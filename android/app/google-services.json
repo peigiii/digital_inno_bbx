@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "799389760150",
+    "project_id": "bbx-app-2025",
+    "storage_bucket": "bbx-app-2025.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799389760150:android:881cf747abdea44283e0b7",
+        "android_client_info": {
+          "package_name": "com.digital_inno_bbx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA73zCv09TZ3hJp6UdjwVGKFMfMQ1hgMTE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
