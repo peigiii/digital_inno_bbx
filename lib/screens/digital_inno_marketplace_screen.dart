@@ -413,14 +413,76 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
           .collection('waste_listings')
           .where('status', isEqualTo: 'available')
           .orderBy('createdAt', descending: true)
-          .snapshots(),
+          .limit(20)
+          .snapshots()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: (sink) {
+              sink.addError(Exception('查询超时，请检查网络连接'));
+            },
+          ),
       builder: (context, snapshot) {
+        // 1. 加载状态
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: 16),
+                Text(
+                  '加载中...',
+                  style: TextStyle(
+                    fontSize: isTablet ? 16 : 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          );
         }
 
+        // 2. 错误处理
         if (snapshot.hasError) {
-          return Center(child: Text('错误: ${snapshot.error}'));
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: isTablet ? 64 : 48,
+                  color: Colors.red,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  '加载失败',
+                  style: TextStyle(
+                    fontSize: isTablet ? 20 : 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  child: Text(
+                    '${snapshot.error}',
+                    style: TextStyle(
+                      fontSize: isTablet ? 14 : 12,
+                      color: Colors.grey[600],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: () => setState(() {}),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('重试'),
+                ),
+              ],
+            ),
+          );
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {

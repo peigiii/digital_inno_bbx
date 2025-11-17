@@ -150,7 +150,13 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
 
       await FirebaseFirestore.instance
           .collection('waste_listings')
-          .add(wasteListing);
+          .add(wasteListing)
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              throw Exception('提交超时，请检查网络连接');
+            },
+          );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
