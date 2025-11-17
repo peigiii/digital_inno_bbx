@@ -413,13 +413,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
           .collection('waste_listings')
           .where('status', isEqualTo: 'available')
           .limit(20)
-          .snapshots()
-          .timeout(
-            const Duration(seconds: 10),
-            onTimeout: (sink) {
-              sink.addError(Exception('查询超时，请检查网络连接'));
-            },
-          ),
+          .snapshots(),
       builder: (context, snapshot) {
         // 1. 加载状态
         if (snapshot.connectionState == ConnectionState.waiting) {

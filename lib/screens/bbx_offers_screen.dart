@@ -31,14 +31,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
 
     return query
         .orderBy('createdAt', descending: true)
-        .snapshots()
-        .timeout(
-          const Duration(seconds: 30),
-          onTimeout: (sink) {
-            // 超时时关闭 sink，不添加错误
-            sink.close();
-          },
-        );
+        .snapshots();
   }
 
   List<DocumentSnapshot> _filterOffers(List<DocumentSnapshot> offers) {

@@ -28,15 +28,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
       query = query.where('userType', isEqualTo: _selectedUserType);
     }
 
-    return query
-        .snapshots()
-        .timeout(
-          const Duration(seconds: 30),
-          onTimeout: (sink) {
-            // 超时时关闭 sink，不添加错误
-            sink.close();
-          },
-        );
+    return query.snapshots();
   }
 
   List<DocumentSnapshot> _filterUsers(List<DocumentSnapshot> users) {

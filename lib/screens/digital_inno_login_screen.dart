@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'bbx_register_screen.dart';
 
 class BBXLoginScreen extends StatefulWidget {
   const BBXLoginScreen({super.key});
@@ -56,38 +57,13 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
     }
   }
 
-  Future<void> _signUp() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
-
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/home');
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('注册失败: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+  void _navigateToRegister() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const BBXRegisterScreen(),
+      ),
+    );
   }
 
   @override
@@ -264,7 +240,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                           SizedBox(
                             height: 50,
                             child: OutlinedButton(
-                              onPressed: _isLoading ? null : _signUp,
+                              onPressed: _isLoading ? null : _navigateToRegister,
                               style: OutlinedButton.styleFrom(
                                 side: const BorderSide(color: Color(0xFF2E7D32)),
                               ),

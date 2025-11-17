@@ -23,14 +23,7 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
     return FirebaseFirestore.instance
         .collection('recyclers')
         .limit(20)
-        .snapshots()
-        .timeout(
-          const Duration(seconds: 30),
-          onTimeout: (sink) {
-            // 超时时关闭 sink，不添加错误
-            sink.close();
-          },
-        );
+        .snapshots();
   }
 
   List<DocumentSnapshot> _filterRecyclers(List<DocumentSnapshot> recyclers) {

@@ -7,6 +7,8 @@ import 'bbx_recyclers_screen.dart';
 import 'bbx_offers_screen.dart';
 import 'bbx_messages_screen.dart';
 import 'bbx_admin_screen.dart';
+import 'bbx_profile_screen.dart';
+import 'bbx_init_data_screen.dart';
 import '../widgets/bbx_bottom_nav.dart';
 
 class BBXHomeScreen extends StatefulWidget {
@@ -245,6 +247,21 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
+                // 个人资料入口
+                ListTile(
+                  leading: const Icon(Icons.person, color: Color(0xFF4CAF50)),
+                  title: const Text('个人资料'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BBXProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
                 _buildDrawerItem(
                   icon: Icons.people,
                   title: 'Users',
@@ -297,6 +314,21 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Help & Support feature coming soon'),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.science, color: Colors.orange),
+                  title: const Text('初始化测试数据'),
+                  subtitle: const Text('创建演示数据'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BBXInitDataScreen(),
                       ),
                     );
                   },

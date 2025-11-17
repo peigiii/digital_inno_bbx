@@ -29,14 +29,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
         .collection('conversations')
         .where('participants', arrayContains: currentUserId)
         .limit(20)
-        .snapshots()
-        .timeout(
-          const Duration(seconds: 30),
-          onTimeout: (sink) {
-            // 超时时关闭 sink，不添加错误
-            sink.close();
-          },
-        );
+        .snapshots();
   }
 
   List<DocumentSnapshot> _filterConversations(List<DocumentSnapshot> conversations) {
