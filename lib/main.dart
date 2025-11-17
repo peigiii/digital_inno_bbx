@@ -4,6 +4,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'screens/digital_inno_login_screen.dart';
 import 'screens/digital_inno_list_waste_screen.dart';
 import 'screens/digital_inno_marketplace_screen.dart';
+import 'screens/bbx_home_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -97,6 +98,7 @@ class BBXApp extends StatelessWidget {
       home: const BBXLoginScreen(),
       routes: {
         '/login': (context) => const BBXLoginScreen(),
+        '/home': (context) => const BBXHomeScreen(),
         '/waste-list': (context) => const BBXListWasteScreen(),
         '/marketplace': (context) => const BBXMarketplaceScreen(),
       },

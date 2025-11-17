@@ -36,7 +36,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
       );
 
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/marketplace');
+        Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {
       if (mounted) {
@@ -70,7 +70,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
       );
 
       if (mounted) {
-        Navigator.pushReplacementNamed(context, '/marketplace');
+        Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {
       if (mounted) {
@@ -99,8 +99,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
       backgroundColor: const Color(0xFFF1F8E9),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Container(
-            height: screenSize.height - MediaQuery.of(context).padding.top,
+          child: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: isTablet ? 80 : 24,
               vertical: 24,
