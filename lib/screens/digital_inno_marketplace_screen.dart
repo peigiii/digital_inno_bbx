@@ -412,7 +412,6 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
       stream: FirebaseFirestore.instance
           .collection('waste_listings')
           .where('status', isEqualTo: 'available')
-          .orderBy('createdAt', descending: true)
           .limit(20)
           .snapshots()
           .timeout(
