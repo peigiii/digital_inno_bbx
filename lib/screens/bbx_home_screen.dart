@@ -20,7 +20,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
 
   final List<Widget> _screens = const [
     BBXUsersScreen(),
-    DigitalInnoMarketplaceScreen(),
+    BBXMarketplaceScreen(),
     BBXRecyclersScreen(),
     BBXOffersScreen(),
     BBXMessagesScreen(),

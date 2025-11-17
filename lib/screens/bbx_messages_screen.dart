@@ -305,8 +305,8 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
               .doc(otherUserId)
               .get(),
           builder: (context, userSnapshot) {
-            final userName = userSnapshot.hasData
-                ? (userSnapshot.data!.data() as Map<String, dynamic>?)?['displayName'] ?? 'Unknown User'
+            final userName = userSnapshot.hasData && userSnapshot.data!.data() != null
+                ? (userSnapshot.data!.data() as Map<String, dynamic>)['displayName'] ?? 'Unknown User'
                 : 'Loading...';
 
             return Text(
