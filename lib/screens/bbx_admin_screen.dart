@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class BBXAdminScreen extends StatefulWidget {
   const BBXAdminScreen({super.key});
@@ -21,7 +22,44 @@ class _BBXAdminScreenState extends State<BBXAdminScreen> {
   @override
   void initState() {
     super.initState();
+    _checkAdminPermission();
     _loadStatistics();
+  }
+
+  Future<void> _checkAdminPermission() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        final isAdmin = userDoc.data()?['isAdmin'] ?? false;
+
+        if (!isAdmin && mounted) {
+          // 非管理员，返回上一页并显示提示
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('无权限访问管理面板'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // 错误处理
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('权限验证失败: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   Future<void> _loadStatistics() async {

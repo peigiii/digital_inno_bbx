@@ -33,9 +33,10 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .timeout(
-          const Duration(seconds: 10),
+          const Duration(seconds: 30),
           onTimeout: (sink) {
-            sink.addError(Exception('查询超时，请检查网络连接'));
+            // 超时时关闭 sink，不添加错误
+            sink.close();
           },
         );
   }
@@ -210,19 +211,29 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                       children: [
                         Icon(
                           Icons.local_offer_outlined,
-                          size: 80,
+                          size: 64,
                           color: Colors.grey[400],
                         ),
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty && _selectedStatus == 'all'
-                              ? '暂无报价数据'
+                              ? '暂无报价'
                               : '未找到匹配的报价',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
                           ),
                         ),
+                        if (_searchQuery.isEmpty && _selectedStatus == 'all') ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            '还没有收到任何报价',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   );

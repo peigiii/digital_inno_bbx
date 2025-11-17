@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'bbx_users_screen.dart';
 import 'digital_inno_marketplace_screen.dart';
 import 'bbx_recyclers_screen.dart';
@@ -17,8 +18,50 @@ class BBXHomeScreen extends StatefulWidget {
 
 class _BBXHomeScreenState extends State<BBXHomeScreen> {
   int _currentIndex = 1; // Start with Listings (Marketplace) screen
+  bool _isAdmin = false;
+  bool _isLoading = true;
 
-  final List<Widget> _screens = const [
+  @override
+  void initState() {
+    super.initState();
+    _checkAdminStatus();
+  }
+
+  Future<void> _checkAdminStatus() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (userDoc.exists) {
+          setState(() {
+            _isAdmin = userDoc.data()?['isAdmin'] ?? false;
+            _isLoading = false;
+          });
+        } else {
+          setState(() {
+            _isAdmin = false;
+            _isLoading = false;
+          });
+        }
+      } else {
+        setState(() {
+          _isAdmin = false;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isAdmin = false;
+        _isLoading = false;
+      });
+    }
+  }
+
+  final List<Widget> _allScreens = const [
     BBXUsersScreen(),
     BBXMarketplaceScreen(),
     BBXRecyclersScreen(),
@@ -27,14 +70,41 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
     BBXAdminScreen(),
   ];
 
-  final List<String> _titles = const [
-    'Users',
-    'Marketplace',
-    'Recyclers',
-    'Offers',
-    'Messages',
-    'Admin',
-  ];
+  List<Widget> get _screens {
+    if (_isAdmin) {
+      return _allScreens;
+    } else {
+      // 非管理员不包含 Admin 页面
+      return const [
+        BBXUsersScreen(),
+        BBXMarketplaceScreen(),
+        BBXRecyclersScreen(),
+        BBXOffersScreen(),
+        BBXMessagesScreen(),
+      ];
+    }
+  }
+
+  List<String> get _titles {
+    if (_isAdmin) {
+      return const [
+        'Users',
+        'Marketplace',
+        'Recyclers',
+        'Offers',
+        'Messages',
+        'Admin',
+      ];
+    } else {
+      return const [
+        'Users',
+        'Marketplace',
+        'Recyclers',
+        'Offers',
+        'Messages',
+      ];
+    }
+  }
 
   void _onTabTapped(int index) {
     setState(() {
@@ -86,6 +156,16 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(
+            color: Color(0xFF4CAF50),
+          ),
+        ),
+      );
+    }
+
     return WillPopScope(
       onWillPop: () async {
         // Prevent going back to login screen
@@ -99,6 +179,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
         bottomNavigationBar: BBXBottomNav(
           currentIndex: _currentIndex,
           onTap: _onTabTapped,
+          isAdmin: _isAdmin,
         ),
         drawer: _buildDrawer(),
       ),
@@ -189,11 +270,12 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                   title: 'Messages',
                   index: 4,
                 ),
-                _buildDrawerItem(
-                  icon: Icons.admin_panel_settings,
-                  title: 'Admin',
-                  index: 5,
-                ),
+                if (_isAdmin)
+                  _buildDrawerItem(
+                    icon: Icons.admin_panel_settings,
+                    title: 'Admin',
+                    index: 5,
+                  ),
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.settings, color: Color(0xFF4CAF50)),

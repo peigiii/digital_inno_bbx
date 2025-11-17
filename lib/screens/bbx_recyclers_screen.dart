@@ -25,9 +25,10 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
         .limit(20)
         .snapshots()
         .timeout(
-          const Duration(seconds: 10),
+          const Duration(seconds: 30),
           onTimeout: (sink) {
-            sink.addError(Exception('查询超时，请检查网络连接'));
+            // 超时时关闭 sink，不添加错误
+            sink.close();
           },
         );
   }
@@ -187,19 +188,29 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
                       children: [
                         Icon(
                           Icons.recycling,
-                          size: 80,
+                          size: 64,
                           color: Colors.grey[400],
                         ),
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty && _selectedWasteType == 'all'
-                              ? '暂无处理者数据'
+                              ? '暂无回收商'
                               : '未找到匹配的处理者',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
                           ),
                         ),
+                        if (_searchQuery.isEmpty && _selectedWasteType == 'all') ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            '还没有注册的废料处理者',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   );

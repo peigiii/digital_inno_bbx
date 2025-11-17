@@ -31,9 +31,10 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
         .limit(20)
         .snapshots()
         .timeout(
-          const Duration(seconds: 10),
+          const Duration(seconds: 30),
           onTimeout: (sink) {
-            sink.addError(Exception('查询超时，请检查网络连接'));
+            // 超时时关闭 sink，不添加错误
+            sink.close();
           },
         );
   }
@@ -188,12 +189,12 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
                       children: [
                         Icon(
                           Icons.message_outlined,
-                          size: 80,
+                          size: 64,
                           color: Colors.grey[400],
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _searchQuery.isEmpty ? '暂无对话' : '未找到匹配的对话',
+                          _searchQuery.isEmpty ? '暂无消息' : '未找到匹配的对话',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -201,7 +202,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '开始与其他用户交流吧！',
+                          _searchQuery.isEmpty ? '还没有任何对话' : '',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[500],

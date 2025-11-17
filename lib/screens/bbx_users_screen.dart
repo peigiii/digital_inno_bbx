@@ -31,9 +31,10 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
     return query
         .snapshots()
         .timeout(
-          const Duration(seconds: 10),
+          const Duration(seconds: 30),
           onTimeout: (sink) {
-            sink.addError(Exception('查询超时，请检查网络连接'));
+            // 超时时关闭 sink，不添加错误
+            sink.close();
           },
         );
   }
@@ -179,17 +180,27 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                       children: [
                         Icon(
                           Icons.people_outline,
-                          size: 80,
+                          size: 64,
                           color: Colors.grey[400],
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _searchQuery.isEmpty ? '暂无用户数据' : '未找到匹配的用户',
+                          _searchQuery.isEmpty ? '暂无用户' : '未找到匹配的用户',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
                           ),
                         ),
+                        if (_searchQuery.isEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            '还没有注册用户',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
                       ],
                     ),
                   );
