@@ -4,7 +4,23 @@ import 'screens/digital_inno_marketplace_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+
+  try {
+    // Initialize Firebase with error handling
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+        apiKey: 'AIzaSyDummy-Key-For-Development',
+        appId: '1:123456789:android:abcdef',
+        messagingSenderId: '123456789',
+        projectId: 'digital-inno-bbx',
+        storageBucket: 'digital-inno-bbx.appspot.com',
+      ),
+    );
+  } catch (e) {
+    // Firebase initialization failed - app will show error state in UI
+    debugPrint('Firebase initialization error: $e');
+  }
+
   runApp(const MyApp());
 }
 

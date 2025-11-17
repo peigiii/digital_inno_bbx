@@ -1,4 +1,4 @@
-package com.example.digital_inno_bbx
+package com.digital_inno_bbx
 
 import io.flutter.embedding.android.FlutterActivity
 
