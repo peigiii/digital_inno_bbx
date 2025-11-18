@@ -25,6 +25,7 @@ class UserInitializer {
           'companyName': '',
           'city': '',
           'contact': '',
+          'photoURL': '',
           'isAdmin': false,
           'verified': false,
           'createdAt': FieldValue.serverTimestamp(),
@@ -72,6 +73,9 @@ class UserInitializer {
         }
         if (!data.containsKey('displayName') || data['displayName'] == null || data['displayName'] == '') {
           updates['displayName'] = data['email']?.split('@')[0] ?? 'User';
+        }
+        if (!data.containsKey('photoURL')) {
+          updates['photoURL'] = '';
         }
 
         if (updates.isNotEmpty) {

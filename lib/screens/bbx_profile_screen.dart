@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../widgets/user_avatar_widget.dart';
 import 'bbx_edit_profile_screen.dart';
 
 class BBXProfileScreen extends StatefulWidget {
@@ -138,17 +139,10 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
         child: Column(
           children: [
             // 头像
-            CircleAvatar(
+            UserAvatarWidget(
+              photoURL: userData?['photoURL'],
+              displayName: userData?['displayName'] ?? currentUser?.email ?? 'User',
               radius: 60,
-              backgroundColor: const Color(0xFF4CAF50),
-              child: Text(
-                (userData?['displayName'] ?? currentUser?.email ?? 'U')[0].toUpperCase(),
-                style: const TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
             ),
             const SizedBox(height: 16),
 

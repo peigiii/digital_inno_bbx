@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../services/avatar_upload_service.dart';
 
 class BBXEditProfileScreen extends StatefulWidget {
   const BBXEditProfileScreen({super.key});
@@ -20,7 +22,9 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
   bool isLoading = true;
   bool isSaving = false;
+  bool isUploadingAvatar = false;
   String? errorMessage;
+  String? avatarUrl;
 
   @override
   void initState() {
@@ -67,6 +71,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           _companyController.text = data['companyName'] ?? '';
           _cityController.text = data['city'] ?? '';
           _contactController.text = data['contact'] ?? '';
+          avatarUrl = data['photoURL'] ?? '';
           isLoading = false;
           errorMessage = null;
         });
@@ -173,6 +178,46 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
     }
   }
 
+  Future<void> _uploadAvatar() async {
+    if (currentUser == null || isUploadingAvatar) return;
+
+    setState(() {
+      isUploadingAvatar = true;
+    });
+
+    try {
+      final String? downloadUrl = await AvatarUploadService.pickAndUploadAvatar(
+        context: context,
+        userId: currentUser!.uid,
+        onProgress: (progress) {
+          print('上传进度: ${(progress * 100).toStringAsFixed(1)}%');
+        },
+      );
+
+      if (downloadUrl != null && mounted) {
+        setState(() {
+          avatarUrl = downloadUrl;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('✅ 头像已更新'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print('❌ 上传头像失败: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          isUploadingAvatar = false;
+        });
+      }
+    }
+  }
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -256,55 +301,79 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           children: [
             // 头像
             Center(
-              child: Stack(
+              child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: const Color(0xFF4CAF50),
-                    child: Text(
-                      (_nameController.text.isNotEmpty
-                          ? _nameController.text[0]
-                          : 'U').toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 4,
+                  Stack(
+                    children: [
+                      // 头像显示
+                      if (isUploadingAvatar)
+                        const CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Color(0xFF4CAF50),
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 3,
                           ),
-                        ],
-                      ),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.camera_alt,
-                          color: Color(0xFF4CAF50),
-                        ),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('头像上传功能即将推出'),
+                        )
+                      else if (avatarUrl != null && avatarUrl!.isNotEmpty)
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundImage: CachedNetworkImageProvider(avatarUrl!),
+                          backgroundColor: const Color(0xFF4CAF50),
+                        )
+                      else
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundColor: const Color(0xFF4CAF50),
+                          child: Text(
+                            (_nameController.text.isNotEmpty
+                                ? _nameController.text[0]
+                                : 'U').toUpperCase(),
+                            style: const TextStyle(
+                              fontSize: 48,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                          );
-                        },
+                          ),
+                        ),
+                      // 相机图标按钮
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.camera_alt,
+                              color: Color(0xFF4CAF50),
+                            ),
+                            onPressed: isUploadingAvatar ? null : _uploadAvatar,
+                          ),
+                        ),
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '点击相机图标更换头像',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
 
             // 姓名
             TextFormField(

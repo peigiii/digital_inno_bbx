@@ -74,6 +74,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
           'companyName': _companyController.text.trim(),
           'city': _cityController.text.trim(),
           'contact': _contactController.text.trim(),
+          'photoURL': '',
           'fcmToken': '',
           'averageRating': 0.0,
           'ratingCount': 0,
