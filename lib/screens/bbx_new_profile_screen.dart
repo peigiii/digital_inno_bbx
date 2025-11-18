@@ -563,6 +563,10 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                 onPressed: () {
                   // Navigate to all orders
                 },
+                style: TextButton.styleFrom(
+                  minimumSize: const Size(80, 36),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                ),
                 child: const Text('View All'),
               ),
             ],
