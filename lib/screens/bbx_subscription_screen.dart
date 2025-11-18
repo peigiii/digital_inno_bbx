@@ -11,7 +11,7 @@ class BBXSubscriptionScreen extends StatefulWidget {
 
 class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
-  String currentPlan = 'Free';
+  String currentPlan = 'free';
   bool isLoading = true;
 
   @override
@@ -21,21 +21,31 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
   }
 
   Future<void> _loadSubscriptionData() async {
-    if (currentUser == null) return;
+    if (currentUser == null) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
 
     try {
-      final doc = await FirebaseFirestore.instance
+      final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
           .get();
 
-      if (doc.exists && mounted) {
+      if (userDoc.exists && mounted) {
         setState(() {
-          currentPlan = doc.data()?['subscriptionPlan'] ?? 'Free';
+          currentPlan = userDoc.data()?['subscriptionPlan'] ?? 'free';
+          isLoading = false;
+        });
+      } else {
+        setState(() {
           isLoading = false;
         });
       }
     } catch (e) {
+      print('Error loading subscription: $e');
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -44,14 +54,16 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
     }
   }
 
-  Future<void> _upgradePlan(String plan, double price) async {
-    if (currentUser == null) return;
-
+  Future<void> _selectPlan(String planName, int price) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认升级'),
-        content: Text('确定要升级到 $plan 计划吗？\n价格：RM $price/月'),
+        title: Text('确认选择 $planName'),
+        content: Text(
+          price > 0
+              ? '您将订阅 $planName 计划，价格为 RM $price/年。\n\n请联系管理员完成支付。'
+              : '您将使用免费计划。',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -59,27 +71,34 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF4CAF50),
+              foregroundColor: Colors.white,
+            ),
             child: const Text('确认'),
           ),
         ],
       ),
     );
 
-    if (confirm == true && mounted) {
+    if (confirm == true && currentUser != null) {
       try {
         await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser!.uid)
-            .update({'subscriptionPlan': plan});
+            .update({
+          'subscriptionPlan': planName.toLowerCase().replaceAll(' ', '_'),
+          'subscriptionUpdatedAt': FieldValue.serverTimestamp(),
+        });
 
         setState(() {
-          currentPlan = plan;
+          currentPlan = planName.toLowerCase().replaceAll(' ', '_');
         });
 
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('成功升级到 $plan 计划'),
+              content: Text('已选择 $planName 计划'),
               backgroundColor: Colors.green,
             ),
           );
@@ -88,7 +107,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('升级失败: $e'),
+              content: Text('选择计划失败: $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -100,8 +119,15 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('订阅计划'),
+          backgroundColor: const Color(0xFF4CAF50),
+          foregroundColor: Colors.white,
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
       );
     }
 
@@ -116,67 +142,127 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '当前计划: $currentPlan',
-              style: const TextStyle(
-                fontSize: 20,
+            const Text(
+              '选择适合您的计划',
+              style: TextStyle(
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            const SizedBox(height: 8),
+            Text(
+              '当前计划: ${_getPlanDisplayName(currentPlan)}',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
+            ),
             const SizedBox(height: 24),
+
+            // Free Plan
             _buildPlanCard(
               'Free',
-              0,
+              'RM 0',
+              '/月',
               [
-                '基础匹配功能',
-                '每月 5 次报价',
-                '标准客服支持',
-                '基础分析报告',
+                '3天试用（个人）',
+                '7天试用（公司）',
+                '最多 5 个列表',
+                '基础功能',
+                '社区支持',
               ],
+              currentPlan == 'free',
               Colors.grey,
-              isCurrentPlan: currentPlan == 'Free',
+              0,
             ),
+
+            // Basic Plan
             _buildPlanCard(
               'Basic',
-              99,
+              'RM 99',
+              '/年',
               [
-                'Free 的所有功能',
-                '每月 20 次报价',
+                '无限列表',
                 '优先匹配',
-                '高级分析报告',
+                '基础报告',
                 '邮件支持',
+                '数据导出',
               ],
+              currentPlan == 'basic',
               Colors.blue,
-              isCurrentPlan: currentPlan == 'Basic',
+              99,
             ),
+
+            // Professional Plan
             _buildPlanCard(
               'Professional',
-              199,
+              'RM 199',
+              '/年',
               [
-                'Basic 的所有功能',
-                '无限报价',
-                '实时价格预测',
+                'Basic 所有功能',
+                'ESG 合规报告',
+                '高级数据分析',
+                '物流优化',
+                '专属客服',
                 'API 访问',
-                '专属客户经理',
-                '优先技术支持',
               ],
-              Colors.purple,
-              isCurrentPlan: currentPlan == 'Professional',
+              currentPlan == 'professional',
+              const Color(0xFF4CAF50),
+              199,
             ),
+
+            // Enterprise Plan
             _buildPlanCard(
               'Enterprise',
-              499,
+              'RM 499',
+              '/年',
               [
-                'Professional 的所有功能',
-                '自定义集成',
-                '批量折扣',
-                '白标方案',
-                '专属服务器',
-                '24/7 电话支持',
-                '定制培训',
+                'Professional 所有功能',
+                '多用户账号',
+                '定制化报告',
+                '白标解决方案',
+                '专属客户经理',
+                '优先技术支持',
+                'SLA 保证',
               ],
-              Colors.orange,
-              isCurrentPlan: currentPlan == 'Enterprise',
+              currentPlan == 'enterprise',
+              Colors.purple,
+              499,
+            ),
+
+            const SizedBox(height: 24),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue[50],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.blue),
+                      SizedBox(width: 8),
+                      Text(
+                        '支付说明',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '• 选择计划后，请联系管理员完成支付\n'
+                    '• 支持银行转账、支付宝等方式\n'
+                    '• 付款后 24 小时内激活\n'
+                    '• 可随时升级或降级计划',
+                    style: TextStyle(color: Colors.grey[700]),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -184,16 +270,33 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
     );
   }
 
+  String _getPlanDisplayName(String plan) {
+    switch (plan.toLowerCase()) {
+      case 'free':
+        return 'Free';
+      case 'basic':
+        return 'Basic (RM 99/年)';
+      case 'professional':
+        return 'Professional (RM 199/年)';
+      case 'enterprise':
+        return 'Enterprise (RM 499/年)';
+      default:
+        return 'Free';
+    }
+  }
+
   Widget _buildPlanCard(
-    String planName,
-    double price,
+    String name,
+    String price,
+    String period,
     List<String> features,
-    Color color, {
-    bool isCurrentPlan = false,
-  }) {
+    bool isCurrentPlan,
+    Color color,
+    int priceValue,
+  ) {
     return Card(
-      elevation: isCurrentPlan ? 8 : 2,
       margin: const EdgeInsets.only(bottom: 16),
+      elevation: isCurrentPlan ? 8 : 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: isCurrentPlan
@@ -201,20 +304,45 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             : BorderSide.none,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  planName,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: color,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: color,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          price,
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          period,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 if (isCurrentPlan)
                   Container(
@@ -231,67 +359,51 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12,
                       ),
                     ),
                   ),
               ],
             ),
-            const SizedBox(height: 8),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  price == 0 ? '免费' : 'RM ${price.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (price > 0)
-                  const Padding(
-                    padding: EdgeInsets.only(left: 4, top: 8),
-                    child: Text(
-                      '/月',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
             ...features.map((feature) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.only(bottom: 12),
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: color,
-                        size: 20,
-                      ),
-                      const SizedBox(width: 8),
+                      Icon(Icons.check_circle, color: color, size: 20),
+                      const SizedBox(width: 12),
                       Expanded(
-                        child: Text(feature),
+                        child: Text(
+                          feature,
+                          style: const TextStyle(fontSize: 15),
+                        ),
                       ),
                     ],
                   ),
                 )),
             const SizedBox(height: 16),
-            if (!isCurrentPlan)
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => _upgradePlan(planName, price),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: color,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 12),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: isCurrentPlan
+                    ? null
+                    : () => _selectPlan(name, priceValue),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isCurrentPlan ? Colors.grey : color,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Text(price == 0 ? '降级到此计划' : '升级到此计划'),
+                ),
+                child: Text(
+                  isCurrentPlan ? '当前计划' : '选择计划',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
+            ),
           ],
         ),
       ),
