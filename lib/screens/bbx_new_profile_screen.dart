@@ -14,6 +14,13 @@ class BBXNewProfileScreen extends StatefulWidget {
 
 class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
   final user = FirebaseAuth.instance.currentUser;
+  late Future<Map<String, dynamic>> _statisticsFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _statisticsFuture = _loadUserStatistics();
+  }
 
   Future<void> _createUserDocument() async {
     if (user == null) return;
@@ -42,7 +49,9 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
             backgroundColor: Colors.green,
           ),
         );
-        setState(() {}); // 触发重新加载
+        setState(() {
+          _statisticsFuture = _loadUserStatistics(); // 重新加载统计数据
+        });
       }
     } catch (e) {
       print('❌ [个人中心] 创建用户文档失败: $e');
@@ -219,7 +228,12 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
 
           final userData = snapshot.data!.data() as Map<String, dynamic>?;
 
-          print('✅ [个人中心] 数据加载成功: ${userData?.keys.join(", ")}');
+          // 安全的日志输出
+          if (userData != null) {
+            print('✅ [个人中心] 数据加载成功: ${userData.keys.join(", ")}');
+          } else {
+            print('⚠️ [个人中心] 用户数据为空，使用默认值');
+          }
 
           return CustomScrollView(
             slivers: [
@@ -391,7 +405,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
 
               // Stats cards - Load real data from Firestore
               FutureBuilder<Map<String, dynamic>>(
-                future: _loadUserStatistics(),
+                future: _statisticsFuture,
                 builder: (context, snapshot) {
                   // 显示加载状态
                   if (snapshot.connectionState == ConnectionState.waiting) {
