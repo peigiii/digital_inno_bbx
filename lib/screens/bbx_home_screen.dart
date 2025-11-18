@@ -10,6 +10,7 @@ import 'bbx_admin_screen.dart';
 import 'bbx_profile_screen.dart';
 import 'bbx_init_data_screen.dart';
 import 'bbx_subscription_screen.dart';
+import 'bbx_rewards_screen.dart';
 import '../widgets/bbx_bottom_nav.dart';
 
 class BBXHomeScreen extends StatefulWidget {
@@ -313,6 +314,20 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                         ),
                       );
                     }
+                  },
+                ),
+                // 奖励积分入口
+                ListTile(
+                  leading: const Icon(Icons.stars, color: Colors.amber),
+                  title: const Text('奖励积分'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BBXRewardsScreen(),
+                      ),
+                    );
                   },
                 ),
                 const Divider(),
