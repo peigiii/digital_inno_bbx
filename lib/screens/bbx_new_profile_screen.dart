@@ -15,6 +15,48 @@ class BBXNewProfileScreen extends StatefulWidget {
 class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
   final user = FirebaseAuth.instance.currentUser;
 
+  Future<void> _createUserDocument() async {
+    if (user == null) return;
+
+    try {
+      print('🔧 [个人中心] 开始创建用户文档: ${user!.uid}');
+
+      await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
+        'uid': user!.uid,
+        'email': user!.email ?? '',
+        'displayName': user!.displayName ?? user!.email?.split('@')[0] ?? 'User',
+        'photoURL': user!.photoURL,
+        'createdAt': FieldValue.serverTimestamp(),
+        'subscriptionPlan': 'free',
+        'subscriptionStatus': 'active',
+        'isAdmin': false,
+        'userType': 'producer',
+      }, SetOptions(merge: true));
+
+      print('✅ [个人中心] 用户文档创建成功');
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('用户数据初始化成功'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        setState(() {}); // 触发重新加载
+      }
+    } catch (e) {
+      print('❌ [个人中心] 创建用户文档失败: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('初始化失败: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _handleLogout() async {
     final shouldLogout = await showDialog<bool>(
       context: context,
@@ -82,11 +124,102 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
             .doc(user!.uid)
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          // 处理加载状态
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            print('🔄 [个人中心] 加载中...');
             return const Center(child: CircularProgressIndicator());
           }
 
+          // 处理错误状态
+          if (snapshot.hasError) {
+            print('❌ [个人中心] StreamBuilder 错误: ${snapshot.error}');
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text(
+                    '加载失败',
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${snapshot.error}',
+                    style: TextStyle(color: Colors.grey[600]),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {}); // 触发重新构建
+                    },
+                    child: const Text('重试'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // 处理无数据状态
+          if (!snapshot.hasData || snapshot.data == null) {
+            print('⚠️ [个人中心] 无数据: hasData=${snapshot.hasData}');
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.person_off, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  const Text(
+                    '用户数据不存在',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () async {
+                      // 尝试创建用户文档
+                      await _createUserDocument();
+                    },
+                    child: const Text('初始化用户数据'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // 检查文档是否存在
+          if (!snapshot.data!.exists) {
+            print('⚠️ [个人中心] 用户文档不存在');
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.person_off, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  const Text(
+                    '用户文档不存在',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'UID: ${user!.uid}',
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await _createUserDocument();
+                    },
+                    child: const Text('创建用户数据'),
+                  ),
+                ],
+              ),
+            );
+          }
+
           final userData = snapshot.data!.data() as Map<String, dynamic>?;
+
+          print('✅ [个人中心] 数据加载成功: ${userData?.keys.join(", ")}');
 
           return CustomScrollView(
             slivers: [

@@ -33,13 +33,19 @@ class _BBXPaymentConfirmationScreenState
   @override
   void initState() {
     super.initState();
+    print('🎬 [确认页面] initState - success: ${widget.success}');
     if (widget.success) {
       _updateSubscription();
     }
   }
 
   Future<void> _updateSubscription() async {
-    if (currentUser == null) return;
+    if (currentUser == null) {
+      print('❌ [确认页面] 用户未登录');
+      return;
+    }
+
+    print('👤 [确认页面] 当前用户: ${currentUser!.email} (${currentUser!.uid})');
 
     setState(() {
       isUpdatingSubscription = true;
@@ -47,6 +53,8 @@ class _BBXPaymentConfirmationScreenState
 
     try {
       print('🔄 [确认页面] 更新订阅状态...');
+      print('📋 计划: ${widget.planName}');
+      print('💰 金额: ${widget.planPrice}');
 
       // 更新用户订阅信息
       await FirebaseFirestore.instance
@@ -74,8 +82,10 @@ class _BBXPaymentConfirmationScreenState
       }).timeout(const Duration(seconds: 10));
 
       print('✅ [确认页面] 订阅更新成功');
+      print('✅ [确认页面] 支付记录已保存到 subscription_payments 集合');
     } catch (e) {
       print('❌ [确认页面] 更新订阅失败: $e');
+      print('❌ [确认页面] 错误详情: ${e.toString()}');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -269,11 +279,13 @@ class _BBXPaymentConfirmationScreenState
                               height: 50,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    '/profile',
-                                    (route) => false,
-                                  );
+                                  print('🏠 [确认页面] 导航到个人中心');
+                                  // 使用 popUntil 返回到 home，然后导航到 profile
+                                  Navigator.of(context).popUntil((route) {
+                                    return route.settings.name == '/home' || route.isFirst;
+                                  });
+                                  // 导航到 profile
+                                  Navigator.of(context).pushReplacementNamed('/profile');
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppTheme.primary,
@@ -297,11 +309,10 @@ class _BBXPaymentConfirmationScreenState
                               height: 50,
                               child: OutlinedButton(
                                 onPressed: () {
-                                  Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    '/home',
-                                    (route) => false,
-                                  );
+                                  print('🏠 [确认页面] 导航到首页');
+                                  // 清除所有路由并返回首页
+                                  Navigator.of(context).popUntil((route) => route.isFirst);
+                                  Navigator.of(context).pushReplacementNamed('/home');
                                 },
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: AppTheme.primary,
@@ -325,6 +336,8 @@ class _BBXPaymentConfirmationScreenState
                               height: 50,
                               child: ElevatedButton(
                                 onPressed: () {
+                                  print('🔄 [确认页面] 重试支付');
+                                  // 返回到支付页面
                                   Navigator.pop(context);
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -349,11 +362,10 @@ class _BBXPaymentConfirmationScreenState
                               height: 50,
                               child: OutlinedButton(
                                 onPressed: () {
-                                  Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    '/home',
-                                    (route) => false,
-                                  );
+                                  print('🏠 [确认页面] 稍后再说，返回首页');
+                                  // 返回首页
+                                  Navigator.of(context).popUntil((route) => route.isFirst);
+                                  Navigator.of(context).pushReplacementNamed('/home');
                                 },
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: Colors.grey[600],
