@@ -290,6 +290,59 @@ class PaymentService {
     ];
   }
 
+  /// 模拟支付处理（用于开发测试）
+  ///
+  /// 参数：
+  /// - userId: 用户ID
+  /// - planName: 订阅计划名称
+  /// - amount: 支付金额
+  /// - paymentMethod: 支付方式
+  ///
+  /// 返回：支付是否成功
+  Future<bool> simulatePayment({
+    required String userId,
+    required String planName,
+    required double amount,
+    required String paymentMethod,
+  }) async {
+    try {
+      print('🔄 [支付服务] 开始模拟支付...');
+      print('👤 用户: $userId');
+      print('📋 计划: $planName');
+      print('💰 金额: RM $amount');
+      print('💳 支付方式: $paymentMethod');
+
+      // 模拟网络延迟
+      await Future.delayed(const Duration(seconds: 2));
+
+      // 更新用户订阅信息
+      await _firestore.collection(CollectionConstants.users).doc(userId).update({
+        'subscriptionPlan': planName.toLowerCase().replaceAll(' ', '_'),
+        'subscriptionUpdatedAt': FieldValue.serverTimestamp(),
+        'subscriptionStatus': 'active',
+        'subscriptionExpiresAt': FieldValue.serverTimestamp(),
+      }).timeout(ApiConstants.defaultTimeout);
+
+      // 记录支付交易
+      await _firestore.collection('subscription_payments').add({
+        'userId': userId,
+        'planName': planName,
+        'amount': amount,
+        'paymentMethod': paymentMethod,
+        'status': TransactionStatusConstants.paid,
+        'paidAt': FieldValue.serverTimestamp(),
+        'createdAt': FieldValue.serverTimestamp(),
+        'simulatedPayment': true, // 标记为模拟支付
+      }).timeout(ApiConstants.defaultTimeout);
+
+      print('✅ [支付服务] 模拟支付成功');
+      return true;
+    } catch (e) {
+      print('❌ [支付服务] 模拟支付失败: $e');
+      return false;
+    }
+  }
+
   /// Webhook 处理（应该在 Cloud Function 中实现）
   ///
   /// 用于处理 Stripe 的支付状态更新
