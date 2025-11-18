@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'screens/digital_inno_login_screen.dart';
 import 'screens/digital_inno_list_waste_screen.dart';
@@ -7,6 +8,7 @@ import 'screens/digital_inno_marketplace_screen.dart';
 import 'screens/bbx_home_screen.dart';
 import 'screens/bbx_splash_screen.dart';
 import 'services/notification_service.dart';
+import 'utils/user_initializer.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -29,6 +31,18 @@ void main() async {
     await NotificationService().initialize();
   } catch (e) {
     debugPrint('Notification service initialization error: $e');
+  }
+
+  // Ensure user document exists
+  try {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      await UserInitializer.ensureUserDocumentExists();
+      await UserInitializer.fixUserDocument(currentUser.uid);
+      debugPrint('✅ 用户文档初始化完成');
+    }
+  } catch (e) {
+    debugPrint('User initialization error: $e');
   }
 
   runApp(const BBXApp());

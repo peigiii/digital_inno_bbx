@@ -20,6 +20,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
   bool isLoading = true;
   bool isSaving = false;
+  String? errorMessage;
 
   @override
   void initState() {
@@ -32,28 +33,61 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
   }
 
   Future<void> _loadUserData() async {
-    if (currentUser == null) return;
+    if (currentUser == null) {
+      setState(() {
+        errorMessage = '未登录';
+        isLoading = false;
+      });
+      return;
+    }
 
     try {
+      print('🔄 开始加载用户数据...');
+
+      // 添加超时限制
       final doc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
-          .get();
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              throw Exception('加载超时，请检查网络连接');
+            },
+          );
 
-      if (doc.exists && mounted) {
+      if (!mounted) return;
+
+      if (doc.exists) {
         final data = doc.data()!;
+        print('✅ 用户数据加载成功');
+
         setState(() {
           _nameController.text = data['displayName'] ?? '';
           _companyController.text = data['companyName'] ?? '';
           _cityController.text = data['city'] ?? '';
           _contactController.text = data['contact'] ?? '';
           isLoading = false;
+          errorMessage = null;
+        });
+      } else {
+        print('⚠️ 用户文档不存在，使用默认值');
+        setState(() {
+          _nameController.text = currentUser!.displayName ??
+                                  currentUser!.email?.split('@')[0] ??
+                                  'User';
+          isLoading = false;
+          errorMessage = null;
         });
       }
     } catch (e) {
+      print('❌ 加载用户数据失败: $e');
       if (mounted) {
         setState(() {
+          errorMessage = '加载失败: $e';
           isLoading = false;
+          // 使用默认值
+          _nameController.text = currentUser!.email?.split('@')[0] ?? 'User';
         });
       }
     }
@@ -63,40 +97,70 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
     if (currentUser == null) return;
 
+    // 防止重复提交
+    if (isSaving) return;
+
     setState(() {
       isSaving = true;
+      errorMessage = null;
     });
 
     try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser!.uid)
-          .update({
+      print('🔄 开始保存用户资料...');
+
+      final updates = {
         'displayName': _nameController.text.trim(),
         'companyName': _companyController.text.trim(),
         'city': _cityController.text.trim(),
         'contact': _contactController.text.trim(),
         'updatedAt': FieldValue.serverTimestamp(),
-      });
+      };
+
+      // 使用 set 而不是 update，避免文档不存在的问题
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser!.uid)
+          .set(updates, SetOptions(merge: true))
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              throw Exception('保存超时，请检查网络连接');
+            },
+          );
 
       // 更新 Firebase Auth 显示名称
       await currentUser!.updateDisplayName(_nameController.text.trim());
 
+      print('✅ 用户资料保存成功');
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('个人资料已更新'),
+            content: Text('✅ 个人资料已更新'),
             backgroundColor: Colors.green,
+            duration: Duration(seconds: 2),
           ),
         );
-        Navigator.pop(context, true); // 返回 true 表示已更新
+
+        // 延迟一下再返回，让用户看到成功提示
+        await Future.delayed(const Duration(milliseconds: 500));
+
+        if (mounted) {
+          Navigator.pop(context, true); // 返回 true 表示已更新
+        }
       }
     } catch (e) {
+      print('❌ 保存失败: $e');
       if (mounted) {
+        setState(() {
+          errorMessage = '保存失败: $e';
+        });
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('保存失败: $e'),
+            content: Text('❌ 保存失败: $e'),
             backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
           ),
         );
       }
@@ -128,9 +192,33 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           foregroundColor: Colors.white,
         ),
         body: const Center(
-          child: CircularProgressIndicator(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: Color(0xFF4CAF50),
+              ),
+              SizedBox(height: 16),
+              Text('正在加载...'),
+            ],
+          ),
         ),
       );
+    }
+
+    // 显示错误但仍然允许编辑
+    if (errorMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage!),
+              backgroundColor: Colors.orange,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      });
     }
 
     return Scaffold(
@@ -157,6 +245,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
             IconButton(
               icon: const Icon(Icons.check),
               onPressed: _saveProfile,
+              tooltip: '保存',
             ),
         ],
       ),
@@ -165,7 +254,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // 头像占位（未来可添加上传功能）
+            // 头像
             Center(
               child: Stack(
                 children: [
@@ -198,9 +287,11 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                         ],
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.camera_alt, color: Color(0xFF4CAF50)),
+                        icon: const Icon(
+                          Icons.camera_alt,
+                          color: Color(0xFF4CAF50),
+                        ),
                         onPressed: () {
-                          // TODO: 实现头像上传
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('头像上传功能即将推出'),
@@ -222,6 +313,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                 labelText: '姓名 *',
                 prefixIcon: Icon(Icons.person),
                 border: OutlineInputBorder(),
+                helperText: '必填项',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
@@ -229,6 +321,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                 }
                 return null;
               },
+              enabled: !isSaving,
             ),
             const SizedBox(height: 16),
 
@@ -240,6 +333,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                 prefixIcon: Icon(Icons.business),
                 border: OutlineInputBorder(),
               ),
+              enabled: !isSaving,
             ),
             const SizedBox(height: 16),
 
@@ -251,6 +345,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                 prefixIcon: Icon(Icons.location_city),
                 border: OutlineInputBorder(),
               ),
+              enabled: !isSaving,
             ),
             const SizedBox(height: 16),
 
@@ -266,13 +361,13 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
               keyboardType: TextInputType.phone,
               validator: (value) {
                 if (value != null && value.isNotEmpty) {
-                  // 简单的电话格式验证
                   if (!RegExp(r'^\+?[\d\s-]{10,}$').hasMatch(value)) {
                     return '请输入有效的电话号码';
                   }
                 }
                 return null;
               },
+              enabled: !isSaving,
             ),
             const SizedBox(height: 16),
 
@@ -284,6 +379,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                 prefixIcon: Icon(Icons.email),
                 border: OutlineInputBorder(),
                 enabled: false,
+                helperText: '邮箱不可修改',
               ),
             ),
             const SizedBox(height: 32),
@@ -298,15 +394,23 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
+                disabledBackgroundColor: Colors.grey,
               ),
               child: isSaving
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
+                  ? const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Text('保存中...'),
+                      ],
                     )
                   : const Text(
                       '保存',
@@ -316,6 +420,30 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                       ),
                     ),
             ),
+            const SizedBox(height: 16),
+
+            // 调试信息（仅开发模式）
+            if (errorMessage != null)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange[50],
+                  border: Border.all(color: Colors.orange),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.info_outline, color: Colors.orange),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '提示：$errorMessage',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),

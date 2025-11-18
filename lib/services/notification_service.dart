@@ -58,16 +58,24 @@ class NotificationService {
   }
 
   Future<void> _saveToken(String token) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .update({'fcmToken': token});
-      }
+      final docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid);
+
+      // 使用 set 而不是 update，自动创建或更新
+      await docRef.set({
+        'fcmToken': token,
+        'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true)); // merge: true 保留其他字段
+
+      print('✅ FCM token 保存成功');
     } catch (e) {
-      print('保存 FCM token 失败: $e');
+      print('❌ 保存 FCM token 失败: $e');
+      // 不抛出错误，避免影响应用启动
     }
   }
 
