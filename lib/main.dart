@@ -17,6 +17,9 @@ import 'screens/bbx_subscription_management_screen.dart';
 import 'screens/bbx_payment_screen.dart';
 import 'screens/bbx_payment_confirmation_screen.dart';
 import 'screens/bbx_invoice_screen.dart';
+import 'screens/offers/bbx_my_offers_screen.dart';
+import 'screens/chat/bbx_conversations_screen.dart';
+import 'screens/search/bbx_advanced_search_screen.dart';
 import 'services/notification_service.dart';
 import 'utils/user_initializer.dart';
 import 'firebase_options.dart';
@@ -99,6 +102,9 @@ class BBXApp extends StatelessWidget {
         '/profile-cards': (context) => const BBXProfileCardsScreen(),
         '/subscription': (context) => const BBXSubscriptionScreen(),
         '/subscription-management': (context) => const BBXSubscriptionManagementScreen(),
+        '/my-offers': (context) => const BBXMyOffersScreen(),
+        '/messages': (context) => const BBXConversationsScreen(),
+        '/advanced-search': (context) => const BBXAdvancedSearchScreen(),
       },
       onGenerateRoute: (settings) {
         // Handle routes with arguments
