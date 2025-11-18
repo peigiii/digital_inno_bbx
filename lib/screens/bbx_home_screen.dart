@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'bbx_users_screen.dart';
-import 'digital_inno_marketplace_screen.dart';
+import 'bbx_new_marketplace_screen.dart';
 import 'bbx_recyclers_screen.dart';
 import 'bbx_offers_screen.dart';
 import 'bbx_messages_screen.dart';
@@ -68,7 +68,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
 
   final List<Widget> _allScreens = const [
     BBXUsersScreen(),
-    BBXMarketplaceScreen(),
+    BBXNewMarketplaceScreen(),
     BBXRecyclersScreen(),
     BBXOffersScreen(),
     BBXMessagesScreen(),
@@ -82,7 +82,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
       // 非管理员不包含 Admin 页面
       return const [
         BBXUsersScreen(),
-        BBXMarketplaceScreen(),
+        BBXNewMarketplaceScreen(),
         BBXRecyclersScreen(),
         BBXOffersScreen(),
         BBXMessagesScreen(),
