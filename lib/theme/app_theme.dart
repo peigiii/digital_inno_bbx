@@ -24,11 +24,13 @@ class AppTheme {
 
   // 背景色
   static const Color background = Color(0xFFF5F5F5); // 背景灰
+  static const Color backgroundGrey = background;    // 背景灰别名
   static const Color surface = Color(0xFFFFFFFF);    // 卡片白
 
   // 文字色
   static const Color textPrimary = Color(0xFF212121);   // 主文字
   static const Color textSecondary = Color(0xFF757575); // 次文字
+  static const Color textLight = Color(0xFF9E9E9E);     // 浅色文字
   static const Color textHint = Color(0xFF9E9E9E);      // 提示文字
   static const Color textDisabled = Color(0xFFBDBDBD);  // 禁用文字
 
@@ -89,6 +91,8 @@ class AppTheme {
     height: 1.5,
   );
 
+  static const TextStyle bodyMedium = body2; // body2 别名
+
   static const TextStyle caption = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.normal,
@@ -108,11 +112,13 @@ class AppTheme {
 
   static const double radiusSmall = 4.0;
   static const double radiusStandard = 8.0;
+  static const double radiusMedium = 8.0; // 中等圆角
   static const double radiusLarge = 12.0;
   static const double radiusRound = 16.0;
 
   static const BorderRadius borderRadiusSmall = BorderRadius.all(Radius.circular(radiusSmall));
   static const BorderRadius borderRadiusStandard = BorderRadius.all(Radius.circular(radiusStandard));
+  static const BorderRadius borderRadiusMedium = BorderRadius.all(Radius.circular(radiusMedium)); // 中等圆角
   static const BorderRadius borderRadiusLarge = BorderRadius.all(Radius.circular(radiusLarge));
   static const BorderRadius borderRadiusRound = BorderRadius.all(Radius.circular(radiusRound));
 
