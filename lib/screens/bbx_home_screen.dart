@@ -13,6 +13,7 @@ import 'bbx_subscription_screen.dart';
 import 'bbx_rewards_screen.dart';
 import 'bbx_help_screen.dart';
 import 'bbx_privacy_policy_screen.dart';
+import 'digital_inno_login_screen.dart';
 import '../widgets/bbx_bottom_nav.dart';
 
 class BBXHomeScreen extends StatefulWidget {
@@ -145,7 +146,13 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
       try {
         await FirebaseAuth.instance.signOut();
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/login');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DigitalInnoLoginScreen(),
+            ),
+            (route) => false,
+          );
         }
       } catch (e) {
         if (mounted) {
@@ -178,6 +185,13 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
         return false;
       },
       child: Scaffold(
+        appBar: AppBar(
+          title: Text(_titles[_currentIndex]),
+          backgroundColor: const Color(0xFF4CAF50),
+          foregroundColor: Colors.white,
+          elevation: 2,
+        ),
+        drawer: _buildDrawer(),
         body: IndexedStack(
           index: _currentIndex,
           children: _screens,
@@ -187,7 +201,6 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
           onTap: _onTabTapped,
           isAdmin: _isAdmin,
         ),
-        drawer: _buildDrawer(),
       ),
     );
   }
@@ -260,7 +273,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXProfileScreen(),
+                        builder: (context) => BBXProfileScreen(),
                       ),
                     );
                   },
@@ -275,7 +288,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXSubscriptionScreen(),
+                        builder: (context) => BBXSubscriptionScreen(),
                       ),
                     );
                   },
@@ -289,7 +302,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXRewardsScreen(),
+                        builder: (context) => BBXRewardsScreen(),
                       ),
                     );
                   },
@@ -336,7 +349,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXHelpScreen(),
+                        builder: (context) => BBXHelpScreen(),
                       ),
                     );
                   },
@@ -350,7 +363,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXPrivacyPolicyScreen(),
+                        builder: (context) => BBXPrivacyPolicyScreen(),
                       ),
                     );
                   },
@@ -365,7 +378,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXInitDataScreen(),
+                        builder: (context) => BBXInitDataScreen(),
                       ),
                     );
                   },
