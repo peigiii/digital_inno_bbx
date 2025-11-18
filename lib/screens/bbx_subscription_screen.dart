@@ -92,39 +92,8 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
   Future<void> _selectPlan(String planName, int price) async {
     print('🎯 [订阅页面] 用户选择计划: $planName (RM $price)');
 
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('确认选择 $planName'),
-        content: Text(
-          price > 0
-              ? '您将订阅 $planName 计划，价格为 RM $price/年。\n\n请联系管理员完成支付。'
-              : '您将使用免费计划。',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4CAF50),
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('确认'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirm != true) {
-      print('❌ [订阅页面] 用户取消选择');
-      return;
-    }
-
     if (currentUser == null) {
-      print('❌ [订阅页面] 用户未登录，无法更新订阅');
+      print('❌ [订阅页面] 用户未登录');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -136,48 +105,86 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
       return;
     }
 
-    print('🔄 [订阅页面] 更新 Firestore 订阅计划...');
-
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser!.uid)
-          .update({
-        'subscriptionPlan': planName.toLowerCase().replaceAll(' ', '_'),
-        'subscriptionUpdatedAt': FieldValue.serverTimestamp(),
-      }).timeout(
-        const Duration(seconds: 10),
-        onTimeout: () {
-          print('⏱️ [订阅页面] 更新订阅超时（10秒）');
-          throw Exception('更新超时，请检查网络连接');
-        },
+    // 免费计划直接更新，无需支付
+    if (price == 0) {
+      final confirm = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('确认选择免费计划'),
+          content: const Text('您将使用免费计划，可随时升级到付费计划。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('取消'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4CAF50),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('确认'),
+            ),
+          ],
+        ),
       );
 
-      print('✅ [订阅页面] 订阅计划更新成功');
-
-      if (mounted) {
-        setState(() {
-          currentPlan = planName.toLowerCase().replaceAll(' ', '_');
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('已选择 $planName 计划'),
-            backgroundColor: Colors.green,
-          ),
-        );
+      if (confirm != true) {
+        print('❌ [订阅页面] 用户取消选择');
+        return;
       }
-    } catch (e) {
-      print('❌ [订阅页面] 更新失败: $e');
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('选择计划失败: $e'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 5),
-          ),
-        );
+
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(currentUser!.uid)
+            .update({
+          'subscriptionPlan': 'free',
+          'subscriptionUpdatedAt': FieldValue.serverTimestamp(),
+          'subscriptionStatus': 'active',
+        }).timeout(const Duration(seconds: 10));
+
+        print('✅ [订阅页面] 免费计划已激活');
+
+        if (mounted) {
+          setState(() {
+            currentPlan = 'free';
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('已选择免费计划'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      } catch (e) {
+        print('❌ [订阅页面] 更新失败: $e');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('选择计划失败: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
+      return;
+    }
+
+    // 付费计划：导航到支付页面
+    print('💳 [订阅页面] 导航到支付页面...');
+
+    if (mounted) {
+      Navigator.pushNamed(
+        context,
+        '/payment',
+        arguments: {
+          'planName': planName,
+          'planPrice': price,
+          'planPeriod': '1年',
+        },
+      );
     }
   }
 

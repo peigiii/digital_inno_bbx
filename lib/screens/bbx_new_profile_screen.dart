@@ -218,18 +218,18 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                             color: Colors.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                Icons.diamond,
+                                _getSubscriptionIcon(userData?['subscriptionPlan']),
                                 size: 14,
                                 color: Colors.white,
                               ),
-                              SizedBox(width: 4),
+                              const SizedBox(width: 4),
                               Text(
-                                'Gold Member',
-                                style: TextStyle(
+                                _getSubscriptionDisplayName(userData?['subscriptionPlan']),
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -255,33 +255,58 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
 
               const SizedBox(height: 24),
 
-              // Stats cards
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      icon: Icons.stars,
-                      label: 'Points',
-                      value: '1,250',
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildStatCard(
-                      icon: Icons.card_giftcard,
-                      label: 'Coupons',
-                      value: '3',
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _buildStatCard(
-                      icon: Icons.account_balance_wallet,
-                      label: 'Balance',
-                      value: 'RM 0',
-                    ),
-                  ),
-                ],
+              // Stats cards - Load real data from Firestore
+              FutureBuilder<Map<String, dynamic>>(
+                future: _loadUserStatistics(),
+                builder: (context, snapshot) {
+                  final stats = snapshot.data ?? {
+                    'listings': 0,
+                    'transactions': 0,
+                    'revenue': 0.0,
+                  };
+
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          icon: Icons.post_add,
+                          label: 'Listings',
+                          value: '${stats['listings']}',
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildStatCard(
+                          icon: Icons.swap_horiz,
+                          label: 'Deals',
+                          value: '${stats['transactions']}',
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: _buildStatCard(
+                          icon: Icons.account_balance_wallet,
+                          label: 'Revenue',
+                          value: 'RM ${stats['revenue']}',
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              // Subscription management button
+              OutlinedButton.icon(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/subscription');
+                },
+                icon: const Icon(Icons.workspace_premium, size: 18),
+                label: const Text('管理订阅'),
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.white),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                ),
               ),
             ],
           ),
@@ -605,5 +630,88 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
       trailing: const Icon(Icons.chevron_right, color: AppTheme.textLight),
       onTap: onTap,
     );
+  }
+
+  /// 获取订阅计划显示名称
+  String _getSubscriptionDisplayName(String? plan) {
+    if (plan == null) return 'Free Member';
+
+    switch (plan.toLowerCase()) {
+      case 'basic':
+        return 'Basic Member';
+      case 'professional':
+        return 'Professional Member';
+      case 'enterprise':
+        return 'Enterprise Member';
+      case 'free':
+      default:
+        return 'Free Member';
+    }
+  }
+
+  /// 获取订阅计划图标
+  IconData _getSubscriptionIcon(String? plan) {
+    if (plan == null) return Icons.person;
+
+    switch (plan.toLowerCase()) {
+      case 'enterprise':
+        return Icons.diamond;
+      case 'professional':
+        return Icons.workspace_premium;
+      case 'basic':
+        return Icons.star;
+      case 'free':
+      default:
+        return Icons.person;
+    }
+  }
+
+  /// 加载用户统计数据
+  Future<Map<String, dynamic>> _loadUserStatistics() async {
+    if (user == null) {
+      return {
+        'listings': 0,
+        'transactions': 0,
+        'revenue': 0.0,
+      };
+    }
+
+    try {
+      // 获取用户的列表数量
+      final listingsSnapshot = await FirebaseFirestore.instance
+          .collection('waste_listings')
+          .where('userId', isEqualTo: user!.uid)
+          .where('status', whereIn: ['available', 'sold'])
+          .get()
+          .timeout(const Duration(seconds: 10));
+
+      // 获取用户的交易数量和总收入
+      final transactionsSnapshot = await FirebaseFirestore.instance
+          .collection('transactions')
+          .where('sellerId', isEqualTo: user!.uid)
+          .where('status', isEqualTo: 'completed')
+          .get()
+          .timeout(const Duration(seconds: 10));
+
+      double totalRevenue = 0.0;
+      for (var doc in transactionsSnapshot.docs) {
+        final data = doc.data();
+        final sellerAmount = data['sellerAmount'] ?? data['amount'] ?? 0.0;
+        totalRevenue += (sellerAmount is num) ? sellerAmount.toDouble() : 0.0;
+      }
+
+      return {
+        'listings': listingsSnapshot.docs.length,
+        'transactions': transactionsSnapshot.docs.length,
+        'revenue': totalRevenue,
+      };
+    } catch (e) {
+      print('❌ [个人中心] 加载统计数据失败: $e');
+      return {
+        'listings': 0,
+        'transactions': 0,
+        'revenue': 0.0,
+      };
+    }
   }
 }

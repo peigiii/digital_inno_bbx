@@ -12,6 +12,9 @@ import 'screens/bbx_splash_screen.dart';
 import 'screens/bbx_modern_home_screen.dart';
 import 'screens/bbx_market_browse_screen.dart';
 import 'screens/bbx_profile_cards_screen.dart';
+import 'screens/bbx_subscription_screen.dart';
+import 'screens/bbx_payment_screen.dart';
+import 'screens/bbx_payment_confirmation_screen.dart';
 import 'services/notification_service.dart';
 import 'utils/user_initializer.dart';
 import 'firebase_options.dart';
@@ -92,6 +95,34 @@ class BBXApp extends StatelessWidget {
         '/modern-home': (context) => const BBXModernHomeScreen(),
         '/market-browse': (context) => const BBXMarketBrowseScreen(),
         '/profile-cards': (context) => const BBXProfileCardsScreen(),
+        '/subscription': (context) => const BBXSubscriptionScreen(),
+      },
+      onGenerateRoute: (settings) {
+        // Handle routes with arguments
+        if (settings.name == '/payment') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => BBXPaymentScreen(
+              planName: args['planName'] as String,
+              planPrice: args['planPrice'] as int,
+              planPeriod: args['planPeriod'] as String,
+            ),
+          );
+        }
+
+        if (settings.name == '/payment-confirmation') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => BBXPaymentConfirmationScreen(
+              planName: args['planName'] as String,
+              planPrice: args['planPrice'] as int,
+              paymentMethod: args['paymentMethod'] as String,
+              success: args['success'] as bool,
+            ),
+          );
+        }
+
+        return null;
       },
     );
   }
