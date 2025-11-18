@@ -294,37 +294,9 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
     final screenSize = MediaQuery.of(context).size;
     final isTablet = screenSize.width > 600;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('BBX 市场'),
-        actions: [
-          // 移除地图切换按钮
-          // IconButton(
-          //   icon: Icon(_isMapView ? Icons.list : Icons.map),
-          //   onPressed: () {
-          //     setState(() {
-          //       _isMapView = !_isMapView;
-          //     });
-          //   },
-          // ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/waste-list');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              if (mounted) {
-                Navigator.pushReplacementNamed(context, '/login');
-              }
-            },
-          ),
-        ],
-      ),
-      body: Column(
+    return Stack(
+      children: [
+        Column(
         children: [
           // Search and Filter Section
           Container(
@@ -396,14 +368,20 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
             child: _buildListView(isTablet),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushReplacementNamed(context, '/waste-list');
-        },
-        backgroundColor: const Color(0xFF2E7D32),
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
+        ),
+        // Floating Action Button
+        Positioned(
+          right: 16,
+          bottom: 16,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, '/waste-list');
+            },
+            backgroundColor: const Color(0xFF2E7D32),
+            child: const Icon(Icons.add, color: Colors.white),
+          ),
+        ),
+      ],
     );
   }
 

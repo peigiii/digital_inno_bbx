@@ -58,15 +58,9 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        title: const Text('Waste Recyclers'),
-        backgroundColor: const Color(0xFF4CAF50),
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Column(
+    return Container(
+      color: const Color(0xFFF5F5F5),
+      child: Column(
         children: [
           // Search and Filter Section
           Container(

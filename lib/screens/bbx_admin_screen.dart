@@ -158,22 +158,9 @@ class _BBXAdminScreenState extends State<BBXAdminScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        title: const Text('Admin Dashboard'),
-        backgroundColor: const Color(0xFF4CAF50),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadStatistics,
-            tooltip: '刷新数据',
-          ),
-        ],
-      ),
-      body: _isLoading
+    return Container(
+      color: const Color(0xFFF5F5F5),
+      child: _isLoading
           ? const Center(
               child: CircularProgressIndicator(
                 color: Color(0xFF4CAF50),
