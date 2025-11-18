@@ -46,6 +46,13 @@ dependencies:
   # Shimmer loading效果
   shimmer: ^3.0.0
 
+  # 任务4-6的新依赖
+  share_plus: ^7.2.2
+  google_maps_flutter: ^2.5.3
+  page_transition: ^2.1.0
+  flutter_staggered_animations: ^1.1.1
+  lottie: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

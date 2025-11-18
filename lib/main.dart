@@ -5,6 +5,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'screens/digital_inno_login_screen.dart';
 import 'screens/digital_inno_list_waste_screen.dart';
 import 'screens/bbx_new_marketplace_screen.dart';
+import 'screens/bbx_listing_detail_screen.dart';
+import 'screens/bbx_new_profile_screen.dart';
 import 'screens/bbx_home_screen.dart';
 import 'screens/bbx_splash_screen.dart';
 import 'services/notification_service.dart';
@@ -83,6 +85,7 @@ class BBXApp extends StatelessWidget {
         '/home': (context) => const BBXHomeScreen(),
         '/waste-list': (context) => const BBXListWasteScreen(),
         '/marketplace': (context) => const BBXNewMarketplaceScreen(),
+        '/profile': (context) => const BBXNewProfileScreen(),
       },
     );
   }

@@ -8,6 +8,7 @@ import '../widgets/marketplace/category_chips.dart';
 import '../widgets/marketplace/stat_cards.dart';
 import '../widgets/marketplace/product_card.dart';
 import '../widgets/marketplace/supplier_card.dart';
+import 'bbx_listing_detail_screen.dart';
 
 /// BBX 新版市场首页
 /// 现代化设计，参考 Alibaba B2B 和 IndiaMART
@@ -718,7 +719,14 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
             return ProductCard(
               doc: doc,
               onTap: () {
-                // Navigate to product detail
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BBXListingDetailScreen(
+                      listingId: doc.id,
+                    ),
+                  ),
+                );
               },
               onQuote: () {
                 _showMakeOfferDialog(doc);

@@ -7,7 +7,7 @@ import 'bbx_recyclers_screen.dart';
 import 'bbx_offers_screen.dart';
 import 'bbx_messages_screen.dart';
 import 'bbx_admin_screen.dart';
-import 'bbx_profile_screen.dart';
+import 'bbx_new_profile_screen.dart';
 import 'bbx_init_data_screen.dart';
 import 'bbx_subscription_screen.dart';
 import 'bbx_rewards_screen.dart';
@@ -287,7 +287,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXProfileScreen(),
+                        builder: (context) => const BBXNewProfileScreen(),
                       ),
                     );
                   },
