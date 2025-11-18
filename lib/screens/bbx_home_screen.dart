@@ -20,6 +20,7 @@ class BBXHomeScreen extends StatefulWidget {
 }
 
 class _BBXHomeScreenState extends State<BBXHomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _currentIndex = 1; // Start with Listings (Marketplace) screen
   bool _isAdmin = false;
   bool _isLoading = true;
@@ -115,6 +116,20 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
     });
   }
 
+  String _getTitle(int index) {
+    if (!_isAdmin && index >= 5) return 'BBX';
+
+    final titles = [
+      'BBX Users',
+      'BBX Marketplace',
+      'Waste Recyclers',
+      'BBX Offers',
+      'Messages',
+      'Admin Panel',
+    ];
+    return titles[index];
+  }
+
   Future<void> _handleLogout() async {
     final shouldLogout = await showDialog<bool>(
       context: context,
@@ -175,6 +190,20 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
         return false;
       },
       child: Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          title: Text(_getTitle(_currentIndex)),
+          backgroundColor: const Color(0xFF4CAF50),
+          foregroundColor: Colors.white,
+          elevation: 2,
+          leading: IconButton(
+            icon: const Icon(Icons.menu),
+            tooltip: '打开菜单',
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+          ),
+        ),
         body: IndexedStack(
           index: _currentIndex,
           children: _screens,
