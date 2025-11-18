@@ -9,6 +9,7 @@ import 'bbx_messages_screen.dart';
 import 'bbx_admin_screen.dart';
 import 'bbx_profile_screen.dart';
 import 'bbx_init_data_screen.dart';
+import 'bbx_subscription_screen.dart';
 import '../widgets/bbx_bottom_nav.dart';
 
 class BBXHomeScreen extends StatefulWidget {
@@ -259,6 +260,30 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                         builder: (context) => const BBXProfileScreen(),
                       ),
                     );
+                  },
+                ),
+                // 订阅计划入口
+                ListTile(
+                  leading: const Icon(Icons.card_membership, color: Colors.blue),
+                  title: const Text('订阅计划'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    try {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BBXSubscriptionScreen(),
+                        ),
+                      );
+                    } catch (e) {
+                      print('Navigation error: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('导航失败: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                 ),
                 const Divider(),
