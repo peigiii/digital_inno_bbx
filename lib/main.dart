@@ -13,8 +13,10 @@ import 'screens/bbx_modern_home_screen.dart';
 import 'screens/bbx_market_browse_screen.dart';
 import 'screens/bbx_profile_cards_screen.dart';
 import 'screens/bbx_subscription_screen.dart';
+import 'screens/bbx_subscription_management_screen.dart';
 import 'screens/bbx_payment_screen.dart';
 import 'screens/bbx_payment_confirmation_screen.dart';
+import 'screens/bbx_invoice_screen.dart';
 import 'services/notification_service.dart';
 import 'utils/user_initializer.dart';
 import 'firebase_options.dart';
@@ -96,6 +98,7 @@ class BBXApp extends StatelessWidget {
         '/market-browse': (context) => const BBXMarketBrowseScreen(),
         '/profile-cards': (context) => const BBXProfileCardsScreen(),
         '/subscription': (context) => const BBXSubscriptionScreen(),
+        '/subscription-management': (context) => const BBXSubscriptionManagementScreen(),
       },
       onGenerateRoute: (settings) {
         // Handle routes with arguments
@@ -118,6 +121,15 @@ class BBXApp extends StatelessWidget {
               planPrice: args['planPrice'] as int,
               paymentMethod: args['paymentMethod'] as String,
               success: args['success'] as bool,
+            ),
+          );
+        }
+
+        if (settings.name == '/invoice') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => BBXInvoiceScreen(
+              paymentId: args['paymentId'] as String,
             ),
           );
         }

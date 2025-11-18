@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -259,6 +260,38 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
               FutureBuilder<Map<String, dynamic>>(
                 future: _loadUserStatistics(),
                 builder: (context, snapshot) {
+                  // 显示加载状态
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatCard(
+                            icon: Icons.post_add,
+                            label: 'Listings',
+                            value: '...',
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildStatCard(
+                            icon: Icons.swap_horiz,
+                            label: 'Deals',
+                            value: '...',
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildStatCard(
+                            icon: Icons.account_balance_wallet,
+                            label: 'Revenue',
+                            value: '...',
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  // 获取数据
                   final stats = snapshot.data ?? {
                     'listings': 0,
                     'transactions': 0,
@@ -287,7 +320,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                         child: _buildStatCard(
                           icon: Icons.account_balance_wallet,
                           label: 'Revenue',
-                          value: 'RM ${stats['revenue']}',
+                          value: 'RM ${stats['revenue'].toStringAsFixed(0)}',
                         ),
                       ),
                     ],
@@ -298,7 +331,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
               // Subscription management button
               OutlinedButton.icon(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/subscription');
+                  Navigator.pushNamed(context, '/subscription-management');
                 },
                 icon: const Icon(Icons.workspace_premium, size: 18),
                 label: const Text('管理订阅'),
@@ -677,22 +710,42 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     }
 
     try {
-      // 获取用户的列表数量
-      final listingsSnapshot = await FirebaseFirestore.instance
-          .collection('waste_listings')
-          .where('userId', isEqualTo: user!.uid)
-          .where('status', whereIn: ['available', 'sold'])
-          .get()
-          .timeout(const Duration(seconds: 10));
+      // 使用并行查询而不是 whereIn（避免索引问题）
+      final futures = await Future.wait([
+        // 查询所有用户的列表（不过滤状态，客户端过滤）
+        FirebaseFirestore.instance
+            .collection('waste_listings')
+            .where('userId', isEqualTo: user!.uid)
+            .limit(100) // 限制最多100条，避免超时
+            .get()
+            .timeout(
+              const Duration(seconds: 5),
+              onTimeout: () => throw TimeoutException('列表查询超时'),
+            ),
+        // 查询已完成的交易
+        FirebaseFirestore.instance
+            .collection('transactions')
+            .where('sellerId', isEqualTo: user!.uid)
+            .where('status', isEqualTo: 'completed')
+            .limit(100) // 限制最多100条
+            .get()
+            .timeout(
+              const Duration(seconds: 5),
+              onTimeout: () => throw TimeoutException('交易查询超时'),
+            ),
+      ]);
 
-      // 获取用户的交易数量和总收入
-      final transactionsSnapshot = await FirebaseFirestore.instance
-          .collection('transactions')
-          .where('sellerId', isEqualTo: user!.uid)
-          .where('status', isEqualTo: 'completed')
-          .get()
-          .timeout(const Duration(seconds: 10));
+      final listingsSnapshot = futures[0];
+      final transactionsSnapshot = futures[1];
 
+      // 客户端过滤状态（避免 whereIn 需要索引）
+      final validStatuses = ['available', 'sold', 'active'];
+      final validListings = listingsSnapshot.docs.where((doc) {
+        final status = doc.data()['status'] as String?;
+        return status != null && validStatuses.contains(status);
+      }).length;
+
+      // 计算总收入
       double totalRevenue = 0.0;
       for (var doc in transactionsSnapshot.docs) {
         final data = doc.data();
@@ -700,10 +753,19 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
         totalRevenue += (sellerAmount is num) ? sellerAmount.toDouble() : 0.0;
       }
 
+      print('✅ [个人中心] 统计数据加载成功: $validListings 个列表, ${transactionsSnapshot.docs.length} 笔交易');
+
       return {
-        'listings': listingsSnapshot.docs.length,
+        'listings': validListings,
         'transactions': transactionsSnapshot.docs.length,
         'revenue': totalRevenue,
+      };
+    } on TimeoutException catch (e) {
+      print('⏱️ [个人中心] 查询超时: $e');
+      return {
+        'listings': 0,
+        'transactions': 0,
+        'revenue': 0.0,
       };
     } catch (e) {
       print('❌ [个人中心] 加载统计数据失败: $e');

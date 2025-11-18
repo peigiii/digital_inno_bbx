@@ -319,6 +319,8 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
                       fontSize: 13,
                       color: Colors.grey[600],
                     ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
