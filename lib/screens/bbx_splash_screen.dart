@@ -43,8 +43,8 @@ class _BBXSplashScreenState extends State<BBXSplashScreen>
       context,
       MaterialPageRoute(
         builder: (context) => user != null
-            ? const BBXHomeScreen()
-            : const DigitalInnoLoginScreen(),
+            ? BBXHomeScreen()
+            : DigitalInnoLoginScreen(),
       ),
     );
   }
