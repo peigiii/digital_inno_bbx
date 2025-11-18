@@ -9,6 +9,7 @@ import 'bbx_messages_screen.dart';
 import 'bbx_admin_screen.dart';
 import 'bbx_profile_screen.dart';
 import 'bbx_init_data_screen.dart';
+import 'bbx_subscription_screen.dart';
 import '../widgets/bbx_bottom_nav.dart';
 
 class BBXHomeScreen extends StatefulWidget {
@@ -294,6 +295,20 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     index: 5,
                   ),
                 const Divider(),
+                ListTile(
+                  leading: const Icon(Icons.workspace_premium, color: Color(0xFFFFC107)),
+                  title: const Text('订阅计划'),
+                  subtitle: const Text('升级获取更多功能'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BBXSubscriptionScreen(),
+                      ),
+                    );
+                  },
+                ),
                 ListTile(
                   leading: const Icon(Icons.settings, color: Color(0xFF4CAF50)),
                   title: const Text('Settings'),

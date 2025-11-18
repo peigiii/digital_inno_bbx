@@ -64,6 +64,218 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
     }
   }
 
+  Future<void> _showMakeOfferDialog(String listingId, Map<String, dynamic> listingData) async {
+    final priceController = TextEditingController();
+    final messageController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+    DateTime? selectedDate;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('提交报价'),
+              content: SingleChildScrollView(
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Listing info
+                      Text(
+                        '废料: ${listingData['title']}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '数量: ${listingData['quantity']} ${listingData['unit']}',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '原价: RM${listingData['pricePerUnit']}/${listingData['unit']}',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
+                      const Divider(height: 24),
+
+                      // Offer price
+                      TextFormField(
+                        controller: priceController,
+                        decoration: const InputDecoration(
+                          labelText: '您的报价 (RM)',
+                          prefixIcon: Icon(Icons.monetization_on),
+                          hintText: '输入总价',
+                        ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return '请输入报价';
+                          }
+                          if (double.tryParse(value) == null) {
+                            return '请输入有效数字';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Collection date
+                      InkWell(
+                        onTap: () async {
+                          final pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now().add(const Duration(days: 1)),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime.now().add(const Duration(days: 90)),
+                          );
+                          if (pickedDate != null) {
+                            setState(() {
+                              selectedDate = pickedDate;
+                            });
+                          }
+                        },
+                        child: InputDecorator(
+                          decoration: const InputDecoration(
+                            labelText: '收集日期',
+                            prefixIcon: Icon(Icons.calendar_today),
+                          ),
+                          child: Text(
+                            selectedDate != null
+                                ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+                                : '选择收集日期',
+                            style: TextStyle(
+                              color: selectedDate != null ? Colors.black : Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Message
+                      TextFormField(
+                        controller: messageController,
+                        decoration: const InputDecoration(
+                          labelText: '留言（可选）',
+                          prefixIcon: Icon(Icons.message),
+                          hintText: '说明您的收集计划或其他信息',
+                        ),
+                        maxLines: 3,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('取消'),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      Navigator.pop(dialogContext);
+                      await _submitOffer(
+                        listingId,
+                        listingData,
+                        double.parse(priceController.text),
+                        messageController.text,
+                        selectedDate,
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4CAF50),
+                  ),
+                  child: const Text('提交报价'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+
+    priceController.dispose();
+    messageController.dispose();
+  }
+
+  Future<void> _submitOffer(
+    String listingId,
+    Map<String, dynamic> listingData,
+    double offerPrice,
+    String message,
+    DateTime? collectionDate,
+  ) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        throw Exception('请先登录');
+      }
+
+      // Get current user data
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        throw Exception('用户数据不存在');
+      }
+
+      final userData = userDoc.data() as Map<String, dynamic>;
+
+      // Create offer
+      final offerData = {
+        'listingId': listingId,
+        'recyclerId': user.uid,
+        'recyclerName': userData['displayName'] ?? user.email,
+        'recyclerCompany': userData['companyName'] ?? '',
+        'recyclerContact': userData['contact'] ?? '',
+        'producerId': listingData['userId'],
+        'offerPrice': offerPrice,
+        'message': message,
+        'collectionDate': collectionDate != null ? Timestamp.fromDate(collectionDate) : null,
+        'status': 'pending',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      await FirebaseFirestore.instance
+          .collection('offers')
+          .add(offerData)
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              throw Exception('提交超时，请检查网络连接');
+            },
+          );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('报价提交成功！'),
+            backgroundColor: Color(0xFF4CAF50),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('提交失败: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _generateCompliancePDF(Map<String, dynamic> wasteData) async {
     final pdf = pw.Document();
 
@@ -758,11 +970,14 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: ElevatedButton.icon(
-                            onPressed: () async {
-                              await _generateCompliancePDF(data);
+                            onPressed: () {
+                              _showMakeOfferDialog(doc.id, data);
                             },
-                            icon: const Icon(Icons.picture_as_pdf),
-                            label: const Text('通行证'),
+                            icon: const Icon(Icons.local_offer),
+                            label: const Text('报价'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF4CAF50),
+                            ),
                           ),
                         ),
                       ],

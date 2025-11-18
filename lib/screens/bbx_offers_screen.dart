@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:printing/printing.dart';
+import '../services/pdf_generator_service.dart';
+import '../utils/date_formatter.dart';
 
 class BBXOffersScreen extends StatefulWidget {
   const BBXOffersScreen({super.key});
@@ -49,17 +52,141 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
     }).toList();
   }
 
-  Future<void> _updateOfferStatus(String offerId, String newStatus) async {
+  Future<void> _updateOfferStatus(String offerId, String newStatus, Map<String, dynamic> offerData) async {
+    // Show loading dialog
+    if (mounted) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: Card(
+            child: Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(
+                    color: Color(0xFF4CAF50),
+                  ),
+                  SizedBox(height: 16),
+                  Text('处理中...'),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     try {
-      await FirebaseFirestore.instance
-          .collection('offers')
-          .doc(offerId)
-          .update({
+      final batch = FirebaseFirestore.instance.batch();
+
+      // Update offer status
+      final offerRef = FirebaseFirestore.instance.collection('offers').doc(offerId);
+      batch.update(offerRef, {
         'status': newStatus,
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
+      if (newStatus == 'accepted') {
+        // Get listing data
+        final listingDoc = await FirebaseFirestore.instance
+            .collection('waste_listings')
+            .doc(offerData['listingId'])
+            .get();
+
+        if (!listingDoc.exists) {
+          throw Exception('废料信息不存在');
+        }
+
+        final listingData = listingDoc.data() as Map<String, dynamic>;
+
+        // Update listing status to sold
+        final listingRef = FirebaseFirestore.instance
+            .collection('waste_listings')
+            .doc(offerData['listingId']);
+        batch.update(listingRef, {
+          'status': 'sold',
+          'soldAt': FieldValue.serverTimestamp(),
+          'soldTo': offerData['recyclerId'],
+        });
+
+        // Create transaction record
+        final transactionId = DateTime.now().millisecondsSinceEpoch.toString();
+        final transactionRef = FirebaseFirestore.instance
+            .collection('transactions')
+            .doc(transactionId);
+
+        batch.set(transactionRef, {
+          'transactionId': transactionId,
+          'listingId': offerData['listingId'],
+          'offerId': offerId,
+          'producerId': offerData['producerId'],
+          'processorId': offerData['recyclerId'],
+          'amount': offerData['offerPrice'],
+          'status': 'pending',
+          'wasteType': listingData['wasteType'],
+          'quantity': listingData['quantity'],
+          'unit': listingData['unit'],
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+
+        // Commit batch
+        await batch.commit().timeout(
+          const Duration(seconds: 15),
+          onTimeout: () {
+            throw Exception('操作超时，请检查网络连接');
+          },
+        );
+
+        // Generate PDF
+        try {
+          // Get producer and processor data
+          final producerDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(offerData['producerId'])
+              .get();
+          final processorDoc = await FirebaseFirestore.instance
+              .collection('users')
+              .doc(offerData['recyclerId'])
+              .get();
+
+          if (producerDoc.exists && processorDoc.exists) {
+            final pdfService = PDFGeneratorService();
+            final pdfFile = await pdfService.generateCompliancePassport(
+              transactionId: transactionId,
+              producer: producerDoc.data() as Map<String, dynamic>,
+              processor: processorDoc.data() as Map<String, dynamic>,
+              wasteDetails: listingData,
+            );
+
+            // Show PDF
+            if (mounted) {
+              Navigator.pop(context); // Close loading dialog
+              await Printing.layoutPdf(
+                onLayout: (format) async => pdfFile.readAsBytes(),
+              );
+            }
+          }
+        } catch (pdfError) {
+          // PDF generation failed, but transaction was successful
+          debugPrint('PDF generation failed: $pdfError');
+        }
+      } else {
+        // Just commit the rejection
+        await batch.commit();
+      }
+
       if (mounted) {
+        if (newStatus == 'accepted') {
+          // PDF dialog already closed the loading dialog
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context); // Close loading dialog if still open
+          }
+        } else {
+          Navigator.pop(context); // Close loading dialog
+        }
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('报价已${newStatus == "accepted" ? "接受" : "拒绝"}'),
@@ -71,6 +198,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
       }
     } catch (e) {
       if (mounted) {
+        Navigator.pop(context); // Close loading dialog
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('操作失败: $e'),
@@ -356,7 +484,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () => _updateOfferStatus(offerId, 'accepted'),
+                      onPressed: () => _updateOfferStatus(offerId, 'accepted', offerData),
                       icon: const Icon(Icons.check),
                       label: const Text('接受'),
                       style: ElevatedButton.styleFrom(
@@ -371,7 +499,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () => _updateOfferStatus(offerId, 'rejected'),
+                      onPressed: () => _updateOfferStatus(offerId, 'rejected', offerData),
                       icon: const Icon(Icons.close),
                       label: const Text('拒绝'),
                       style: ElevatedButton.styleFrom(
@@ -471,20 +599,6 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
   }
 
   String _formatTimestamp(Timestamp timestamp) {
-    final dateTime = timestamp.toDate();
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inDays > 7) {
-      return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
-    } else if (difference.inDays > 0) {
-      return '${difference.inDays}天前';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时前';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟前';
-    } else {
-      return '刚刚';
-    }
+    return DateFormatter.formatTimestamp(timestamp);
   }
 }

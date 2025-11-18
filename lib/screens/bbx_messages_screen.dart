@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../utils/date_formatter.dart';
+import 'bbx_chat_screen.dart';
 
 class BBXMessagesScreen extends StatefulWidget {
   const BBXMessagesScreen({super.key});
@@ -349,37 +351,43 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
     );
   }
 
-  void _openChatScreen(String conversationId, String otherUserId) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('聊天功能'),
-        content: const Text('聊天界面将在后续版本中实现。'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('确定'),
+  Future<void> _openChatScreen(String conversationId, String otherUserId) async {
+    // Get other user's name
+    try {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(otherUserId)
+          .get();
+
+      final userName = userDoc.exists
+          ? (userDoc.data() as Map<String, dynamic>)['displayName'] ?? 'Unknown User'
+          : 'Unknown User';
+
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BBXChatScreen(
+              conversationId: conversationId,
+              otherUserId: otherUserId,
+              otherUserName: userName,
+            ),
           ),
-        ],
-      ),
-    );
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('打开聊天失败: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   String _formatTimestamp(Timestamp timestamp) {
-    final dateTime = timestamp.toDate();
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inDays > 7) {
-      return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
-    } else if (difference.inDays > 0) {
-      return '${difference.inDays}天前';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时前';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟前';
-    } else {
-      return '刚刚';
-    }
+    return DateFormatter.formatTimestamp(timestamp);
   }
 }
