@@ -149,7 +149,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) => DigitalInnoLoginScreen(),
+              builder: (context) => BBXLoginScreen(),
             ),
             (route) => false,
           );
