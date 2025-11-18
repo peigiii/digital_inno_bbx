@@ -23,6 +23,12 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
     super.dispose();
   }
 
+  Future<void> _refreshOffers() async {
+    setState(() {
+      // 触发重建以刷新 StreamBuilder
+    });
+  }
+
   Stream<QuerySnapshot> _getOffersStream() {
     Query query = FirebaseFirestore.instance
         .collection('offers')
@@ -354,14 +360,18 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                   );
                 }
 
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: filteredOffers.length,
-                  itemBuilder: (context, index) {
-                    final offerDoc = filteredOffers[index];
-                    final offerData = offerDoc.data() as Map<String, dynamic>;
-                    return _buildOfferCard(offerDoc.id, offerData);
-                  },
+                return RefreshIndicator(
+                  onRefresh: _refreshOffers,
+                  color: const Color(0xFF4CAF50),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: filteredOffers.length,
+                    itemBuilder: (context, index) {
+                      final offerDoc = filteredOffers[index];
+                      final offerData = offerDoc.data() as Map<String, dynamic>;
+                      return _buildOfferCard(offerDoc.id, offerData);
+                    },
+                  ),
                 );
               },
             ),

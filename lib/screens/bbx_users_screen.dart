@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../utils/search_history.dart';
 
 class BBXUsersScreen extends StatefulWidget {
   const BBXUsersScreen({super.key});
@@ -12,11 +13,45 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
   String _selectedUserType = 'all';
+  List<String> _searchHistory = [];
+  bool _showSearchHistory = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSearchHistory();
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadSearchHistory() async {
+    final history = await SearchHistory.getHistory('users');
+    if (mounted) {
+      setState(() {
+        _searchHistory = history;
+      });
+    }
+  }
+
+  Future<void> _performSearch(String query) async {
+    if (query.trim().isNotEmpty) {
+      await SearchHistory.addToHistory('users', query);
+      await _loadSearchHistory();
+    }
+    setState(() {
+      _searchQuery = query;
+      _showSearchHistory = false;
+    });
+  }
+
+  Future<void> _refreshUsers() async {
+    setState(() {
+      // 触发重建以刷新 StreamBuilder
+    });
   }
 
   Stream<QuerySnapshot> _getUsersStream() {
@@ -74,6 +109,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                               setState(() {
                                 _searchController.clear();
                                 _searchQuery = '';
+                                _showSearchHistory = false;
                               });
                             },
                           )
@@ -86,11 +122,91 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                     fillColor: const Color(0xFFF5F5F5),
                   ),
                   onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
+                    _performSearch(value);
+                  },
+                  onTap: () {
+                    if (_searchHistory.isNotEmpty && _searchController.text.isEmpty) {
+                      setState(() {
+                        _showSearchHistory = true;
+                      });
+                    }
+                  },
+                  onSubmitted: (value) {
+                    _performSearch(value);
                   },
                 ),
+                // Search History
+                if (_showSearchHistory && _searchHistory.isNotEmpty)
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey[300]!),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '搜索历史',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  await SearchHistory.clearHistory('users');
+                                  await _loadSearchHistory();
+                                  setState(() {
+                                    _showSearchHistory = false;
+                                  });
+                                },
+                                child: Text(
+                                  '清除',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(height: 1),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _searchHistory.length,
+                          itemBuilder: (context, index) {
+                            final query = _searchHistory[index];
+                            return ListTile(
+                              dense: true,
+                              leading: const Icon(Icons.history, size: 20),
+                              title: Text(query, style: const TextStyle(fontSize: 14)),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.close, size: 18),
+                                onPressed: () async {
+                                  await SearchHistory.removeFromHistory('users', query);
+                                  await _loadSearchHistory();
+                                },
+                              ),
+                              onTap: () {
+                                _searchController.text = query;
+                                _performSearch(query);
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 const SizedBox(height: 12),
                 // User Type Filter
                 SingleChildScrollView(
@@ -192,19 +308,23 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                   );
                 }
 
-                return GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 0.85,
+                return RefreshIndicator(
+                  onRefresh: _refreshUsers,
+                  color: const Color(0xFF4CAF50),
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.85,
+                    ),
+                    itemCount: filteredUsers.length,
+                    itemBuilder: (context, index) {
+                      final userData = filteredUsers[index].data() as Map<String, dynamic>;
+                      return _buildUserCard(userData);
+                    },
                   ),
-                  itemCount: filteredUsers.length,
-                  itemBuilder: (context, index) {
-                    final userData = filteredUsers[index].data() as Map<String, dynamic>;
-                    return _buildUserCard(userData);
-                  },
                 );
               },
             ),

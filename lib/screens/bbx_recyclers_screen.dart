@@ -19,6 +19,12 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
     super.dispose();
   }
 
+  Future<void> _refreshRecyclers() async {
+    setState(() {
+      // 触发重建以刷新 StreamBuilder
+    });
+  }
+
   Stream<QuerySnapshot> _getRecyclersStream() {
     return FirebaseFirestore.instance
         .collection('recyclers')
@@ -203,19 +209,23 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
                   );
                 }
 
-                return GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 0.8,
+                return RefreshIndicator(
+                  onRefresh: _refreshRecyclers,
+                  color: const Color(0xFF4CAF50),
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 0.8,
+                    ),
+                    itemCount: filteredRecyclers.length,
+                    itemBuilder: (context, index) {
+                      final recyclerData = filteredRecyclers[index].data() as Map<String, dynamic>;
+                      return _buildRecyclerCard(recyclerData);
+                    },
                   ),
-                  itemCount: filteredRecyclers.length,
-                  itemBuilder: (context, index) {
-                    final recyclerData = filteredRecyclers[index].data() as Map<String, dynamic>;
-                    return _buildRecyclerCard(recyclerData);
-                  },
                 );
               },
             ),

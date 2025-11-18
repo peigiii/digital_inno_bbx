@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/date_formatter.dart';
+import '../utils/search_history.dart';
 import 'bbx_chat_screen.dart';
 
 class BBXMessagesScreen extends StatefulWidget {
@@ -14,11 +15,45 @@ class BBXMessagesScreen extends StatefulWidget {
 class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  List<String> _searchHistory = [];
+  bool _showSearchHistory = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSearchHistory();
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadSearchHistory() async {
+    final history = await SearchHistory.getHistory('messages');
+    if (mounted) {
+      setState(() {
+        _searchHistory = history;
+      });
+    }
+  }
+
+  Future<void> _performSearch(String query) async {
+    if (query.trim().isNotEmpty) {
+      await SearchHistory.addToHistory('messages', query);
+      await _loadSearchHistory();
+    }
+    setState(() {
+      _searchQuery = query;
+      _showSearchHistory = false;
+    });
+  }
+
+  Future<void> _refreshConversations() async {
+    setState(() {
+      // 触发重建以刷新 StreamBuilder
+    });
   }
 
   Stream<QuerySnapshot> _getConversationsStream() {
@@ -196,18 +231,22 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
                   );
                 }
 
-                return ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: filteredConversations.length,
-                  itemBuilder: (context, index) {
-                    final conversationDoc = filteredConversations[index];
-                    final conversationData = conversationDoc.data() as Map<String, dynamic>;
-                    return _buildConversationCard(
-                      conversationDoc.id,
-                      conversationData,
-                      currentUserId,
-                    );
-                  },
+                return RefreshIndicator(
+                  onRefresh: _refreshConversations,
+                  color: const Color(0xFF4CAF50),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: filteredConversations.length,
+                    itemBuilder: (context, index) {
+                      final conversationDoc = filteredConversations[index];
+                      final conversationData = conversationDoc.data() as Map<String, dynamic>;
+                      return _buildConversationCard(
+                        conversationDoc.id,
+                        conversationData,
+                        currentUserId,
+                      );
+                    },
+                  ),
                 );
               },
             ),

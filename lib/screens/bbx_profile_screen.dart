@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'bbx_edit_profile_screen.dart';
 
 class BBXProfileScreen extends StatefulWidget {
   const BBXProfileScreen({super.key});
@@ -254,6 +255,39 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               ],
             ),
             const SizedBox(height: 32),
+
+            // 编辑资料按钮
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BBXEditProfileScreen(),
+                    ),
+                  );
+                  if (result == true) {
+                    // 重新加载数据
+                    setState(() {
+                      isLoading = true;
+                    });
+                    _loadUserData();
+                  }
+                },
+                icon: const Icon(Icons.edit),
+                label: const Text('编辑资料'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4CAF50),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
 
             // 退出登录按钮
             SizedBox(
