@@ -331,7 +331,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
               // Subscription management button
               OutlinedButton.icon(
                 onPressed: () {
-                  Navigator.pushNamed(context, '/subscription');
+                  Navigator.pushNamed(context, '/subscription-management');
                 },
                 icon: const Icon(Icons.workspace_premium, size: 18),
                 label: const Text('管理订阅'),
