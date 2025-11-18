@@ -12,6 +12,7 @@ class BBXProfileScreen extends StatefulWidget {
 class _BBXProfileScreenState extends State<BBXProfileScreen> {
   final User? currentUser = FirebaseAuth.instance.currentUser;
   Map<String, dynamic>? userData;
+  int userPoints = 0;
   bool isLoading = true;
 
   @override
@@ -23,14 +24,22 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
   Future<void> _loadUserData() async {
     try {
       if (currentUser != null) {
-        final doc = await FirebaseFirestore.instance
+        // 加载用户基本信息
+        final userDoc = await FirebaseFirestore.instance
             .collection('users')
+            .doc(currentUser!.uid)
+            .get();
+
+        // 加载用户积分
+        final rewardsDoc = await FirebaseFirestore.instance
+            .collection('rewards')
             .doc(currentUser!.uid)
             .get();
 
         if (mounted) {
           setState(() {
-            userData = doc.data();
+            userData = userDoc.data();
+            userPoints = rewardsDoc.data()?['points'] ?? 0;
             isLoading = false;
           });
         }
@@ -227,9 +236,9 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               children: [
                 Expanded(
                   child: _buildStatCard(
-                    '评分',
-                    '${userData?['rating'] ?? 0.0}',
-                    Icons.star,
+                    '积分',
+                    '$userPoints',
+                    Icons.stars,
                     Colors.amber,
                   ),
                 ),

@@ -95,7 +95,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
           // 导航到主页
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const BBXHomeScreen()),
+            MaterialPageRoute(builder: (context) => BBXHomeScreen()),
             (route) => false,
           );
         }

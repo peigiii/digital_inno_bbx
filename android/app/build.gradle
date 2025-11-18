@@ -32,6 +32,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+        coreLibraryDesugaringEnabled true
     }
 
     kotlinOptions {
@@ -65,18 +66,21 @@ flutter {
 }
 
 dependencies {
+    // Core library desugaring - 必须用于 flutter_local_notifications
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+
     // Firebase BOM - 管理所有Firebase库版本
     implementation platform('com.google.firebase:firebase-bom:32.7.0')
-    
+
     // Firebase依赖（版本由BOM管理）
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-storage'
-    
+
     // Google Play Services
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
     implementation 'com.google.android.gms:play-services-location:21.1.0'
-    
+
     // AndroidX
     implementation 'androidx.multidex:multidex:2.0.1'
 }

@@ -5,6 +5,8 @@ import 'screens/digital_inno_login_screen.dart';
 import 'screens/digital_inno_list_waste_screen.dart';
 import 'screens/digital_inno_marketplace_screen.dart';
 import 'screens/bbx_home_screen.dart';
+import 'screens/bbx_splash_screen.dart';
+import 'services/notification_service.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -21,6 +23,13 @@ void main() async {
 
   // Request permissions
   await _requestPermissions();
+
+  // Initialize notification service
+  try {
+    await NotificationService().initialize();
+  } catch (e) {
+    debugPrint('Notification service initialization error: $e');
+  }
 
   runApp(const BBXApp());
 }
@@ -95,7 +104,7 @@ class BBXApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const BBXLoginScreen(),
+      home: const BBXSplashScreen(),
       routes: {
         '/login': (context) => const BBXLoginScreen(),
         '/home': (context) => const BBXHomeScreen(),

@@ -10,6 +10,10 @@ import 'bbx_admin_screen.dart';
 import 'bbx_profile_screen.dart';
 import 'bbx_init_data_screen.dart';
 import 'bbx_subscription_screen.dart';
+import 'bbx_rewards_screen.dart';
+import 'bbx_help_screen.dart';
+import 'bbx_privacy_policy_screen.dart';
+import 'digital_inno_login_screen.dart';
 import '../widgets/bbx_bottom_nav.dart';
 
 class BBXHomeScreen extends StatefulWidget {
@@ -142,7 +146,13 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
       try {
         await FirebaseAuth.instance.signOut();
         if (mounted) {
-          Navigator.pushReplacementNamed(context, '/login');
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BBXLoginScreen(),
+            ),
+            (route) => false,
+          );
         }
       } catch (e) {
         if (mounted) {
@@ -175,6 +185,13 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
         return false;
       },
       child: Scaffold(
+        appBar: AppBar(
+          title: Text(_titles[_currentIndex]),
+          backgroundColor: const Color(0xFF4CAF50),
+          foregroundColor: Colors.white,
+          elevation: 2,
+        ),
+        drawer: _buildDrawer(),
         body: IndexedStack(
           index: _currentIndex,
           children: _screens,
@@ -184,7 +201,6 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
           onTap: _onTabTapped,
           isAdmin: _isAdmin,
         ),
-        drawer: _buildDrawer(),
       ),
     );
   }
@@ -257,7 +273,36 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXProfileScreen(),
+                        builder: (context) => BBXProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
+                // 订阅计划
+                ListTile(
+                  leading: const Icon(Icons.card_membership, color: Colors.blue),
+                  title: const Text('订阅计划'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BBXSubscriptionScreen(),
+                      ),
+                    );
+                  },
+                ),
+                // 奖励积分
+                ListTile(
+                  leading: const Icon(Icons.stars, color: Colors.amber),
+                  title: const Text('奖励积分'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BBXRewardsScreen(),
                       ),
                     );
                   },
@@ -295,40 +340,30 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     index: 5,
                   ),
                 const Divider(),
+                // 帮助与支持
                 ListTile(
-                  leading: const Icon(Icons.workspace_premium, color: Color(0xFFFFC107)),
-                  title: const Text('订阅计划'),
-                  subtitle: const Text('升级获取更多功能'),
+                  leading: const Icon(Icons.help_outline, color: Color(0xFF4CAF50)),
+                  title: const Text('帮助与支持'),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXSubscriptionScreen(),
+                        builder: (context) => BBXHelpScreen(),
                       ),
                     );
                   },
                 ),
+                // 隐私政策
                 ListTile(
-                  leading: const Icon(Icons.settings, color: Color(0xFF4CAF50)),
-                  title: const Text('Settings'),
+                  leading: const Icon(Icons.privacy_tip_outlined, color: Color(0xFF4CAF50)),
+                  title: const Text('隐私政策'),
                   onTap: () {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Settings feature coming soon'),
-                      ),
-                    );
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.help, color: Color(0xFF4CAF50)),
-                  title: const Text('Help & Support'),
-                  onTap: () {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Help & Support feature coming soon'),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BBXPrivacyPolicyScreen(),
                       ),
                     );
                   },
@@ -343,7 +378,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BBXInitDataScreen(),
+                        builder: (context) => BBXInitDataScreen(),
                       ),
                     );
                   },
