@@ -227,7 +227,8 @@ class SearchService {
   List<ListingModel> _rankByRelevance(List<ListingModel> listings) {
     final random = math.Random();
 
-    return listings.map((listing) {
+    // 计算每个商品的评分
+    final scoredListings = listings.map((listing) {
       // 计算综合评分
       double score = 0;
 
@@ -250,11 +251,13 @@ class SearchService {
       score += random.nextDouble() * 0.5;
 
       return MapEntry(listing, score);
-    }).toList()
-      ..sort((a, b) => b.value.compareTo(a.value))
-      ..map((entry) => entry.key);
+    }).toList();
 
-    return listings;
+    // 按评分降序排序
+    scoredListings.sort((a, b) => b.value.compareTo(a.value));
+
+    // 返回排序后的商品列表
+    return scoredListings.map((entry) => entry.key).toList();
   }
 
   /// 保存搜索历史

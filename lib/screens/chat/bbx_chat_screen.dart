@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/message_model.dart';
 import '../../services/chat_service.dart';
 
@@ -26,6 +27,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
   final _chatService = ChatService();
   final _messageController = TextEditingController();
   final _scrollController = ScrollController();
+  final _auth = FirebaseAuth.instance;
   bool _isSending = false;
 
   @override
@@ -177,7 +179,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
 
   /// 消息气泡
   Widget _buildMessageBubble(MessageModel message) {
-    final isMe = message.senderId == _chatService._auth.currentUser?.uid;
+    final isMe = message.senderId == _auth.currentUser?.uid;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
