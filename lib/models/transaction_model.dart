@@ -3,15 +3,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// 交易模型
 class TransactionModel {
   final String id;
+  final String? offerId; // 关联的报价ID
   final String buyerId;
   final String sellerId;
   final String listingId;
-  final double amount;
+  final double amount; // 交易金额
+  final double platformFee; // 平台费（3%）
+  final double totalAmount; // 总金额 = amount + platformFee
   final String paymentMethod; // fpx, ewallet, credit_card, cash
-  final String status; // pending, paid, shipped, completed, cancelled, refund_requested, refunded, refund_rejected, disputed
+  final String? paymentId; // 支付ID
+  final String? receiptUrl; // 收据URL
+  final String status; // confirmed, scheduled, inTransit, delivered, completed, disputed, cancelled, refunded
   final String escrowStatus; // held, released, refunded
   final String? trackingNumber;
+  final String? logisticsProvider; // 物流供应商
+  final DateTime? pickupDate; // 取货日期
+  final DateTime? deliveryDate; // 送货日期
   final List<String> shippingProof;
+  final String? complianceDocumentUrl; // 合规文档URL
+  final bool buyerReviewed; // 买家是否已评价
+  final bool sellerReviewed; // 卖家是否已评价
   final DateTime? createdAt;
   final DateTime? paidAt;
   final DateTime? shippedAt;
@@ -25,15 +36,26 @@ class TransactionModel {
 
   TransactionModel({
     required this.id,
+    this.offerId,
     required this.buyerId,
     required this.sellerId,
     required this.listingId,
     required this.amount,
+    required this.platformFee,
+    required this.totalAmount,
     this.paymentMethod = 'fpx',
-    this.status = 'pending',
+    this.paymentId,
+    this.receiptUrl,
+    this.status = 'confirmed',
     this.escrowStatus = 'held',
     this.trackingNumber,
+    this.logisticsProvider,
+    this.pickupDate,
+    this.deliveryDate,
     this.shippingProof = const [],
+    this.complianceDocumentUrl,
+    this.buyerReviewed = false,
+    this.sellerReviewed = false,
     this.createdAt,
     this.paidAt,
     this.shippedAt,
@@ -56,15 +78,26 @@ class TransactionModel {
   factory TransactionModel.fromMap(String id, Map<String, dynamic> data) {
     return TransactionModel(
       id: id,
+      offerId: data['offerId'],
       buyerId: data['buyerId'] ?? '',
       sellerId: data['sellerId'] ?? '',
       listingId: data['listingId'] ?? '',
       amount: (data['amount'] ?? 0).toDouble(),
+      platformFee: (data['platformFee'] ?? 0).toDouble(),
+      totalAmount: (data['totalAmount'] ?? 0).toDouble(),
       paymentMethod: data['paymentMethod'] ?? 'fpx',
-      status: data['status'] ?? 'pending',
+      paymentId: data['paymentId'],
+      receiptUrl: data['receiptUrl'],
+      status: data['status'] ?? 'confirmed',
       escrowStatus: data['escrowStatus'] ?? 'held',
       trackingNumber: data['trackingNumber'],
+      logisticsProvider: data['logisticsProvider'],
+      pickupDate: (data['pickupDate'] as Timestamp?)?.toDate(),
+      deliveryDate: (data['deliveryDate'] as Timestamp?)?.toDate(),
       shippingProof: (data['shippingProof'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
+      complianceDocumentUrl: data['complianceDocumentUrl'],
+      buyerReviewed: data['buyerReviewed'] ?? false,
+      sellerReviewed: data['sellerReviewed'] ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
       paidAt: (data['paidAt'] as Timestamp?)?.toDate(),
       shippedAt: (data['shippedAt'] as Timestamp?)?.toDate(),
@@ -81,15 +114,26 @@ class TransactionModel {
   /// 转换为 Map（用于Firestore）
   Map<String, dynamic> toMap() {
     return {
+      'offerId': offerId,
       'buyerId': buyerId,
       'sellerId': sellerId,
       'listingId': listingId,
       'amount': amount,
+      'platformFee': platformFee,
+      'totalAmount': totalAmount,
       'paymentMethod': paymentMethod,
+      'paymentId': paymentId,
+      'receiptUrl': receiptUrl,
       'status': status,
       'escrowStatus': escrowStatus,
       'trackingNumber': trackingNumber,
+      'logisticsProvider': logisticsProvider,
+      'pickupDate': pickupDate != null ? Timestamp.fromDate(pickupDate!) : null,
+      'deliveryDate': deliveryDate != null ? Timestamp.fromDate(deliveryDate!) : null,
       'shippingProof': shippingProof,
+      'complianceDocumentUrl': complianceDocumentUrl,
+      'buyerReviewed': buyerReviewed,
+      'sellerReviewed': sellerReviewed,
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
       'paidAt': paidAt != null ? Timestamp.fromDate(paidAt!) : null,
       'shippedAt': shippedAt != null ? Timestamp.fromDate(shippedAt!) : null,
@@ -106,10 +150,18 @@ class TransactionModel {
   /// 复制并修改部分字段
   TransactionModel copyWith({
     String? paymentMethod,
+    String? paymentId,
+    String? receiptUrl,
     String? status,
     String? escrowStatus,
     String? trackingNumber,
+    String? logisticsProvider,
+    DateTime? pickupDate,
+    DateTime? deliveryDate,
     List<String>? shippingProof,
+    String? complianceDocumentUrl,
+    bool? buyerReviewed,
+    bool? sellerReviewed,
     DateTime? paidAt,
     DateTime? shippedAt,
     DateTime? completedAt,
@@ -122,15 +174,26 @@ class TransactionModel {
   }) {
     return TransactionModel(
       id: id,
+      offerId: offerId,
       buyerId: buyerId,
       sellerId: sellerId,
       listingId: listingId,
       amount: amount,
+      platformFee: platformFee,
+      totalAmount: totalAmount,
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      paymentId: paymentId ?? this.paymentId,
+      receiptUrl: receiptUrl ?? this.receiptUrl,
       status: status ?? this.status,
       escrowStatus: escrowStatus ?? this.escrowStatus,
       trackingNumber: trackingNumber ?? this.trackingNumber,
+      logisticsProvider: logisticsProvider ?? this.logisticsProvider,
+      pickupDate: pickupDate ?? this.pickupDate,
+      deliveryDate: deliveryDate ?? this.deliveryDate,
       shippingProof: shippingProof ?? this.shippingProof,
+      complianceDocumentUrl: complianceDocumentUrl ?? this.complianceDocumentUrl,
+      buyerReviewed: buyerReviewed ?? this.buyerReviewed,
+      sellerReviewed: sellerReviewed ?? this.sellerReviewed,
       createdAt: createdAt,
       paidAt: paidAt ?? this.paidAt,
       shippedAt: shippedAt ?? this.shippedAt,
@@ -146,6 +209,10 @@ class TransactionModel {
 
   /// 状态判断
   bool get isPending => status == 'pending';
+  bool get isConfirmed => status == 'confirmed';
+  bool get isScheduled => status == 'scheduled';
+  bool get isInTransit => status == 'inTransit';
+  bool get isDelivered => status == 'delivered';
   bool get isPaid => status == 'paid';
   bool get isShipped => status == 'shipped';
   bool get isCompleted => status == 'completed';
@@ -164,6 +231,14 @@ class TransactionModel {
     switch (status) {
       case 'pending':
         return '待支付';
+      case 'confirmed':
+        return '已确认';
+      case 'scheduled':
+        return '已安排';
+      case 'inTransit':
+        return '运输中';
+      case 'delivered':
+        return '已送达';
       case 'paid':
         return '已支付';
       case 'shipped':
