@@ -365,15 +365,20 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: Icon(icon, color: color),
-        title: Text(title),
+        title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
         subtitle: Text('$points 积分'),
-        trailing: ElevatedButton(
-          onPressed: canAfford ? () => _redeemReward(title, points) : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: canAfford ? color : Colors.grey,
-            foregroundColor: Colors.white,
+        trailing: SizedBox(
+          width: 70,
+          height: 36,
+          child: ElevatedButton(
+            onPressed: canAfford ? () => _redeemReward(title, points) : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: canAfford ? color : Colors.grey,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+            ),
+            child: const Text('兑换', style: TextStyle(fontSize: 13)),
           ),
-          child: const Text('兑换'),
         ),
       ),
     );

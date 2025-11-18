@@ -375,12 +375,16 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                                 color: Colors.white,
                               ),
                               const SizedBox(width: 4),
-                              Text(
-                                _getSubscriptionDisplayName(userData?['subscriptionPlan']),
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
+                              Flexible(
+                                child: Text(
+                                  _getSubscriptionDisplayName(userData?['subscriptionPlan']),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
@@ -438,12 +442,11 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                     );
                   }
 
-                  // 获取数据
-                  final stats = snapshot.data ?? {
-                    'listings': 0,
-                    'transactions': 0,
-                    'revenue': 0.0,
-                  };
+                  // 获取数据并确保所有值都有默认值
+                  final stats = snapshot.data ?? {};
+                  final listings = stats['listings'] ?? 0;
+                  final transactions = stats['transactions'] ?? 0;
+                  final revenue = (stats['revenue'] ?? 0.0) as num;
 
                   return Row(
                     children: [
@@ -451,7 +454,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                         child: _buildStatCard(
                           icon: Icons.post_add,
                           label: 'Listings',
-                          value: '${stats['listings']}',
+                          value: '$listings',
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -459,7 +462,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                         child: _buildStatCard(
                           icon: Icons.swap_horiz,
                           label: 'Deals',
-                          value: '${stats['transactions']}',
+                          value: '$transactions',
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -467,7 +470,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                         child: _buildStatCard(
                           icon: Icons.account_balance_wallet,
                           label: 'Revenue',
-                          value: 'RM ${stats['revenue'].toStringAsFixed(0)}',
+                          value: 'RM ${revenue.toDouble().toStringAsFixed(0)}',
                         ),
                       ),
                     ],
@@ -517,6 +520,9 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
           ),
           Text(
             label,
@@ -524,6 +530,9 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
               fontSize: 12,
               color: Colors.white.withOpacity(0.9),
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
           ),
         ],
       ),
