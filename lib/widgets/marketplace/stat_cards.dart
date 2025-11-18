@@ -22,7 +22,7 @@ class StatCards extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         crossAxisSpacing: AppTheme.spacingMD,
         mainAxisSpacing: AppTheme.spacingMD,
-        childAspectRatio: 1.5,
+        childAspectRatio: 1.3,
         children: [
           _buildStatCard(
             icon: Icons.inventory_2,
@@ -71,18 +71,22 @@ class StatCards extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 32),
+          Icon(icon, color: color, size: 28),
           const SizedBox(height: AppTheme.spacingSM),
           Text(
             value,
-            style: AppTheme.h3.copyWith(color: color),
+            style: AppTheme.h3.copyWith(color: color, fontSize: 18),
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: AppTheme.caption.copyWith(color: AppTheme.textSecondary),
+            style: AppTheme.caption.copyWith(
+              color: AppTheme.textSecondary,
+              fontSize: 11,
+            ),
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

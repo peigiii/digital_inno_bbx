@@ -566,10 +566,19 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
           .get();
 
       // Calculate stats
-      int totalTonnage = 0;
+      num totalTonnage = 0;
       for (var doc in listingsSnapshot.docs) {
         final data = doc.data();
-        totalTonnage += (data['quantity'] ?? 0) as int;
+        final quantity = data['quantity'];
+        if (quantity != null) {
+          if (quantity is int) {
+            totalTonnage += quantity;
+          } else if (quantity is double) {
+            totalTonnage += quantity.toInt();
+          } else if (quantity is String) {
+            totalTonnage += int.tryParse(quantity) ?? 0;
+          }
+        }
       }
 
       return {
