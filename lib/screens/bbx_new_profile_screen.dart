@@ -293,6 +293,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
 
   Widget _buildUserHeader(Map<String, dynamic>? userData) {
     return Container(
+      width: double.infinity,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
@@ -541,6 +542,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
 
   Widget _buildOrdersSection() {
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(top: AppTheme.spacingMD),
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
@@ -676,6 +678,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     ];
 
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(top: AppTheme.spacingMD),
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
@@ -740,6 +743,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     ];
 
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(top: AppTheme.spacingMD),
       padding: const EdgeInsets.symmetric(vertical: AppTheme.spacingSM),
       color: Colors.white,
@@ -779,6 +783,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     ];
 
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(top: AppTheme.spacingMD),
       padding: const EdgeInsets.symmetric(vertical: AppTheme.spacingSM),
       color: Colors.white,
