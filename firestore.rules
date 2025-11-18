@@ -1,155 +1,60 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Helper functions
-    function isSignedIn() {
+    function isAuthenticated() {
       return request.auth != null;
     }
-
+    
     function isOwner(userId) {
-      return isSignedIn() && request.auth.uid == userId;
+      return isAuthenticated() && request.auth.uid == userId;
     }
-
+    
     function isAdmin() {
-      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
     }
-
-    function isVerified() {
-      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.verified == true;
-    }
-
-    // Users Collection
+    
     match /users/{userId} {
-      // Anyone authenticated can read user profiles
-      allow read: if isSignedIn();
-
-      // Users can only create/update their own profile
-      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow read: if true;
+      allow create: if isAuthenticated() && request.auth.uid == userId;
       allow update: if isOwner(userId) || isAdmin();
-
-      // Only admins can delete users
-      allow delete: if isAdmin();
+      allow delete: if false;
     }
-
-    // Waste Listings Collection
+    
     match /waste_listings/{listingId} {
-      // Anyone authenticated can read listings
-      allow read: if isSignedIn();
-
-      // Authenticated users can create listings
-      allow create: if isSignedIn() &&
-                      request.resource.data.userId == request.auth.uid &&
-                      request.resource.data.status == 'available';
-
-      // Only the owner can update their listing
-      allow update: if isOwner(resource.data.userId) || isAdmin();
-
-      // Only owner or admin can delete
-      allow delete: if isOwner(resource.data.userId) || isAdmin();
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow delete: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
     }
-
-    // Offers Collection
+    
     match /offers/{offerId} {
-      // Both the recycler (who made the offer) and producer (who owns the listing) can read
-      allow read: if isSignedIn() &&
-                    (request.auth.uid == resource.data.recyclerId ||
-                     request.auth.uid == resource.data.producerId ||
-                     isAdmin());
-
-      // Authenticated users can create offers
-      allow create: if isSignedIn() &&
-                      request.resource.data.recyclerId == request.auth.uid &&
-                      request.resource.data.status == 'pending';
-
-      // Producer can update (accept/reject), recycler can update their own pending offers
-      allow update: if isSignedIn() &&
-                      (request.auth.uid == resource.data.producerId ||
-                       (request.auth.uid == resource.data.recyclerId &&
-                        resource.data.status == 'pending')) ||
-                      isAdmin();
-
-      // Only admin can delete offers
-      allow delete: if isAdmin();
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.recyclerId || request.auth.uid == resource.data.producerId || isAdmin());
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (request.auth.uid == resource.data.producerId || isAdmin());
+      allow delete: if isAuthenticated() && (request.auth.uid == resource.data.recyclerId || isAdmin());
     }
-
-    // Transactions Collection
+    
     match /transactions/{transactionId} {
-      // Both parties can read
-      allow read: if isSignedIn() &&
-                    (request.auth.uid == resource.data.producerId ||
-                     request.auth.uid == resource.data.processorId ||
-                     isAdmin());
-
-      // System creates transactions (through Cloud Functions ideally)
-      allow create: if isSignedIn();
-
-      // Only involved parties can update status
-      allow update: if isSignedIn() &&
-                      (request.auth.uid == resource.data.producerId ||
-                       request.auth.uid == resource.data.processorId ||
-                       isAdmin());
-
-      // Only admin can delete
-      allow delete: if isAdmin();
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.buyerId || request.auth.uid == resource.data.sellerId || isAdmin());
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (request.auth.uid == resource.data.buyerId || request.auth.uid == resource.data.sellerId || isAdmin());
+      allow delete: if false;
     }
-
-    // Recyclers Collection
-    match /recyclers/{recyclerId} {
-      // Anyone authenticated can read recyclers
-      allow read: if isSignedIn();
-
-      // Only verified users can create recycler profiles
-      allow create: if isSignedIn() && isVerified();
-
-      // Owner or admin can update
-      allow update: if isOwner(resource.data.userId) || isAdmin();
-
-      // Only admin can delete
-      allow delete: if isAdmin();
-    }
-
-    // Conversations Collection
+    
     match /conversations/{conversationId} {
-      // Only participants can read the conversation
-      allow read: if isSignedIn() &&
-                    request.auth.uid in resource.data.participants;
-
-      // Users can create conversations they participate in
-      allow create: if isSignedIn() &&
-                      request.auth.uid in request.resource.data.participants;
-
-      // Only participants can update (for typing indicators, etc.)
-      allow update: if isSignedIn() &&
-                      request.auth.uid in resource.data.participants;
-
-      // Only admin can delete
-      allow delete: if isAdmin();
-
-      // Messages subcollection
+      allow read: if isAuthenticated() && request.auth.uid in resource.data.participants;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && request.auth.uid in resource.data.participants;
+      
       match /messages/{messageId} {
-        // Participants can read messages
-        allow read: if isSignedIn() &&
-                      request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
-
-        // Sender can create messages
-        allow create: if isSignedIn() &&
-                        request.resource.data.senderId == request.auth.uid &&
-                        request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
-
-        // Receiver can update (mark as read)
-        allow update: if isSignedIn() &&
-                        request.auth.uid == resource.data.receiverId;
-
-        // Only admin can delete
-        allow delete: if isAdmin();
+        allow read: if isAuthenticated() && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
+        allow create: if isAuthenticated();
+        allow update: if isAuthenticated();
       }
     }
-
-    // Admin Collection (for app settings)
-    match /admin/{document=**} {
-      allow read: if isAdmin();
-      allow write: if isAdmin();
+    
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

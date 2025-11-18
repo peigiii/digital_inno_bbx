@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 /// 信用评分系统
 ///
@@ -391,6 +392,3 @@ class CreditScoreBadge extends StatelessWidget {
     }
   }
 }
-
-// 需要导入 Flutter 包来使用 StatelessWidget
-import 'package:flutter/material.dart';
