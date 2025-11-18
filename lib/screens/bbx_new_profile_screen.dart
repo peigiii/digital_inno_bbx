@@ -299,7 +299,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(AppTheme.borderRadiusMedium),
+        borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
       ),
       child: Column(
         children: [

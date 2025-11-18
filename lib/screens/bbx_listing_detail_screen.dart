@@ -726,7 +726,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           ),
           const SizedBox(height: 16),
           ClipRRect(
-            borderRadius: BorderRadius.circular(AppTheme.borderRadiusMedium),
+            borderRadius: BorderRadius.circular(AppTheme.radiusMedium),
             child: SizedBox(
               height: 200,
               child: GoogleMap(
