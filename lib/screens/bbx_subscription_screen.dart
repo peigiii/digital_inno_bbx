@@ -21,40 +21,77 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
   }
 
   Future<void> _loadSubscriptionData() async {
+    print('🔍 [订阅页面] 开始加载订阅数据');
+
     if (currentUser == null) {
-      setState(() {
-        isLoading = false;
-      });
-      return;
-    }
-
-    try {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser!.uid)
-          .get();
-
-      if (userDoc.exists && mounted) {
-        setState(() {
-          currentPlan = userDoc.data()?['subscriptionPlan'] ?? 'free';
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      print('Error loading subscription: $e');
+      print('❌ [订阅页面] 用户未登录');
       if (mounted) {
         setState(() {
           isLoading = false;
         });
       }
+      return;
+    }
+
+    print('✅ [订阅页面] 用户已登录: ${currentUser!.email}');
+    print('🔄 [订阅页面] 查询 Firestore 用户文档...');
+
+    try {
+      // 添加 10 秒超时
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser!.uid)
+          .get()
+          .timeout(
+            const Duration(seconds: 10),
+            onTimeout: () {
+              print('⏱️ [订阅页面] Firestore 查询超时（10秒）');
+              throw Exception('查询超时，请检查网络连接');
+            },
+          );
+
+      print('📄 [订阅页面] 文档查询完成，存在: ${userDoc.exists}');
+
+      if (!mounted) {
+        print('⚠️ [订阅页面] Widget 已销毁，停止更新');
+        return;
+      }
+
+      if (userDoc.exists) {
+        final plan = userDoc.data()?['subscriptionPlan'] ?? 'free';
+        print('✅ [订阅页面] 当前计划: $plan');
+        setState(() {
+          currentPlan = plan;
+          isLoading = false;
+        });
+      } else {
+        print('⚠️ [订阅页面] 用户文档不存在，使用默认计划');
+        setState(() {
+          currentPlan = 'free';
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('❌ [订阅页面] 加载失败: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+        // 显示错误提示
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('加载订阅信息失败: $e'),
+            backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 5),
+          ),
+        );
+      }
     }
   }
 
   Future<void> _selectPlan(String planName, int price) async {
+    print('🎯 [订阅页面] 用户选择计划: $planName (RM $price)');
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -81,37 +118,65 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
       ),
     );
 
-    if (confirm == true && currentUser != null) {
-      try {
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(currentUser!.uid)
-            .update({
-          'subscriptionPlan': planName.toLowerCase().replaceAll(' ', '_'),
-          'subscriptionUpdatedAt': FieldValue.serverTimestamp(),
-        });
+    if (confirm != true) {
+      print('❌ [订阅页面] 用户取消选择');
+      return;
+    }
 
+    if (currentUser == null) {
+      print('❌ [订阅页面] 用户未登录，无法更新订阅');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('请先登录'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+      return;
+    }
+
+    print('🔄 [订阅页面] 更新 Firestore 订阅计划...');
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser!.uid)
+          .update({
+        'subscriptionPlan': planName.toLowerCase().replaceAll(' ', '_'),
+        'subscriptionUpdatedAt': FieldValue.serverTimestamp(),
+      }).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          print('⏱️ [订阅页面] 更新订阅超时（10秒）');
+          throw Exception('更新超时，请检查网络连接');
+        },
+      );
+
+      print('✅ [订阅页面] 订阅计划更新成功');
+
+      if (mounted) {
         setState(() {
           currentPlan = planName.toLowerCase().replaceAll(' ', '_');
         });
 
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('已选择 $planName 计划'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('选择计划失败: $e'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('已选择 $planName 计划'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      print('❌ [订阅页面] 更新失败: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('选择计划失败: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
+        );
       }
     }
   }
