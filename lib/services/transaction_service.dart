@@ -49,6 +49,7 @@ class TransactionService {
         paymentStatus: 'pending',
         shippingStatus: 'pending',
         escrowStatus: 'held',
+        deliveryMethod: offer.deliveryMethod, // 从报价继承配送方式
         pickupScheduledDate: offer.scheduledPickupDate,
         createdAt: DateTime.now(),
       );
@@ -475,5 +476,14 @@ class TransactionService {
 
       return allTransactions;
     });
+  }
+
+  /// 更新交易记录
+  Future<void> updateTransaction(String transactionId, Map<String, dynamic> data) async {
+    try {
+      await _firestore.collection('transactions').doc(transactionId).update(data);
+    } catch (e) {
+      throw Exception('更新交易失败: $e');
+    }
   }
 }

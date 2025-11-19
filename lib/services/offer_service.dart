@@ -20,7 +20,8 @@ class OfferService {
   /// - originalPrice: 原价
   /// - message: 留言
   /// - scheduledPickupDate: 预计收集日期
-  /// - deliveryMethod: 收集方式（self_pickup/platform_logistics/seller_delivery）
+  /// - deliveryMethod: 收集方式（self_pickup/platform_logistics/seller_delivery 或 self_collect/delivery）
+  /// - deliveryNote: 配送备注
   ///
   /// 返回：报价ID
   Future<String> createOffer({
@@ -30,7 +31,8 @@ class OfferService {
     required double originalPrice,
     String message = '',
     DateTime? scheduledPickupDate,
-    String deliveryMethod = 'self_pickup',
+    String deliveryMethod = 'self_collect',
+    String? deliveryNote,
   }) async {
     if (_currentUserId == null) {
       throw Exception('用户未登录');
@@ -57,6 +59,7 @@ class OfferService {
       message: message,
       scheduledPickupDate: scheduledPickupDate,
       deliveryMethod: deliveryMethod,
+      deliveryNote: deliveryNote,
       status: 'pending',
       createdAt: now,
       expiresAt: expiresAt,

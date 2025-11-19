@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/listing_model.dart';
 import '../../services/offer_service.dart';
+import '../../utils/delivery_config.dart';
 
 /// 提交报价页面
 class BBXMakeOfferScreen extends StatefulWidget {
@@ -20,10 +21,11 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
   final _formKey = GlobalKey<FormState>();
   final _offerPriceController = TextEditingController();
   final _messageController = TextEditingController();
+  final _deliveryNoteController = TextEditingController();
   final _offerService = OfferService();
 
   DateTime? _scheduledPickupDate;
-  String _deliveryMethod = 'self_pickup';
+  String _deliveryMethod = 'self_collect'; // 默认自提
   bool _isLoading = false;
   double? _discountPercentage;
 
@@ -31,6 +33,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
   void dispose() {
     _offerPriceController.dispose();
     _messageController.dispose();
+    _deliveryNoteController.dispose();
     super.dispose();
   }
 
@@ -92,6 +95,9 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
         message: _messageController.text.trim(),
         scheduledPickupDate: _scheduledPickupDate,
         deliveryMethod: _deliveryMethod,
+        deliveryNote: _deliveryNoteController.text.trim().isNotEmpty
+            ? _deliveryNoteController.text.trim()
+            : null,
       );
 
       if (mounted) {
@@ -313,20 +319,99 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     );
   }
 
-  /// 收集方式选择
+  /// 配送方式选择
   Widget _buildDeliveryMethodSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '收集方式',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+          '🚚 配送方式 *',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
+        const SizedBox(height: 12),
+
+        // 自提选项
+        RadioListTile<String>(
+          title: const Text(
+            '自提',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 4),
+              const Text(
+                '到卖家指定地点取货',
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.location_on, size: 14, color: Colors.grey),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      widget.listing.location,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          value: 'self_collect',
+          groupValue: _deliveryMethod,
+          onChanged: (value) {
+            setState(() {
+              _deliveryMethod = value!;
+            });
+          },
+        ),
+
         const SizedBox(height: 8),
+
+        // 邮寄选项
         RadioListTile<String>(
-          title: const Text('自行收集'),
-          subtitle: const Text('买家自行到卖家地点收集'),
-          value: 'self_pickup',
+          title: const Text(
+            '邮寄',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 4),
+              const Text(
+                '卖家安排快递配送',
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.orange[50],
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.info_outline, size: 14, color: Colors.orange[700]),
+                    const SizedBox(width: 4),
+                    Text(
+                      '邮费需与卖家协商(额外支付)',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.orange[700],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          value: 'delivery',
           groupValue: _deliveryMethod,
           onChanged: (value) {
             setState(() {
@@ -334,27 +419,23 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
             });
           },
         ),
-        RadioListTile<String>(
-          title: const Text('使用平台物流'),
-          subtitle: const Text('通过平台合作物流公司运输'),
-          value: 'platform_logistics',
-          groupValue: _deliveryMethod,
-          onChanged: (value) {
-            setState(() {
-              _deliveryMethod = value!;
-            });
-          },
-        ),
-        RadioListTile<String>(
-          title: const Text('卖家送货'),
-          subtitle: const Text('由卖家安排送货到指定地点'),
-          value: 'seller_delivery',
-          groupValue: _deliveryMethod,
-          onChanged: (value) {
-            setState(() {
-              _deliveryMethod = value!;
-            });
-          },
+
+        const SizedBox(height: 16),
+
+        // 配送备注
+        TextFormField(
+          controller: _deliveryNoteController,
+          maxLines: 2,
+          maxLength: 200,
+          decoration: InputDecoration(
+            labelText: '💬 配送备注(可选)',
+            hintText: _deliveryMethod == 'self_collect'
+                ? '例如：希望明天下午自提'
+                : '例如：希望尽快发货',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
         ),
       ],
     );

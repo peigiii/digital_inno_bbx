@@ -440,6 +440,59 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               ),
             ],
           ),
+          const SizedBox(height: 16),
+          // 配送方式说明
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.blue[50],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.blue[100]!),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.local_shipping, size: 16, color: Colors.blue),
+                    const SizedBox(width: 8),
+                    Text(
+                      '🚚 配送方式',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.blue[900],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.check_circle, size: 14, color: Colors.green[700]),
+                    const SizedBox(width: 6),
+                    const Text(
+                      '支持自提',
+                      style: TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.check_circle, size: 14, color: Colors.green[700]),
+                    const SizedBox(width: 6),
+                    const Expanded(
+                      child: Text(
+                        '支持邮寄(邮费与卖家协商)',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

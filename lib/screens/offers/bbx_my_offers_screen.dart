@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/offer_model.dart';
 import '../../services/offer_service.dart';
+import '../../utils/delivery_config.dart';
 
 /// 我的报价页面
 class BBXMyOffersScreen extends StatefulWidget {
@@ -210,6 +211,12 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
               isBuyer ? '卖家：${offer.sellerId}' : '买家：${offer.recyclerName}',
               style: const TextStyle(fontSize: 14),
             ),
+
+            // 配送方式标签
+            if (offer.deliveryMethod != null) ...[
+              const SizedBox(height: 8),
+              DeliveryConfig.buildMethodChip(offer.deliveryMethod!, small: true),
+            ],
 
             // 留言
             if (offer.message.isNotEmpty) ...[
