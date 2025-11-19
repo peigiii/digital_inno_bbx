@@ -187,18 +187,18 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
                     final doc = snapshot.data!.docs[index];
-                    final listing = Listing.fromFirestore(doc);
+                    final listing = ListingModel.fromDocument(doc);
 
                     return BBXListingCard(
-                      imageUrl: listing.images.isNotEmpty
-                          ? listing.images.first
+                      imageUrl: listing.imageUrls.isNotEmpty
+                          ? listing.imageUrls.first
                           : '',
                       title: listing.title,
-                      category: listing.category,
+                      category: listing.wasteType,
                       price: listing.pricePerUnit,
                       unit: listing.unit,
                       quantity: '${listing.quantity} ${listing.unit}',
-                      sellerName: listing.sellerName,
+                      sellerName: listing.userEmail,
                       onTap: () {
                         // 导航到商品详情页
                       },

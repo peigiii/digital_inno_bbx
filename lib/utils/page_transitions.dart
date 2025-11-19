@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 /// 页面转场动画工具类
 class PageTransitions {
   /// 淡入淡出转场
-  static Route fadeTransition(Widget page) {
-    return PageRouteBuilder(
+  static Route<T> fadeTransition<T>(Widget page) {
+    return PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeTransition(
@@ -17,20 +17,19 @@ class PageTransitions {
   }
 
   /// 从下到上滑动转场
-  static Route slideUpTransition(Widget page) {
-    return PageRouteBuilder(
+  static Route<T> slideUpTransition<T>(Widget page) {
+    return PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         const curve = Curves.easeOut;
 
-        var tween = Tween(begin: begin, end: end).chain(
-          CurvedAnimation(parent: animation, curve: curve),
-        );
+        final curvedAnimation = CurvedAnimation(parent: animation, curve: curve);
+        final tween = Tween(begin: begin, end: end);
 
         return SlideTransition(
-          position: animation.drive(tween),
+          position: tween.animate(curvedAnimation),
           child: child,
         );
       },
@@ -39,20 +38,19 @@ class PageTransitions {
   }
 
   /// 从右到左滑动转场
-  static Route slideRightTransition(Widget page) {
-    return PageRouteBuilder(
+  static Route<T> slideRightTransition<T>(Widget page) {
+    return PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(1.0, 0.0);
         const end = Offset.zero;
         const curve = Curves.easeOut;
 
-        var tween = Tween(begin: begin, end: end).chain(
-          CurvedAnimation(parent: animation, curve: curve),
-        );
+        final curvedAnimation = CurvedAnimation(parent: animation, curve: curve);
+        final tween = Tween(begin: begin, end: end);
 
         return SlideTransition(
-          position: animation.drive(tween),
+          position: tween.animate(curvedAnimation),
           child: child,
         );
       },
@@ -61,23 +59,20 @@ class PageTransitions {
   }
 
   /// 缩放转场
-  static Route scaleTransition(Widget page) {
-    return PageRouteBuilder(
+  static Route<T> scaleTransition<T>(Widget page) {
+    return PageRouteBuilder<T>(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const curve = Curves.easeOut;
 
-        var scaleTween = Tween(begin: 0.8, end: 1.0).chain(
-          CurvedAnimation(parent: animation, curve: curve),
-        );
-        var fadeTween = Tween(begin: 0.0, end: 1.0).chain(
-          CurvedAnimation(parent: animation, curve: curve),
-        );
+        final curvedAnimation = CurvedAnimation(parent: animation, curve: curve);
+        final scaleTween = Tween(begin: 0.8, end: 1.0);
+        final fadeTween = Tween(begin: 0.0, end: 1.0);
 
         return ScaleTransition(
-          scale: animation.drive(scaleTween),
+          scale: scaleTween.animate(curvedAnimation),
           child: FadeTransition(
-            opacity: animation.drive(fadeTween),
+            opacity: fadeTween.animate(curvedAnimation),
             child: child,
           ),
         );
