@@ -457,7 +457,8 @@ class AppTheme {
       ),
 
       // 底部导航栏主题
-      bottomNavigationBarTheme: const BottomNavigationBarTheme(
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: surface,
         selectedItemColor: primary500,
         unselectedItemColor: neutral500,
         selectedLabelStyle: TextStyle(
