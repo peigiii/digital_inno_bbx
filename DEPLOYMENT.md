@@ -420,5 +420,177 @@ Gradle build failed
 
 ---
 
-**最后更新**: 2025-11-18
-**版本**: 1.0.0
+## 最新更新记录
+
+### 2025-11-19: 底部导航与个人中心完整重构
+
+#### 新增组件
+1. **底部导航栏** (`lib/widgets/navigation/bbx_bottom_navigation.dart`)
+   - 5个Tab：首页、商品、发布（凸起）、消息、个人中心
+   - 中间发布按钮凸起设计
+   - 未读消息角标支持
+
+#### 新增页面
+2. **个人中心页面** (`lib/screens/profile/bbx_profile_screen.dart`)
+   - 完整的用户信息展示
+   - 账户管理区域（钱包、会员、积分）
+   - 我的服务区域（商品、报价、交易、收藏）
+   - 会员专区（2x2网格布局）
+   - 设置区域
+   - 帮助与支持
+
+3. **钱包页面** (`lib/screens/profile/bbx_wallet_screen.dart`)
+   - 余额显示
+   - 充值/提现功能
+   - 交易记录列表
+
+4. **优惠券页面** (`lib/screens/profile/bbx_coupons_screen.dart`)
+   - Tab切换：可用、已使用、已过期
+   - 精美的优惠券卡片设计
+   - 优惠券使用功能
+
+5. **统计页面** (`lib/screens/profile/bbx_statistics_screen.dart`)
+   - 财务概览（收入、支出、利润）
+   - 业务统计（发布、报价、交易、浏览）
+   - 评价统计（评分分布）
+   - 月度趋势图表占位
+
+6. **账户设置页面** (`lib/screens/profile/bbx_account_settings_screen.dart`)
+   - 个人信息编辑
+   - 公司信息
+   - 账户安全（邮箱验证、修改密码、实名认证）
+   - 危险操作（删除账户）
+
+7. **通知设置页面** (`lib/screens/profile/bbx_notification_settings_screen.dart`)
+   - 通知方式设置（推送、邮件、短信）
+   - 通知类型设置（新报价、交易更新等）
+   - 营销通知开关
+
+#### 新增数据模型
+8. **订阅模型** (`lib/models/subscription_model.dart`)
+   - 支持4种订阅类型：Free, Basic, Professional, Enterprise
+   - 订阅状态管理
+   - 功能特性列表
+
+9. **奖励模型** (`lib/models/reward_model.dart`)
+   - 积分系统
+   - 会员等级（Bronze, Silver, Gold, Platinum）
+   - 奖励交易记录
+   - 每日任务系统
+
+10. **优惠券模型** (`lib/models/coupon_model.dart`)
+    - 固定金额和百分比折扣
+    - 优惠券状态管理
+    - 最小使用金额限制
+    - 折扣计算功能
+
+#### 新增服务类
+11. **订阅服务** (`lib/services/subscription_service.dart`)
+    - 获取当前订阅
+    - 订阅/取消订阅
+    - 订阅状态检查
+
+12. **奖励服务** (`lib/services/reward_service.dart`)
+    - 积分获取与兑换
+    - 每日任务管理
+    - 会员等级升级
+
+13. **钱包服务** (`lib/services/wallet_service.dart`)
+    - 充值/提现
+    - 支付/退款
+    - 交易记录管理
+
+#### 路由更新
+在 `lib/main.dart` 中新增以下路由：
+- `/profile` - 个人中心（更新为新版本）
+- `/wallet` - 钱包
+- `/rewards` - 奖励中心（已存在，重用）
+- `/coupons` - 优惠券
+- `/statistics` - 统计
+- `/account-settings` - 账户设置
+- `/notification-settings` - 通知设置
+
+#### Firestore 集合需求
+需要在 Firebase Console 创建以下集合：
+```
+subscriptions/      # 订阅记录
+├── {userId}
+    ├── planType
+    ├── status
+    ├── startDate
+    ├── endDate
+    ├── price
+    └── features
+
+rewards/            # 奖励积分
+├── {userId}
+    ├── points
+    ├── tier
+    ├── transactions[]
+    └── dailyTasks[]
+
+coupons/            # 优惠券
+├── {couponId}
+    ├── userId
+    ├── code
+    ├── discountType
+    ├── discount
+    ├── minAmount
+    ├── status
+    └── expiryDate
+
+wallets/            # 钱包
+├── {userId}
+    ├── balance
+    └── transactions[]
+
+user_settings/      # 用户设置
+├── {userId}
+    └── notifications{}
+```
+
+#### 部署步骤
+1. 拉取最新代码
+   ```bash
+   git pull origin claude/redesign-navigation-profile-01YRNUz5uhYHkHYkK8CWwQm2
+   ```
+
+2. 安装依赖
+   ```bash
+   flutter pub get
+   ```
+
+3. 创建 Firestore 集合（可通过应用首次使用自动创建）
+
+4. 更新 Firestore 安全规则（添加新集合的权限）
+   ```bash
+   firebase deploy --only firestore:rules
+   ```
+
+5. 运行应用
+   ```bash
+   flutter run
+   ```
+
+6. 测试新功能
+   - [ ] 测试底部导航栏切换
+   - [ ] 测试个人中心所有菜单项
+   - [ ] 测试钱包充值/提现
+   - [ ] 测试优惠券显示
+   - [ ] 测试统计数据展示
+   - [ ] 测试账户设置保存
+   - [ ] 测试通知设置保存
+
+#### 后续优化建议
+- [ ] 实现实际的支付集成（充值/提现）
+- [ ] 添加图表库实现统计图表
+- [ ] 实现实名认证流程
+- [ ] 集成第三方支付（如 Stripe, PayPal）
+- [ ] 添加优惠券自动应用功能
+- [ ] 实现每日任务自动重置
+- [ ] 添加会员权益详细说明页
+
+---
+
+**最后更新**: 2025-11-19
+**版本**: 1.1.0

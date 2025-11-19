@@ -14,6 +14,7 @@ import 'screens/bbx_market_browse_screen.dart';
 import 'screens/bbx_profile_cards_screen.dart';
 import 'screens/bbx_subscription_screen.dart';
 import 'screens/bbx_subscription_management_screen.dart';
+import 'screens/bbx_rewards_screen.dart';
 import 'screens/bbx_payment_screen.dart';
 import 'screens/bbx_payment_confirmation_screen.dart';
 import 'screens/bbx_invoice_screen.dart';
@@ -24,6 +25,12 @@ import 'screens/transactions/bbx_transactions_screen.dart';
 import 'screens/transactions/bbx_transaction_detail_screen.dart';
 import 'screens/transactions/bbx_upload_payment_screen.dart';
 import 'screens/transactions/bbx_update_logistics_screen.dart';
+import 'screens/profile/bbx_profile_screen.dart';
+import 'screens/profile/bbx_wallet_screen.dart';
+import 'screens/profile/bbx_coupons_screen.dart';
+import 'screens/profile/bbx_statistics_screen.dart';
+import 'screens/profile/bbx_account_settings_screen.dart';
+import 'screens/profile/bbx_notification_settings_screen.dart';
 import 'services/notification_service.dart';
 import 'utils/user_initializer.dart';
 import 'firebase_options.dart';
@@ -100,7 +107,7 @@ class BBXApp extends StatelessWidget {
         '/home': (context) => const BBXHomeScreen(),
         '/waste-list': (context) => const BBXListWasteScreen(),
         '/marketplace': (context) => const BBXNewMarketplaceScreen(),
-        '/profile': (context) => const BBXNewProfileScreen(),
+        '/profile': (context) => const BBXProfileScreen(),
         '/modern-home': (context) => const BBXModernHomeScreen(),
         '/market-browse': (context) => const BBXMarketBrowseScreen(),
         '/profile-cards': (context) => const BBXProfileCardsScreen(),
@@ -110,6 +117,12 @@ class BBXApp extends StatelessWidget {
         '/messages': (context) => const BBXConversationsScreen(),
         '/advanced-search': (context) => const BBXAdvancedSearchScreen(),
         '/transactions': (context) => const BBXTransactionsScreen(),
+        '/wallet': (context) => const BBXWalletScreen(),
+        '/rewards': (context) => const BBXRewardsScreen(),
+        '/coupons': (context) => const BBXCouponsScreen(),
+        '/statistics': (context) => const BBXStatisticsScreen(),
+        '/account-settings': (context) => const BBXAccountSettingsScreen(),
+        '/notification-settings': (context) => const BBXNotificationSettingsScreen(),
       },
       onGenerateRoute: (settings) {
         // Handle routes with arguments
