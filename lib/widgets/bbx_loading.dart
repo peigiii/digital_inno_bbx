@@ -63,6 +63,40 @@ class BBXLoading extends StatelessWidget {
   }
 }
 
+/// 列表加载组件（骨架屏）
+class BBXListLoading extends StatelessWidget {
+  final int itemCount;
+  final double itemHeight;
+  final EdgeInsetsGeometry? padding;
+
+  const BBXListLoading({
+    super.key,
+    required this.itemCount,
+    this.itemHeight = 120,
+    this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: padding ?? const EdgeInsets.all(AppTheme.spacing16),
+      itemCount: itemCount,
+      itemBuilder: (context, index) {
+        return Container(
+          margin: const EdgeInsets.only(bottom: AppTheme.spacing12),
+          child: BBXShimmerLoading(
+            width: double.infinity,
+            height: itemHeight,
+            borderRadius: AppTheme.borderRadiusMedium,
+          ),
+        );
+      },
+    );
+  }
+}
+
 /// Shimmer 加载效果（用于列表骨架屏）
 class BBXShimmerLoading extends StatefulWidget {
   final double width;
