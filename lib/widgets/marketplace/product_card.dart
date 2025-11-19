@@ -50,7 +50,7 @@ class ProductCard extends StatelessWidget {
               borderRadius: AppTheme.borderRadiusStandard,
               child: Image.network(
                 imageUrl,
-                height: 120,
+                height: 100,
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
@@ -61,7 +61,7 @@ class ProductCard extends StatelessWidget {
           else
             _buildPlaceholderImage(),
 
-          const SizedBox(height: AppTheme.spacingMD),
+          const SizedBox(height: AppTheme.spacingSM),
 
           // 废料类型（标签）
           Container(
@@ -90,11 +90,11 @@ class ProductCard extends StatelessWidget {
           Text(
             title,
             style: AppTheme.subtitle1,
-            maxLines: 2,
+            maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
 
-          const SizedBox(height: AppTheme.spacingMD),
+          const SizedBox(height: AppTheme.spacingSM),
 
           // 价格和数量
           Row(
@@ -147,10 +147,10 @@ class ProductCard extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: AppTheme.spacingMD),
+          const SizedBox(height: AppTheme.spacingSM),
 
           const Divider(height: 1),
-          const SizedBox(height: AppTheme.spacingMD),
+          const SizedBox(height: AppTheme.spacingSM),
 
           // 底部信息
           Row(
@@ -217,7 +217,7 @@ class ProductCard extends StatelessWidget {
 
   Widget _buildPlaceholderImage() {
     return Container(
-      height: 120,
+      height: 100,
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppTheme.background,

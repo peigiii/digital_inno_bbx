@@ -58,7 +58,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
             return const Center(child: Text('商品不存在'));
           }
 
-          final listing = Listing.fromFirestore(snapshot.data!);
+          final listing = ListingModel.fromDocument(snapshot.data!);
 
           return Stack(
             children: [
@@ -290,7 +290,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
 
               // 发布时间
               Text(
-                '发布于 ${_formatDate(listing.createdAt)}',
+                '发布于 ${listing.createdAt != null ? _formatDate(listing.createdAt!) : '未知时间'}',
                 style: AppTheme.caption.copyWith(
                   color: AppTheme.neutral500,
                 ),
@@ -307,7 +307,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(AppTheme.spacing16),
-        padding: const EdgeInsets.all(AppTheme.spacing16),
+        padding: const EdgeInsets.all(AppTheme.spacing12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: AppTheme.borderRadiusMedium,
@@ -322,14 +322,15 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                   '总数量',
                   '${listing.quantity} ${listing.unit}',
                 ),
+                const SizedBox(width: AppTheme.spacing8),
                 _buildInfoItem(
                   Icons.shopping_cart_outlined,
-                  '最小起订',
-                  '${listing.minimumOrder} ${listing.unit}',
+                  '数量',
+                  '${listing.quantity} ${listing.unit}',
                 ),
               ],
             ),
-            const SizedBox(height: AppTheme.spacing16),
+            const SizedBox(height: AppTheme.spacing12),
             Row(
               children: [
                 _buildInfoItem(
@@ -337,10 +338,13 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                   '可用数量',
                   '${listing.quantity} ${listing.unit}',
                 ),
+                const SizedBox(width: AppTheme.spacing8),
                 _buildInfoItem(
                   Icons.location_on_outlined,
                   '所在地',
-                  listing.location.address.split(',').first,
+                  listing.location != null && listing.location!['address'] != null
+                      ? listing.location!['address'].toString().split(',').first
+                      : listing.contactInfo,
                 ),
               ],
             ),
@@ -353,24 +357,30 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
   Widget _buildInfoItem(IconData icon, String label, String value) {
     return Expanded(
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppTheme.primary500, size: 24),
-          const SizedBox(width: AppTheme.spacing8),
+          Icon(icon, color: AppTheme.primary500, size: 20),
+          const SizedBox(width: AppTheme.spacing4),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   label,
-                  style: AppTheme.body2.copyWith(
+                  style: AppTheme.caption.copyWith(
                     color: AppTheme.neutral700,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 2),
                 Text(
                   value,
-                  style: AppTheme.heading4,
-                  maxLines: 1,
+                  style: AppTheme.body2.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
               ],
@@ -386,61 +396,75 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(AppTheme.spacing16),
-        padding: const EdgeInsets.all(AppTheme.spacing16),
+        padding: const EdgeInsets.all(AppTheme.spacing12),
         decoration: BoxDecoration(
           color: AppTheme.neutral50,
           borderRadius: AppTheme.borderRadiusMedium,
         ),
-        child: Row(
-          children: [
-            BBXAvatarVerified(
-              imageUrl: null,
-              name: listing.sellerName,
-              size: 56,
-              isVerified: true,
-            ),
-            const SizedBox(width: AppTheme.spacing12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: IntrinsicHeight(
+          child: Row(
+            children: [
+              BBXAvatarVerified(
+                imageUrl: null,
+                name: listing.sellerName,
+                size: 48,
+                isVerified: true,
+              ),
+              const SizedBox(width: AppTheme.spacing8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      listing.sellerName,
+                      style: AppTheme.heading4,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.star_rounded, size: 14, color: Colors.amber[700]),
+                        const SizedBox(width: 4),
+                        const Text('4.8', style: TextStyle(fontSize: 12)),
+                        const SizedBox(width: 4),
+                        const Text('·', style: TextStyle(fontSize: 12)),
+                        const SizedBox(width: 4),
+                        const Flexible(
+                          child: Text(
+                            '128笔交易',
+                            style: TextStyle(fontSize: 11),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: AppTheme.spacing8),
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    listing.sellerName ?? '未知卖家',
-                    style: AppTheme.heading4,
+                  BBXIconButton(
+                    icon: Icons.message_rounded,
+                    onPressed: () {},
+                    color: AppTheme.primary500,
+                    size: 36,
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.star_rounded, size: 16, color: Colors.amber[700]),
-                      const SizedBox(width: 4),
-                      const Text('4.8', style: AppTheme.body2),
-                      const SizedBox(width: AppTheme.spacing8),
-                      const Text('·', style: AppTheme.body2),
-                      const SizedBox(width: AppTheme.spacing8),
-                      const Text('128笔交易', style: AppTheme.caption),
-                    ],
+                  BBXIconButton(
+                    icon: Icons.phone_rounded,
+                    onPressed: () {},
+                    color: AppTheme.primary500,
+                    size: 36,
                   ),
                 ],
               ),
-            ),
-            Column(
-              children: [
-                BBXIconButton(
-                  icon: Icons.message_rounded,
-                  onPressed: () {},
-                  color: AppTheme.primary500,
-                  size: 40,
-                ),
-                const SizedBox(height: AppTheme.spacing8),
-                BBXIconButton(
-                  icon: Icons.phone_rounded,
-                  onPressed: () {},
-                  color: AppTheme.primary500,
-                  size: 40,
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -516,7 +540,9 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
             ),
             const SizedBox(height: AppTheme.spacing12),
             Text(
-              listing.location.address,
+              listing.location != null && listing.location!['address'] != null
+                  ? listing.location!['address'].toString()
+                  : listing.contactInfo,
               style: AppTheme.body1,
             ),
             const SizedBox(height: AppTheme.spacing12),
@@ -560,7 +586,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       final doc = snapshot.data!.docs[index];
-                      final listing = Listing.fromFirestore(doc);
+                      final listing = ListingModel.fromDocument(doc);
 
                       return Container(
                         width: 160,
@@ -632,10 +658,13 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
       left: 0,
       right: 0,
       child: Container(
-        padding: const EdgeInsets.all(AppTheme.spacing16),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppTheme.spacing12,
+          vertical: AppTheme.spacing12,
+        ),
         decoration: const BoxDecoration(
           color: Colors.white,
-          boxShadow: [AppTheme.shadowMedium],
+          boxShadow: AppTheme.shadowMedium,
         ),
         child: SafeArea(
           top: false,
@@ -649,17 +678,17 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                   });
                 },
                 color: _isFavorited ? AppTheme.error : AppTheme.neutral600,
-                size: 48,
+                size: 44,
               ),
-              const SizedBox(width: AppTheme.spacing12),
+              const SizedBox(width: AppTheme.spacing8),
               Expanded(
                 child: BBXSecondaryButton(
-                  text: '联系卖家',
+                  text: '联系',
                   onPressed: () {},
                   icon: Icons.message_rounded,
                 ),
               ),
-              const SizedBox(width: AppTheme.spacing12),
+              const SizedBox(width: AppTheme.spacing8),
               Expanded(
                 flex: 2,
                 child: BBXPrimaryButton(

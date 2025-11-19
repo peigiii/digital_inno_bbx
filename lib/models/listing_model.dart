@@ -190,8 +190,23 @@ class ListingModel {
     }
   }
 
+  // Compatibility getters for backward compatibility
+  List<String> get images => imageUrls;
+  String get category => wasteType;
+  String get sellerName => userEmail.split('@').first;
+
   @override
   String toString() {
     return 'ListingModel(id: $id, title: $title, wasteType: $wasteType, quantity: $quantity $unit, status: $status)';
+  }
+}
+
+// Backward compatibility typedef
+typedef Listing = ListingModel;
+
+// Add fromFirestore as an extension
+extension ListingModelExtensions on ListingModel {
+  static ListingModel fromFirestore(DocumentSnapshot doc) {
+    return ListingModel.fromDocument(doc);
   }
 }

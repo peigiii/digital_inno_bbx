@@ -83,10 +83,13 @@ class BBXListingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double imageHeight = 130;
+
     return BBXCard(
       onTap: onTap,
       padding: EdgeInsets.zero,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 商品图片
@@ -97,18 +100,19 @@ class BBXListingCard extends StatelessWidget {
                   topLeft: Radius.circular(AppTheme.radiusMedium),
                   topRight: Radius.circular(AppTheme.radiusMedium),
                 ),
-                child: Image.network(
-                  imageUrl,
-                  height: 160,
+                child: SizedBox(
+                  height: imageHeight,
                   width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 160,
-                    color: AppTheme.neutral200,
-                    child: const Icon(
-                      Icons.image_not_supported_rounded,
-                      size: 48,
-                      color: AppTheme.neutral400,
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: AppTheme.neutral200,
+                      child: const Icon(
+                        Icons.image_not_supported_rounded,
+                        size: 42,
+                        color: AppTheme.neutral400,
+                      ),
                     ),
                   ),
                 ),
@@ -145,18 +149,22 @@ class BBXListingCard extends StatelessWidget {
 
           // 商品信息
           Padding(
-            padding: const EdgeInsets.all(AppTheme.spacing12),
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppTheme.spacing12,
+              vertical: AppTheme.spacing8,
+            ),
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 商品标题
                 Text(
                   title,
                   style: AppTheme.heading4,
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: AppTheme.spacing8),
+                const SizedBox(height: AppTheme.spacing4),
 
                 // 卖家信息
                 if (sellerName != null)
@@ -200,7 +208,7 @@ class BBXListingCard extends StatelessWidget {
                     ],
                   ),
 
-                const SizedBox(height: AppTheme.spacing8),
+                const SizedBox(height: AppTheme.spacing4),
 
                 // 数量
                 if (quantity != null)
@@ -211,7 +219,7 @@ class BBXListingCard extends StatelessWidget {
                     ),
                   ),
 
-                const SizedBox(height: AppTheme.spacing8),
+                const SizedBox(height: AppTheme.spacing4),
 
                 // 价格和按钮
                 Row(
@@ -236,9 +244,9 @@ class BBXListingCard extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      height: 32,
+                      height: 30,
                       padding: const EdgeInsets.symmetric(
-                        horizontal: AppTheme.spacing12,
+                        horizontal: AppTheme.spacing8,
                       ),
                       decoration: BoxDecoration(
                         color: AppTheme.primary500,

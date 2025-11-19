@@ -221,10 +221,12 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return BBXEmptyState.noData(
             description: '暂无报价记录',
-            buttonText: '去逛逛',
-            onButtonPressed: () {
-              Navigator.pushNamed(context, '/marketplace');
-            },
+            action: BBXPrimaryButton(
+              text: '去逛逛',
+              onPressed: () {
+                Navigator.pushNamed(context, '/home');
+              },
+            ),
           );
         }
 

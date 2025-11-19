@@ -113,7 +113,10 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return BBXEmptyState.noMessages();
+          return BBXEmptyState.noData(
+            title: '暂无消息',
+            description: '开始你的第一个对话吧',
+          );
         }
 
         return ListView.builder(

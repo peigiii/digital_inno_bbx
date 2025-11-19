@@ -554,11 +554,11 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
 
       await FirebaseFirestore.instance.collection('offers').add({
         'listingId': widget.listing.id,
-        'sellerId': widget.listing.sellerId,
+        'sellerId': widget.listing.userId,
         'buyerId': user.uid,
         'offerPrice': _offerAmount,
         'originalPrice': widget.listing.pricePerUnit,
-        'quantity': widget.listing.minimumOrder,
+        'quantity': widget.listing.quantity,
         'totalAmount': _totalAmount,
         'deliveryMethod': _deliveryMethod,
         'pickupDate': Timestamp.fromDate(_pickupDate!),

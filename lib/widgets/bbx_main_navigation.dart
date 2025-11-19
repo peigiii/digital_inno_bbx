@@ -20,7 +20,7 @@ class BBXMainNavigation extends StatelessWidget {
       height: AppTheme.bottomNavHeight,
       decoration: const BoxDecoration(
         color: Colors.white,
-        boxShadow: [AppTheme.shadowMedium],
+        boxShadow: AppTheme.shadowMedium,
       ),
       child: SafeArea(
         top: false,
