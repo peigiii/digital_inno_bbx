@@ -93,6 +93,8 @@ class ListingModel {
 
   /// 复制并修改部分字段
   ListingModel copyWith({
+    String? userId,
+    String? userEmail,
     String? title,
     String? description,
     String? wasteType,
@@ -108,8 +110,8 @@ class ListingModel {
   }) {
     return ListingModel(
       id: id,
-      userId: userId,
-      userEmail: userEmail,
+      userId: userId ?? this.userId,
+      userEmail: userEmail ?? this.userEmail,
       title: title ?? this.title,
       description: description ?? this.description,
       wasteType: wasteType ?? this.wasteType,

@@ -709,7 +709,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
       sliver: SliverGrid(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 0.65,
+          childAspectRatio: 0.8,
           crossAxisSpacing: 0,
           mainAxisSpacing: 0,
         ),

@@ -229,7 +229,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
   /// 3. 商品信息卡片
   Widget _buildProductInfoCard(TransactionModel transaction) {
     return FutureBuilder<ListingModel?>(
-      future: _listingService.getListingById(transaction.listingId),
+      future: _listingService.getListing(transaction.listingId),
       builder: (context, snapshot) {
         final listing = snapshot.data;
 
@@ -287,7 +287,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                                 borderRadius: BorderRadius.circular(4),
                               ),
                               child: Text(
-                                listing.scrapType,
+                                listing.wasteType,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.blue[700],
@@ -300,7 +300,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                               style: TextStyle(color: Colors.grey[700]),
                             ),
                             Text(
-                              '单价: RM ${listing.expectedPrice.toStringAsFixed(2)}/${listing.unit}',
+                              '单价: RM ${listing.pricePerUnit.toStringAsFixed(2)}/${listing.unit}',
                               style: TextStyle(color: Colors.grey[700]),
                             ),
                           ],
@@ -402,10 +402,10 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     children: [
                       CircleAvatar(
                         radius: 24,
-                        backgroundImage: user.photoUrl != null
-                            ? NetworkImage(user.photoUrl!)
+                        backgroundImage: user.photoURL != null
+                            ? NetworkImage(user.photoURL!)
                             : null,
-                        child: user.photoUrl == null
+                        child: user.photoURL == null
                             ? const Icon(Icons.person)
                             : null,
                       ),
@@ -421,15 +421,15 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                                 fontSize: 15,
                               ),
                             ),
-                            if (user.phone != null)
+                            if (user.contact != null)
                               InkWell(
-                                onTap: () => _makePhoneCall(user.phone!),
+                                onTap: () => _makePhoneCall(user.contact!),
                                 child: Row(
                                   children: [
                                     const Icon(Icons.phone, size: 14),
                                     const SizedBox(width: 4),
                                     Text(
-                                      user.phone!,
+                                      user.contact!,
                                       style: const TextStyle(
                                         color: Colors.blue,
                                         decoration: TextDecoration.underline,

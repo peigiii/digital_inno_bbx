@@ -184,7 +184,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
 
               // 商品信息
               FutureBuilder<ListingModel?>(
-                future: _listingService.getListingById(transaction.listingId),
+                future: _listingService.getListing(transaction.listingId),
                 builder: (context, snapshot) {
                   final listing = snapshot.data;
                   return Row(
@@ -348,10 +348,10 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundImage: otherUser?.photoUrl != null
-                            ? NetworkImage(otherUser!.photoUrl!)
+                        backgroundImage: otherUser?.photoURL != null
+                            ? NetworkImage(otherUser!.photoURL!)
                             : null,
-                        child: otherUser?.photoUrl == null
+                        child: otherUser?.photoURL == null
                             ? const Icon(Icons.person, size: 16)
                             : null,
                       ),

@@ -337,7 +337,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       Row(
                         children: [
                           Expanded(
-                            flex: 2,
+                            flex: 3,
                             child: TextFormField(
                               controller: _quantityController,
                               decoration: const InputDecoration(
@@ -356,18 +356,24 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                               },
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 12),
                           Expanded(
-                            flex: 1,
+                            flex: 2,
                             child: DropdownButtonFormField<String>(
                               initialValue: _selectedUnit,
+                              isExpanded: true,
+                              isDense: true,
                               decoration: const InputDecoration(
                                 labelText: '单位',
+                                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                               ),
                               items: units.map((String unit) {
                                 return DropdownMenuItem<String>(
                                   value: unit,
-                                  child: Text(unit),
+                                  child: Text(
+                                    unit,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 );
                               }).toList(),
                               onChanged: (String? value) {

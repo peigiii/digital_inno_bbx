@@ -32,54 +32,111 @@ import 'theme/app_theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase with options
+  // Initialize Firebase with timeout
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
+    ).timeout(
+      const Duration(seconds: 10),
+      onTimeout: () {
+        debugPrint('⚠️ Firebase 初始化超时');
+        throw Exception('Firebase initialization timeout');
+      },
     );
+    debugPrint('✅ Firebase 初始化成功');
   } catch (e) {
-    debugPrint('Firebase initialization error: $e');
+    debugPrint('❌ Firebase initialization error: $e');
   }
 
-  // Request permissions
-  await _requestPermissions();
+  // Start app immediately, don't wait for other initializations
+  runApp(const BBXApp());
 
-  // Initialize notification service
-  try {
-    await NotificationService().initialize();
-  } catch (e) {
-    debugPrint('Notification service initialization error: $e');
-  }
+  // Background initialization - non-blocking
+  _backgroundInitialization();
+}
 
-  // Ensure user document exists
+/// Background initialization that won't block app startup
+Future<void> _backgroundInitialization() async {
+  // Request permissions in background
+  _requestPermissions().catchError((e) {
+    debugPrint('❌ Permission request error: $e');
+  });
+
+  // Initialize notification service in background
+  NotificationService().initialize().timeout(
+    const Duration(seconds: 5),
+    onTimeout: () {
+      debugPrint('⚠️ 通知服务初始化超时');
+    },
+  ).catchError((e) {
+    debugPrint('❌ Notification service error: $e');
+  });
+
+  // Initialize user document in background (only if logged in)
   try {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      await UserInitializer.ensureUserDocumentExists();
-      await UserInitializer.fixUserDocument(currentUser.uid);
+      await UserInitializer.ensureUserDocumentExists().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('⚠️ 用户文档初始化超时');
+        },
+      );
+      await UserInitializer.fixUserDocument(currentUser.uid).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('⚠️ 用户文档修复超时');
+        },
+      );
       debugPrint('✅ 用户文档初始化完成');
     }
   } catch (e) {
-    debugPrint('User initialization error: $e');
+    debugPrint('❌ User initialization error: $e');
   }
-
-  runApp(const BBXApp());
 }
 
 Future<void> _requestPermissions() async {
   try {
-    // Request permissions individually with error handling
-    await Permission.location.request();
-    await Permission.camera.request();
-    await Permission.notification.request();
+    // Request permissions individually with timeout and error handling
+    await Permission.location.request().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        debugPrint('⚠️ Location permission timeout');
+        return PermissionStatus.denied;
+      },
+    );
+    
+    await Permission.camera.request().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        debugPrint('⚠️ Camera permission timeout');
+        return PermissionStatus.denied;
+      },
+    );
+    
+    await Permission.notification.request().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        debugPrint('⚠️ Notification permission timeout');
+        return PermissionStatus.denied;
+      },
+    );
     
     // Handle storage permission based on platform
     if (await Permission.storage.isRestricted || 
         await Permission.storage.isDenied) {
-      await Permission.storage.request();
+      await Permission.storage.request().timeout(
+        const Duration(seconds: 5),
+        onTimeout: () {
+          debugPrint('⚠️ Storage permission timeout');
+          return PermissionStatus.denied;
+        },
+      );
     }
+    
+    debugPrint('✅ 权限请求完成');
   } catch (e) {
-    debugPrint('Permission request error: $e');
+    debugPrint('❌ Permission request error: $e');
   }
 }
 
