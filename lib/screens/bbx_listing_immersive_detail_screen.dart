@@ -526,7 +526,7 @@ class _BBXListingImmersiveDetailScreenState
       {'label': 'Type', 'value': data['wasteType'] ?? '-'},
       {'label': 'Quantity', 'value': '${data['quantity']} tons'},
       {'label': 'Moisture', 'value': data['moistureContent'] ?? '-'},
-      {'label': 'Location', 'value': data['location'] ?? '-'},
+      {'label': 'Location', 'value': _getLocationDisplay(data['location'])},
     ];
 
     return Container(
@@ -655,7 +655,7 @@ class _BBXListingImmersiveDetailScreenState
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  data['location'] ?? 'Location not specified',
+                  _getLocationDisplay(data['location']),
                   style: const TextStyle(fontSize: 14),
                 ),
               ),
@@ -884,6 +884,33 @@ class _BBXListingImmersiveDetailScreenState
       'Quantity: ${data['quantity']} tons',
       subject: data['wasteType'],
     );
+  }
+
+  String _getLocationDisplay(dynamic location) {
+    if (location == null) return 'Location not specified';
+
+    // 如果是字符串，直接返回
+    if (location is String) return location;
+
+    // 如果是Map（包含latitude和longitude）
+    if (location is Map<String, dynamic>) {
+      final lat = location['latitude'];
+      final lng = location['longitude'];
+      if (lat != null && lng != null) {
+        return '${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}';
+      }
+      // 如果有address字段，返回address
+      if (location['address'] != null) {
+        return location['address'].toString();
+      }
+    }
+
+    // 如果是GeoPoint类型
+    if (location is GeoPoint) {
+      return '${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}';
+    }
+
+    return 'Location not specified';
   }
 
   void _showQuoteDialog(Map<String, dynamic> data) {
