@@ -30,7 +30,7 @@ class TransactionService {
       final listing = ListingModel.fromDocument(listingDoc);
 
       // 计算总金额 = 报价金额 + 平台费（3%）
-      final amount = offer.amount;
+      final amount = offer.offerPrice;
       final platformFee = amount * 0.03;
       final totalAmount = amount + platformFee;
 
@@ -49,7 +49,7 @@ class TransactionService {
         paymentStatus: 'pending',
         shippingStatus: 'pending',
         escrowStatus: 'held',
-        pickupScheduledDate: offer.pickupDate,
+        pickupScheduledDate: offer.scheduledPickupDate,
         createdAt: DateTime.now(),
       );
 

@@ -85,7 +85,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     if (isLoading) {
       return const Scaffold(
         backgroundColor: AppTheme.background,
-        body: Center(child: BBXLoading()),
+        body: Center(child: BBXFullScreenLoading()),
       );
     }
 

@@ -101,7 +101,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
         ),
       ),
       body: isLoading
-          ? const Center(child: BBXLoading())
+          ? const Center(child: BBXFullScreenLoading())
           : TabBarView(
               controller: _tabController,
               children: [

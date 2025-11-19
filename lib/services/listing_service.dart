@@ -17,8 +17,6 @@ class ListingService {
 
       // 确保设置了必要字段
       final listingData = listing.copyWith(
-        userId: user.uid,
-        userEmail: user.email ?? '',
         status: ListingStatusConstants.available,
         complianceStatus: 'pending',
       );

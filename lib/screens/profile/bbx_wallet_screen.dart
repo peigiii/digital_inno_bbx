@@ -59,7 +59,7 @@ class _BBXWalletScreenState extends State<BBXWalletScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Scaffold(
-        body: Center(child: BBXLoading()),
+        body: Center(child: BBXFullScreenLoading()),
       );
     }
 

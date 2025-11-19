@@ -52,7 +52,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return const Scaffold(
-        body: Center(child: BBXLoading()),
+        body: Center(child: BBXFullScreenLoading()),
       );
     }
 
