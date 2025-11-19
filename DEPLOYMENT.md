@@ -608,8 +608,78 @@ user_settings/      # 用户设置
 
 详细信息请查看：`BUGFIX_REPORT_2025-11-19.md`
 
+#### 20个编译错误修复（2025-11-19 批次2）
+**状态**: ✅ 已修复
+
+修复了20个编译错误，确保代码100%可运行：
+1. **UserModel 属性名称** (10处)
+   - photoUrl → photoURL (6处)
+   - phone → contact (3处)
+
+2. **ListingModel 属性名称** (2处)
+   - scrapType → wasteType (1处)
+   - expectedPrice → pricePerUnit (1处)
+
+3. **OfferModel 属性名称** (2处)
+   - amount → offerPrice (1处)
+   - pickupDate → scheduledPickupDate (1处)
+
+4. **服务方法修正** (3处)
+   - getListingById() → getListing() (2处)
+   - 移除不支持的 userId 参数 (1处)
+
+5. **组件使用修正** (6处)
+   - BBXLoading() → BBXFullScreenLoading() (6处profile页面)
+
+详细信息请查看：`BUGFIX_REPORT_2025-11-19_BATCH2.md`
+
+#### 旧版UI显示问题修复（2025-11-19）
+**状态**: ✅ 已修复
+**优先级**: P0（紧急）
+
+**问题描述**：
+用户启动应用后看到旧版UI（BBX Users页面），而不是新设计的UI。
+
+**根本原因**：
+1. `bbx_splash_screen.dart` 跳转到旧的 `BBXHomeScreen`
+2. `BBXHomeScreen` 包含旧的5个Tab（Users/Listings/Recyclers/Offers/Messages）
+3. 新UI文件已创建但缺少主页面包装器
+
+**修复内容**：
+1. **创建主页面包装器** - `lib/screens/bbx_main_screen.dart`
+   - 管理5个新Tab页面切换
+   - 使用 IndexedStack 保持页面状态
+   - 集成 BBXBottomNavigation 新导航栏
+
+2. **修改启动页跳转** - `lib/screens/bbx_splash_screen.dart`
+   - 从跳转 BBXHomeScreen → 改为跳转 BBXMainScreen
+
+3. **修改路由配置** - `lib/main.dart`
+   - '/home' 路由从 BBXHomeScreen → 改为 BBXMainScreen
+
+**新UI架构**：
+```
+BBXMainScreen (主页面)
+├── IndexedStack (保持状态)
+│   ├── BBXNewHomeScreen (首页)
+│   ├── BBXNewMarketplaceScreen (商品)
+│   ├── BBXListWasteScreen (发布)
+│   ├── BBXConversationsScreen (消息)
+│   └── BBXProfileScreen (个人中心)
+└── BBXBottomNavigation (底部导航)
+    └── 5个Tab + 凸起的发布按钮
+```
+
+**预期效果**：
+- ✅ 首页显示 "BBX Marketplace" 而非 "BBX Users"
+- ✅ 底部导航：首页/商品/发布/消息/我的
+- ✅ 中间发布按钮凸起设计（64x64，向上8px）
+- ✅ 新的个人中心完整显示（渐变头部、会员专区等）
+
+详细信息请查看：`UI_FIX_REPORT_2025-11-19.md`
+
 ---
 
 **最后更新**: 2025-11-19
-**版本**: 1.1.1
-**构建状态**: ✅ 编译错误已修复
+**版本**: 1.2.0
+**构建状态**: ✅ 所有编译错误已修复，新UI已启用

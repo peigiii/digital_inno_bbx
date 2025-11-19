@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'bbx_home_screen.dart';
+import 'bbx_main_screen.dart'; // ← 修改：使用新的主页面
 import 'digital_inno_login_screen.dart';
 
 class BBXSplashScreen extends StatefulWidget {
@@ -43,8 +43,8 @@ class _BBXSplashScreenState extends State<BBXSplashScreen>
       context,
       MaterialPageRoute(
         builder: (context) => user != null
-            ? BBXHomeScreen()
-            : BBXLoginScreen(),
+            ? const BBXMainScreen() // ← 修改：使用新的主页面
+            : const BBXLoginScreen(),
       ),
     );
   }

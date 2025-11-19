@@ -9,6 +9,7 @@ import 'screens/bbx_listing_detail_screen.dart';
 import 'screens/bbx_new_profile_screen.dart';
 import 'screens/bbx_home_screen.dart';
 import 'screens/bbx_splash_screen.dart';
+import 'screens/bbx_main_screen.dart'; // ← 新增：主页面（带新底部导航）
 import 'screens/bbx_modern_home_screen.dart';
 import 'screens/bbx_market_browse_screen.dart';
 import 'screens/bbx_profile_cards_screen.dart';
@@ -104,7 +105,7 @@ class BBXApp extends StatelessWidget {
       home: const BBXSplashScreen(),
       routes: {
         '/login': (context) => const BBXLoginScreen(),
-        '/home': (context) => const BBXHomeScreen(),
+        '/home': (context) => const BBXMainScreen(), // ← 修改：使用新的主页面
         '/waste-list': (context) => const BBXListWasteScreen(),
         '/marketplace': (context) => const BBXNewMarketplaceScreen(),
         '/profile': (context) => const BBXProfileScreen(),
