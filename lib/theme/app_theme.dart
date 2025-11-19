@@ -252,35 +252,35 @@ class AppTheme {
   // 阴影系统
   // ============================================================================
 
-  static const BoxShadow shadowSmall = BoxShadow(
+  static const List<BoxShadow> shadowSmall = [BoxShadow(
     offset: Offset(0, 1),
     blurRadius: 3,
     color: Color(0x14000000), // rgba(0,0,0,0.08)
-  );
+  )];
 
-  static const BoxShadow shadowMedium = BoxShadow(
+  static const List<BoxShadow> shadowMedium = [BoxShadow(
     offset: Offset(0, 2),
     blurRadius: 6,
     color: Color(0x1F000000), // rgba(0,0,0,0.12)
-  );
+  )];
 
-  static const BoxShadow shadowLarge = BoxShadow(
+  static const List<BoxShadow> shadowLarge = [BoxShadow(
     offset: Offset(0, 4),
     blurRadius: 12,
     color: Color(0x29000000), // rgba(0,0,0,0.16)
-  );
+  )];
 
-  static const BoxShadow shadowXLarge = BoxShadow(
+  static const List<BoxShadow> shadowXLarge = [BoxShadow(
     offset: Offset(0, 8),
     blurRadius: 16,
     color: Color(0x33000000), // rgba(0,0,0,0.20)
-  );
+  )];
 
   // 阴影列表
-  static const List<BoxShadow> elevation1 = [shadowSmall];
-  static const List<BoxShadow> elevation2 = [shadowMedium];
-  static const List<BoxShadow> elevation4 = [shadowLarge];
-  static const List<BoxShadow> elevation8 = [shadowXLarge];
+  static const List<BoxShadow> elevation1 = shadowSmall;
+  static const List<BoxShadow> elevation2 = shadowMedium;
+  static const List<BoxShadow> elevation4 = shadowLarge;
+  static const List<BoxShadow> elevation8 = shadowXLarge;
 
   // 阴影别名
   static const List<BoxShadow> shadowLight = elevation1;
@@ -458,7 +458,6 @@ class AppTheme {
 
       // 底部导航栏主题
       bottomNavigationBarTheme: const BottomNavigationBarTheme(
-        backgroundColor: surface,
         selectedItemColor: primary500,
         unselectedItemColor: neutral500,
         selectedLabelStyle: TextStyle(
