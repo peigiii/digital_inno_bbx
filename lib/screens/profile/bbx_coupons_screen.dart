@@ -122,7 +122,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
             : type == 'used'
                 ? '暂无已使用优惠券'
                 : '暂无过期优惠券',
-        subtitle: type == 'available' ? '完成任务获取更多优惠券' : null,
+        description: type == 'available' ? '完成任务获取更多优惠券' : null,
       );
     }
 

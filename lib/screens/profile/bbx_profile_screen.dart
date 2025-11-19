@@ -521,7 +521,12 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   _buildMenuItem(
                     icon: Icons.language_rounded,
                     title: '语言设置',
-                    trailing: '中文',
+                    trailing: Text(
+                      '中文',
+                      style: AppTheme.body2.copyWith(
+                        color: AppTheme.neutral600,
+                      ),
+                    ),
                     onTap: () => Navigator.pushNamed(context, '/language-settings'),
                   ),
                   const Divider(height: 1, indent: 56),
@@ -585,7 +590,12 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   _buildMenuItem(
                     icon: Icons.info_outline_rounded,
                     title: '关于BBX',
-                    trailing: 'v1.0.0',
+                    trailing: Text(
+                      'v1.0.0',
+                      style: AppTheme.body2.copyWith(
+                        color: AppTheme.neutral600,
+                      ),
+                    ),
                     onTap: () => Navigator.pushNamed(context, '/about'),
                   ),
                 ],

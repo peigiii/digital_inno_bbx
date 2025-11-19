@@ -590,7 +590,26 @@ user_settings/      # 用户设置
 - [ ] 实现每日任务自动重置
 - [ ] 添加会员权益详细说明页
 
+#### 编译错误修复（2025-11-19）
+**状态**: ✅ 已修复
+
+修复了3个编译错误：
+1. **bbx_profile_screen.dart:524** - 类型不匹配
+   - 问题：trailing 参数需要 Widget? 类型，错误传入 String '中文'
+   - 修复：将字符串包装成 Text widget
+
+2. **bbx_profile_screen.dart:588** - 类型不匹配
+   - 问题：trailing 参数需要 Widget? 类型，错误传入 String 'v1.0.0'
+   - 修复：将字符串包装成 Text widget
+
+3. **bbx_coupons_screen.dart:125** - 参数名称错误
+   - 问题：BBXEmptyState 没有 subtitle 参数
+   - 修复：将 subtitle 改为 description
+
+详细信息请查看：`BUGFIX_REPORT_2025-11-19.md`
+
 ---
 
 **最后更新**: 2025-11-19
-**版本**: 1.1.0
+**版本**: 1.1.1
+**构建状态**: ✅ 编译错误已修复
