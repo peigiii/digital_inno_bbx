@@ -18,6 +18,9 @@ class AppTheme {
   static const Color primary = primary500;
   static const Color primaryDark = Color(0xFF1B5E20);
   static const Color primaryLight = primary100;
+  static const Color primary600 = Color(0xFF388E3C); // 新增
+  static const Color primary700 = Color(0xFF2E7D32); // 新增
+  static const Color primary800 = Color(0xFF1B5E20); // 新增
 
   // ============================================================================
   // 次要色调（Secondary）- 橙色系，用于废料回收强调
@@ -104,6 +107,29 @@ class AppTheme {
         return textile;
       default:
         return others;
+    }
+  }
+
+  // 根据状态获取颜色
+  static Color getStatusColor(String status) {
+    switch (status.toLowerCase().trim()) {
+      case 'active':
+      case 'available':
+      case 'completed':
+      case 'accepted':
+        return success;
+      case 'pending':
+      case 'processing':
+      case 'in_progress':
+        return warning;
+      case 'cancelled':
+      case 'rejected':
+      case 'expired':
+        return error;
+      case 'draft':
+        return textSecondary;
+      default:
+        return textLight;
     }
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/navigation/bbx_bottom_navigation.dart';
-import 'home/bbx_new_home_screen.dart';
+import 'home/bbx_optimized_home_screen.dart'; // 优化后的首页
 import 'bbx_new_marketplace_screen.dart';
 import 'digital_inno_list_waste_screen.dart';
 import 'chat/bbx_conversations_screen.dart';
@@ -26,7 +25,7 @@ class _BBXMainScreenState extends State<BBXMainScreen> {
   void initState() {
     super.initState();
     _pages = [
-      const BBXNewHomeScreen(),        // 0: 首页
+      const BBXOptimizedHomeScreen(),  // 0: 首页 ← 已更新为优化版本！
       const BBXNewMarketplaceScreen(), // 1: 商品列表
       const BBXListWasteScreen(),      // 2: 发布（创建商品）
       const BBXConversationsScreen(),  // 3: 消息
