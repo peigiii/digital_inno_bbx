@@ -389,7 +389,7 @@ class _BBXNewHomeScreenState extends State<BBXNewHomeScreen> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const BBXListLoading(itemCount: 3);
+                  return BBXListLoading(itemCount: 3);
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {

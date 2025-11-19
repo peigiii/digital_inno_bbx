@@ -46,6 +46,11 @@ class ListingModel {
     return ListingModel.fromMap(doc.id, data);
   }
 
+  /// 从 Firestore 文档创建（别名方法）
+  factory ListingModel.fromFirestore(DocumentSnapshot doc) {
+    return ListingModel.fromDocument(doc);
+  }
+
   /// 从 Map 创建
   factory ListingModel.fromMap(String id, Map<String, dynamic> data) {
     return ListingModel(
@@ -148,6 +153,15 @@ class ListingModel {
   double? get latitude => location?['latitude'] as double?;
   double? get longitude => location?['longitude'] as double?;
 
+  /// 兼容性 getter - images（别名 imageUrls）
+  List<String> get images => imageUrls;
+
+  /// 兼容性 getter - category（别名 wasteType）
+  String get category => wasteType;
+
+  /// 兼容性 getter - sellerName（从 userEmail 提取）
+  String get sellerName => userEmail.split('@').first;
+
   /// 获取废料类型显示文本
   String get wasteTypeDisplay {
     switch (wasteType) {
@@ -197,3 +211,6 @@ class ListingModel {
     return 'ListingModel(id: $id, title: $title, wasteType: $wasteType, quantity: $quantity $unit, status: $status)';
   }
 }
+
+/// 类型别名，用于向后兼容
+typedef Listing = ListingModel;

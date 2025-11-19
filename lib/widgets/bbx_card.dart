@@ -31,7 +31,7 @@ class BBXCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: color ?? Colors.white,
         borderRadius: borderRadius ?? AppTheme.borderRadiusMedium,
-        boxShadow: elevation != null ? [AppTheme.shadowSmall] : AppTheme.elevation2,
+        boxShadow: elevation != null ? AppTheme.shadowSmall : AppTheme.elevation2,
       ),
       child: Material(
         color: Colors.transparent,
