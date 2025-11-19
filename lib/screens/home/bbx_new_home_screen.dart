@@ -33,7 +33,9 @@ class _BBXNewHomeScreenState extends State<BBXNewHomeScreen> {
   Future<void> _onRefresh() async {
     setState(() => _isLoading = true);
     await Future.delayed(const Duration(seconds: 1));
-    setState(() => _isLoading = false);
+    if (mounted) {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -113,6 +115,7 @@ class _BBXNewHomeScreenState extends State<BBXNewHomeScreen> {
           icon: Icons.qr_code_scanner_rounded,
           onPressed: () {},
         ),
+        const SizedBox(width: 8),
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
@@ -184,12 +187,14 @@ class _BBXNewHomeScreenState extends State<BBXNewHomeScreen> {
     ];
 
     return SliverToBoxAdapter(
-      child: Container(
+      child: SizedBox(
         height: 120,
-        padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing16),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppTheme.spacing16,
+            vertical: AppTheme.spacing16,
+          ),
           itemCount: categories.length,
           itemBuilder: (context, index) {
             final category = categories[index];
@@ -303,7 +308,13 @@ class _BBXNewHomeScreenState extends State<BBXNewHomeScreen> {
                 final feature = features[index];
                 return GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, feature['route'] as String);
+                    try {
+                      Navigator.pushNamed(context, feature['route'] as String);
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('功能开发中：${feature['title']}')),
+                      );
+                    }
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -369,7 +380,13 @@ class _BBXNewHomeScreenState extends State<BBXNewHomeScreen> {
                 BBXTextButton(
                   text: '查看全部',
                   onPressed: () {
-                    Navigator.pushNamed(context, '/marketplace');
+                    try {
+                      Navigator.pushNamed(context, '/marketplace');
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('功能开发中')),
+                      );
+                    }
                   },
                 ),
               ],
@@ -378,13 +395,15 @@ class _BBXNewHomeScreenState extends State<BBXNewHomeScreen> {
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('listings')
-                  .where('status', isEqualTo: 'active')
+                  .where('status', isEqualTo: 'available')
                   .limit(10)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  return BBXEmptyState.noData(
-                    description: '加载失败，请重试',
+                  return Center(
+                    child: BBXEmptyState.noData(
+                      description: '加载失败，请重试',
+                    ),
                   );
                 }
 
@@ -393,8 +412,11 @@ class _BBXNewHomeScreenState extends State<BBXNewHomeScreen> {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return BBXEmptyState.noData(
-                    description: '暂无商品',
+                  return Center(
+                    child: BBXEmptyState.noData(
+                      title: '暂无商品',
+                      description: '当前没有可用商品\n敬请期待',
+                    ),
                   );
                 }
 
@@ -403,23 +425,30 @@ class _BBXNewHomeScreenState extends State<BBXNewHomeScreen> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    final doc = snapshot.data!.docs[index];
-                    final listing = Listing.fromFirestore(doc);
+                    try {
+                      final doc = snapshot.data!.docs[index];
+                      final listing = Listing.fromFirestore(doc);
 
-                    return BBXListingCard(
-                      imageUrl: listing.images.isNotEmpty
-                          ? listing.images.first
-                          : '',
-                      title: listing.title,
-                      category: listing.category,
-                      price: listing.pricePerUnit,
-                      unit: listing.unit,
-                      quantity: '${listing.quantity} ${listing.unit}',
-                      sellerName: listing.sellerName,
-                      onTap: () {
-                        // 导航到商品详情页
-                      },
-                    );
+                      return BBXListingCard(
+                        imageUrl: listing.images.isNotEmpty
+                            ? listing.images.first
+                            : '',
+                        title: listing.title,
+                        category: listing.category,
+                        price: listing.pricePerUnit,
+                        unit: listing.unit,
+                        quantity: '${listing.quantity} ${listing.unit}',
+                        sellerName: listing.sellerName,
+                        onTap: () {
+                          // 导航到商品详情页
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('查看商品: ${listing.title}')),
+                          );
+                        },
+                      );
+                    } catch (e) {
+                      return const SizedBox.shrink();
+                    }
                   },
                 );
               },
