@@ -249,14 +249,18 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
 
         // 搜索结果列表
         Expanded(
-          child: BBXEmptyState.noSearchResults(
-            buttonText: '清除筛选',
-            onButtonPressed: () {
-              setState(() {
-                _showResults = false;
-                _searchController.clear();
-              });
-            },
+          child: BBXEmptyState.noResults(
+            title: '无搜索结果',
+            description: '试试其他关键词',
+            action: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _showResults = false;
+                  _searchController.clear();
+                });
+              },
+              child: const Text('清除筛选'),
+            ),
           ),
         ),
       ],

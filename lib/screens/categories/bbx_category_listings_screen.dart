@@ -170,7 +170,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
               }
 
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SliverToBoxAdapter(
+                return SliverToBoxAdapter(
                   child: BBXListLoading(itemCount: 5),
                 );
               }
