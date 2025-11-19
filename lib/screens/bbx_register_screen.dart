@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'bbx_home_screen.dart';
+import 'home/bbx_new_home_screen.dart';
 
 class BBXRegisterScreen extends StatefulWidget {
   const BBXRegisterScreen({super.key});
@@ -98,7 +98,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
           // 导航到主页
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => BBXHomeScreen()),
+            MaterialPageRoute(builder: (context) => const BBXNewHomeScreen()),
             (route) => false,
           );
         }

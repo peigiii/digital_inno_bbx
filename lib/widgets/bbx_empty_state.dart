@@ -1,24 +1,62 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// BBX 空状态组件
+/// 空状态组件 - 用于显示无数据、无结果等状态
 class BBXEmptyState extends StatelessWidget {
-  final IconData? icon;
+  final IconData icon;
   final String title;
-  final String? description;
-  final String? buttonText;
-  final VoidCallback? onButtonPressed;
-  final Widget? customWidget;
+  final String description;
+  final Widget? action;
 
   const BBXEmptyState({
     super.key,
-    this.icon,
+    required this.icon,
     required this.title,
-    this.description,
-    this.buttonText,
-    this.onButtonPressed,
-    this.customWidget,
+    required this.description,
+    this.action,
   });
+
+  /// 无数据状态
+  factory BBXEmptyState.noData({
+    String title = '暂无数据',
+    String description = '暂时没有内容',
+    Widget? action,
+  }) {
+    return BBXEmptyState(
+      icon: Icons.inbox_outlined,
+      title: title,
+      description: description,
+      action: action,
+    );
+  }
+
+  /// 无搜索结果状态
+  factory BBXEmptyState.noResults({
+    String title = '无搜索结果',
+    String description = '试试其他关键词',
+    Widget? action,
+  }) {
+    return BBXEmptyState(
+      icon: Icons.search_off,
+      title: title,
+      description: description,
+      action: action,
+    );
+  }
+
+  /// 错误状态
+  factory BBXEmptyState.error({
+    String title = '出错了',
+    String description = '请稍后重试',
+    Widget? action,
+  }) {
+    return BBXEmptyState(
+      icon: Icons.error_outline,
+      title: title,
+      description: description,
+      action: action,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,138 +65,36 @@ class BBXEmptyState extends StatelessWidget {
         padding: const EdgeInsets.all(AppTheme.spacing32),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // 自定义组件或图标
-            if (customWidget != null)
-              customWidget!
-            else if (icon != null)
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: AppTheme.neutral100,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  icon,
-                  size: 64,
-                  color: AppTheme.neutral400,
-                ),
-              ),
-
-            const SizedBox(height: AppTheme.spacing24),
-
-            // 标题
+            Icon(
+              icon,
+              size: 80,
+              color: AppTheme.neutral400,
+            ),
+            const SizedBox(height: AppTheme.spacing16),
             Text(
               title,
               style: AppTheme.heading3.copyWith(
-                color: AppTheme.neutral700,
+                color: AppTheme.neutral600,
               ),
               textAlign: TextAlign.center,
             ),
-
-            // 描述
-            if (description != null) ...[
-              const SizedBox(height: AppTheme.spacing12),
-              Text(
-                description!,
-                style: AppTheme.body2.copyWith(
-                  color: AppTheme.neutral500,
-                ),
-                textAlign: TextAlign.center,
+            const SizedBox(height: AppTheme.spacing8),
+            Text(
+              description,
+              style: AppTheme.body2.copyWith(
+                color: AppTheme.neutral500,
               ),
-            ],
-
-            // 按钮
-            if (buttonText != null && onButtonPressed != null) ...[
-              const SizedBox(height: AppTheme.spacing32),
-              SizedBox(
-                width: 200,
-                child: ElevatedButton(
-                  onPressed: onButtonPressed,
-                  child: Text(buttonText!),
-                ),
-              ),
+              textAlign: TextAlign.center,
+            ),
+            if (action != null) ...[
+              const SizedBox(height: AppTheme.spacing24),
+              action!,
             ],
           ],
         ),
       ),
-    );
-  }
-
-  /// 创建"无数据"空状态
-  factory BBXEmptyState.noData({
-    String? title,
-    String? description,
-    String? buttonText,
-    VoidCallback? onButtonPressed,
-  }) {
-    return BBXEmptyState(
-      icon: Icons.inbox_rounded,
-      title: title ?? '暂无数据',
-      description: description,
-      buttonText: buttonText,
-      onButtonPressed: onButtonPressed,
-    );
-  }
-
-  /// 创建"无搜索结果"空状态
-  factory BBXEmptyState.noSearchResults({
-    String? title,
-    String? description,
-    String? buttonText,
-    VoidCallback? onButtonPressed,
-  }) {
-    return BBXEmptyState(
-      icon: Icons.search_off_rounded,
-      title: title ?? '未找到相关内容',
-      description: description ?? '试试其他关键词',
-      buttonText: buttonText,
-      onButtonPressed: onButtonPressed,
-    );
-  }
-
-  /// 创建"无收藏"空状态
-  factory BBXEmptyState.noFavorites({
-    String? title,
-    String? description,
-    String? buttonText,
-    VoidCallback? onButtonPressed,
-  }) {
-    return BBXEmptyState(
-      icon: Icons.favorite_border_rounded,
-      title: title ?? '还没有收藏',
-      description: description ?? '收藏你喜欢的商品',
-      buttonText: buttonText ?? '去逛逛',
-      onButtonPressed: onButtonPressed,
-    );
-  }
-
-  /// 创建"无消息"空状态
-  factory BBXEmptyState.noMessages({
-    String? title,
-    String? description,
-  }) {
-    return BBXEmptyState(
-      icon: Icons.chat_bubble_outline_rounded,
-      title: title ?? '收件箱空空',
-      description: description ?? '开始与卖家沟通吧',
-    );
-  }
-
-  /// 创建"无交易"空状态
-  factory BBXEmptyState.noTransactions({
-    String? title,
-    String? description,
-    String? buttonText,
-    VoidCallback? onButtonPressed,
-  }) {
-    return BBXEmptyState(
-      icon: Icons.receipt_long_outlined,
-      title: title ?? '暂无交易记录',
-      description: description,
-      buttonText: buttonText ?? '去逛逛',
-      onButtonPressed: onButtonPressed,
     );
   }
 }

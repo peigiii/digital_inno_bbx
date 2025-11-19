@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'bbx_home_screen.dart';
+import 'home/bbx_new_home_screen.dart';
 import 'digital_inno_login_screen.dart';
 
 class BBXSplashScreen extends StatefulWidget {
@@ -33,34 +33,17 @@ class _BBXSplashScreenState extends State<BBXSplashScreen>
   }
 
   Future<void> _initialize() async {
-    // Show splash for at least 2 seconds
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    User? user;
-    try {
-      // Try to get current user with timeout
-      user = await Future.microtask(() => FirebaseAuth.instance.currentUser)
-          .timeout(
-        const Duration(seconds: 3),
-        onTimeout: () {
-          debugPrint('⚠️ 获取用户信息超时，跳转到登录页');
-          return null;
-        },
-      );
-    } catch (e) {
-      debugPrint('❌ 获取用户信息失败: $e');
-      user = null;
-    }
-
-    if (!mounted) return;
+    final user = FirebaseAuth.instance.currentUser;
 
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => user != null
-            ? const BBXHomeScreen()
+            ? const BBXNewHomeScreen()
             : const BBXLoginScreen(),
       ),
     );
