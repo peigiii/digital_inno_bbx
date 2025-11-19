@@ -20,6 +20,10 @@ import 'screens/bbx_invoice_screen.dart';
 import 'screens/offers/bbx_my_offers_screen.dart';
 import 'screens/chat/bbx_conversations_screen.dart';
 import 'screens/search/bbx_advanced_search_screen.dart';
+import 'screens/transactions/bbx_transactions_screen.dart';
+import 'screens/transactions/bbx_transaction_detail_screen.dart';
+import 'screens/transactions/bbx_upload_payment_screen.dart';
+import 'screens/transactions/bbx_update_logistics_screen.dart';
 import 'services/notification_service.dart';
 import 'utils/user_initializer.dart';
 import 'firebase_options.dart';
@@ -105,6 +109,7 @@ class BBXApp extends StatelessWidget {
         '/my-offers': (context) => const BBXMyOffersScreen(),
         '/messages': (context) => const BBXConversationsScreen(),
         '/advanced-search': (context) => const BBXAdvancedSearchScreen(),
+        '/transactions': (context) => const BBXTransactionsScreen(),
       },
       onGenerateRoute: (settings) {
         // Handle routes with arguments
@@ -136,6 +141,33 @@ class BBXApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) => BBXInvoiceScreen(
               paymentId: args['paymentId'] as String,
+            ),
+          );
+        }
+
+        if (settings.name == '/transaction-detail') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => BBXTransactionDetailScreen(
+              transactionId: args['transactionId'] as String,
+            ),
+          );
+        }
+
+        if (settings.name == '/upload-payment') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => BBXUploadPaymentScreen(
+              transactionId: args['transactionId'] as String,
+            ),
+          );
+        }
+
+        if (settings.name == '/update-logistics') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => BBXUpdateLogisticsScreen(
+              transactionId: args['transactionId'] as String,
             ),
           );
         }

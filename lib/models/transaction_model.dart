@@ -10,15 +10,22 @@ class TransactionModel {
   final double amount; // 交易金额
   final double platformFee; // 平台费（3%）
   final double totalAmount; // 总金额 = amount + platformFee
-  final String paymentMethod; // fpx, ewallet, credit_card, cash
+  final String paymentMethod; // cash, bank_transfer, ewallet
+  final String paymentStatus; // pending, paid, refunded
+  final String? paymentProofUrl; // 支付凭证图片URL
   final String? paymentId; // 支付ID
   final String? receiptUrl; // 收据URL
   final String status; // confirmed, scheduled, inTransit, delivered, completed, disputed, cancelled, refunded
+  final String shippingStatus; // pending, picked_up, in_transit, delivered, completed
   final String escrowStatus; // held, released, refunded
   final String? trackingNumber;
   final String? logisticsProvider; // 物流供应商
-  final DateTime? pickupDate; // 取货日期
+  final DateTime? pickupScheduledDate; // 预定取货日期
+  final DateTime? actualPickupDate; // 实际取货日期
+  final DateTime? pickupDate; // 取货日期（兼容旧字段）
   final DateTime? deliveryDate; // 送货日期
+  final String? notes; // 交易备注
+  final String? cancellationReason; // 取消原因
   final List<String> shippingProof;
   final String? complianceDocumentUrl; // 合规文档URL
   final bool buyerReviewed; // 买家是否已评价
@@ -43,15 +50,22 @@ class TransactionModel {
     required this.amount,
     required this.platformFee,
     required this.totalAmount,
-    this.paymentMethod = 'fpx',
+    this.paymentMethod = 'cash',
+    this.paymentStatus = 'pending',
+    this.paymentProofUrl,
     this.paymentId,
     this.receiptUrl,
     this.status = 'confirmed',
+    this.shippingStatus = 'pending',
     this.escrowStatus = 'held',
     this.trackingNumber,
     this.logisticsProvider,
+    this.pickupScheduledDate,
+    this.actualPickupDate,
     this.pickupDate,
     this.deliveryDate,
+    this.notes,
+    this.cancellationReason,
     this.shippingProof = const [],
     this.complianceDocumentUrl,
     this.buyerReviewed = false,
@@ -85,15 +99,22 @@ class TransactionModel {
       amount: (data['amount'] ?? 0).toDouble(),
       platformFee: (data['platformFee'] ?? 0).toDouble(),
       totalAmount: (data['totalAmount'] ?? 0).toDouble(),
-      paymentMethod: data['paymentMethod'] ?? 'fpx',
+      paymentMethod: data['paymentMethod'] ?? 'cash',
+      paymentStatus: data['paymentStatus'] ?? 'pending',
+      paymentProofUrl: data['paymentProofUrl'],
       paymentId: data['paymentId'],
       receiptUrl: data['receiptUrl'],
       status: data['status'] ?? 'confirmed',
+      shippingStatus: data['shippingStatus'] ?? 'pending',
       escrowStatus: data['escrowStatus'] ?? 'held',
       trackingNumber: data['trackingNumber'],
       logisticsProvider: data['logisticsProvider'],
+      pickupScheduledDate: (data['pickupScheduledDate'] as Timestamp?)?.toDate(),
+      actualPickupDate: (data['actualPickupDate'] as Timestamp?)?.toDate(),
       pickupDate: (data['pickupDate'] as Timestamp?)?.toDate(),
       deliveryDate: (data['deliveryDate'] as Timestamp?)?.toDate(),
+      notes: data['notes'],
+      cancellationReason: data['cancellationReason'],
       shippingProof: (data['shippingProof'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       complianceDocumentUrl: data['complianceDocumentUrl'],
       buyerReviewed: data['buyerReviewed'] ?? false,
@@ -122,14 +143,21 @@ class TransactionModel {
       'platformFee': platformFee,
       'totalAmount': totalAmount,
       'paymentMethod': paymentMethod,
+      'paymentStatus': paymentStatus,
+      'paymentProofUrl': paymentProofUrl,
       'paymentId': paymentId,
       'receiptUrl': receiptUrl,
       'status': status,
+      'shippingStatus': shippingStatus,
       'escrowStatus': escrowStatus,
       'trackingNumber': trackingNumber,
       'logisticsProvider': logisticsProvider,
+      'pickupScheduledDate': pickupScheduledDate != null ? Timestamp.fromDate(pickupScheduledDate!) : null,
+      'actualPickupDate': actualPickupDate != null ? Timestamp.fromDate(actualPickupDate!) : null,
       'pickupDate': pickupDate != null ? Timestamp.fromDate(pickupDate!) : null,
       'deliveryDate': deliveryDate != null ? Timestamp.fromDate(deliveryDate!) : null,
+      'notes': notes,
+      'cancellationReason': cancellationReason,
       'shippingProof': shippingProof,
       'complianceDocumentUrl': complianceDocumentUrl,
       'buyerReviewed': buyerReviewed,
@@ -150,14 +178,21 @@ class TransactionModel {
   /// 复制并修改部分字段
   TransactionModel copyWith({
     String? paymentMethod,
+    String? paymentStatus,
+    String? paymentProofUrl,
     String? paymentId,
     String? receiptUrl,
     String? status,
+    String? shippingStatus,
     String? escrowStatus,
     String? trackingNumber,
     String? logisticsProvider,
+    DateTime? pickupScheduledDate,
+    DateTime? actualPickupDate,
     DateTime? pickupDate,
     DateTime? deliveryDate,
+    String? notes,
+    String? cancellationReason,
     List<String>? shippingProof,
     String? complianceDocumentUrl,
     bool? buyerReviewed,
@@ -182,14 +217,21 @@ class TransactionModel {
       platformFee: platformFee,
       totalAmount: totalAmount,
       paymentMethod: paymentMethod ?? this.paymentMethod,
+      paymentStatus: paymentStatus ?? this.paymentStatus,
+      paymentProofUrl: paymentProofUrl ?? this.paymentProofUrl,
       paymentId: paymentId ?? this.paymentId,
       receiptUrl: receiptUrl ?? this.receiptUrl,
       status: status ?? this.status,
+      shippingStatus: shippingStatus ?? this.shippingStatus,
       escrowStatus: escrowStatus ?? this.escrowStatus,
       trackingNumber: trackingNumber ?? this.trackingNumber,
       logisticsProvider: logisticsProvider ?? this.logisticsProvider,
+      pickupScheduledDate: pickupScheduledDate ?? this.pickupScheduledDate,
+      actualPickupDate: actualPickupDate ?? this.actualPickupDate,
       pickupDate: pickupDate ?? this.pickupDate,
       deliveryDate: deliveryDate ?? this.deliveryDate,
+      notes: notes ?? this.notes,
+      cancellationReason: cancellationReason ?? this.cancellationReason,
       shippingProof: shippingProof ?? this.shippingProof,
       complianceDocumentUrl: complianceDocumentUrl ?? this.complianceDocumentUrl,
       buyerReviewed: buyerReviewed ?? this.buyerReviewed,
@@ -263,21 +305,93 @@ class TransactionModel {
   /// 获取支付方式显示文本
   String get paymentMethodDisplay {
     switch (paymentMethod) {
-      case 'fpx':
-        return 'FPX 网银转账';
-      case 'ewallet':
-        return '电子钱包';
-      case 'credit_card':
-        return '信用卡/借记卡';
       case 'cash':
         return '现金支付';
+      case 'bank_transfer':
+        return '银行转账';
+      case 'ewallet':
+        return '电子钱包';
+      case 'fpx':
+        return 'FPX 网银转账';
+      case 'credit_card':
+        return '信用卡/借记卡';
       default:
         return paymentMethod;
     }
   }
 
+  /// 获取物流状态显示文本
+  String get shippingStatusDisplay {
+    switch (shippingStatus) {
+      case 'pending':
+        return '待发货';
+      case 'picked_up':
+        return '已取货';
+      case 'in_transit':
+        return '运输中';
+      case 'delivered':
+        return '已送达';
+      case 'completed':
+        return '已完成';
+      default:
+        return shippingStatus;
+    }
+  }
+
+  /// 获取支付状态显示文本
+  String get paymentStatusDisplay {
+    switch (paymentStatus) {
+      case 'pending':
+        return '待支付';
+      case 'paid':
+        return '已支付';
+      case 'refunded':
+        return '已退款';
+      default:
+        return paymentStatus;
+    }
+  }
+
+  /// 判断是否可以支付（状态为confirmed）
+  bool canPayment() {
+    return status == 'confirmed' && paymentStatus == 'pending';
+  }
+
+  /// 判断是否可以取货（已支付）
+  bool canPickup() {
+    return paymentStatus == 'paid' && shippingStatus == 'pending';
+  }
+
+  /// 判断是否可以确认收货（in_transit状态）
+  bool canConfirmDelivery() {
+    return shippingStatus == 'in_transit' || shippingStatus == 'picked_up';
+  }
+
+  /// 判断是否可以完成交易（已送达）
+  bool canComplete() {
+    return shippingStatus == 'delivered' && status != 'completed';
+  }
+
+  /// 判断是否可以取消（未完成状态）
+  bool canCancel() {
+    return status != 'completed' && status != 'cancelled' && shippingStatus != 'completed';
+  }
+
+  /// 判断交易是否进行中
+  bool isActive() {
+    return status != 'completed' && status != 'cancelled' && status != 'refunded';
+  }
+
+  /// 距离取货还有几天
+  int? daysToPickup() {
+    if (pickupScheduledDate == null) return null;
+    final now = DateTime.now();
+    final difference = pickupScheduledDate!.difference(now);
+    return difference.inDays;
+  }
+
   @override
   String toString() {
-    return 'TransactionModel(id: $id, amount: $amount, status: $status, escrowStatus: $escrowStatus)';
+    return 'TransactionModel(id: $id, amount: $amount, status: $status, shippingStatus: $shippingStatus, escrowStatus: $escrowStatus)';
   }
 }
