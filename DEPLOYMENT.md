@@ -678,8 +678,53 @@ BBXMainScreen (主页面)
 
 详细信息请查看：`UI_FIX_REPORT_2025-11-19.md`
 
+#### 12个编译错误修复（2025-11-19 批次3）
+**状态**: ✅ 已修复
+**优先级**: P0（阻止编译）
+
+**问题描述**：
+应用编译失败，出现12个编译错误，涉及模型类名、类型系统升级等问题。
+
+**错误分类**：
+1. **Listing 类未定义** (2处)
+   - bbx_new_home_screen.dart:407
+   - bbx_category_listings_screen.dart:190
+   - 原因：使用了不存在的 `Listing` 类，应为 `ListingModel`
+   - 修复：Listing.fromFirestore() → ListingModel.fromDocument()
+
+2. **模型属性名称错误** (附带修复)
+   - listing.images → listing.imageUrls
+   - listing.category → listing.wasteType
+   - listing.sellerName → listing.userEmail
+
+3. **BoxShadow 类型错误** (1处)
+   - bbx_card.dart:34
+   - 原因：不必要的数组包装导致类型推断错误
+   - 修复：[AppTheme.shadowSmall] → AppTheme.shadowSmall
+
+4. **page_transitions.dart 类型错误** (9处)
+   - CurvedAnimation 使用错误 (4处)
+     • 原因：Flutter SDK 升级后不再支持 `.chain()` 方法
+     • 修复：使用 `.animate()` 代替 `.chain()`
+   - Route 泛型参数缺失 (5处)
+     • 原因：类型系统更严格，需要明确泛型参数
+     • 修复：Route → Route<T>，添加泛型参数
+
+**根本原因**：
+1. 模型类命名不规范（简化命名vs完整命名）
+2. Flutter SDK 升级导致 API 变更
+3. 类型系统更加严格
+
+**修复内容**：
+- 统一使用 `ListingModel` 类名
+- 修正所有模型属性名称
+- 修复动画API使用方式
+- 添加明确的泛型参数
+
+详细信息请查看：`BUGFIX_REPORT_2025-11-19_BATCH3.md`
+
 ---
 
 **最后更新**: 2025-11-19
-**版本**: 1.2.0
-**构建状态**: ✅ 所有编译错误已修复，新UI已启用
+**版本**: 1.2.1
+**构建状态**: ✅ 所有编译错误已修复，代码可正常编译运行
