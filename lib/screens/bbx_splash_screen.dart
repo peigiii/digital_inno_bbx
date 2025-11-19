@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'bbx_home_screen.dart';
+import 'home/bbx_new_home_screen.dart';
 import 'digital_inno_login_screen.dart';
 
 class BBXSplashScreen extends StatefulWidget {
@@ -43,8 +43,8 @@ class _BBXSplashScreenState extends State<BBXSplashScreen>
       context,
       MaterialPageRoute(
         builder: (context) => user != null
-            ? BBXHomeScreen()
-            : BBXLoginScreen(),
+            ? const BBXNewHomeScreen()
+            : const BBXLoginScreen(),
       ),
     );
   }
