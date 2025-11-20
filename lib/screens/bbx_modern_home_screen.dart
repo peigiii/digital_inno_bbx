@@ -824,7 +824,7 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
 
                   // Price
                   Text(
-                    'RM ${data['pricePerTon']}',
+                    'RM ${data['pricePerUnit'] ?? 0}/${data['unit'] ?? 'unit'}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
