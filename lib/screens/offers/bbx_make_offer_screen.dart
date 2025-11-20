@@ -37,6 +37,26 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     super.dispose();
   }
 
+  /// 格式化地址显示
+  String _formatLocation() {
+    final location = widget.listing.location;
+    if (location == null) return '地址未提供';
+
+    // 尝试获取地址字符串
+    if (location['address'] != null) {
+      return location['address'].toString();
+    }
+
+    // 如果只有经纬度，显示坐标
+    final lat = location['latitude'];
+    final lng = location['longitude'];
+    if (lat != null && lng != null) {
+      return '位置: $lat, $lng';
+    }
+
+    return '地址未提供';
+  }
+
   /// 计算折扣百分比
   void _calculateDiscount() {
     final offerPrice = double.tryParse(_offerPriceController.text);
@@ -351,7 +371,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
-                      widget.listing.location,
+                      _formatLocation(),
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[700],
