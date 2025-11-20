@@ -95,13 +95,52 @@ class _BBXListingImmersiveDetailScreenState
             .doc(widget.listingId)
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          // 处理加载状态
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          // 处理错误
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 60, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('加载失败: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('返回'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          // 检查数据是否存在
+          if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(child: Text('数据不存在'));
           }
 
           final data = snapshot.data!.data() as Map<String, dynamic>?;
           if (data == null) {
-            return const Center(child: Text('Listing not found'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.inventory_2_outlined, size: 60, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  const Text('商品不存在或已被删除'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('返回'),
+                  ),
+                ],
+              ),
+            );
           }
 
           final images =
@@ -415,8 +454,12 @@ class _BBXListingImmersiveDetailScreenState
             .doc(data['userId'])
             .get(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const ShimmerBox(width: double.infinity, height: 80);
+          }
+
+          if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+            return const SizedBox.shrink();
           }
 
           final userData = snapshot.data!.data() as Map<String, dynamic>?;
@@ -715,8 +758,12 @@ class _BBXListingImmersiveDetailScreenState
                   .limit(5)
                   .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+                }
+
+                if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+                  return const SizedBox.shrink();
                 }
 
                 final products = snapshot.data!.docs
