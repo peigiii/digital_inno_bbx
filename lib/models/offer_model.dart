@@ -16,7 +16,8 @@ class OfferModel {
   final double? counterOfferPrice; // 还价金额
   final DateTime? collectionDate; // 预计收集日期
   final DateTime? scheduledPickupDate; // 预计收集日期（别名）
-  final String? deliveryMethod; // 收集方式：self_pickup/platform_logistics/seller_delivery
+  final String? deliveryMethod; // 收集方式：self_pickup/platform_logistics/seller_delivery 或 self_collect/delivery（新）
+  final String? deliveryNote; // 配送备注
   final String status; // pending, negotiating, accepted, rejected, expired, cancelled
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -40,6 +41,7 @@ class OfferModel {
     this.collectionDate,
     this.scheduledPickupDate,
     this.deliveryMethod,
+    this.deliveryNote,
     this.status = 'pending',
     this.createdAt,
     this.updatedAt,
@@ -74,6 +76,7 @@ class OfferModel {
       collectionDate: (data['collectionDate'] as Timestamp?)?.toDate(),
       scheduledPickupDate: (data['scheduledPickupDate'] as Timestamp?)?.toDate(),
       deliveryMethod: data['deliveryMethod'],
+      deliveryNote: data['deliveryNote'],
       status: data['status'] ?? 'pending',
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
@@ -102,6 +105,7 @@ class OfferModel {
       'collectionDate': collectionDate != null ? Timestamp.fromDate(collectionDate!) : null,
       'scheduledPickupDate': scheduledPickupDate != null ? Timestamp.fromDate(scheduledPickupDate!) : null,
       'deliveryMethod': deliveryMethod,
+      'deliveryNote': deliveryNote,
       'status': status,
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
@@ -121,6 +125,7 @@ class OfferModel {
     DateTime? collectionDate,
     DateTime? scheduledPickupDate,
     String? deliveryMethod,
+    String? deliveryNote,
     String? status,
     DateTime? expiresAt,
     DateTime? respondedAt,
@@ -142,6 +147,7 @@ class OfferModel {
       collectionDate: collectionDate ?? this.collectionDate,
       scheduledPickupDate: scheduledPickupDate ?? this.scheduledPickupDate,
       deliveryMethod: deliveryMethod ?? this.deliveryMethod,
+      deliveryNote: deliveryNote ?? this.deliveryNote,
       status: status ?? this.status,
       createdAt: createdAt,
       updatedAt: DateTime.now(),
@@ -217,6 +223,10 @@ class OfferModel {
         return '使用平台物流';
       case 'seller_delivery':
         return '卖家送货';
+      case 'self_collect':
+        return '自提';
+      case 'delivery':
+        return '邮寄';
       default:
         return deliveryMethod ?? '未指定';
     }

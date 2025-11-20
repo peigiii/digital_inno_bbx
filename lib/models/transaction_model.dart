@@ -18,8 +18,10 @@ class TransactionModel {
   final String status; // confirmed, scheduled, inTransit, delivered, completed, disputed, cancelled, refunded
   final String shippingStatus; // pending, picked_up, in_transit, delivered, completed
   final String escrowStatus; // held, released, refunded
-  final String? trackingNumber;
-  final String? logisticsProvider; // 物流供应商
+  final String? deliveryMethod; // 配送方式：self_collect(自提)/delivery(邮寄)
+  final Map<String, dynamic>? shippingInfo; // 快递信息(仅邮寄时使用): courierName, trackingNumber, shippedAt, notes
+  final String? trackingNumber; // 快递单号（兼容旧字段）
+  final String? logisticsProvider; // 物流供应商（兼容旧字段）
   final DateTime? pickupScheduledDate; // 预定取货日期
   final DateTime? actualPickupDate; // 实际取货日期
   final DateTime? pickupDate; // 取货日期（兼容旧字段）
@@ -58,6 +60,8 @@ class TransactionModel {
     this.status = 'confirmed',
     this.shippingStatus = 'pending',
     this.escrowStatus = 'held',
+    this.deliveryMethod,
+    this.shippingInfo,
     this.trackingNumber,
     this.logisticsProvider,
     this.pickupScheduledDate,
@@ -107,6 +111,8 @@ class TransactionModel {
       status: data['status'] ?? 'confirmed',
       shippingStatus: data['shippingStatus'] ?? 'pending',
       escrowStatus: data['escrowStatus'] ?? 'held',
+      deliveryMethod: data['deliveryMethod'],
+      shippingInfo: data['shippingInfo'] as Map<String, dynamic>?,
       trackingNumber: data['trackingNumber'],
       logisticsProvider: data['logisticsProvider'],
       pickupScheduledDate: (data['pickupScheduledDate'] as Timestamp?)?.toDate(),
@@ -150,6 +156,8 @@ class TransactionModel {
       'status': status,
       'shippingStatus': shippingStatus,
       'escrowStatus': escrowStatus,
+      'deliveryMethod': deliveryMethod,
+      'shippingInfo': shippingInfo,
       'trackingNumber': trackingNumber,
       'logisticsProvider': logisticsProvider,
       'pickupScheduledDate': pickupScheduledDate != null ? Timestamp.fromDate(pickupScheduledDate!) : null,
@@ -185,6 +193,8 @@ class TransactionModel {
     String? status,
     String? shippingStatus,
     String? escrowStatus,
+    String? deliveryMethod,
+    Map<String, dynamic>? shippingInfo,
     String? trackingNumber,
     String? logisticsProvider,
     DateTime? pickupScheduledDate,
@@ -224,6 +234,8 @@ class TransactionModel {
       status: status ?? this.status,
       shippingStatus: shippingStatus ?? this.shippingStatus,
       escrowStatus: escrowStatus ?? this.escrowStatus,
+      deliveryMethod: deliveryMethod ?? this.deliveryMethod,
+      shippingInfo: shippingInfo ?? this.shippingInfo,
       trackingNumber: trackingNumber ?? this.trackingNumber,
       logisticsProvider: logisticsProvider ?? this.logisticsProvider,
       pickupScheduledDate: pickupScheduledDate ?? this.pickupScheduledDate,

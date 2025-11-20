@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../models/transaction_model.dart';
@@ -10,6 +11,7 @@ import '../../models/logistics_update_model.dart';
 import '../../services/transaction_service.dart';
 import '../../services/listing_service.dart';
 import '../../services/user_service.dart';
+import '../../utils/delivery_config.dart';
 import 'bbx_upload_payment_screen.dart';
 import 'bbx_update_logistics_screen.dart';
 
@@ -455,28 +457,242 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
 
   /// 7. 物流信息卡片
   Widget _buildLogisticsInfoCard(TransactionModel transaction) {
+    final deliveryMethod = transaction.deliveryMethod;
+    final shippingInfo = transaction.shippingInfo;
+    final isSelfCollect = DeliveryConfig.isSelfCollect(deliveryMethod);
+    final isDelivery = DeliveryConfig.isDelivery(deliveryMethod);
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '物流信息',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+            // 标题
+            Row(
+              children: [
+                Icon(
+                  isSelfCollect ? Icons.store : Icons.local_shipping,
+                  color: isSelfCollect ? Colors.green : Colors.blue,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  isSelfCollect ? '配送方式：自提' : '配送方式：邮寄',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
             const Divider(),
-            if (transaction.pickupScheduledDate != null)
-              _buildInfoRow('预定取货日期', _formatDateTime(transaction.pickupScheduledDate)),
-            if (transaction.actualPickupDate != null)
-              _buildInfoRow('实际取货日期', _formatDateTime(transaction.actualPickupDate)),
-            if (transaction.deliveryDate != null)
-              _buildInfoRow('送达日期', _formatDateTime(transaction.deliveryDate)),
-            if (transaction.trackingNumber != null)
-              _buildInfoRow('物流追踪号', transaction.trackingNumber!),
+
+            // 自提信息
+            if (isSelfCollect) ...[
+              _buildInfoRow('取货地址', '请联系卖家获取详细地址'),
+              if (transaction.pickupScheduledDate != null)
+                _buildInfoRow('预定取货日期', _formatDateTime(transaction.pickupScheduledDate)),
+              if (transaction.actualPickupDate != null)
+                _buildInfoRow('实际取货日期', _formatDateTime(transaction.actualPickupDate)),
+              const SizedBox(height: 12),
+              // 提示信息
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.green[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.green[700], size: 20),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        '请联系卖家协商取货时间和地点',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            // 邮寄信息 - 未发货
+            if (isDelivery && shippingInfo == null) ...[
+              DeliveryConfig.buildShippingFeeNote(),
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.blue[700], size: 20),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        '等待卖家发货',
+                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            // 邮寄信息 - 已发货
+            if (isDelivery && shippingInfo != null) ...[
+              // 快递公司和单号
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 快递公司
+                    Row(
+                      children: [
+                        const Icon(Icons.local_shipping, size: 16, color: Colors.blue),
+                        const SizedBox(width: 8),
+                        Text(
+                          shippingInfo['courierName'] ?? '未知快递',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+
+                    // 快递单号
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '快递单号',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                shippingInfo['trackingNumber'] ?? '',
+                                style: const TextStyle(
+                                  fontFamily: 'monospace',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // 复制按钮
+                        IconButton(
+                          icon: const Icon(Icons.copy, size: 20),
+                          onPressed: () {
+                            Clipboard.setData(
+                              ClipboardData(text: shippingInfo['trackingNumber'] ?? ''),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('已复制快递单号')),
+                            );
+                          },
+                          tooltip: '复制单号',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              // 发货时间
+              if (shippingInfo['shippedAt'] != null) ...[
+                const SizedBox(height: 12),
+                _buildInfoRow(
+                  '发货时间',
+                  _formatDateTime((shippingInfo['shippedAt'] as Timestamp).toDate()),
+                ),
+              ],
+
+              // 发货备注
+              if (shippingInfo['notes'] != null && shippingInfo['notes'].toString().isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[50],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '卖家备注',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        shippingInfo['notes'] ?? '',
+                        style: const TextStyle(fontSize: 13),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+
+              // 提示
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.orange[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.orange[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.orange[700], size: 20),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        '💡 请自行到快递官网查询物流',
+                        style: TextStyle(fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+
+            // 旧的物流信息（兼容）
+            if (deliveryMethod == null) ...[
+              if (transaction.pickupScheduledDate != null)
+                _buildInfoRow('预定取货日期', _formatDateTime(transaction.pickupScheduledDate)),
+              if (transaction.actualPickupDate != null)
+                _buildInfoRow('实际取货日期', _formatDateTime(transaction.actualPickupDate)),
+              if (transaction.deliveryDate != null)
+                _buildInfoRow('送达日期', _formatDateTime(transaction.deliveryDate)),
+              if (transaction.trackingNumber != null)
+                _buildInfoRow('物流追踪号', transaction.trackingNumber!),
+            ],
           ],
         ),
       ),
