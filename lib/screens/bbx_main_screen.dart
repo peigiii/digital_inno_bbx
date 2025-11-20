@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../widgets/navigation/bbx_bottom_navigation.dart';
-import 'home/bbx_optimized_home_screen.dart'; // 优化后的首页
+import 'home/bbx_home_progressive.dart'; // 渐进式首页
 import 'bbx_new_marketplace_screen.dart';
 import 'digital_inno_list_waste_screen.dart';
 import 'chat/bbx_conversations_screen.dart';
-import 'profile/bbx_profile_screen.dart';
+import 'profile/bbx_optimized_profile_screen.dart'; // 优化后的个人中心
 
 /// BBX 主页面 - 管理底部导航的5个Tab页面
 class BBXMainScreen extends StatefulWidget {
@@ -25,11 +25,11 @@ class _BBXMainScreenState extends State<BBXMainScreen> {
   void initState() {
     super.initState();
     _pages = [
-      const BBXOptimizedHomeScreen(),  // 0: 首页 ← 已更新为优化版本！
-      const BBXNewMarketplaceScreen(), // 1: 商品列表
-      const BBXListWasteScreen(),      // 2: 发布（创建商品）
-      const BBXConversationsScreen(),  // 3: 消息
-      const BBXProfileScreen(),        // 4: 个人中心
+      const BBXHomeProgressive(),            // 0: 首页 ← 渐进式首页
+      const BBXNewMarketplaceScreen(),       // 1: 商品列表
+      const BBXListWasteScreen(),            // 2: 发布（创建商品）
+      const BBXConversationsScreen(),        // 3: 消息
+      const BBXOptimizedProfileScreen(),     // 4: 个人中心 ← 优化版
     ];
     _loadUnreadMessageCount();
   }
