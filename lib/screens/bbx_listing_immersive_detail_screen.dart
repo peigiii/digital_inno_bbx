@@ -323,15 +323,15 @@ class _BBXListingImmersiveDetailScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'RM ${data['pricePerTon']}',
+                      'RM ${data['pricePerUnit'] ?? 0}',
                       style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: AppTheme.primary,
                       ),
                     ),
-                    const Text(
-                      'per ton',
+                    Text(
+                      'per ${data['unit'] ?? 'ton'}',
                       style: TextStyle(
                         fontSize: 14,
                         color: AppTheme.textLight,
@@ -524,8 +524,8 @@ class _BBXListingImmersiveDetailScreenState
   Widget _buildSpecsCard(Map<String, dynamic> data) {
     final specs = [
       {'label': 'Type', 'value': data['wasteType'] ?? '-'},
-      {'label': 'Quantity', 'value': '${data['quantity']} tons'},
-      {'label': 'Moisture', 'value': data['moistureContent'] ?? '-'},
+      {'label': 'Quantity', 'value': '${data['quantity']} ${data['unit'] ?? 'tons'}'},
+      {'label': 'Unit', 'value': data['unit'] ?? '-'},
       {'label': 'Location', 'value': _getLocationDisplay(data['location'])},
     ];
 
@@ -621,8 +621,9 @@ class _BBXListingImmersiveDetailScreenState
   }
 
   Widget _buildLocationCard(Map<String, dynamic> data) {
-    final latitude = (data['latitude'] as num?)?.toDouble() ?? 5.9804;
-    final longitude = (data['longitude'] as num?)?.toDouble() ?? 116.0735;
+    final locationData = data['location'] as Map<String, dynamic>?;
+    final latitude = (locationData?['latitude'] as num?)?.toDouble() ?? 5.9804;
+    final longitude = (locationData?['longitude'] as num?)?.toDouble() ?? 116.0735;
 
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
@@ -880,8 +881,8 @@ class _BBXListingImmersiveDetailScreenState
   void _shareListing(Map<String, dynamic> data) {
     Share.share(
       'Check out this listing: ${data['wasteType']}\n'
-      'Price: RM ${data['pricePerTon']}/ton\n'
-      'Quantity: ${data['quantity']} tons',
+      'Price: RM ${data['pricePerUnit']}/${data['unit'] ?? 'ton'}\n'
+      'Quantity: ${data['quantity']} ${data['unit'] ?? 'tons'}',
       subject: data['wasteType'],
     );
   }
