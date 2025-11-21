@@ -8,6 +8,7 @@ import '../theme/app_theme.dart';
 import '../widgets/common/app_button.dart';
 import '../widgets/common/shimmer_loading.dart';
 import '../widgets/marketplace/product_card.dart';
+import '../widgets/state/error_state_widget.dart';
 
 class BBXListingDetailScreen extends StatefulWidget {
   final String listingId;
@@ -187,16 +188,41 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Scaffold(
+              appBar: AppBar(title: const Text('商品详情')),
+              body: ErrorStateWidget.network(
+                onRetry: () => setState(() {}),
+                onBack: () => Navigator.pop(context),
+              ),
+            );
           }
 
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return Scaffold(
+              appBar: AppBar(title: const Text('商品详情')),
+              body: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text('正在加载商品详情...'),
+                  ],
+                ),
+              ),
+            );
           }
 
           final data = snapshot.data!.data() as Map<String, dynamic>?;
           if (data == null) {
-            return const Center(child: Text('Listing not found'));
+            return Scaffold(
+              appBar: AppBar(title: const Text('商品详情')),
+              body: ErrorStateWidget.notFound(
+                title: '商品不存在',
+                message: '该商品可能已被删除或下架',
+                onBack: () => Navigator.pop(context),
+              ),
+            );
           }
 
           final images = (data['imageUrls'] as List<dynamic>?)?.cast<String>() ?? [];
@@ -441,7 +467,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          // 配送方式说�?          Container(
+          // 配送方式说�?          Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.blue[50],
@@ -456,7 +482,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     const Icon(Icons.local_shipping, size: 16, color: Colors.blue),
                     const SizedBox(width: 8),
                     Text(
-                      '🚚 配送方�?,
+                      '🚚 配送方�?,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -483,7 +509,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     const SizedBox(width: 6),
                     const Expanded(
                       child: Text(
-                        '支持邮寄(邮费与卖家协�?',
+                        '支持邮寄(邮费与卖家协�?',
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -978,9 +1004,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   String _getLocationDisplay(dynamic location) {
     if (location == null) return 'Location not specified';
 
-    // 如果是字符串，直接返�?    if (location is String) return location;
+    // 如果是字符串，直接返�?    if (location is String) return location;
 
-    // 如果是Map（包含latitude和longitude�?    if (location is Map<String, dynamic>) {
+    // 如果是Map（包含latitude和longitude�?    if (location is Map<String, dynamic>) {
       final lat = location['latitude'];
       final lng = location['longitude'];
       if (lat != null && lng != null) {

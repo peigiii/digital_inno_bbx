@@ -4,8 +4,10 @@ import '../../theme/app_theme.dart';
 import '../../models/listing_model.dart';
 import '../../widgets/enhanced/modern_card.dart';
 import '../../widgets/enhanced/shimmer_loading.dart';
+import '../../widgets/state/error_state_widget.dart';
+import '../../widgets/state/empty_state_widget.dart';
 
-/// BBX 商品列表 - 优化�?
+/// BBX 商品列表 - 优化�?
 /// Material Design 3 风格，适配 Pixel 5
 class BBXOptimizedMarketplaceScreen extends StatefulWidget {
   const BBXOptimizedMarketplaceScreen({super.key});
@@ -23,7 +25,7 @@ class _BBXOptimizedMarketplaceScreenState
   final List<Map<String, dynamic>> _categories = [
     {'id': 'all', 'label': '📦 全部', 'color': Color(0xFF43A047)},
     {'id': 'EFB (Empty Fruit Bunches)', 'label': '🌴 棕榈果串', 'color': Color(0xFFFF9800)},
-    {'id': 'Palm Shell', 'label': '🥥 棕榈�?, 'color': Color(0xFF8BC34A)},
+    {'id': 'Palm Shell', 'label': '🥥 棕榈�?, 'color': Color(0xFF8BC34A)},
     {'id': 'Wood Chips', 'label': '🪵 木屑', 'color': Color(0xFF795548)},
     {'id': 'Plastic', 'label': '♻️ 塑料', 'color': Color(0xFF2196F3)},
     {'id': 'Metal', 'label': '🔩 金属', 'color': Color(0xFF607D8B)},
@@ -42,10 +44,10 @@ class _BBXOptimizedMarketplaceScreenState
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部搜索�?
+            // 顶部搜索�?
             _buildTopBar(),
 
-            // 分类筛�?
+            // 分类筛�?
             _buildCategoryChips(),
 
             // 商品列表
@@ -73,16 +75,16 @@ class _BBXOptimizedMarketplaceScreenState
             ),
           ),
           const SizedBox(height: 12),
-          // 搜索�?
+          // 搜索�?
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: '搜索生物质废�?..',
+              hintText: '搜索生物质废�?..',
               prefixIcon: const Icon(Icons.search, color: AppTheme.primary500),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.tune),
                 onPressed: () {
-                  // 高级筛�?
+                  // 高级筛�?
                 },
               ),
               filled: true,
@@ -262,49 +264,38 @@ class _BBXOptimizedMarketplaceScreenState
   }
 
   Widget _buildErrorState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
-          const SizedBox(height: 16),
-          const Text(
-            '加载失败',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          const Text('请检查网络连接后重试'),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {});
-            },
-            child: const Text('重试'),
-          ),
-        ],
-      ),
+    return ErrorStateWidget.network(
+      onRetry: () => setState(() {}),
     );
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.inbox_outlined, size: 80, color: Colors.grey.shade400),
-          const SizedBox(height: 16),
-          Text(
-            _selectedCategory == 'all' ? '暂无商品' : '该分类暂无商�?,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '请稍后再来查�?,
-            style: TextStyle(color: Colors.grey.shade600),
-          ),
-        ],
-      ),
-    );
+    if (_selectedCategory == 'all') {
+      return EmptyStateWidget.noListings(
+        onCreateListing: () {
+          // 导航到发布商品页面
+          Navigator.pushNamed(context, '/create-listing');
+        },
+        onBrowseAll: () {
+          // 切换到全部分类
+          setState(() {
+            _selectedCategory = 'all';
+          });
+        },
+      );
+    } else {
+      return EmptyStateWidget(
+        icon: Icons.category_outlined,
+        title: '该分类暂无商品',
+        message: '尝试浏览其他分类或查看全部商品',
+        actionLabel: '查看全部',
+        onAction: () {
+          setState(() {
+            _selectedCategory = 'all';
+          });
+        },
+      );
+    }
   }
 }
 

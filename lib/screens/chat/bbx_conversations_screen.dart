@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/message_model.dart';
 import '../../services/chat_service.dart';
+import '../../widgets/state/error_state_widget.dart';
+import '../../widgets/state/empty_state_widget.dart';
 import 'bbx_chat_screen.dart';
 
 /// 对话列表页面
@@ -40,17 +42,28 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
         stream: _chatService.getMyConversations(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('正在加载对话列表...'),
+                ],
+              ),
+            );
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('加载失败�?{snapshot.error}'));
+            return ErrorStateWidget.network(
+              onRetry: () => setState(() {}),
+            );
           }
 
           final conversations = snapshot.data ?? [];
 
           if (conversations.isEmpty) {
-            return _buildEmptyState();
+            return EmptyStateWidget.noMessages();
           }
 
           return ListView.builder(
@@ -64,33 +77,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
     );
   }
 
-  /// 空状�?
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.chat_bubble_outline, size: 80, color: Colors.grey.shade300),
-          const SizedBox(height: 16),
-          Text(
-            '暂无消息',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey.shade600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '开始与其他用户聊天�?,
-            style: TextStyle(color: Colors.grey.shade500),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 对话列表�?
+  /// 对话列表�?
   Widget _buildConversationTile(ConversationModel conversation) {
     final otherUserId = conversation.getOtherParticipantId(_currentUserId!);
     if (otherUserId == null) return const SizedBox.shrink();
@@ -190,7 +177,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
     }
   }
 
-  /// 格式化时�?
+  /// 格式化时�?
   String _formatTime(DateTime? dateTime) {
     if (dateTime == null) return '';
 
@@ -198,17 +185,17 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
     final difference = now.difference(dateTime);
 
     if (difference.inDays == 0) {
-      // 今天：显示时�?
+      // 今天：显示时�?
       return DateFormat('HH:mm').format(dateTime);
     } else if (difference.inDays == 1) {
       // 昨天
       return '昨天';
     } else if (difference.inDays < 7) {
-      // 本周：显示星�?
+      // 本周：显示星�?
       const weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
       return weekdays[dateTime.weekday - 1];
     } else {
-      // 更早：显示日�?
+      // 更早：显示日�?
       return DateFormat('MM/dd').format(dateTime);
     }
   }
