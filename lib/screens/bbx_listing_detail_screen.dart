@@ -27,7 +27,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   int _currentImageIndex = 0;
   bool _isFavorite = false;
   bool _isDescriptionExpanded = false;
-  late GoogleMapController _mapController;
+  GoogleMapController? _mapController;
   final PageController _imagePageController = PageController();
   final ChatService _chatService = ChatService();
   bool _isStartingChat = false;
@@ -640,7 +640,14 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                                       fit: BoxFit.cover,
                                       placeholder: (context, url) {
                                         debugPrint('⏳ [ListingDetail] Image $index loading...');
-                                        return const ShimmerBox(width: double.infinity, height: 400);
+                                        return Container(
+                                          width: double.infinity,
+                                          height: 400,
+                                          color: AppTheme.backgroundGrey,
+                                          child: const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        );
                                       },
                                       errorWidget: (context, url, error) {
                                         debugPrint('❌ [ListingDetail] Failed to load image $index: $error');
@@ -934,14 +941,51 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           debugPrint('⏳ [ListingDetail] Loading supplier data...');
-          return const Padding(
-            padding: EdgeInsets.all(AppTheme.spacingLG),
-            child: ShimmerBox(width: double.infinity, height: 100),
+          return Container(
+            padding: const EdgeInsets.all(AppTheme.spacingLG),
+            color: Colors.white,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
           );
         }
 
-        if (snapshot.hasError) {
+        if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
           debugPrint('❌ [ListingDetail] Error loading supplier: ${snapshot.error}');
+          // Show minimal supplier info on error
+          return Container(
+            padding: const EdgeInsets.all(AppTheme.spacingLG),
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Supplier Information',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: AppTheme.primary.withOpacity(0.1),
+                      child: const Icon(Icons.person, color: AppTheme.primary),
+                    ),
+                    const SizedBox(width: 16),
+                    const Expanded(
+                      child: Text(
+                        'Supplier information unavailable',
+                        style: TextStyle(color: AppTheme.textSecondary),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
         }
 
         final userData = snapshot.data!.data() as Map<String, dynamic>?;
@@ -1292,6 +1336,13 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                       padding: EdgeInsets.only(right: 12),
                       child: ShimmerBox(width: 160, height: 240),
                     ),
+                  );
+                }
+
+                if (snapshot.hasError || snapshot.data == null) {
+                  debugPrint('❌ [ListingDetail] Error loading similar products: ${snapshot.error}');
+                  return const Center(
+                    child: Text('Unable to load similar products'),
                   );
                 }
 
