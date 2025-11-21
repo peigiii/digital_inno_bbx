@@ -7,8 +7,11 @@ import '../../widgets/bbx_chip.dart';
 import '../../widgets/bbx_button.dart';
 import '../../widgets/bbx_empty_state.dart';
 import '../../widgets/bbx_loading.dart';
+import '../../widgets/state/error_state_widget.dart';
+import '../../widgets/state/empty_state_widget.dart';
 import '../../models/offer_model.dart';
 
+/// BBX 我的报价页面（完全重构）
 class BBXNewMyOffersScreen extends StatefulWidget {
   const BBXNewMyOffersScreen({super.key});
 
@@ -32,11 +35,11 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
   final Map<String, String> _filterLabels = {
     'all': '全部',
-    'pending': '待处?,
-    'negotiating': '议价?,
-    'accepted': '已接?,
-    'rejected': '已拒?,
-    'expired': '已过?,
+    'pending': '待处�?,
+    'negotiating': '议价�?,
+    'accepted': '已接�?,
+    'rejected': '已拒�?,
+    'expired': '已过�?,
   };
 
   @override
@@ -56,7 +59,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('我的Quote', style: AppTheme.heading2),
+        title: const Text('我的报价', style: AppTheme.heading2),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list_rounded),
@@ -121,9 +124,11 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
       ),
       body: Column(
         children: [
-                    _buildFilterBar(),
+          // 状态筛选栏
+          _buildFilterBar(),
 
-                    Expanded(
+          // 内容区域
+          Expanded(
             child: TabBarView(
               controller: _tabController,
               children: [
@@ -137,7 +142,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-    Widget _buildBadge(int count) {
+  /// 角标
+  Widget _buildBadge(int count) {
     if (count == 0) return const SizedBox.shrink();
 
     return Container(
@@ -165,7 +171,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-    Widget _buildFilterBar() {
+  /// 筛选栏
+  Widget _buildFilterBar() {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(
@@ -195,17 +202,23 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-    Widget _buildSentOffersList() {
+  /// 我发出的报价列表
+  Widget _buildSentOffersList() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      return BBXEmptyState.noData(description: '请先登录');
+      return ErrorStateWidget.permissionDenied(
+        message: '请先登录以查看您的报价',
+        onBack: () => Navigator.pop(context),
+      );
     }
 
     return StreamBuilder<QuerySnapshot>(
       stream: _getOffersStream(user.uid, isSent: true),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return BBXEmptyState.noData(description: '加载失败');
+          return ErrorStateWidget.network(
+            onRetry: () => setState(() {}),
+          );
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -213,14 +226,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return BBXEmptyState.noData(
-            description: '暂无Quote记录',
-            action: BBXPrimaryButton(
-              text: '去逛?,
-              onPressed: () {
-                Navigator.pushNamed(context, '/home');
-              },
-            ),
+          return EmptyStateWidget.noOffers(
+            onBrowse: () => Navigator.pushNamed(context, '/home'),
           );
         }
 
@@ -236,17 +243,23 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-    Widget _buildReceivedOffersList() {
+  /// 我收到的报价列表
+  Widget _buildReceivedOffersList() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      return BBXEmptyState.noData(description: '请先登录');
+      return ErrorStateWidget.permissionDenied(
+        message: '请先登录以查看收到的报价',
+        onBack: () => Navigator.pop(context),
+      );
     }
 
     return StreamBuilder<QuerySnapshot>(
       stream: _getOffersStream(user.uid, isSent: false),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return BBXEmptyState.noData(description: '加载失败');
+          return ErrorStateWidget.network(
+            onRetry: () => setState(() {}),
+          );
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -254,8 +267,10 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return BBXEmptyState.noData(
-            description: '暂无收到的报?,
+          return EmptyStateWidget(
+            icon: Icons.inbox_outlined,
+            title: '暂无收到的报价',
+            message: '当买家对您的商品提交报价时\n会显示在这里',
           );
         }
 
@@ -271,7 +286,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-    Stream<QuerySnapshot> _getOffersStream(String userId, {required bool isSent}) {
+  /// 获取报价�?
+  Stream<QuerySnapshot> _getOffersStream(String userId, {required bool isSent}) {
     var query = FirebaseFirestore.instance
         .collection('offers')
         .where(isSent ? 'buyerId' : 'sellerId', isEqualTo: userId)
@@ -284,7 +300,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     return query.snapshots();
   }
 
-    Widget _buildOfferCard(DocumentSnapshot doc, {required bool isSent}) {
+  /// 报价卡片
+  Widget _buildOfferCard(DocumentSnapshot doc, {required bool isSent}) {
     final data = doc.data() as Map<String, dynamic>;
     final status = data['status'] ?? 'pending';
     final offerPrice = (data['offerPrice'] ?? 0.0).toDouble();
@@ -299,7 +316,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-                    Row(
+          // 顶部：状态和时间
+          Row(
             children: [
               BBXStatusChip.status(status, isSmall: true),
               const Spacer(),
@@ -314,7 +332,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
           const SizedBox(height: AppTheme.spacing12),
 
-                    Row(
+          // 商品信息（简化版�?
+          Row(
             children: [
               Container(
                 width: 80,
@@ -350,7 +369,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
           const SizedBox(height: AppTheme.spacing12),
 
-                    Container(
+          // 报价信息
+          Container(
             padding: const EdgeInsets.all(AppTheme.spacing12),
             decoration: BoxDecoration(
               color: AppTheme.neutral50,
@@ -383,7 +403,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Quote',
+                        '报价',
                         style: AppTheme.caption.copyWith(
                           color: AppTheme.neutral600,
                         ),
@@ -418,7 +438,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
             ),
           ),
 
-                    if (counterPrice != null && sellerMessage != null) ...[
+          // 还价信息（如有）
+          if (counterPrice != null && sellerMessage != null) ...[
             const SizedBox(height: AppTheme.spacing12),
             Container(
               padding: const EdgeInsets.all(AppTheme.spacing12),
@@ -454,7 +475,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
             ),
           ],
 
-                    const SizedBox(height: AppTheme.spacing12),
+          // 对方信息
+          const SizedBox(height: AppTheme.spacing12),
           Row(
             children: [
               Container(
@@ -477,22 +499,25 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
             ],
           ),
 
-                    const SizedBox(height: AppTheme.spacing12),
+          // 操作按钮
+          const SizedBox(height: AppTheme.spacing12),
           _buildActionButtons(status, isSent: isSent),
         ],
       ),
     );
   }
 
-    Widget _buildActionButtons(String status, {required bool isSent}) {
+  /// 操作按钮
+  Widget _buildActionButtons(String status, {required bool isSent}) {
     if (isSent) {
-            switch (status) {
+      // 我发出的报价
+      switch (status) {
         case 'pending':
           return Row(
             children: [
               Expanded(
                 child: BBXSecondaryButton(
-                  text: '取消Quote',
+                  text: '取消报价',
                   onPressed: () {},
                   height: 40,
                 ),
@@ -535,7 +560,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
         case 'rejected':
         case 'expired':
           return BBXPrimaryButton(
-            text: '重新Quote',
+            text: '重新报价',
             onPressed: () {},
             height: 40,
           );
@@ -543,7 +568,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
           return const SizedBox.shrink();
       }
     } else {
-            switch (status) {
+      // 我收到的报价
+      switch (status) {
         case 'pending':
           return Row(
             children: [
@@ -587,7 +613,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
               Expanded(
                 flex: 2,
                 child: BBXPrimaryButton(
-                  text: '接受当前?,
+                  text: '接受当前�?,
                   onPressed: () {},
                   height: 40,
                 ),
@@ -611,13 +637,13 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     final difference = now.difference(date);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays} days ago';
+      return '${difference.inDays}天前';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} hours ago';
+      return '${difference.inHours}小时�?;
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} minutes ago';
+      return '${difference.inMinutes}分钟�?;
     } else {
-      return 'Just now';
+      return '刚刚';
     }
   }
 }

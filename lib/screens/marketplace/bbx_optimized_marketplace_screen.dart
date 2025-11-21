@@ -4,7 +4,11 @@ import '../../theme/app_theme.dart';
 import '../../models/listing_model.dart';
 import '../../widgets/enhanced/modern_card.dart';
 import '../../widgets/enhanced/shimmer_loading.dart';
+import '../../widgets/state/error_state_widget.dart';
+import '../../widgets/state/empty_state_widget.dart';
 
+/// BBX 商品列表 - 优化�?
+/// Material Design 3 风格，适配 Pixel 5
 class BBXOptimizedMarketplaceScreen extends StatefulWidget {
   const BBXOptimizedMarketplaceScreen({super.key});
 
@@ -19,12 +23,12 @@ class _BBXOptimizedMarketplaceScreenState
   final TextEditingController _searchController = TextEditingController();
 
   final List<Map<String, dynamic>> _categories = [
-    {'id': 'all', 'label': 'All', 'color': const Color(0xFF43A047)},
-    {'id': 'EFB (Empty Fruit Bunches)', 'label': 'EFB', 'color': const Color(0xFFFF9800)},
-    {'id': 'Palm Shell', 'label': 'Palm Shell', 'color': const Color(0xFF8BC34A)},
-    {'id': 'Wood Chips', 'label': 'Wood Chips', 'color': const Color(0xFF795548)},
-    {'id': 'Plastic', 'label': 'Plastic', 'color': const Color(0xFF2196F3)},
-    {'id': 'Metal', 'label': 'Metal', 'color': const Color(0xFF607D8B)},
+    {'id': 'all', 'label': '📦 全部', 'color': Color(0xFF43A047)},
+    {'id': 'EFB (Empty Fruit Bunches)', 'label': '🌴 棕榈果串', 'color': Color(0xFFFF9800)},
+    {'id': 'Palm Shell', 'label': '🥥 棕榈�?, 'color': Color(0xFF8BC34A)},
+    {'id': 'Wood Chips', 'label': '🪵 木屑', 'color': Color(0xFF795548)},
+    {'id': 'Plastic', 'label': '♻️ 塑料', 'color': Color(0xFF2196F3)},
+    {'id': 'Metal', 'label': '🔩 金属', 'color': Color(0xFF607D8B)},
   ];
 
   @override
@@ -40,10 +44,13 @@ class _BBXOptimizedMarketplaceScreenState
       body: SafeArea(
         child: Column(
           children: [
+            // 顶部搜索�?
             _buildTopBar(),
 
+            // 分类筛�?
             _buildCategoryChips(),
 
+            // 商品列表
             Expanded(
               child: _buildProductList(),
             ),
@@ -61,22 +68,23 @@ class _BBXOptimizedMarketplaceScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'BBX Marketplace',
+            'BBX 市场',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),
+          // 搜索�?
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: 'Search biomass waste...',
+              hintText: '搜索生物质废�?..',
               prefixIcon: const Icon(Icons.search, color: AppTheme.primary500),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.tune),
                 onPressed: () {
-                  // TODO: Show filters
+                  // 高级筛�?
                 },
               ),
               filled: true,
@@ -166,7 +174,7 @@ class _BBXOptimizedMarketplaceScreenState
                 category: listing.wasteType,
                 price: listing.pricePerUnit,
                 unit: listing.unit,
-                location: listing.location != null ? listing.location.toString() : 'Unknown Location',
+                location: listing.location != null ? listing.location.toString() : '未知位置',
                 sellerName: listing.userEmail.split('@').first,
                 rating: 4.5,
                 isVerified: true,
@@ -178,7 +186,7 @@ class _BBXOptimizedMarketplaceScreenState
                   );
                 },
                 onFavorite: () {
-                  // TODO: Toggle favorite
+                  // TODO: 收藏功能
                 },
               );
             } catch (e) {
@@ -256,48 +264,38 @@ class _BBXOptimizedMarketplaceScreenState
   }
 
   Widget _buildErrorState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
-          const SizedBox(height: 16),
-          const Text(
-            'Load Failed',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          const Text('Please check network and try again'),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {});
-            },
-            child: const Text('Retry'),
-          ),
-        ],
-      ),
+    return ErrorStateWidget.network(
+      onRetry: () => setState(() {}),
     );
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.inbox_outlined, size: 80, color: Colors.grey.shade400),
-          const SizedBox(height: 16),
-          Text(
-            _selectedCategory == 'all' ? 'No items' : 'No items in this category',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Please check back later',
-            style: TextStyle(color: Colors.grey.shade600),
-          ),
-        ],
-      ),
-    );
+    if (_selectedCategory == 'all') {
+      return EmptyStateWidget.noListings(
+        onCreateListing: () {
+          // 导航到发布商品页面
+          Navigator.pushNamed(context, '/create-listing');
+        },
+        onBrowseAll: () {
+          // 切换到全部分类
+          setState(() {
+            _selectedCategory = 'all';
+          });
+        },
+      );
+    } else {
+      return EmptyStateWidget(
+        icon: Icons.category_outlined,
+        title: '该分类暂无商品',
+        message: '尝试浏览其他分类或查看全部商品',
+        actionLabel: '查看全部',
+        onAction: () {
+          setState(() {
+            _selectedCategory = 'all';
+          });
+        },
+      );
+    }
   }
 }
+

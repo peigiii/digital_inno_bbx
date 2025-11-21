@@ -121,9 +121,19 @@ class ChatService {
         .orderBy('createdAt', descending: true)
         .limit(100)
         .snapshots()
+        .handleError((error) {
+          print('Error getting messages: $error');
+        })
         .map((snapshot) {
-      return snapshot.docs.map((doc) => MessageModel.fromDocument(doc)).toList();
-    });
+          return snapshot.docs.map((doc) {
+            try {
+              return MessageModel.fromDocument(doc);
+            } catch (e) {
+              print('Error parsing message ${doc.id}: $e');
+              return null;
+            }
+          }).whereType<MessageModel>().toList();
+        });
   }
 
   /// Get My Conversations Stream
@@ -137,9 +147,19 @@ class ChatService {
         .where('participantIds', arrayContains: _currentUserId)
         .orderBy('lastMessageAt', descending: true)
         .snapshots()
+        .handleError((error) {
+          print('Error getting conversations: $error');
+        })
         .map((snapshot) {
-      return snapshot.docs.map((doc) => ConversationModel.fromDocument(doc)).toList();
-    });
+          return snapshot.docs.map((doc) {
+            try {
+              return ConversationModel.fromDocument(doc);
+            } catch (e) {
+              print('Error parsing conversation ${doc.id}: $e');
+              return null;
+            }
+          }).whereType<ConversationModel>().toList();
+        });
   }
 
   /// Mark Messages as Read

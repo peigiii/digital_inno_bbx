@@ -134,7 +134,8 @@ class ListingService {
         .map((snapshot) => snapshot.docs.map((doc) => ListingModel.fromDocument(doc)).toList());
   }
 
-    Future<List<ListingModel>> searchListings({
+  /// 搜索列表
+  Future<List<ListingModel>> searchListings({
     String? category,
     String? status,
     int limit = 20,

@@ -197,16 +197,41 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Scaffold(
+              appBar: AppBar(title: const Text('商品详情')),
+              body: ErrorStateWidget.network(
+                onRetry: () => setState(() {}),
+                onBack: () => Navigator.pop(context),
+              ),
+            );
           }
 
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return Scaffold(
+              appBar: AppBar(title: const Text('商品详情')),
+              body: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text('正在加载商品详情...'),
+                  ],
+                ),
+              ),
+            );
           }
 
           final data = snapshot.data!.data() as Map<String, dynamic>?;
           if (data == null) {
-            return const Center(child: Text('Listing not found'));
+            return Scaffold(
+              appBar: AppBar(title: const Text('商品详情')),
+              body: ErrorStateWidget.notFound(
+                title: '商品不存在',
+                message: '该商品可能已被删除或下架',
+                onBack: () => Navigator.pop(context),
+              ),
+            );
           }
 
           List<String> images =

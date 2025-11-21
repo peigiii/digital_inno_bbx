@@ -214,6 +214,9 @@ class OfferService {
         .orderBy('createdAt', descending: true)
         .limit(50)
         .snapshots()
+        .handleError((error) {
+          print('Error getting my offers: $error');
+        })
         .map((snapshot) {
           return snapshot.docs.map((doc) {
             try {
@@ -237,6 +240,9 @@ class OfferService {
         .orderBy('createdAt', descending: true)
         .limit(50)
         .snapshots()
+        .handleError((error) {
+          print('Error getting received offers: $error');
+        })
         .map((snapshot) {
           return snapshot.docs.map((doc) {
             try {
@@ -259,9 +265,19 @@ class OfferService {
         .where('listingId', isEqualTo: listingId)
         .orderBy('createdAt', descending: true)
         .snapshots()
+        .handleError((error) {
+          print('Error getting offers for listing: $error');
+        })
         .map((snapshot) {
-      return snapshot.docs.map((doc) => OfferModel.fromDocument(doc)).toList();
-    });
+          return snapshot.docs.map((doc) {
+            try {
+              return OfferModel.fromDocument(doc);
+            } catch (e) {
+              print('解析报价失败 ${doc.id}: $e');
+              return null;
+            }
+          }).whereType<OfferModel>().toList();
+        });
   }
 
     Future<void> _createTransaction(String offerId) async {
