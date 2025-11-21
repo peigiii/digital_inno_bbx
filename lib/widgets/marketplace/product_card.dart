@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common/common.dart';
 
-/// 商品卡片组件
 class ProductCard extends StatelessWidget {
   final DocumentSnapshot doc;
   final VoidCallback? onTap;
@@ -19,17 +18,17 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = doc.data() as Map<String, dynamic>;
-    final title = data['title'] ?? '未知标题';
-    final wasteType = data['wasteType'] ?? '未知类型';
+    final title = data['title'] ?? 'Unknown Title';
+    final wasteType = data['wasteType'] ?? 'Unknown Type';
     final quantity = data['quantity'] ?? 0;
-    final unit = data['unit'] ?? '�?;
+    final unit = data['unit'] ?? 'tons';
     final pricePerUnit = data['pricePerUnit'] ?? 0;
-    final city = data['city'] ?? data['contactInfo'] ?? '未知地区';
+    final city = data['city'] ?? data['contactInfo'] ?? 'Unknown Location';
     final userEmail = data['userEmail'] ?? '';
     final imageUrl = data['imageUrl'];
 
     // Extract company name from email
-    String supplierName = '供应�?;
+    String supplierName = 'Supplier';
     if (userEmail.isNotEmpty) {
       supplierName = userEmail.split('@').first;
     }
@@ -44,8 +43,7 @@ class ProductCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 图片
-          if (imageUrl != null)
+                    if (imageUrl != null)
             ClipRRect(
               borderRadius: AppTheme.borderRadiusStandard,
               child: Image.network(
@@ -63,8 +61,7 @@ class ProductCard extends StatelessWidget {
 
           const SizedBox(height: AppTheme.spacingSM),
 
-          // 废料类型（标签）
-          Container(
+                    Container(
             padding: const EdgeInsets.symmetric(
               horizontal: AppTheme.spacingSM,
               vertical: 4,
@@ -86,8 +83,7 @@ class ProductCard extends StatelessWidget {
 
           const SizedBox(height: AppTheme.spacingSM),
 
-          // 标题
-          Text(
+                    Text(
             title,
             style: AppTheme.subtitle1,
             maxLines: 1,
@@ -96,12 +92,10 @@ class ProductCard extends StatelessWidget {
 
           const SizedBox(height: AppTheme.spacingSM),
 
-          // 价格和数�?
-          Row(
+                    Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // 价格
-              Column(
+                            Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -111,14 +105,13 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '�?unit',
+                    '个unit',
                     style: AppTheme.caption,
                   ),
                 ],
               ),
 
-              // 数量
-              Container(
+                            Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppTheme.spacingMD,
                   vertical: AppTheme.spacingSM,
@@ -152,12 +145,10 @@ class ProductCard extends StatelessWidget {
           const Divider(height: 1),
           const SizedBox(height: AppTheme.spacingSM),
 
-          // 底部信息
-          Row(
+                    Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // 城市和供应商
-              Expanded(
+                            Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -202,9 +193,8 @@ class ProductCard extends StatelessWidget {
                 ),
               ),
 
-              // 立即报价按钮
-              SmallButton(
-                text: '报价',
+                            SmallButton(
+                text: 'Quote',
                 icon: Icons.local_offer,
                 onPressed: onQuote,
               ),
@@ -233,7 +223,7 @@ class ProductCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '暂无图片',
+            'No Image',
             style: AppTheme.caption.copyWith(
               color: AppTheme.textSecondary.withOpacity(0.5),
             ),

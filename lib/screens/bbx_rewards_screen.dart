@@ -41,7 +41,6 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
           isLoading = false;
         });
       } else {
-        // 创建新的奖励记录
         await _initializeRewards();
       }
     } catch (e) {
@@ -58,13 +57,13 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
         .collection('rewards')
         .doc(currentUser!.uid)
         .set({
-      'points': 50, // 注册奖励
+      'points': 50,
       'tier': 'bronze',
       'transactions': [
         {
           'type': 'earn',
           'points': 50,
-          'reason': '注册奖励',
+          'reason': 'Registration Reward',
           'timestamp': DateTime.now().toIso8601String(),
         }
       ],
@@ -111,11 +110,11 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
       } else if (timestamp is Timestamp) {
         date = timestamp.toDate();
       } else {
-        return '刚刚';
+        return 'Just now';
       }
       return DateFormat('yyyy-MM-dd HH:mm').format(date);
     } catch (e) {
-      return '刚刚';
+      return 'Just now';
     }
   }
 
@@ -123,7 +122,7 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
     if (totalPoints < pointsCost) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('积分不足'),
+          content: Text('Insufficient points'),
           backgroundColor: Colors.red,
         ),
       );
@@ -154,7 +153,7 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('成功兑换: $rewardType'),
+            content: Text('Redeemed: $rewardType'),
             backgroundColor: Colors.green,
           ),
         );
@@ -163,7 +162,7 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('兑换失败: $e'),
+            content: Text('Redemption failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -181,14 +180,13 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('奖励积分'),
+        title: const Text('Reward Points'),
         backgroundColor: const Color(0xFF4CAF50),
         foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 积分卡片
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(32),
@@ -208,7 +206,7 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    '${tier.toUpperCase()} 会员',
+                    '${tier.toUpperCase()} Member',
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -217,7 +215,7 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '$totalPoints 积分',
+                    '$totalPoints Points',
                     style: const TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
@@ -228,40 +226,38 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
               ),
             ),
 
-            // 赚取积分规则
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '如何赚取积分',
+                    'How to earn points',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _buildEarnRule('注册', '+50 积分', Icons.person_add),
-                  _buildEarnRule('完成交易', '+10 积分/�?, Icons.check_circle),
-                  _buildEarnRule('邀请朋�?, '+20 积分', Icons.group_add),
-                  _buildEarnRule('认证账号', '+30 积分', Icons.verified),
-                  _buildEarnRule('连续使用', '+5 积分/�?, Icons.calendar_today),
-                  _buildEarnRule('撰写评价', '+5 积分', Icons.star),
+                  _buildEarnRule('Registration', '+50 Points', Icons.person_add),
+                  _buildEarnRule('Complete Transaction', '+10 Points/Tx', Icons.check_circle),
+                  _buildEarnRule('Invite Friend', '+20 Points', Icons.group_add),
+                  _buildEarnRule('Verify Account', '+30 Points', Icons.verified),
+                  _buildEarnRule('Daily Use', '+5 Points/Day', Icons.calendar_today),
+                  _buildEarnRule('Write Review', '+5 Points', Icons.star),
                 ],
               ),
             ),
 
             const Divider(),
 
-            // 兑换选项
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '兑换奖励',
+                    'Redeem Rewards',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -269,19 +265,19 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
                   ),
                   const SizedBox(height: 16),
                   _buildRewardCard(
-                    'RM 10 折扣�?,
+                    'RM 10 Discount',
                     100,
                     Icons.discount,
                     Colors.green,
                   ),
                   _buildRewardCard(
-                    '优先匹配 7 �?,
+                    'Priority Match 7 Days',
                     50,
                     Icons.priority_high,
                     Colors.blue,
                   ),
                   _buildRewardCard(
-                    '捐赠给环�?NGO',
+                    'Donate to NGO',
                     200,
                     Icons.favorite,
                     Colors.red,
@@ -292,14 +288,13 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
 
             const Divider(),
 
-            // 积分历史
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '积分历史',
+                    'Points History',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -310,7 +305,7 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
                     const Center(
                       child: Padding(
                         padding: EdgeInsets.all(32),
-                        child: Text('暂无积分历史'),
+                        child: Text('No history'),
                       ),
                     )
                   else
@@ -366,7 +361,7 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
       child: ListTile(
         leading: Icon(icon, color: color),
         title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
-        subtitle: Text('$points 积分'),
+        subtitle: Text('$points Points'),
         trailing: SizedBox(
           width: 70,
           height: 36,
@@ -377,7 +372,7 @@ class _BBXRewardsScreenState extends State<BBXRewardsScreen> {
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 8),
             ),
-            child: const Text('兑换', style: TextStyle(fontSize: 13)),
+            child: const Text('Redeem', style: TextStyle(fontSize: 13)),
           ),
         ),
       ),

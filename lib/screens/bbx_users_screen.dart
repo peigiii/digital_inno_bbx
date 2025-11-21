@@ -50,8 +50,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
 
   Future<void> _refreshUsers() async {
     setState(() {
-      // 触发重建以刷�?StreamBuilder
-    });
+          });
   }
 
   Stream<QuerySnapshot> _getUsersStream() {
@@ -296,7 +295,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                         if (_searchQuery.isEmpty) ...[
                           const SizedBox(height: 8),
                           Text(
-                            '还没有注册用�?,
+                            '还没有注册用?,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[500],
@@ -565,7 +564,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
               if (userData['contact'] != null)
                 _buildDetailRow('联系方式', userData['contact']),
               if (userData['rating'] != null && userData['rating'] > 0)
-                _buildDetailRow('评分', '${userData['rating'].toStringAsFixed(1)} �?),
+                _buildDetailRow('评分', '${userData['rating'].toStringAsFixed(1)} ?),
             ],
           ),
         ),

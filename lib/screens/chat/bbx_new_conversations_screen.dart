@@ -9,7 +9,6 @@ import '../../widgets/bbx_loading.dart';
 import 'bbx_new_chat_screen.dart';
 import '../../utils/page_transitions.dart';
 
-/// BBX 对话列表页（完全重构�?
 class BBXNewConversationsScreen extends StatefulWidget {
   const BBXNewConversationsScreen({super.key});
 
@@ -47,11 +46,9 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
       ),
       body: Column(
         children: [
-          // 快捷筛�?
-          _buildFilterBar(),
+                    _buildFilterBar(),
 
-          // 对话列表
-          Expanded(
+                    Expanded(
             child: _buildConversationsList(),
           ),
         ],
@@ -59,8 +56,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
     );
   }
 
-  /// 筛选栏
-  Widget _buildFilterBar() {
+    Widget _buildFilterBar() {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(
@@ -90,8 +86,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
     );
   }
 
-  /// 对话列表
-  Widget _buildConversationsList() {
+    Widget _buildConversationsList() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       return BBXEmptyState.noData(description: '请先登录');
@@ -130,8 +125,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
     );
   }
 
-  /// 对话卡片
-  Widget _buildConversationCard(DocumentSnapshot doc) {
+    Widget _buildConversationCard(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     final otherUserName = data['otherUserName'] ?? '未知用户';
     final otherUserAvatar = data['otherUserAvatar'] as String?;
@@ -179,8 +173,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
           ),
           child: Row(
             children: [
-              // 头像（带在线状态）
-              BBXAvatarOnline(
+                            BBXAvatarOnline(
                 imageUrl: otherUserAvatar,
                 name: otherUserName,
                 size: 56,
@@ -188,13 +181,11 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
               ),
               const SizedBox(width: AppTheme.spacing12),
 
-              // 内容
-              Expanded(
+                            Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 顶部行：姓名 + 时间
-                    Row(
+                                        Row(
                       children: [
                         Expanded(
                           child: Text(
@@ -215,8 +206,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
                     ),
                     const SizedBox(height: 4),
 
-                    // 底部行：最后消�?+ 未读角标
-                    Row(
+                                        Row(
                       children: [
                         Expanded(
                           child: Text(
@@ -276,21 +266,20 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
     final difference = now.difference(time);
 
     if (difference.inDays > 0) {
-      return '${time.month}�?{time.day}�?;
+      return '${time.month}?{time.day}?';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时�?;
+      return '${difference.inHours} hours ago';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟�?;
+      return '${difference.inMinutes} minutes ago';
     } else {
-      return '刚刚';
+      return 'Just now';
     }
   }
 
   String _formatLastMessage(String message) {
     if (message.isEmpty) return '';
 
-    // 处理特殊消息类型
-    if (message.startsWith('[图片]')) return '[图片]';
+        if (message.startsWith('[图片]')) return '[图片]';
     if (message.startsWith('[文件]')) return '[文件]';
     if (message.startsWith('[位置]')) return '[位置]';
     if (message.startsWith('[商品]')) return '[商品链接]';

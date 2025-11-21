@@ -9,9 +9,6 @@ import '../../models/listing_model.dart';
 import '../search/bbx_new_search_screen.dart';
 import '../categories/bbx_category_listings_screen.dart';
 
-/// BBX 首页 - 完全优化�?
-/// 适配 Pixel 5 (393 x 851 dp)
-/// Material Design 3 风格，现代化设计
 class BBXOptimizedHomeScreen extends StatefulWidget {
   const BBXOptimizedHomeScreen({super.key});
 
@@ -41,7 +38,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
   }
 
   void _onScroll() {
-    // 滚动时隐藏问候语
     if (_scrollController.offset > 50 && _showGreeting) {
       setState(() => _showGreeting = false);
     } else if (_scrollController.offset <= 50 && !_showGreeting) {
@@ -56,8 +52,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // 必须调用，因为使用了 AutomaticKeepAliveClientMixin
-    
+    super.build(context);
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: RefreshIndicator(
@@ -67,25 +62,18 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
           controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            // 顶部�?
             _buildSliverAppBar(),
 
-            // 搜索栏区�?
             _buildSearchSection(),
 
-            // 快捷分类（横向滚动）
             _buildQuickCategories(),
 
-            // 快捷功能卡片
             _buildQuickActions(),
 
-            // Banner广告位（可选）
             _buildPromotionBanner(),
 
-            // 为你推荐 - 商品列表
             _buildRecommendedSection(),
 
-            // 底部间距
             const SliverToBoxAdapter(
               child: SizedBox(height: AppTheme.spacing24),
             ),
@@ -95,10 +83,9 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 顶部 AppBar
   Widget _buildSliverAppBar() {
     final user = FirebaseAuth.instance.currentUser;
-    final userName = user?.displayName ?? '用户';
+    final userName = user?.displayName ?? 'User';
     final greeting = _getGreeting();
 
     return SliverToBoxAdapter(
@@ -112,7 +99,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
         ),
         child: Row(
           children: [
-            // Logo 和标�?
             Container(
               width: 44,
               height: 44,
@@ -140,7 +126,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
             ),
             const SizedBox(width: AppTheme.spacing12),
 
-            // 问候语
             Expanded(
               child: AnimatedOpacity(
                 opacity: _showGreeting ? 1.0 : 0.0,
@@ -165,12 +150,10 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
               ),
             ),
 
-            // 通知按钮
             _buildNotificationButton(),
 
             const SizedBox(width: AppTheme.spacing8),
 
-            // 扫码按钮
             _buildScanButton(),
           ],
         ),
@@ -178,7 +161,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 搜索区域
   Widget _buildSearchSection() {
     return SliverToBoxAdapter(
       child: Container(
@@ -190,7 +172,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
           AppTheme.spacing16,
         ),
         child: ModernSearchBar(
-          hintText: '搜索废料类型、商�?..',
+          hintText: 'Search waste types, companies...',
           showFilter: true,
           showVoiceSearch: false,
           onTap: () {
@@ -213,15 +195,14 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 快捷分类（横向滚动）
   Widget _buildQuickCategories() {
     final categories = [
-      {'name': 'Plastic', 'label': '塑料', 'icon': '♻️', 'color': AppTheme.plastic},
-      {'name': 'Metal', 'label': '金属', 'icon': '🔩', 'color': AppTheme.metal},
-      {'name': 'Paper', 'label': '纸类', 'icon': '📄', 'color': AppTheme.paper},
-      {'name': 'Glass', 'label': '玻璃', 'icon': '🍾', 'color': AppTheme.glass},
-      {'name': 'Electronic', 'label': '电子', 'icon': '💻', 'color': AppTheme.electronic},
-      {'name': 'Organic', 'label': '有机', 'icon': '🌿', 'color': AppTheme.organic},
+      {'name': 'Plastic', 'label': 'Plastic', 'icon': '♻️', 'color': AppTheme.plastic},
+      {'name': 'Metal', 'label': 'Metal', 'icon': '🔩', 'color': AppTheme.metal},
+      {'name': 'Paper', 'label': 'Paper', 'icon': '📄', 'color': AppTheme.paper},
+      {'name': 'Glass', 'label': 'Glass', 'icon': '🍾', 'color': AppTheme.glass},
+      {'name': 'Electronic', 'label': 'Electronic', 'icon': '💻', 'color': AppTheme.electronic},
+      {'name': 'Organic', 'label': 'Organic', 'icon': '🌿', 'color': AppTheme.organic},
     ];
 
     return SliverToBoxAdapter(
@@ -233,7 +214,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
             padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
             child: Row(
               children: [
-                const Text('废料分类', style: AppTheme.heading4),
+                const Text('Categories', style: AppTheme.heading4),
                 const Spacer(),
                 TextButton(
                   onPressed: () {
@@ -242,7 +223,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
                   child: Row(
                     children: [
                       Text(
-                        '全部',
+                        'View All',
                         style: AppTheme.body2.copyWith(
                           color: AppTheme.primary500,
                         ),
@@ -292,12 +273,11 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 快捷功能
   Widget _buildQuickActions() {
     final actions = [
       {
-        'title': '我的报价',
-        'subtitle': '5 条待处理',
+        'title': 'My Quotes',
+        'subtitle': '5 Pending',
         'icon': Icons.local_offer_rounded,
         'gradient': const LinearGradient(
           colors: [Color(0xFFFF6B6B), Color(0xFFFF8E8E)],
@@ -305,8 +285,8 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
         'route': '/my-offers',
       },
       {
-        'title': '我的交易',
-        'subtitle': '2 笔进行中',
+        'title': 'My Transactions',
+        'subtitle': '2 In Progress',
         'icon': Icons.receipt_long_rounded,
         'gradient': const LinearGradient(
           colors: [Color(0xFF4ECDC4), Color(0xFF44D9C0)],
@@ -314,8 +294,8 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
         'route': '/transactions',
       },
       {
-        'title': '附近商品',
-        'subtitle': '基于位置',
+        'title': 'Nearby',
+        'subtitle': 'Based on location',
         'icon': Icons.location_on_rounded,
         'gradient': const LinearGradient(
           colors: [Color(0xFFF7B731), Color(0xFFF7CE66)],
@@ -323,8 +303,8 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
         'route': '/nearby',
       },
       {
-        'title': '我的收藏',
-        'subtitle': '8 个商�?,
+        'title': 'My Favorites',
+        'subtitle': '8 Items',
         'icon': Icons.favorite_rounded,
         'gradient': const LinearGradient(
           colors: [Color(0xFFEE5A6F), Color(0xFFF082A5)],
@@ -339,7 +319,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('快捷功能', style: AppTheme.heading4),
+            const Text('Quick Actions', style: AppTheme.heading4),
             const SizedBox(height: AppTheme.spacing12),
             GridView.builder(
               shrinkWrap: true,
@@ -370,7 +350,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// Banner 推广�?
   Widget _buildPromotionBanner() {
     return SliverToBoxAdapter(
       child: Container(
@@ -398,7 +377,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
         ),
         child: Stack(
           children: [
-            // 背景装饰
             Positioned(
               right: -20,
               bottom: -20,
@@ -424,7 +402,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
               ),
             ),
 
-            // 内容
             Padding(
               padding: const EdgeInsets.all(AppTheme.spacing20),
               child: Row(
@@ -444,7 +421,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
-                            '限时优惠',
+                            'Limited Time Offer',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 11,
@@ -454,7 +431,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          '升级专业版\n享受更多特权',
+                          'Upgrade to Professional\nGet more benefits',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -479,7 +456,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
                             ),
                           ),
                           child: const Text(
-                            '立即升级',
+                            'Upgrade Now',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: AppTheme.semibold,
@@ -503,7 +480,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 推荐商品区域
   Widget _buildRecommendedSection() {
     return SliverToBoxAdapter(
       child: Padding(
@@ -513,7 +489,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
           children: [
             Row(
               children: [
-                const Text('为你推荐', style: AppTheme.heading4),
+                const Text('Recommended', style: AppTheme.heading4),
                 const Spacer(),
                 TextButton(
                   onPressed: () {
@@ -522,7 +498,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
                   child: Row(
                     children: [
                       Text(
-                        '查看全部',
+                        'View All',
                         style: AppTheme.body2.copyWith(
                           color: AppTheme.primary500,
                         ),
@@ -545,7 +521,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 商品列表
   Widget _buildListingList() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
@@ -576,7 +551,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
             try {
               final listing = ListingModel.fromDocument(doc);
               return ModernListingCard(
-                heroTag: listing.imageUrls.isNotEmpty ? listing.imageUrls.first : null, // 使用图片URL作为tag
+                heroTag: listing.imageUrls.isNotEmpty ? listing.imageUrls.first : null,
                 imageUrl: listing.imageUrls.isNotEmpty
                     ? listing.imageUrls.first
                     : '',
@@ -584,7 +559,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
                 category: listing.wasteType,
                 price: listing.pricePerUnit,
                 unit: listing.unit,
-                location: (listing.location ?? '未知位置').toString(),
+                location: (listing.location ?? 'Unknown Location').toString(),
                 sellerName: listing.userEmail,
                 rating: 4.8,
                 reviewCount: 125,
@@ -597,7 +572,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
                   );
                 },
                 onFavorite: () {
-                  // 处理收藏逻辑
+                  // TODO: Implement favorite logic
                 },
               );
             } catch (e) {
@@ -610,7 +585,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 分类卡片
   Widget _buildCategoryCard({
     required String name,
     required String label,
@@ -660,7 +634,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 功能卡片
   Widget _buildActionCard({
     required String title,
     required String subtitle,
@@ -723,7 +696,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 通知按钮
   Widget _buildNotificationButton() {
     return Stack(
       clipBehavior: Clip.none,
@@ -746,7 +718,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
             ),
           ),
         ),
-        // 红点提示
         Positioned(
           right: 8,
           top: 8,
@@ -763,7 +734,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 扫码按钮
   Widget _buildScanButton() {
     return Container(
       width: 44,
@@ -774,7 +744,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
       ),
       child: IconButton(
         onPressed: () {
-          // 打开扫码页面
+          // TODO: Implement QR Scan
         },
         icon: const Icon(
           Icons.qr_code_scanner_rounded,
@@ -785,7 +755,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 加载状�?
   Widget _buildLoadingState() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
@@ -800,18 +769,18 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
                 borderRadius: AppTheme.borderRadiusLarge,
                 border: Border.all(color: AppTheme.neutral200),
               ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ShimmerLoading.rounded(
-                      width: double.infinity,
-                      height: 180,
-                      shapeBorder: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(12),
-                        ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShimmerLoading.rounded(
+                    width: double.infinity,
+                    height: 180,
+                    shapeBorder: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(12),
                       ),
                     ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -840,7 +809,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 错误状�?
   Widget _buildErrorState() {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing32),
@@ -853,14 +821,14 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
           ),
           const SizedBox(height: AppTheme.spacing16),
           Text(
-            '加载失败',
+            'Failed to load',
             style: AppTheme.heading4.copyWith(
               color: AppTheme.neutral600,
             ),
           ),
           const SizedBox(height: AppTheme.spacing8),
           Text(
-            '请检查网络连接后重试',
+            'Please check network connection',
             style: AppTheme.body2.copyWith(
               color: AppTheme.neutral500,
             ),
@@ -870,7 +838,6 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 空状�?
   Widget _buildEmptyState() {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing32),
@@ -883,14 +850,14 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
           ),
           const SizedBox(height: AppTheme.spacing16),
           Text(
-            '暂无商品',
+            'No listings found',
             style: AppTheme.heading4.copyWith(
               color: AppTheme.neutral600,
             ),
           ),
           const SizedBox(height: AppTheme.spacing8),
           Text(
-            '稍后再来看看�?,
+            'Check back later',
             style: AppTheme.body2.copyWith(
               color: AppTheme.neutral500,
             ),
@@ -900,16 +867,14 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 获取问候语
   String _getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return '早上�?👋';
+      return 'Good Morning 👋';
     } else if (hour < 18) {
-      return '下午�?☀�?;
+      return 'Good Afternoon ☀️';
     } else {
-      return '晚上�?🌙';
+      return 'Good Evening 🌙';
     }
   }
 }
-

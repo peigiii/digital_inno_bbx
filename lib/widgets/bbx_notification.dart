@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// BBX 应用内通知组件
 class BBXNotification {
-  /// 显示成功通知
-  static void showSuccess(
+    static void showSuccess(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 3),
@@ -20,8 +18,7 @@ class BBXNotification {
     );
   }
 
-  /// 显示错误通知
-  static void showError(
+    static void showError(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 5),
@@ -37,8 +34,7 @@ class BBXNotification {
     );
   }
 
-  /// 显示信息通知
-  static void showInfo(
+    static void showInfo(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 3),
@@ -54,8 +50,7 @@ class BBXNotification {
     );
   }
 
-  /// 显示警告通知
-  static void showWarning(
+    static void showWarning(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 4),
@@ -71,8 +66,7 @@ class BBXNotification {
     );
   }
 
-  /// 通用显示方法
-  static void _show(
+    static void _show(
     BuildContext context, {
     required String message,
     required Color backgroundColor,
@@ -97,8 +91,7 @@ class BBXNotification {
 
     overlay.insert(overlayEntry);
 
-    // 自动移除
-    Future.delayed(duration, () {
+        Future.delayed(duration, () {
       if (overlayEntry.mounted) {
         overlayEntry.remove();
       }
@@ -106,7 +99,6 @@ class BBXNotification {
   }
 }
 
-/// 通知 Widget
 class _BBXNotificationWidget extends StatefulWidget {
   final String message;
   final Color backgroundColor;
@@ -228,7 +220,6 @@ class _BBXNotificationWidgetState extends State<_BBXNotificationWidget>
   }
 }
 
-/// SnackBar 样式的通知（备选方案）
 class BBXSnackBar {
   static void show(
     BuildContext context,

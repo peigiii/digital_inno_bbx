@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../theme/app_theme.dart';
 
-/// 订阅管理页面
-/// 显示订阅详情、历史记录、升�?降级选项
 class BBXSubscriptionManagementScreen extends StatefulWidget {
   const BBXSubscriptionManagementScreen({Key? key}) : super(key: key);
 
@@ -36,14 +34,12 @@ class _BBXSubscriptionManagementScreenState
     }
 
     try {
-      // 加载用户订阅信息
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
           .get()
           .timeout(const Duration(seconds: 10));
 
-      // 加载支付历史
       final paymentsSnapshot = await FirebaseFirestore.instance
           .collection('subscription_payments')
           .where('userId', isEqualTo: currentUser!.uid)
@@ -62,14 +58,14 @@ class _BBXSubscriptionManagementScreenState
         });
       }
     } catch (e) {
-      print('�?[订阅管理] 加载失败: $e');
+      print('❌ [Subscription] Load failed: $e');
       if (mounted) {
         setState(() {
           isLoading = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('加载订阅信息失败: $e'),
+            content: Text('Failed to load subscription info: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -82,12 +78,12 @@ class _BBXSubscriptionManagementScreenState
     if (currentUser == null) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('订阅管理'),
+          title: const Text('Subscription Management'),
           backgroundColor: AppTheme.primary,
           foregroundColor: Colors.white,
         ),
         body: const Center(
-          child: Text('请先登录'),
+          child: Text('Please login'),
         ),
       );
     }
@@ -95,7 +91,7 @@ class _BBXSubscriptionManagementScreenState
     if (isLoading) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('订阅管理'),
+          title: const Text('Subscription Management'),
           backgroundColor: AppTheme.primary,
           foregroundColor: Colors.white,
         ),
@@ -110,7 +106,7 @@ class _BBXSubscriptionManagementScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('订阅管理'),
+        title: const Text('Subscription Management'),
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
       ),
@@ -122,22 +118,18 @@ class _BBXSubscriptionManagementScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 当前订阅卡片
               _buildCurrentSubscriptionCard(currentPlan, subscriptionStatus),
 
               const SizedBox(height: 24),
 
-              // 快速操作按�?
               _buildQuickActions(currentPlan),
 
               const SizedBox(height: 24),
 
-              // 订阅详情
               _buildSubscriptionDetails(currentPlan),
 
               const SizedBox(height: 24),
 
-              // 支付历史
               _buildPaymentHistory(),
             ],
           ),
@@ -176,7 +168,7 @@ class _BBXSubscriptionManagementScreenState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '当前订阅',
+                'Current Subscription',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.white70,
@@ -193,7 +185,7 @@ class _BBXSubscriptionManagementScreenState
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  status == 'active' ? '有效' : status == 'expired' ? '已过�? : '待激�?,
+                  status == 'active' ? 'Active' : status == 'expired' ? 'Expired' : 'Pending',
                   style: const TextStyle(
                     fontSize: 12,
                     color: Colors.white,
@@ -241,8 +233,8 @@ class _BBXSubscriptionManagementScreenState
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoItem('价格', 'RM ${planInfo['price']}/�?),
-                _buildInfoItem('续费日期', _getNextBillingDate()),
+                _buildInfoItem('Price', 'RM ${planInfo['price']}/mo'),
+                _buildInfoItem('Next Billing Date', _getNextBillingDate()),
               ],
             ),
           ],
@@ -280,7 +272,7 @@ class _BBXSubscriptionManagementScreenState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '快速操�?,
+          'Quick Actions',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -293,7 +285,7 @@ class _BBXSubscriptionManagementScreenState
               Expanded(
                 child: _buildActionButton(
                   icon: Icons.upgrade,
-                  label: '升级计划',
+                  label: 'Upgrade Plan',
                   color: AppTheme.primary,
                   onTap: () {
                     Navigator.pushNamed(context, '/subscription');
@@ -305,7 +297,7 @@ class _BBXSubscriptionManagementScreenState
             Expanded(
               child: _buildActionButton(
                 icon: Icons.receipt_long,
-                label: '查看发票',
+                label: 'View Invoices',
                 color: Colors.blue,
                 onTap: () {
                   _showInvoicesDialog();
@@ -372,7 +364,7 @@ class _BBXSubscriptionManagementScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '订阅权益',
+            'Subscription Benefits',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -421,7 +413,7 @@ class _BBXSubscriptionManagementScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '支付历史',
+            'Payment History',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -433,7 +425,7 @@ class _BBXSubscriptionManagementScreenState
               child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Text(
-                  '暂无支付记录',
+                  'No payment history',
                   style: TextStyle(color: Colors.grey),
                 ),
               ),
@@ -511,7 +503,7 @@ class _BBXSubscriptionManagementScreenState
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
-                          '测试',
+                          'Test',
                           style: TextStyle(
                             fontSize: 10,
                             color: Colors.orange,
@@ -566,12 +558,12 @@ class _BBXSubscriptionManagementScreenState
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('发票功能'),
-        content: const Text('发票生成功能即将推出！\n\n您可以在支付历史中查看所有交易记录�?),
+        title: const Text('Invoices'),
+        content: const Text('Invoice generation coming soon! View transaction history.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('知道�?),
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -583,64 +575,64 @@ class _BBXSubscriptionManagementScreenState
       case 'basic':
         return {
           'name': 'Basic',
-          'description': '适合个人用户',
+          'description': 'For Individuals',
           'color': Colors.blue,
           'icon': Icons.star,
           'price': 99,
           'features': [
-            '无限列表',
-            '优先匹配',
-            '基础报告',
-            '邮件支持',
-            '数据导出',
+            'Unlimited Listings',
+            'Priority Matching',
+            'Basic Reports',
+            'Email Support',
+            'Data Export',
           ],
         };
       case 'professional':
         return {
           'name': 'Professional',
-          'description': '适合企业用户',
+          'description': 'For Businesses',
           'color': AppTheme.primary,
           'icon': Icons.workspace_premium,
           'price': 199,
           'features': [
-            'Basic 所有功�?,
-            'ESG 合规报告',
-            '高级数据分析',
-            '物流优化',
-            '专属客服',
-            'API 访问',
+            'All Basic features',
+            'ESG Compliance Report',
+            'Advanced Analytics',
+            'Logistics Optimization',
+            'Dedicated Support',
+            'API Access',
           ],
         };
       case 'enterprise':
         return {
           'name': 'Enterprise',
-          'description': '适合大型企业',
+          'description': 'For Large Enterprises',
           'color': Colors.purple,
           'icon': Icons.diamond,
           'price': 499,
           'features': [
-            'Professional 所有功�?,
-            '多用户账�?,
-            '定制化报�?,
-            '白标解决方案',
-            '专属客户经理',
-            '优先技术支�?,
-            'SLA 保证',
+            'All Professional features',
+            'Multi-user account',
+            'Custom Reports',
+            'White-label Solution',
+            'Dedicated Account Manager',
+            'Priority Tech Support',
+            'SLA Guarantee',
           ],
         };
       default:
         return {
           'name': 'Free',
-          'description': '免费试用',
+          'description': 'Free Trial',
           'color': Colors.grey,
           'icon': Icons.person,
           'price': 0,
           'features': [
-            '3天试用（个人�?,
-            '7天试用（公司�?,
-            '最�?5 个列�?,
-            '基础功能',
-            '社区支持',
+            '3-day trial (Individual)',
+            '7-day trial (Company)',
+            'Max 5 listings',
+            'Basic Features',
+            'Community Support',
           ],
         };
     }
@@ -651,7 +643,7 @@ class _BBXSubscriptionManagementScreenState
     if (expiresAt is Timestamp) {
       return _formatDate(expiresAt.toDate());
     }
-    return '暂无';
+    return 'N/A';
   }
 
   String _formatDate(DateTime date) {
@@ -661,13 +653,13 @@ class _BBXSubscriptionManagementScreenState
   String _getPaymentMethodName(String method) {
     switch (method) {
       case 'fpx':
-        return 'FPX 网银转账';
+        return 'FPX Online Banking';
       case 'ewallet':
-        return '电子钱包';
+        return 'E-Wallet';
       case 'credit_card':
-        return '信用�?借记�?;
+        return 'Credit/Debit Card';
       case 'cash':
-        return '现金支付';
+        return 'Cash Payment';
       default:
         return method;
     }

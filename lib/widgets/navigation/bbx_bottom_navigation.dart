@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// BBX 底部导航栏组�?
-/// 包含5个Tab：首页、商品列表、发布（凸起）、消息、个人中�?
 class BBXBottomNavigation extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
@@ -26,11 +24,9 @@ class BBXBottomNavigation extends StatelessWidget {
       child: SafeArea(
         child: Stack(
           children: [
-            // 常规导航项（左侧2�?+ 右侧2个）
-            Row(
+                        Row(
               children: [
-                // 左侧：首页、商品列�?
-                _buildNavItem(
+                                _buildNavItem(
                   icon: Icons.home_rounded,
                   label: '首页',
                   index: 0,
@@ -43,11 +39,9 @@ class BBXBottomNavigation extends StatelessWidget {
                   isSelected: currentIndex == 1,
                 ),
 
-                // 中间空位（留给凸起按钮）
-                const Spacer(),
+                                const Spacer(),
 
-                // 右侧：消息、个人中�?
-                _buildNavItem(
+                                _buildNavItem(
                   icon: Icons.chat_bubble_rounded,
                   label: '消息',
                   index: 3,
@@ -63,11 +57,9 @@ class BBXBottomNavigation extends StatelessWidget {
               ],
             ),
 
-            // 中间凸起的发布按�?
-            Positioned(
+                        Positioned(
               left: MediaQuery.of(context).size.width / 2 - 32,
-              top: -8, // 向上凸起8px
-              child: _buildCenterButton(),
+              top: -8,               child: _buildCenterButton(),
             ),
           ],
         ),
@@ -75,8 +67,7 @@ class BBXBottomNavigation extends StatelessWidget {
     );
   }
 
-  /// 构建常规导航�?
-  Widget _buildNavItem({
+    Widget _buildNavItem({
     required IconData icon,
     required String label,
     required int index,
@@ -101,8 +92,7 @@ class BBXBottomNavigation extends StatelessWidget {
                     size: 24,
                     color: color,
                   ),
-                  // 未读消息角标
-                  if (badge != null && badge > 0)
+                                    if (badge != null && badge > 0)
                     Positioned(
                       right: -8,
                       top: -4,
@@ -145,8 +135,7 @@ class BBXBottomNavigation extends StatelessWidget {
     );
   }
 
-  /// 构建中间凸起的发布按�?
-  Widget _buildCenterButton() {
+    Widget _buildCenterButton() {
     final isSelected = currentIndex == 2;
 
     return GestureDetector(

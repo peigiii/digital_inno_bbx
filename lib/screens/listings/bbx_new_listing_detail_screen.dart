@@ -11,7 +11,6 @@ import '../../models/listing_model.dart';
 import '../offers/bbx_new_make_offer_screen.dart';
 import '../../utils/page_transitions.dart';
 
-/// BBX 商品详情页（完全重构�?
 class BBXNewListingDetailScreen extends StatefulWidget {
   final String listingId;
 
@@ -47,15 +46,15 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('加载失败�?{snapshot.error}'));
+            return Center(child: Text('加载失败?{snapshot.error}'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const BBXFullScreenLoading(message: '加载�?..');
+            return const BBXFullScreenLoading(message: '加载?..');
           }
 
           if (!snapshot.hasData || !snapshot.data!.exists) {
-            return const Center(child: Text('商品不存�?));
+            return const Center(child: Text('商品不存?));
           }
 
           final listing = ListingModel.fromDocument(snapshot.data!);
@@ -64,36 +63,27 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
             children: [
               CustomScrollView(
                 slivers: [
-                  // 图片轮播
-                  _buildImageCarousel(listing.images),
+                                    _buildImageCarousel(listing.images),
 
-                  // 商品信息卡片（浮动）
-                  _buildListingInfoCard(listing),
+                                    _buildListingInfoCard(listing),
 
-                  // 基本信息区域
-                  _buildBasicInfo(listing),
+                                    _buildBasicInfo(listing),
 
-                  // 卖家信息卡片
-                  _buildSellerCard(listing),
+                                    _buildSellerCard(listing),
 
-                  // 商品描述
-                  _buildDescription(listing),
+                                    _buildDescription(listing),
 
-                  // 位置信息
-                  _buildLocationInfo(listing),
+                                    _buildLocationInfo(listing),
 
-                  // 相似商品推荐
-                  _buildSimilarListings(listing.category),
+                                    _buildSimilarListings(listing.category),
 
-                  // 底部间距
-                  const SliverToBoxAdapter(
+                                    const SliverToBoxAdapter(
                     child: SizedBox(height: 100),
                   ),
                 ],
               ),
 
-              // 底部操作�?
-              _buildBottomActionBar(listing),
+                            _buildBottomActionBar(listing),
             ],
           );
         },
@@ -101,8 +91,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     );
   }
 
-  /// 图片轮播
-  Widget _buildImageCarousel(List<String> images) {
+    Widget _buildImageCarousel(List<String> images) {
     final displayImages = images.isNotEmpty ? images : [''];
 
     return SliverAppBar(
@@ -154,7 +143,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                 });
                 BBXNotification.showSuccess(
                   context,
-                  _isFavorited ? '已添加到收藏' : '已取消收�?,
+                  _isFavorited ? '已添加到收藏' : 'Cancelled收?,
                 );
               },
             ),
@@ -175,8 +164,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    // 全屏查看
-                  },
+                                      },
                   child: displayImages[index].isNotEmpty
                       ? Image.network(
                           displayImages[index],
@@ -202,8 +190,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                 );
               },
             ),
-            // 指示�?
-            if (displayImages.length > 1)
+                        if (displayImages.length > 1)
               Positioned(
                 bottom: 16,
                 left: 0,
@@ -232,8 +219,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     );
   }
 
-  /// 商品信息卡片（浮动）
-  Widget _buildListingInfoCard(Listing listing) {
+    Widget _buildListingInfoCard(Listing listing) {
     return SliverToBoxAdapter(
       child: Transform.translate(
         offset: const Offset(0, -20),
@@ -251,19 +237,16 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 分类标签
-              BBXCategoryChip(category: listing.category),
+                            BBXCategoryChip(category: listing.category),
               const SizedBox(height: AppTheme.spacing12),
 
-              // 商品标题
-              Text(
+                            Text(
                 listing.title,
                 style: AppTheme.heading2,
               ),
               const SizedBox(height: AppTheme.spacing12),
 
-              // 价格
-              Row(
+                            Row(
                 children: [
                   RichText(
                     text: TextSpan(
@@ -288,9 +271,8 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               ),
               const SizedBox(height: AppTheme.spacing8),
 
-              // 发布时间
-              Text(
-                '发布�?${listing.createdAt != null ? _formatDate(listing.createdAt!) : '未知时间'}',
+                            Text(
+                '发布?${listing.createdAt != null ? _formatDate(listing.createdAt!) : '未知时间'}',
                 style: AppTheme.caption.copyWith(
                   color: AppTheme.neutral500,
                 ),
@@ -302,8 +284,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     );
   }
 
-  /// 基本信息区域
-  Widget _buildBasicInfo(Listing listing) {
+    Widget _buildBasicInfo(Listing listing) {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(AppTheme.spacing16),
@@ -319,7 +300,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               children: [
                 _buildInfoItem(
                   Icons.inventory_2_outlined,
-                  '总数�?,
+                  '总数?,
                   '${listing.quantity} ${listing.unit}',
                 ),
                 const SizedBox(width: AppTheme.spacing8),
@@ -391,8 +372,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     );
   }
 
-  /// 卖家信息卡片
-  Widget _buildSellerCard(Listing listing) {
+    Widget _buildSellerCard(Listing listing) {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(AppTheme.spacing16),
@@ -433,7 +413,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                         const SizedBox(width: 4),
                         const Flexible(
                           child: Text(
-                            '128笔交�?,
+                            '128笔交?,
                             style: TextStyle(fontSize: 11),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -470,8 +450,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     );
   }
 
-  /// 商品描述
-  Widget _buildDescription(Listing listing) {
+    Widget _buildDescription(Listing listing) {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(AppTheme.spacing16),
@@ -507,8 +486,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     );
   }
 
-  /// 位置信息
-  Widget _buildLocationInfo(Listing listing) {
+    Widget _buildLocationInfo(Listing listing) {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(AppTheme.spacing16),
@@ -523,8 +501,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
           children: [
             const Text('取货地址', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
-            // 地图预览占位�?
-            Container(
+                        Container(
               height: 200,
               decoration: BoxDecoration(
                 color: AppTheme.neutral200,
@@ -557,8 +534,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     );
   }
 
-  /// 相似商品推荐
-  Widget _buildSimilarListings(String category) {
+    Widget _buildSimilarListings(String category) {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(AppTheme.spacing16),
@@ -651,8 +627,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     );
   }
 
-  /// 底部操作�?
-  Widget _buildBottomActionBar(Listing listing) {
+    Widget _buildBottomActionBar(Listing listing) {
     return Positioned(
       bottom: 0,
       left: 0,
@@ -692,7 +667,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               Expanded(
                 flex: 2,
                 child: BBXPrimaryButton(
-                  text: '提交报价',
+                  text: '提交Quote',
                   onPressed: () {
                     PageTransitions.navigateToSlideUp(
                       context,
@@ -716,13 +691,13 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     if (difference.inDays > 30) {
       return '${date.year}-${date.month}-${date.day}';
     } else if (difference.inDays > 0) {
-      return '${difference.inDays}天前';
+      return '${difference.inDays} days ago';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时�?;
+      return '${difference.inHours} hours ago';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟�?;
+      return '${difference.inMinutes} minutes ago';
     } else {
-      return '刚刚';
+      return 'Just now';
     }
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Shimmer 骨架屏加载效果组�?
 class ShimmerLoading extends StatefulWidget {
   final double width;
   final double height;

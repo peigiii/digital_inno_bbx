@@ -5,8 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
-/// 撰写评价页面
-/// 支持多维度评分、标签选择、图片上传和匿名评价
 class BBXWriteReviewScreen extends StatefulWidget {
   final String transactionId;
   final String revieweeId;
@@ -26,26 +24,21 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final ImagePicker _picker = ImagePicker();
 
-  // 评分
-  double _overallRating = 5.0;
+    double _overallRating = 5.0;
   double _descriptionScore = 5.0;
   double _serviceScore = 5.0;
   double _deliveryScore = 5.0;
 
-  // 标签
-  final List<String> _positiveTags = ['质量�?, '服务�?, '发货�?, '包装�?, '价格实惠'];
-  final List<String> _negativeTags = ['质量�?, '服务�?, '发货�?, '包装�?, '描述不符'];
+    final List<String> _positiveTags = ['质量?, '服务?, '发货?, '包装?, '价格实惠'];
+  final List<String> _negativeTags = ['质量?, '服务?, '发货?, '包装?, '描述不符'];
   final Set<String> _selectedTags = {};
 
-  // 评价内容
-  final TextEditingController _commentController = TextEditingController();
+    final TextEditingController _commentController = TextEditingController();
 
-  // 图片
-  final List<String> _images = [];
+    final List<String> _images = [];
   bool _isUploading = false;
 
-  // 匿名
-  bool _isAnonymous = false;
+    bool _isAnonymous = false;
 
   bool _isSubmitting = false;
 
@@ -58,7 +51,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
   Future<void> _pickImages() async {
     if (_images.length >= 9) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('最多上�?张图�?)),
+        const SnackBar(content: Text('最多上?张图?)),
       );
       return;
     }
@@ -133,7 +126,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('评价已提�?)),
+          const SnackBar(content: Text('评价已提?)),
         );
       }
     } catch (e) {
@@ -170,8 +163,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 总体评分
-                  const Text(
+                                    const Text(
                     '总体评分',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
@@ -195,14 +187,13 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // 多维度评�?
-                  const Text(
+                                    const Text(
                     '详细评分',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   _buildScoreSlider(
-                    '描述相符�?,
+                    '描述相符?,
                     _descriptionScore,
                     (value) => setState(() => _descriptionScore = value),
                   ),
@@ -218,9 +209,8 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // 快速标�?
-                  const Text(
-                    '快速评�?,
+                                    const Text(
+                    '快速评?,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -277,8 +267,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // 评价内容
-                  const Text(
+                                    const Text(
                     '评价内容',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
@@ -294,9 +283,8 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // 图片上传
-                  const Text(
-                    '上传图片 (最�?�?',
+                                    const Text(
+                    '上传图片 (最??',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -321,10 +309,9 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                     _buildAddImageButton(),
                   const SizedBox(height: 24),
 
-                  // 匿名评价
-                  SwitchListTile(
+                                    SwitchListTile(
                     title: const Text('匿名评价'),
-                    subtitle: const Text('其他用户将无法看到您的身份信�?),
+                    subtitle: const Text('其他用户将无法看到您的身份信?),
                     value: _isAnonymous,
                     onChanged: (value) {
                       setState(() => _isAnonymous = value);
@@ -332,8 +319,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // 提交按钮
-                  SizedBox(
+                                    SizedBox(
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(

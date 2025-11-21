@@ -5,8 +5,6 @@ import '../../models/listing_model.dart';
 import '../../widgets/enhanced/modern_card.dart';
 import '../../widgets/enhanced/shimmer_loading.dart';
 
-/// BBX 商品列表 - 优化�?
-/// Material Design 3 风格，适配 Pixel 5
 class BBXOptimizedMarketplaceScreen extends StatefulWidget {
   const BBXOptimizedMarketplaceScreen({super.key});
 
@@ -21,12 +19,12 @@ class _BBXOptimizedMarketplaceScreenState
   final TextEditingController _searchController = TextEditingController();
 
   final List<Map<String, dynamic>> _categories = [
-    {'id': 'all', 'label': '📦 全部', 'color': Color(0xFF43A047)},
-    {'id': 'EFB (Empty Fruit Bunches)', 'label': '🌴 棕榈果串', 'color': Color(0xFFFF9800)},
-    {'id': 'Palm Shell', 'label': '🥥 棕榈�?, 'color': Color(0xFF8BC34A)},
-    {'id': 'Wood Chips', 'label': '🪵 木屑', 'color': Color(0xFF795548)},
-    {'id': 'Plastic', 'label': '♻️ 塑料', 'color': Color(0xFF2196F3)},
-    {'id': 'Metal', 'label': '🔩 金属', 'color': Color(0xFF607D8B)},
+    {'id': 'all', 'label': 'All', 'color': const Color(0xFF43A047)},
+    {'id': 'EFB (Empty Fruit Bunches)', 'label': 'EFB', 'color': const Color(0xFFFF9800)},
+    {'id': 'Palm Shell', 'label': 'Palm Shell', 'color': const Color(0xFF8BC34A)},
+    {'id': 'Wood Chips', 'label': 'Wood Chips', 'color': const Color(0xFF795548)},
+    {'id': 'Plastic', 'label': 'Plastic', 'color': const Color(0xFF2196F3)},
+    {'id': 'Metal', 'label': 'Metal', 'color': const Color(0xFF607D8B)},
   ];
 
   @override
@@ -42,13 +40,10 @@ class _BBXOptimizedMarketplaceScreenState
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部搜索�?
             _buildTopBar(),
 
-            // 分类筛�?
             _buildCategoryChips(),
 
-            // 商品列表
             Expanded(
               child: _buildProductList(),
             ),
@@ -66,23 +61,22 @@ class _BBXOptimizedMarketplaceScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'BBX 市场',
+            'BBX Marketplace',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),
-          // 搜索�?
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: '搜索生物质废�?..',
+              hintText: 'Search biomass waste...',
               prefixIcon: const Icon(Icons.search, color: AppTheme.primary500),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.tune),
                 onPressed: () {
-                  // 高级筛�?
+                  // TODO: Show filters
                 },
               ),
               filled: true,
@@ -172,7 +166,7 @@ class _BBXOptimizedMarketplaceScreenState
                 category: listing.wasteType,
                 price: listing.pricePerUnit,
                 unit: listing.unit,
-                location: listing.location != null ? listing.location.toString() : '未知位置',
+                location: listing.location != null ? listing.location.toString() : 'Unknown Location',
                 sellerName: listing.userEmail.split('@').first,
                 rating: 4.5,
                 isVerified: true,
@@ -184,7 +178,7 @@ class _BBXOptimizedMarketplaceScreenState
                   );
                 },
                 onFavorite: () {
-                  // TODO: 收藏功能
+                  // TODO: Toggle favorite
                 },
               );
             } catch (e) {
@@ -269,17 +263,17 @@ class _BBXOptimizedMarketplaceScreenState
           Icon(Icons.error_outline, size: 64, color: Colors.red.shade300),
           const SizedBox(height: 16),
           const Text(
-            '加载失败',
+            'Load Failed',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
-          const Text('请检查网络连接后重试'),
+          const Text('Please check network and try again'),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
               setState(() {});
             },
-            child: const Text('重试'),
+            child: const Text('Retry'),
           ),
         ],
       ),
@@ -294,12 +288,12 @@ class _BBXOptimizedMarketplaceScreenState
           Icon(Icons.inbox_outlined, size: 80, color: Colors.grey.shade400),
           const SizedBox(height: 16),
           Text(
-            _selectedCategory == 'all' ? '暂无商品' : '该分类暂无商�?,
+            _selectedCategory == 'all' ? 'No items' : 'No items in this category',
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Text(
-            '请稍后再来查�?,
+            'Please check back later',
             style: TextStyle(color: Colors.grey.shade600),
           ),
         ],
@@ -307,4 +301,3 @@ class _BBXOptimizedMarketplaceScreenState
     );
   }
 }
-

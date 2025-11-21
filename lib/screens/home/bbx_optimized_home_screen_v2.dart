@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../theme/app_theme.dart';
 
-/// BBX 首页 - 渐进式测试版 v2
-/// 逐步添加功能，排查白屏原�?
 class BBXOptimizedHomeScreenV2 extends StatefulWidget {
   const BBXOptimizedHomeScreenV2({super.key});
 
@@ -38,9 +36,9 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return '早上�?👋';
-    if (hour < 18) return '下午�?☀�?;
-    return '晚上�?🌙';
+    if (hour < 12) return '早上?👋';
+    if (hour < 18) return '下午?☀?';
+    return '晚上?🌙';
   }
 
   @override
@@ -51,23 +49,17 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
         controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         slivers: [
-          // 顶部�?
-          _buildSliverAppBar(),
+                    _buildSliverAppBar(),
 
-          // 搜索栏区�?
-          _buildSearchSection(),
+                    _buildSearchSection(),
 
-          // 快捷分类
-          _buildQuickCategories(),
+                    _buildQuickCategories(),
 
-          // 快捷功能卡片
-          _buildQuickActions(),
+                    _buildQuickActions(),
 
-          // Banner广告�?
-          _buildPromotionBanner(),
+                    _buildPromotionBanner(),
 
-          // 商品列表标题
-          SliverToBoxAdapter(
+                    SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
                 AppTheme.spacing16,
@@ -93,8 +85,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
             ),
           ),
 
-          // 商品列表（占位）
-          SliverToBoxAdapter(
+                    SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(AppTheme.spacing16),
               child: Container(
@@ -126,8 +117,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
     );
   }
 
-  /// 顶部 AppBar
-  Widget _buildSliverAppBar() {
+    Widget _buildSliverAppBar() {
     final user = FirebaseAuth.instance.currentUser;
     final userName = user?.displayName ?? '用户';
     final greeting = _getGreeting();
@@ -171,8 +161,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
             ),
             const SizedBox(width: AppTheme.spacing12),
 
-            // 问候语
-            Expanded(
+                        Expanded(
               child: AnimatedOpacity(
                 opacity: _showGreeting ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 200),
@@ -194,8 +183,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
               ),
             ),
 
-            // 通知按钮
-            IconButton(
+                        IconButton(
               icon: Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -219,8 +207,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
 
             const SizedBox(width: AppTheme.spacing8),
 
-            // 扫码按钮
-            IconButton(
+                        IconButton(
               icon: const Icon(Icons.qr_code_scanner_rounded, size: 24),
               onPressed: () {},
             ),
@@ -230,8 +217,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
     );
   }
 
-  /// 搜索区域（简化版，不使用自定义组件）
-  Widget _buildSearchSection() {
+    Widget _buildSearchSection() {
     return SliverToBoxAdapter(
       child: Container(
         color: Colors.white,
@@ -263,8 +249,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
             child: Row(
               children: [
                 const SizedBox(width: AppTheme.spacing20),
-                // 搜索图标（带渐变�?
-                Container(
+                                Container(
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
@@ -280,15 +265,14 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                 const SizedBox(width: AppTheme.spacing12),
                 const Expanded(
                   child: Text(
-                    '搜索废料类型、商�?..',
+                    '搜索废料类型、商?..',
                     style: TextStyle(
                       fontSize: 16,
                       color: AppTheme.neutral500,
                     ),
                   ),
                 ),
-                // 筛选按�?
-                Container(
+                                Container(
                   margin: const EdgeInsets.only(right: AppTheme.spacing8),
                   width: 40,
                   height: 40,
@@ -311,8 +295,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
     );
   }
 
-  /// 快捷分类
-  Widget _buildQuickCategories() {
+    Widget _buildQuickCategories() {
     final categories = [
       {'label': '塑料', 'icon': '♻️', 'color': AppTheme.plastic},
       {'label': '金属', 'icon': '🔩', 'color': AppTheme.metal},
@@ -417,8 +400,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
     );
   }
 
-  /// 快捷功能卡片
-  Widget _buildQuickActions() {
+    Widget _buildQuickActions() {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -436,8 +418,8 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
               childAspectRatio: 1.5,
               children: [
                 _buildActionCard(
-                  title: '我的报价',
-                  subtitle: '待处�?5 �?,
+                  title: '我的Quote',
+                  subtitle: '待处?5 ?,
                   icon: Icons.local_offer_outlined,
                   gradient: const LinearGradient(
                     colors: [Color(0xFFFF6B6B), Color(0xFFEE5A6F)],
@@ -446,7 +428,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                 ),
                 _buildActionCard(
                   title: '我的交易',
-                  subtitle: '进行�?2 �?,
+                  subtitle: '进行?2 ?,
                   icon: Icons.receipt_long_outlined,
                   gradient: const LinearGradient(
                     colors: [Color(0xFF4ECDC4), Color(0xFF44A08D)],
@@ -464,7 +446,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                 ),
                 _buildActionCard(
                   title: '我的收藏',
-                  subtitle: '已收�?12 �?,
+                  subtitle: '已收?12 ?,
                   icon: Icons.favorite_outline,
                   gradient: const LinearGradient(
                     colors: [Color(0xFFEC6EAD), Color(0xFF3494E6)],
@@ -531,8 +513,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
     );
   }
 
-  /// Banner广告�?
-  Widget _buildPromotionBanner() {
+    Widget _buildPromotionBanner() {
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
@@ -559,7 +540,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          '升级专业�?,
+                          '升级专业?,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -568,7 +549,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '享受更多特权和功�?,
+                          '享受更多特权和功?,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.9),
                             fontSize: 14,

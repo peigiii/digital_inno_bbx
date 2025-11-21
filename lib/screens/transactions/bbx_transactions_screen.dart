@@ -10,7 +10,7 @@ import '../../services/user_service.dart';
 import 'bbx_optimized_transaction_detail_screen.dart';
 import 'bbx_upload_payment_screen.dart';
 
-/// 我的交易列表页面
+/// My Transactions Screen
 class BBXTransactionsScreen extends StatefulWidget {
   const BBXTransactionsScreen({Key? key}) : super(key: key);
 
@@ -43,18 +43,18 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('我的交易'),
+        title: const Text('My Transactions'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: '进行�?),
-            Tab(text: '已完�?),
-            Tab(text: '已取�?),
+            Tab(text: 'Active'),
+            Tab(text: 'Completed'),
+            Tab(text: 'Cancelled'),
           ],
         ),
       ),
       body: _currentUserId == null
-          ? const Center(child: Text('请先登录'))
+          ? const Center(child: Text('Please login first'))
           : TabBarView(
               controller: _tabController,
               children: [
@@ -66,7 +66,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
     );
   }
 
-  /// 构建交易列表
+  /// Build Transaction List
   Widget _buildTransactionList(String filterType) {
     return StreamBuilder<List<TransactionModel>>(
       stream: _getTransactionsStream(filterType),
@@ -76,7 +76,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('加载失败: ${snapshot.error}'));
+          return Center(child: Text('Load failed: ${snapshot.error}'));
         }
 
         final transactions = snapshot.data ?? [];
@@ -108,22 +108,22 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
     );
   }
 
-  /// 获取交易�?
+  /// Get Transactions Stream
   Stream<List<TransactionModel>> _getTransactionsStream(String filterType) {
     if (_currentUserId == null) {
       return Stream.value([]);
     }
 
-    // 合并买家和卖家的交易
+    // Merge Buyer and Seller Transactions
     final buyerStream = _transactionService.getMyBuyerTransactions(_currentUserId!);
     final sellerStream = _transactionService.getMySellerTransactions(_currentUserId!);
 
-    // 合并流并过滤
+    // Merge Streams and Filter
     return buyerStream.asyncMap((buyerTransactions) async {
       final sellerTransactions = await sellerStream.first;
       final allTransactions = [...buyerTransactions, ...sellerTransactions];
 
-      // 根据类型过滤
+      // Filter by Type
       List<TransactionModel> filtered;
       switch (filterType) {
         case 'active':
@@ -139,14 +139,14 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
           filtered = allTransactions;
       }
 
-      // 按时间排�?
+      // Sort by Time
       filtered.sort((a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
 
       return filtered;
     });
   }
 
-  /// 构建交易卡片
+  /// Build Transaction Card
   Widget _buildTransactionCard(TransactionModel transaction) {
     final bool isBuyer = transaction.buyerId == _currentUserId;
 
@@ -166,12 +166,12 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 顶部：交易编�?+ 状态标�?
+              // Top: Transaction ID + Status
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '交易编号: ${transaction.id.substring(transaction.id.length - 6)}',
+                    'ID: ${transaction.id.substring(transaction.id.length - 6)}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -182,14 +182,14 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
               ),
               const SizedBox(height: 12),
 
-              // 商品信息
+              // Listing Info
               FutureBuilder<ListingModel?>(
                 future: _listingService.getListing(transaction.listingId),
                 builder: (context, snapshot) {
                   final listing = snapshot.data;
                   return Row(
                     children: [
-                      // 商品图片
+                      // Image
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: listing?.imageUrls.isNotEmpty == true
@@ -216,13 +216,13 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                       ),
                       const SizedBox(width: 12),
 
-                      // 商品信息
+                      // Info
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              listing?.title ?? '加载�?..',
+                              listing?.title ?? 'Loading...',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
@@ -249,7 +249,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
 
               const Divider(height: 24),
 
-              // 金额信息
+              // Amount Info
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -257,7 +257,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '交易金额',
+                        'Amount',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 12,
@@ -273,7 +273,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '平台�?,
+                        'Fee',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 12,
@@ -289,7 +289,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '总金�?,
+                        'Total',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 12,
@@ -310,13 +310,13 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
 
               const SizedBox(height: 12),
 
-              // 时间信息
+              // Time Info
               Row(
                 children: [
                   Icon(Icons.access_time, size: 14, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text(
-                    '创建: ${_formatDate(transaction.createdAt)}',
+                    'Created: ${_formatDate(transaction.createdAt)}',
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontSize: 12,
@@ -327,7 +327,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                     Icon(Icons.local_shipping, size: 14, color: Colors.grey[600]),
                     const SizedBox(width: 4),
                     Text(
-                      '取货: ${_formatDate(transaction.pickupScheduledDate)}',
+                      'Pickup: ${_formatDate(transaction.pickupScheduledDate)}',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 12,
@@ -339,7 +339,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
 
               const SizedBox(height: 12),
 
-              // 对方信息
+              // Counterparty Info
               FutureBuilder<UserModel?>(
                 future: _userService.getUserById(isBuyer ? transaction.sellerId : transaction.buyerId),
                 builder: (context, snapshot) {
@@ -357,7 +357,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        '${isBuyer ? '卖家' : '买家'}: ${otherUser?.displayName ?? '加载�?..'}',
+                        '${isBuyer ? 'Seller' : 'Buyer'}: ${otherUser?.displayName ?? 'Loading...'}',
                         style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 13,
@@ -370,7 +370,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
 
               const SizedBox(height: 12),
 
-              // 操作按钮
+              // Action Buttons
               _buildActionButtons(transaction, isBuyer),
             ],
           ),
@@ -379,7 +379,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
     );
   }
 
-  /// 构建状态标�?
+  /// Build Status Chip
   Widget _buildStatusChip(String status) {
     Color color;
     switch (status) {
@@ -420,7 +420,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
     );
   }
 
-  /// 构建操作按钮
+  /// Build Action Buttons
   Widget _buildActionButtons(TransactionModel transaction, bool isBuyer) {
     List<Widget> buttons = [];
 
@@ -436,7 +436,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
             );
           },
           icon: const Icon(Icons.upload, size: 18),
-          label: const Text('上传支付凭证'),
+          label: const Text('Upload Payment'),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,
             foregroundColor: Colors.white,
@@ -456,7 +456,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
               ),
             );
           },
-          child: const Text('查看详情'),
+          child: const Text('View Details'),
         ),
       );
     }
@@ -468,41 +468,41 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
     );
   }
 
-  /// 格式化日�?
+  /// Format Date
   String _formatDate(DateTime? date) {
     if (date == null) return '--';
     return DateFormat('MM-dd HH:mm').format(date);
   }
 
-  /// 获取状态文�?
+  /// Get Status Text
   String _getStatusText(String status) {
     switch (status) {
       case 'pending':
-        return '待发�?;
+        return 'Pending';
       case 'picked_up':
-        return '已取�?;
+        return 'Picked Up';
       case 'in_transit':
-        return '运输�?;
+        return 'In Transit';
       case 'delivered':
-        return '已送达';
+        return 'Delivered';
       case 'completed':
-        return '已完�?;
+        return 'Completed';
       default:
         return status;
     }
   }
 
-  /// 获取空列表提�?
+  /// Get Empty Message
   String _getEmptyMessage(String filterType) {
     switch (filterType) {
       case 'active':
-        return '暂无进行中的交易';
+        return 'No active transactions';
       case 'completed':
-        return '暂无已完成的交易';
+        return 'No completed transactions';
       case 'cancelled':
-        return '暂无已取消的交易';
+        return 'No cancelled transactions';
       default:
-        return '暂无交易';
+        return 'No transactions';
     }
   }
 }

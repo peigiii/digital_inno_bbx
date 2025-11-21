@@ -79,8 +79,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
     if (_isAdmin) {
       return _allScreens;
     } else {
-      // 非管理员不包�?Admin 页面
-      return const [
+            return const [
         BBXUsersScreen(),
         BBXNewMarketplaceScreen(),
         BBXRecyclersScreen(),
@@ -135,8 +134,8 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
     final shouldLogout = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认退�?),
-        content: const Text('您确定要退出登录吗�?),
+        title: const Text('确认退?),
+        content: const Text('您确定要退出登录吗?),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -148,7 +147,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
               backgroundColor: const Color(0xFFF44336),
               foregroundColor: Colors.white,
             ),
-            child: const Text('退�?),
+            child: const Text('退?),
           ),
         ],
       ),
@@ -164,7 +163,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('退出失�? $e'),
+              content: Text('退出失? $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -278,8 +277,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
             child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                // 个人资料入口
-                ListTile(
+                                ListTile(
                   leading: const Icon(Icons.person, color: Color(0xFF4CAF50)),
                   title: const Text('个人资料'),
                   onTap: () {
@@ -292,8 +290,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     );
                   },
                 ),
-                // 订阅计划入口
-                ListTile(
+                                ListTile(
                   leading: const Icon(Icons.card_membership, color: Colors.blue),
                   title: const Text('订阅计划'),
                   onTap: () {
@@ -316,8 +313,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                     }
                   },
                 ),
-                // 奖励积分入口
-                ListTile(
+                                ListTile(
                   leading: const Icon(Icons.stars, color: Colors.amber),
                   title: const Text('奖励积分'),
                   onTap: () {
@@ -390,7 +386,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.science, color: Colors.orange),
-                  title: const Text('初始化测试数�?),
+                  title: const Text('初始化测试数?),
                   subtitle: const Text('创建演示数据'),
                   onTap: () {
                     Navigator.pop(context);

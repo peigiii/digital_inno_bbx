@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 分类标签组件
 class CategoryChips extends StatelessWidget {
   final String selectedCategory;
   final ValueChanged<String> onCategorySelected;
@@ -13,12 +12,12 @@ class CategoryChips extends StatelessWidget {
   });
 
   static const List<Map<String, String>> categories = [
-    {'id': 'all', 'label': '全部', 'emoji': '📦'},
-    {'id': 'EFB (Empty Fruit Bunches)', 'label': '棕榈果串', 'emoji': '🌴'},
-    {'id': 'POME (Palm Oil Mill Effluent)', 'label': '棕榈废液', 'emoji': '💧'},
-    {'id': 'Palm Shell', 'label': '棕榈�?, 'emoji': '🥥'},
-    {'id': 'Palm Fiber', 'label': '棕榈纤维', 'emoji': '🌾'},
-    {'id': 'Other Biomass', 'label': '其他生物�?, 'emoji': '🎋'},
+    {'id': 'all', 'label': 'All', 'emoji': ''},
+    {'id': 'EFB (Empty Fruit Bunches)', 'label': 'EFB', 'emoji': ''},
+    {'id': 'POME (Palm Oil Mill Effluent)', 'label': 'POME', 'emoji': ''},
+    {'id': 'Palm Shell', 'label': 'Palm Shell', 'emoji': ''},
+    {'id': 'Palm Fiber', 'label': 'Palm Fiber', 'emoji': ''},
+    {'id': 'Other Biomass', 'label': 'Other Biomass', 'emoji': ''},
   ];
 
   @override

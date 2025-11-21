@@ -15,7 +15,6 @@ import '../../utils/delivery_config.dart';
 import 'bbx_upload_payment_screen.dart';
 import 'bbx_update_logistics_screen.dart';
 
-/// 交易详情页面
 class BBXTransactionDetailScreen extends StatefulWidget {
   final String transactionId;
 
@@ -45,7 +44,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('交易详情'),
+        title: const Text('Transaction Details'),
       ),
       body: StreamBuilder<TransactionModel>(
         stream: _transactionService.getTransactionDetailsStream(widget.transactionId),
@@ -55,12 +54,12 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('加载失败: ${snapshot.error}'));
+            return Center(child: Text('Load failed: ${snapshot.error}'));
           }
 
           final transaction = snapshot.data;
           if (transaction == null) {
-            return const Center(child: Text('交易不存�?));
+            return const Center(child: Text('Transaction not found'));
           }
 
           final bool isBuyer = transaction.buyerId == _currentUserId;
@@ -73,50 +72,39 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 1. 状态进度条
-                      _buildProgressIndicator(transaction),
+                                            _buildProgressIndicator(transaction),
                       const SizedBox(height: 24),
 
-                      // 2. 交易信息卡片
-                      _buildTransactionInfoCard(transaction),
+                                            _buildTransactionInfoCard(transaction),
                       const SizedBox(height: 16),
 
-                      // 3. 商品信息卡片
-                      _buildProductInfoCard(transaction),
+                                            _buildProductInfoCard(transaction),
                       const SizedBox(height: 16),
 
-                      // 4. 金额明细卡片
-                      _buildAmountCard(transaction),
+                                            _buildAmountCard(transaction),
                       const SizedBox(height: 16),
 
-                      // 5. 买家信息卡片
-                      _buildUserInfoCard(transaction.buyerId, '买家信息'),
+                                            _buildUserInfoCard(transaction.buyerId, 'Buyer Info'),
                       const SizedBox(height: 16),
 
-                      // 6. 卖家信息卡片
-                      _buildUserInfoCard(transaction.sellerId, '卖家信息'),
+                                            _buildUserInfoCard(transaction.sellerId, 'Seller Info'),
                       const SizedBox(height: 16),
 
-                      // 7. 物流信息卡片
-                      _buildLogisticsInfoCard(transaction),
+                                            _buildLogisticsInfoCard(transaction),
                       const SizedBox(height: 16),
 
-                      // 8. 支付凭证卡片（如已上传）
-                      if (transaction.paymentProofUrl != null) ...[
+                                            if (transaction.paymentProofUrl != null) ...[
                         _buildPaymentProofCard(transaction),
                         const SizedBox(height: 16),
                       ],
 
-                      // 9. 物流时间�?
-                      _buildLogisticsTimeline(transaction),
-                      const SizedBox(height: 80), // 底部按钮区域的空�?
-                    ],
+                                            _buildLogisticsTimeline(transaction),
+                      const SizedBox(height: 80),                     ],
                   ),
                 ),
               ),
 
-              // 10. 操作按钮区域（底部固定）
-              _buildActionButtons(transaction, isBuyer),
+                            _buildActionButtons(transaction, isBuyer),
             ],
           );
         },
@@ -124,9 +112,8 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  /// 1. 状态进度条
-  Widget _buildProgressIndicator(TransactionModel transaction) {
-    final steps = ['确认订单', '支付', '取货', '运输', '送达', '完成'];
+    Widget _buildProgressIndicator(TransactionModel transaction) {
+    final steps = ['Order', 'Pay', 'Pickup', 'Transit', 'Delivered', 'Done'];
     int currentStep = 0;
 
     switch (transaction.shippingStatus) {
@@ -201,8 +188,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  /// 2. 交易信息卡片
-  Widget _buildTransactionInfoCard(TransactionModel transaction) {
+    Widget _buildTransactionInfoCard(TransactionModel transaction) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -210,26 +196,25 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '交易信息',
+              'Transaction Info',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const Divider(),
-            _buildInfoRow('交易编号', transaction.id, copyable: true),
-            _buildInfoRow('创建时间', _formatDateTime(transaction.createdAt)),
-            _buildInfoRow('当前状�?, transaction.shippingStatusDisplay),
-            _buildInfoRow('支付方式', transaction.paymentMethodDisplay),
-            _buildInfoRow('支付状�?, transaction.paymentStatusDisplay),
+            _buildInfoRow('ID', transaction.id, copyable: true),
+            _buildInfoRow('Created At', _formatDateTime(transaction.createdAt)),
+            _buildInfoRow('Current Status', transaction.shippingStatusDisplay),
+            _buildInfoRow('Payment Method', transaction.paymentMethodDisplay),
+            _buildInfoRow('Payment Status', transaction.paymentStatusDisplay),
           ],
         ),
       ),
     );
   }
 
-  /// 3. 商品信息卡片
-  Widget _buildProductInfoCard(TransactionModel transaction) {
+    Widget _buildProductInfoCard(TransactionModel transaction) {
     return FutureBuilder<ListingModel?>(
       future: _listingService.getListing(transaction.listingId),
       builder: (context, snapshot) {
@@ -242,7 +227,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  '商品信息',
+                  'Product Info',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -252,8 +237,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                 if (listing != null) ...[
                   Row(
                     children: [
-                      // 商品图片
-                      ClipRRect(
+                                            ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: listing.imageUrls.isNotEmpty
                             ? Image.network(
@@ -298,11 +282,11 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              '数量: ${listing.quantity} ${listing.unit}',
+                              'Qty: ${listing.quantity} ${listing.unit}',
                               style: TextStyle(color: Colors.grey[700]),
                             ),
                             Text(
-                              '单价: RM ${listing.pricePerUnit.toStringAsFixed(2)}/${listing.unit}',
+                              'Price: RM ${listing.pricePerUnit.toStringAsFixed(2)}/${listing.unit}',
                               style: TextStyle(color: Colors.grey[700]),
                             ),
                           ],
@@ -320,8 +304,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  /// 4. 金额明细卡片
-  Widget _buildAmountCard(TransactionModel transaction) {
+    Widget _buildAmountCard(TransactionModel transaction) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -329,7 +312,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '金额明细',
+              'Amount Details',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -339,7 +322,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('商品金额'),
+                const Text('Product Amount'),
                 Text('RM ${transaction.amount.toStringAsFixed(2)}'),
               ],
             ),
@@ -347,7 +330,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('平台�?(3%)'),
+                const Text('Platform Fee (3%)'),
                 Text('RM ${transaction.platformFee.toStringAsFixed(2)}'),
               ],
             ),
@@ -356,7 +339,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  '总金�?,
+                  'Total Amount',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -378,8 +361,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  /// 5. & 6. 用户信息卡片
-  Widget _buildUserInfoCard(String userId, String title) {
+    Widget _buildUserInfoCard(String userId, String title) {
     return FutureBuilder<UserModel?>(
       future: _userService.getUserById(userId),
       builder: (context, snapshot) {
@@ -417,7 +399,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              user.displayName ?? '未知用户',
+                              user.displayName ?? 'Unknown User',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
@@ -455,8 +437,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  /// 7. 物流信息卡片
-  Widget _buildLogisticsInfoCard(TransactionModel transaction) {
+    Widget _buildLogisticsInfoCard(TransactionModel transaction) {
     final deliveryMethod = transaction.deliveryMethod;
     final shippingInfo = transaction.shippingInfo;
     final isSelfCollect = DeliveryConfig.isSelfCollect(deliveryMethod);
@@ -468,8 +449,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 标题
-            Row(
+                        Row(
               children: [
                 Icon(
                   isSelfCollect ? Icons.store : Icons.local_shipping,
@@ -478,7 +458,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  isSelfCollect ? '配送方式：自提' : '配送方式：邮寄',
+                  isSelfCollect ? 'Method: Self Collect' : 'Method: Delivery',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -488,16 +468,14 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
             ),
             const Divider(),
 
-            // 自提信息
-            if (isSelfCollect) ...[
-              _buildInfoRow('取货地址', '请联系卖家获取详细地址'),
+                        if (isSelfCollect) ...[
+              _buildInfoRow('Pickup Address', 'Please contact seller'),
               if (transaction.pickupScheduledDate != null)
-                _buildInfoRow('预定取货日期', _formatDateTime(transaction.pickupScheduledDate)),
+                _buildInfoRow('Scheduled Date', _formatDateTime(transaction.pickupScheduledDate)),
               if (transaction.actualPickupDate != null)
-                _buildInfoRow('实际取货日期', _formatDateTime(transaction.actualPickupDate)),
+                _buildInfoRow('Actual Pickup', _formatDateTime(transaction.actualPickupDate)),
               const SizedBox(height: 12),
-              // 提示信息
-              Container(
+                            Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.green[50],
@@ -510,7 +488,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
-                        '请联系卖家协商取货时间和地点',
+                        'Please contact seller to arrange pickup',
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -519,8 +497,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               ),
             ],
 
-            // 邮寄信息 - 未发�?
-            if (isDelivery && shippingInfo == null) ...[
+                        if (isDelivery && shippingInfo == null) ...[
               DeliveryConfig.buildShippingFeeNote(),
               const SizedBox(height: 12),
               Container(
@@ -536,7 +513,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
-                        '等待卖家发货',
+                        'Waiting for seller to ship',
                         style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -545,10 +522,8 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               ),
             ],
 
-            // 邮寄信息 - 已发�?
-            if (isDelivery && shippingInfo != null) ...[
-              // 快递公司和单号
-              Container(
+                        if (isDelivery && shippingInfo != null) ...[
+                            Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.grey[100],
@@ -558,13 +533,12 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 快递公�?
-                    Row(
+                                        Row(
                       children: [
                         const Icon(Icons.local_shipping, size: 16, color: Colors.blue),
                         const SizedBox(width: 8),
                         Text(
-                          shippingInfo['courierName'] ?? '未知快�?,
+                          shippingInfo['courierName'] ?? 'Unknown Courier',
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -574,15 +548,14 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     ),
                     const SizedBox(height: 12),
 
-                    // 快递单�?
-                    Row(
+                                        Row(
                       children: [
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '快递单�?,
+                                'Tracking Number',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey[600],
@@ -600,18 +573,17 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                             ],
                           ),
                         ),
-                        // 复制按钮
-                        IconButton(
+                                                IconButton(
                           icon: const Icon(Icons.copy, size: 20),
                           onPressed: () {
                             Clipboard.setData(
                               ClipboardData(text: shippingInfo['trackingNumber'] ?? ''),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('已复制快递单�?)),
+                              const SnackBar(content: Text('Copied to clipboard')),
                             );
                           },
-                          tooltip: '复制单号',
+                          tooltip: 'Copy Tracking Number',
                         ),
                       ],
                     ),
@@ -619,17 +591,15 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                 ),
               ),
 
-              // 发货时间
-              if (shippingInfo['shippedAt'] != null) ...[
+                            if (shippingInfo['shippedAt'] != null) ...[
                 const SizedBox(height: 12),
                 _buildInfoRow(
-                  '发货时间',
+                  'Shipped At',
                   _formatDateTime((shippingInfo['shippedAt'] as Timestamp).toDate()),
                 ),
               ],
 
-              // 发货备注
-              if (shippingInfo['notes'] != null && shippingInfo['notes'].toString().isNotEmpty) ...[
+                            if (shippingInfo['notes'] != null && shippingInfo['notes'].toString().isNotEmpty) ...[
                 const SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -641,7 +611,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '卖家备注',
+                        'Seller Notes',
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[600],
@@ -658,8 +628,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                 ),
               ],
 
-              // 提示
-              const SizedBox(height: 12),
+                            const SizedBox(height: 12),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -673,7 +642,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
-                        '💡 请自行到快递官网查询物�?,
+                        ' Please track on courier website',
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -682,16 +651,15 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               ),
             ],
 
-            // 旧的物流信息（兼容）
-            if (deliveryMethod == null) ...[
+                        if (deliveryMethod == null) ...[
               if (transaction.pickupScheduledDate != null)
-                _buildInfoRow('预定取货日期', _formatDateTime(transaction.pickupScheduledDate)),
+                _buildInfoRow('Scheduled Pickup', _formatDateTime(transaction.pickupScheduledDate)),
               if (transaction.actualPickupDate != null)
-                _buildInfoRow('实际取货日期', _formatDateTime(transaction.actualPickupDate)),
+                _buildInfoRow('Actual Pickup', _formatDateTime(transaction.actualPickupDate)),
               if (transaction.deliveryDate != null)
-                _buildInfoRow('送达日期', _formatDateTime(transaction.deliveryDate)),
+                _buildInfoRow('Delivered At', _formatDateTime(transaction.deliveryDate)),
               if (transaction.trackingNumber != null)
-                _buildInfoRow('物流追踪�?, transaction.trackingNumber!),
+                _buildInfoRow('Tracking No.', transaction.trackingNumber!),
             ],
           ],
         ),
@@ -699,8 +667,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  /// 8. 支付凭证卡片
-  Widget _buildPaymentProofCard(TransactionModel transaction) {
+    Widget _buildPaymentProofCard(TransactionModel transaction) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -708,7 +675,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '支付凭证',
+              'Payment Proof',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -717,8 +684,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
             const Divider(),
             GestureDetector(
               onTap: () {
-                // 查看大图
-                _showImageDialog(transaction.paymentProofUrl!);
+                                _showImageDialog(transaction.paymentProofUrl!);
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
@@ -736,8 +702,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  /// 9. 物流时间�?
-  Widget _buildLogisticsTimeline(TransactionModel transaction) {
+    Widget _buildLogisticsTimeline(TransactionModel transaction) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -745,7 +710,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '物流时间�?,
+              'Timeline',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -762,7 +727,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                 final updates = snapshot.data ?? [];
 
                 if (updates.isEmpty) {
-                  return const Text('暂无物流更新');
+                  return const Text('No updates yet');
                 }
 
                 return Column(
@@ -810,7 +775,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                                 ),
                                 if (update.location != null)
                                   Text(
-                                    '位置: ${update.location}',
+                                    'Location: ${update.location}',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.grey[700],
@@ -849,12 +814,10 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  /// 10. 操作按钮区域
-  Widget _buildActionButtons(TransactionModel transaction, bool isBuyer) {
+    Widget _buildActionButtons(TransactionModel transaction, bool isBuyer) {
     List<Widget> buttons = [];
 
-    // confirmed状�?
-    if (transaction.canPayment() && isBuyer) {
+        if (transaction.canPayment() && isBuyer) {
       buttons.add(
         Expanded(
           child: ElevatedButton(
@@ -871,7 +834,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
-            child: const Text('上传支付凭证'),
+            child: const Text('Upload Payment'),
           ),
         ),
       );
@@ -886,14 +849,13 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               foregroundColor: Colors.red,
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
-            child: const Text('取消交易'),
+            child: const Text('Cancel Order'),
           ),
         ),
       );
     }
 
-    // paid状�?
-    if (transaction.canPickup() && !isBuyer) {
+        if (transaction.canPickup() && !isBuyer) {
       buttons.add(
         Expanded(
           child: ElevatedButton(
@@ -903,14 +865,13 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
-            child: const Text('标记已取�?),
+            child: const Text('Mark Picked Up'),
           ),
         ),
       );
     }
 
-    // picked_up/in_transit状�?
-    if ((transaction.shippingStatus == 'picked_up' || transaction.shippingStatus == 'in_transit') && !isBuyer) {
+        if ((transaction.shippingStatus == 'picked_up' || transaction.shippingStatus == 'in_transit') && !isBuyer) {
       buttons.add(
         Expanded(
           child: ElevatedButton(
@@ -927,7 +888,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
-            child: const Text('更新物流信息'),
+            child: const Text('Update Logistics'),
           ),
         ),
       );
@@ -946,14 +907,13 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
-            child: const Text('确认收货'),
+            child: const Text('Confirm Receipt'),
           ),
         ),
       );
     }
 
-    // delivered状�?
-    if (transaction.canComplete()) {
+        if (transaction.canComplete()) {
       buttons.add(
         Expanded(
           child: ElevatedButton(
@@ -963,7 +923,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
-            child: const Text('完成交易'),
+            child: const Text('Complete Order'),
           ),
         ),
       );
@@ -994,8 +954,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  // ==================== 辅助方法 ====================
-
+  
   Widget _buildInfoRow(String label, String? value, {bool copyable = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -1023,7 +982,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: value));
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('已复制到剪贴�?)),
+                        const SnackBar(content: Text('Copied to clipboard')),
                       );
                     },
                     padding: EdgeInsets.zero,
@@ -1075,13 +1034,13 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
       await _transactionService.markAsPickedUp(transaction.id, null);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('已标记为已取�?)),
+          const SnackBar(content: Text('Marked as Picked Up')),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('操作失败: $e')),
+          SnackBar(content: Text('Action failed: $e')),
         );
       }
     }
@@ -1091,12 +1050,12 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认收货'),
-        content: const Text('请确认您已收到货物\n确认后将无法撤销'),
+        title: const Text('Confirm Receipt'),
+        content: const Text('Are you sure you received the goods?\nThis cannot be undone.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -1104,7 +1063,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               backgroundColor: Colors.green,
               foregroundColor: Colors.white,
             ),
-            child: const Text('确认收货'),
+            child: const Text('Confirm'),
           ),
         ],
       ),
@@ -1115,13 +1074,13 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
         await _transactionService.confirmDelivery(transaction.id);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('已确认收�?)),
+            const SnackBar(content: Text('Receipt Confirmed')),
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('操作失败: $e')),
+            SnackBar(content: Text('Action failed: $e')),
           );
         }
       }
@@ -1133,13 +1092,13 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
       await _transactionService.completeTransaction(transaction.id);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('交易已完�?)),
+          const SnackBar(content: Text('Transaction Completed')),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('操作失败: $e')),
+          SnackBar(content: Text('Action failed: $e')),
         );
       }
     }
@@ -1151,17 +1110,17 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('取消交易'),
+        title: const Text('Cancel Transaction'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('请输入取消原因：'),
+            const Text('Please enter cancellation reason:'),
             const SizedBox(height: 8),
             TextField(
               controller: reasonController,
               maxLines: 3,
               decoration: const InputDecoration(
-                hintText: '请输入取消原�?,
+                hintText: 'Reason...',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -1170,7 +1129,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('返回'),
+            child: const Text('Back'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -1178,7 +1137,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('确认取消'),
+            child: const Text('Confirm Cancel'),
           ),
         ],
       ),
@@ -1189,13 +1148,13 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
         await _transactionService.cancelTransaction(transaction.id, reasonController.text);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('交易已取�?)),
+            const SnackBar(content: Text('Transaction Cancelled')),
           );
         }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('操作失败: $e')),
+            SnackBar(content: Text('Action failed: $e')),
           );
         }
       }

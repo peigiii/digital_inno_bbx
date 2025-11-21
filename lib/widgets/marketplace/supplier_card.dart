@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common/common.dart';
 
-/// 供应商卡片组�?
 class SupplierCard extends StatelessWidget {
   final DocumentSnapshot doc;
   final VoidCallback? onTap;
@@ -17,16 +16,15 @@ class SupplierCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = doc.data() as Map<String, dynamic>;
-    final displayName = data['displayName'] ?? data['email']?.split('@').first ?? '供应�?;
+    final displayName = data['displayName'] ?? data['email']?.split('@').first ?? 'Supplier';
     final companyName = data['companyName'] ?? displayName;
-    final city = data['city'] ?? data['address'] ?? '未知地区';
+    final city = data['city'] ?? data['address'] ?? 'Unknown Location';
     final avatarUrl = data['avatarUrl'];
     final isVerified = data['isVerified'] ?? false;
     final rating = data['rating'] ?? 4.5;
     final photoURL = data['photoURL'];
 
-    // 使用 photoURL �?avatarUrl
-    final imageUrl = photoURL ?? avatarUrl;
+        final imageUrl = photoURL ?? avatarUrl;
 
     return Container(
       width: 180,
@@ -37,8 +35,7 @@ class SupplierCard extends StatelessWidget {
         margin: EdgeInsets.zero,
         child: Column(
           children: [
-            // 头像
-            Stack(
+                        Stack(
               children: [
                 CircleAvatar(
                   radius: 36,
@@ -57,8 +54,7 @@ class SupplierCard extends StatelessWidget {
                   },
                 ),
 
-                // 认证徽章
-                if (isVerified)
+                                if (isVerified)
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -81,8 +77,7 @@ class SupplierCard extends StatelessWidget {
 
             const SizedBox(height: AppTheme.spacingMD),
 
-            // 公司名称
-            Text(
+                        Text(
               companyName,
               style: AppTheme.subtitle1.copyWith(fontSize: 14),
               textAlign: TextAlign.center,
@@ -92,8 +87,7 @@ class SupplierCard extends StatelessWidget {
 
             const SizedBox(height: AppTheme.spacingSM),
 
-            // 评分
-            Row(
+                        Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(
@@ -113,8 +107,7 @@ class SupplierCard extends StatelessWidget {
 
             const SizedBox(height: AppTheme.spacingSM),
 
-            // 城市
-            Row(
+                        Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Icon(
@@ -137,9 +130,8 @@ class SupplierCard extends StatelessWidget {
 
             const SizedBox(height: AppTheme.spacingMD),
 
-            // 查看店铺按钮
-            SmallButton(
-              text: '查看店铺',
+                        SmallButton(
+              text: 'View Shop',
               onPressed: onTap,
               outlined: true,
               color: AppTheme.accent,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// BBX 主按钮组�?
 class BBXPrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -71,7 +70,6 @@ class BBXPrimaryButton extends StatelessWidget {
   }
 }
 
-/// BBX 次要按钮组件
 class BBXSecondaryButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -144,7 +142,6 @@ class BBXSecondaryButton extends StatelessWidget {
   }
 }
 
-/// BBX 文字按钮组件
 class BBXTextButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -181,7 +178,6 @@ class BBXTextButton extends StatelessWidget {
   }
 }
 
-/// BBX 图标按钮组件
 class BBXIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onPressed;

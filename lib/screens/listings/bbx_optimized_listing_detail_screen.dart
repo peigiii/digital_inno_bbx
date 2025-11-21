@@ -6,9 +6,6 @@ import '../../theme/app_theme.dart';
 import '../../models/listing_model.dart';
 import '../offers/bbx_optimized_make_offer_bottom_sheet.dart';
 
-/// BBX 商品详情�?- 完全优化�?
-/// 适配 Pixel 5 (393 x 851 dp)
-/// Material Design 3 风格
 class BBXOptimizedListingDetailScreen extends StatefulWidget {
   final String listingId;
 
@@ -47,8 +44,7 @@ class _BBXOptimizedListingDetailScreenState
   }
 
   void _onScroll() {
-    // 根据滚动位置控制 AppBar 透明�?
-    final offset = _scrollController.offset;
+        final offset = _scrollController.offset;
     setState(() {
       _appBarOpacity = (offset / 200).clamp(0.0, 1.0);
     });
@@ -88,7 +84,7 @@ class _BBXOptimizedListingDetailScreenState
     try {
       if (_isFavorited) {
         await favRef.delete();
-        _showMessage('已取消收�?);
+        _showMessage('Cancelled收?);
       } else {
         await favRef.set({
           'listingId': widget.listingId,
@@ -126,8 +122,7 @@ class _BBXOptimizedListingDetailScreenState
           .doc(widget.listingId)
           .snapshots(),
       builder: (context, snapshot) {
-        // 获取数据
-        Map<String, dynamic>? data;
+                Map<String, dynamic>? data;
         if (snapshot.hasData) {
           data = snapshot.data!.data() as Map<String, dynamic>?;
         }
@@ -159,8 +154,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 顶部 AppBar
-  PreferredSizeWidget _buildAppBar() {
+    PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white.withOpacity(_appBarOpacity),
       elevation: _appBarOpacity > 0.5 ? 2 : 0,
@@ -191,8 +185,7 @@ class _BBXOptimizedListingDetailScreenState
           ),
           child: IconButton(
             onPressed: () {
-              // 分享功能
-              Share.share('查看这个商品');
+                            Share.share('查看这个商品');
             },
             icon: Icon(
               Icons.share_rounded,
@@ -222,28 +215,24 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 主内容区�?
-  Widget _buildContent(Map<String, dynamic> data) {
+    Widget _buildContent(Map<String, dynamic> data) {
     final images = (data['imageUrls'] as List<dynamic>?)?.cast<String>() ?? [];
 
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
-        // 图片轮播区域
-        SliverToBoxAdapter(
+                SliverToBoxAdapter(
           child: _buildImageCarousel(images),
         ),
 
-        // 价格和标题卡片（浮动设计�?
-        SliverToBoxAdapter(
+                SliverToBoxAdapter(
           child: Transform.translate(
             offset: const Offset(0, -24),
             child: _buildPriceCard(data),
           ),
         ),
 
-        // 商品详情
-        SliverToBoxAdapter(
+                SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(
               AppTheme.spacing16,
@@ -254,27 +243,21 @@ class _BBXOptimizedListingDetailScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 卖家信息卡片
-                _buildSellerCard(data),
+                                _buildSellerCard(data),
                 const SizedBox(height: AppTheme.spacing16),
 
-                // 商品规格
-                _buildSpecificationsCard(data),
+                                _buildSpecificationsCard(data),
                 const SizedBox(height: AppTheme.spacing16),
 
-                // 商品描述
-                _buildDescriptionCard(data),
+                                _buildDescriptionCard(data),
                 const SizedBox(height: AppTheme.spacing16),
 
-                // 位置信息
-                _buildLocationCard(data),
+                                _buildLocationCard(data),
                 const SizedBox(height: AppTheme.spacing16),
 
-                // 相似商品
-                _buildSimilarProductsSection(data),
+                                _buildSimilarProductsSection(data),
                 
-                // 底部间距
-                const SizedBox(height: 80),
+                                const SizedBox(height: 80),
               ],
             ),
           ),
@@ -283,8 +266,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 图片轮播
-  Widget _buildImageCarousel(List<String> images) {
+    Widget _buildImageCarousel(List<String> images) {
     if (images.isEmpty) {
       return Container(
         height: 400,
@@ -303,8 +285,7 @@ class _BBXOptimizedListingDetailScreenState
       height: 400,
       child: Stack(
         children: [
-          // 图片轮播
-          PageView.builder(
+                    PageView.builder(
             controller: _imagePageController,
             onPageChanged: (index) {
               setState(() {
@@ -330,8 +311,7 @@ class _BBXOptimizedListingDetailScreenState
                 },
               );
 
-              // 只对第一张图片使�?Hero 动画，且 URL 不为�?
-              if (index == 0 && images[index].isNotEmpty) {
+                            if (index == 0 && images[index].isNotEmpty) {
                 return Hero(
                   tag: images[index],
                   child: imageWidget,
@@ -341,8 +321,7 @@ class _BBXOptimizedListingDetailScreenState
             },
           ),
 
-          // 渐变遮罩（底部）
-          Positioned(
+                    Positioned(
             left: 0,
             right: 0,
             bottom: 0,
@@ -361,8 +340,7 @@ class _BBXOptimizedListingDetailScreenState
             ),
           ),
 
-          // 图片指示�?
-          if (images.length > 1)
+                    if (images.length > 1)
             Positioned(
               bottom: 16,
               left: 0,
@@ -390,8 +368,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 价格和标题卡�?
-  Widget _buildPriceCard(Map<String, dynamic> data) {
+    Widget _buildPriceCard(Map<String, dynamic> data) {
     final price = (data['pricePerUnit'] ?? 0).toDouble();
     final unit = data['unit'] ?? 'kg';
     final title = data['title'] ?? '未知商品';
@@ -416,8 +393,7 @@ class _BBXOptimizedListingDetailScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 分类标签
-          Container(
+                    Container(
             padding: const EdgeInsets.symmetric(
               horizontal: AppTheme.spacing8,
               vertical: AppTheme.spacing4,
@@ -438,16 +414,14 @@ class _BBXOptimizedListingDetailScreenState
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 标题
-          Text(
+                    Text(
             title,
             style: AppTheme.heading2.copyWith(height: 1.3),
           ),
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 可用数量
-          Row(
+                    Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(6),
@@ -463,14 +437,13 @@ class _BBXOptimizedListingDetailScreenState
               ),
               const SizedBox(width: 8),
               Text(
-                '可用�?quantity $unit',
+                '可用?quantity $unit',
                 style: AppTheme.body1.copyWith(
                   fontWeight: AppTheme.medium,
                 ),
               ),
               const Spacer(),
-              // 状态标�?
-              Container(
+                            Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppTheme.spacing12,
                   vertical: AppTheme.spacing4,
@@ -495,7 +468,7 @@ class _BBXOptimizedListingDetailScreenState
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      status == 'available' ? '可购�? : '已售�?,
+                      status == 'available' ? '可购? : '已售?,
                       style: TextStyle(
                         color: status == 'available'
                             ? AppTheme.success
@@ -514,8 +487,7 @@ class _BBXOptimizedListingDetailScreenState
           const Divider(height: 1),
           const SizedBox(height: AppTheme.spacing16),
 
-          // 价格
-          Row(
+                    Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Column(
@@ -551,8 +523,7 @@ class _BBXOptimizedListingDetailScreenState
                 ],
               ),
               const Spacer(),
-              // 总价估算
-              Container(
+                            Container(
                 padding: const EdgeInsets.all(AppTheme.spacing12),
                 decoration: BoxDecoration(
                   color: AppTheme.primary50,
@@ -584,8 +555,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 卖家信息卡片
-  Widget _buildSellerCard(Map<String, dynamic> data) {
+    Widget _buildSellerCard(Map<String, dynamic> data) {
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance
           .collection('users')
@@ -627,8 +597,7 @@ class _BBXOptimizedListingDetailScreenState
               const SizedBox(height: AppTheme.spacing12),
               Row(
                 children: [
-                  // 头像
-                  Container(
+                                    Container(
                     width: 56,
                     height: 56,
                     decoration: BoxDecoration(
@@ -648,8 +617,7 @@ class _BBXOptimizedListingDetailScreenState
                   ),
                   const SizedBox(width: AppTheme.spacing12),
 
-                  // 卖家信息
-                  Expanded(
+                                    Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -695,8 +663,7 @@ class _BBXOptimizedListingDetailScreenState
                     ),
                   ),
 
-                  // 聊天按钮
-                  Container(
+                                    Container(
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
@@ -705,8 +672,7 @@ class _BBXOptimizedListingDetailScreenState
                     ),
                     child: IconButton(
                       onPressed: () {
-                        // 打开聊天
-                      },
+                                              },
                       padding: EdgeInsets.zero,
                       icon: const Icon(
                         Icons.chat_bubble_rounded,
@@ -724,8 +690,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 商品规格卡片
-  Widget _buildSpecificationsCard(Map<String, dynamic> data) {
+    Widget _buildSpecificationsCard(Map<String, dynamic> data) {
     final specs = [
       {
         'icon': Icons.category_rounded,
@@ -739,7 +704,7 @@ class _BBXOptimizedListingDetailScreenState
       },
       {
         'icon': Icons.water_drop_rounded,
-        'label': '含水�?,
+        'label': '含水?,
         'value': data['moistureContent'] ?? '-'
       },
       {
@@ -811,8 +776,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 商品描述卡片
-  Widget _buildDescriptionCard(Map<String, dynamic> data) {
+    Widget _buildDescriptionCard(Map<String, dynamic> data) {
     final description = data['description'] ?? '暂无描述';
 
     return Container(
@@ -844,8 +808,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 位置信息卡片
-  Widget _buildLocationCard(Map<String, dynamic> data) {
+    Widget _buildLocationCard(Map<String, dynamic> data) {
     final location = data['location'] ?? '未知位置';
 
     return Container(
@@ -891,8 +854,7 @@ class _BBXOptimizedListingDetailScreenState
               ),
               IconButton(
                 onPressed: () {
-                  // 打开地图
-                },
+                                  },
                 icon: const Icon(
                   Icons.map_rounded,
                   color: AppTheme.primary500,
@@ -905,8 +867,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 相似商品区域
-  Widget _buildSimilarProductsSection(Map<String, dynamic> data) {
+    Widget _buildSimilarProductsSection(Map<String, dynamic> data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -987,8 +948,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 底部操作�?
-  Widget _buildBottomActionBar(Map<String, dynamic> data) {
+    Widget _buildBottomActionBar(Map<String, dynamic> data) {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing16),
       decoration: BoxDecoration(
@@ -1004,8 +964,7 @@ class _BBXOptimizedListingDetailScreenState
       child: SafeArea(
         child: Row(
           children: [
-            // 收藏按钮
-            Container(
+                        Container(
               width: 48,
               height: 48,
               decoration: BoxDecoration(
@@ -1025,8 +984,7 @@ class _BBXOptimizedListingDetailScreenState
 
             const SizedBox(width: AppTheme.spacing12),
 
-            // 联系卖家按钮
-            Expanded(
+                        Expanded(
               child: Container(
                 height: 48,
                 decoration: BoxDecoration(
@@ -1070,8 +1028,7 @@ class _BBXOptimizedListingDetailScreenState
 
             const SizedBox(width: AppTheme.spacing12),
 
-            // 立即报价按钮
-            Expanded(
+                        Expanded(
               child: Container(
                 height: 48,
                 decoration: BoxDecoration(
@@ -1089,21 +1046,20 @@ class _BBXOptimizedListingDetailScreenState
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      // 打开现代化报价弹�?
-                      try {
+                                            try {
                         final listing = ListingModel.fromMap(widget.listingId, data);
                         BBXOptimizedMakeOfferBottomSheet.show(context, listing);
                       } catch (e) {
                         debugPrint('Error creating ListingModel: $e');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('无法打开报价页面，数据格式错�?)),
+                          const SnackBar(content: Text('无法打开Quote页面，数据格式错?)),
                         );
                       }
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: const Center(
                       child: Text(
-                        '立即报价',
+                        '立即Quote',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -1121,15 +1077,13 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 加载状�?
-  Widget _buildLoadingState() {
+    Widget _buildLoadingState() {
     return const Center(
       child: CircularProgressIndicator(),
     );
   }
 
-  /// 错误状�?
-  Widget _buildErrorState() {
+    Widget _buildErrorState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1151,8 +1105,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 未找到状�?
-  Widget _buildNotFoundState() {
+    Widget _buildNotFoundState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1164,7 +1117,7 @@ class _BBXOptimizedListingDetailScreenState
           ),
           const SizedBox(height: AppTheme.spacing16),
           Text(
-            '商品不存�?,
+            '商品不存?,
             style: AppTheme.heading4.copyWith(
               color: AppTheme.neutral600,
             ),
@@ -1174,8 +1127,7 @@ class _BBXOptimizedListingDetailScreenState
     );
   }
 
-  /// 格式化日�?
-  String _formatDate(dynamic timestamp) {
+    String _formatDate(dynamic timestamp) {
     if (timestamp == null) return '-';
     if (timestamp is Timestamp) {
       final date = timestamp.toDate();

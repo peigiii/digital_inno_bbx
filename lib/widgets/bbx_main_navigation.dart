@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// BBX 主导航栏组件（底部导航）
 class BBXMainNavigation extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
@@ -124,7 +123,6 @@ class BBXMainNavigation extends StatelessWidget {
   }
 }
 
-/// BBX 浮动发布按钮
 class BBXFloatingPostButton extends StatelessWidget {
   final VoidCallback onPressed;
 

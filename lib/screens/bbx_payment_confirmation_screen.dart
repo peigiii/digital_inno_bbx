@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../theme/app_theme.dart';
 import 'package:lottie/lottie.dart';
 
-/// 支付确认页面
-/// 显示支付结果（成功或失败�?
 class BBXPaymentConfirmationScreen extends StatefulWidget {
   final String planName;
   final int planPrice;
@@ -33,7 +31,7 @@ class _BBXPaymentConfirmationScreenState
   @override
   void initState() {
     super.initState();
-    print('🎬 [确认页面] initState - success: ${widget.success}');
+    debugPrint('🎬 [Page] initState - success: ${widget.success}');
     if (widget.success) {
       _updateSubscription();
     }
@@ -41,22 +39,21 @@ class _BBXPaymentConfirmationScreenState
 
   Future<void> _updateSubscription() async {
     if (currentUser == null) {
-      print('�?[确认页面] 用户未登�?);
+      debugPrint('?[Page] User not logged in');
       return;
     }
 
-    print('👤 [确认页面] 当前用户: ${currentUser!.email} (${currentUser!.uid})');
+    debugPrint('👤 [Page] Current user: ${currentUser!.email} (${currentUser!.uid})');
 
     setState(() {
       isUpdatingSubscription = true;
     });
 
     try {
-      print('🔄 [确认页面] 更新订阅状�?..');
-      print('📋 计划: ${widget.planName}');
-      print('💰 金额: ${widget.planPrice}');
+      debugPrint('🔄 [Page] Updating subscription status...');
+      debugPrint('📋 Plan: ${widget.planName}');
+      debugPrint('💰 Amount: ${widget.planPrice}');
 
-      // 更新用户订阅信息
       await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
@@ -65,11 +62,10 @@ class _BBXPaymentConfirmationScreenState
         'subscriptionUpdatedAt': FieldValue.serverTimestamp(),
         'subscriptionStatus': 'active',
         'subscriptionExpiresAt': Timestamp.fromDate(
-          DateTime.now().add(const Duration(days: 365)), // 1�?
+          DateTime.now().add(const Duration(days: 365)),
         ),
       }).timeout(const Duration(seconds: 10));
 
-      // 记录支付交易
       await FirebaseFirestore.instance.collection('subscription_payments').add({
         'userId': currentUser!.uid,
         'userEmail': currentUser!.email,
@@ -81,15 +77,15 @@ class _BBXPaymentConfirmationScreenState
         'createdAt': FieldValue.serverTimestamp(),
       }).timeout(const Duration(seconds: 10));
 
-      print('�?[确认页面] 订阅更新成功');
-      print('�?[确认页面] 支付记录已保存到 subscription_payments 集合');
+      debugPrint('?[Page] Subscription updated successfully');
+      debugPrint('?[Page] Payment record saved to subscription_payments collection');
     } catch (e) {
-      print('�?[确认页面] 更新订阅失败: $e');
-      print('�?[确认页面] 错误详情: ${e.toString()}');
+      debugPrint('?[Page] Update failed: $e');
+      debugPrint('?[Page] Error details: ${e.toString()}');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('更新订阅失败: $e'),
+            content: Text('Update failed: $e'),
             backgroundColor: Colors.orange,
           ),
         );
@@ -105,8 +101,9 @@ class _BBXPaymentConfirmationScreenState
 
   @override
   Widget build(BuildContext context) {
+    // ignore: deprecated_member_use
     return WillPopScope(
-      onWillPop: () async => false, // 禁用返回按钮
+      onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -118,7 +115,7 @@ class _BBXPaymentConfirmationScreenState
                       CircularProgressIndicator(),
                       SizedBox(height: 16),
                       Text(
-                        '正在激活订�?..',
+                        'Activating subscription...',
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -151,7 +148,7 @@ class _BBXPaymentConfirmationScreenState
 
                             // Title
                             Text(
-                              widget.success ? '支付成功�? : '支付失败',
+                              widget.success ? 'Payment Successful' : 'Payment Failed',
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -166,8 +163,8 @@ class _BBXPaymentConfirmationScreenState
                             // Subtitle
                             Text(
                               widget.success
-                                  ? '恭喜！您已成功订�?${widget.planName} 计划'
-                                  : '支付未能完成，请重试',
+                                  ? 'Congratulations! You have subscribed to ${widget.planName} plan'
+                                  : 'Payment incomplete, please try again',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 16,
@@ -188,32 +185,32 @@ class _BBXPaymentConfirmationScreenState
                               child: Column(
                                 children: [
                                   _buildDetailRow(
-                                    '订阅计划',
+                                    'Subscription Plan',
                                     widget.planName,
                                     Icons.workspace_premium,
                                   ),
                                   const Divider(height: 24),
                                   _buildDetailRow(
-                                    '支付金额',
+                                    'Payment Amount',
                                     'RM ${widget.planPrice.toStringAsFixed(2)}',
                                     Icons.attach_money,
                                   ),
                                   const Divider(height: 24),
                                   _buildDetailRow(
-                                    '支付方式',
+                                    'Payment Method',
                                     _getPaymentMethodName(widget.paymentMethod),
                                     Icons.payment,
                                   ),
                                   const Divider(height: 24),
                                   _buildDetailRow(
-                                    '交易时间',
+                                    'Transaction Time',
                                     _formatDateTime(DateTime.now()),
                                     Icons.access_time,
                                   ),
                                   if (widget.success) ...[
                                     const Divider(height: 24),
                                     _buildDetailRow(
-                                      '有效�?,
+                                      'Valid until',
                                       '${_formatDate(DateTime.now())} - ${_formatDate(DateTime.now().add(const Duration(days: 365)))}',
                                       Icons.calendar_today,
                                     ),
@@ -243,7 +240,7 @@ class _BBXPaymentConfirmationScreenState
                                         ),
                                         const SizedBox(width: 8),
                                         const Text(
-                                          '订阅权益已激�?,
+                                          'Subscription benefits activated',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -253,7 +250,7 @@ class _BBXPaymentConfirmationScreenState
                                     ),
                                     const SizedBox(height: 12),
                                     Text(
-                                      '您现在可以享�?${widget.planName} 计划的所有功能和权益�?,
+                                      'You can now enjoy all features of ${widget.planName} plan',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey[700],
@@ -279,12 +276,8 @@ class _BBXPaymentConfirmationScreenState
                               height: 50,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  print('🏠 [确认页面] 导航到个人中�?);
-                                  // 使用 popUntil 返回�?home，然后导航到 profile
-                                  Navigator.of(context).popUntil((route) {
-                                    return route.settings.name == '/home' || route.isFirst;
-                                  });
-                                  // 导航�?profile
+                                  debugPrint('🏠 [Page] Navigating to Profile');
+                                  Navigator.of(context).popUntil((route) => route.isFirst);
                                   Navigator.of(context).pushReplacementNamed('/profile');
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -295,7 +288,7 @@ class _BBXPaymentConfirmationScreenState
                                   ),
                                 ),
                                 child: const Text(
-                                  '返回个人中心',
+                                  'Back to Profile',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -309,8 +302,7 @@ class _BBXPaymentConfirmationScreenState
                               height: 50,
                               child: OutlinedButton(
                                 onPressed: () {
-                                  print('🏠 [确认页面] 导航到首�?);
-                                  // 清除所有路由并返回首页
+                                  debugPrint('🏠 [Page] Navigating to Home');
                                   Navigator.of(context).popUntil((route) => route.isFirst);
                                   Navigator.of(context).pushReplacementNamed('/home');
                                 },
@@ -322,7 +314,7 @@ class _BBXPaymentConfirmationScreenState
                                   ),
                                 ),
                                 child: const Text(
-                                  '返回首页',
+                                  'Back to Home',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -336,8 +328,7 @@ class _BBXPaymentConfirmationScreenState
                               height: 50,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  print('🔄 [确认页面] 重试支付');
-                                  // 返回到支付页�?
+                                  debugPrint('🔄 [Page] Retrying payment');
                                   Navigator.pop(context);
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -348,7 +339,7 @@ class _BBXPaymentConfirmationScreenState
                                   ),
                                 ),
                                 child: const Text(
-                                  '重试支付',
+                                  'Retry Payment',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -362,8 +353,7 @@ class _BBXPaymentConfirmationScreenState
                               height: 50,
                               child: OutlinedButton(
                                 onPressed: () {
-                                  print('🏠 [确认页面] 稍后再说，返回首�?);
-                                  // 返回首页
+                                  debugPrint('🏠 [Page] Later, returning to Home');
                                   Navigator.of(context).popUntil((route) => route.isFirst);
                                   Navigator.of(context).pushReplacementNamed('/home');
                                 },
@@ -375,7 +365,7 @@ class _BBXPaymentConfirmationScreenState
                                   ),
                                 ),
                                 child: const Text(
-                                  '稍后再说',
+                                  'Later',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -428,13 +418,13 @@ class _BBXPaymentConfirmationScreenState
   String _getPaymentMethodName(String method) {
     switch (method) {
       case 'fpx':
-        return 'FPX 网银转账';
+        return 'FPX Online Banking';
       case 'ewallet':
-        return '电子钱包';
+        return 'E-Wallet';
       case 'credit_card':
-        return '信用�?借记�?;
+        return 'Credit/Debit Card';
       case 'cash':
-        return '现金支付';
+        return 'Cash Payment';
       default:
         return method;
     }

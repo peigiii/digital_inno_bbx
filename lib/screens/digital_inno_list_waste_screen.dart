@@ -87,7 +87,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('获取位置信息失败: $e')),
+          SnackBar(content: Text('Failed to get location: $e')),
         );
       }
     } finally {
@@ -125,7 +125,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        throw Exception('用户未登�?);
+        throw Exception('User not logged in');
       }
 
       final wasteListing = {
@@ -154,14 +154,14 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('提交超时，请检查网络连�?);
+              throw Exception('Submit timeout, please check connection');
             },
           );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('废料信息发布成功�?),
+            content: Text('Listing submitted successfully'),
             backgroundColor: Colors.green,
           ),
         );
@@ -179,14 +179,19 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
           _selectedImage = null;
         });
 
-        // Navigate to marketplace
-        Navigator.pushReplacementNamed(context, '/marketplace');
+        // Navigate to marketplace tab in main screen
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/home',
+          (route) => false,
+          arguments: {'index': 1},
+        );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('发布失败: $e'),
+            content: Text('Submission failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -207,12 +212,17 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('发布废料信息'),
+        title: const Text('List Waste'),
         actions: [
           IconButton(
             icon: const Icon(Icons.store),
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/marketplace');
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                '/home',
+                (route) => false,
+                arguments: {'index': 1},
+              );
             },
           ),
           IconButton(
@@ -244,7 +254,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'BBX 废料交换平台',
+                      'BBX Waste Exchange',
                       style: TextStyle(
                         fontSize: isTablet ? 24 : 20,
                         fontWeight: FontWeight.bold,
@@ -252,7 +262,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       ),
                     ),
                     Text(
-                      '将您的生物质废料转化为收�?,
+                      'Convert your biomass waste into revenue',
                       style: TextStyle(
                         fontSize: isTablet ? 16 : 14,
                         color: Colors.grey[600],
@@ -275,7 +285,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        '废料信息',
+                        'Listing Details',
                         style: TextStyle(
                           fontSize: isTablet ? 20 : 18,
                           fontWeight: FontWeight.bold,
@@ -288,13 +298,13 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       TextFormField(
                         controller: _titleController,
                         decoration: const InputDecoration(
-                          labelText: '废料标题',
+                          labelText: 'Title',
                           prefixIcon: Icon(Icons.title),
-                          hintText: '例如：高质量棕榈空果�?,
+                          hintText: 'e.g. High Quality EFB',
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入废料标�?;
+                            return 'Please enter title';
                           }
                           return null;
                         },
@@ -305,7 +315,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       DropdownButtonFormField<String>(
                         initialValue: _selectedWasteType,
                         decoration: const InputDecoration(
-                          labelText: '废料类型',
+                          labelText: 'Waste Type',
                           prefixIcon: Icon(Icons.category),
                         ),
                         items: wasteTypes.map((String type) {
@@ -326,7 +336,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                         },
                         validator: (value) {
                           if (value == null) {
-                            return '请选择废料类型';
+                            return 'Please select waste type';
                           }
                           return null;
                         },
@@ -341,16 +351,16 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                             child: TextFormField(
                               controller: _quantityController,
                               decoration: const InputDecoration(
-                                labelText: '数量',
+                                labelText: 'Quantity',
                                 prefixIcon: Icon(Icons.straighten),
                               ),
                               keyboardType: TextInputType.number,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return '请输入数�?;
+                                  return 'Enter quantity';
                                 }
                                 if (double.tryParse(value) == null) {
-                                  return '请输入有效数�?;
+                                  return 'Invalid number';
                                 }
                                 return null;
                               },
@@ -362,7 +372,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                             child: DropdownButtonFormField<String>(
                               initialValue: _selectedUnit,
                               decoration: const InputDecoration(
-                                labelText: '单位',
+                                labelText: 'Unit',
                               ),
                               items: units.map((String unit) {
                                 return DropdownMenuItem<String>(
@@ -377,7 +387,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                               },
                               validator: (value) {
                                 if (value == null) {
-                                  return '请选择单位';
+                                  return 'Select unit';
                                 }
                                 return null;
                               },
@@ -391,17 +401,17 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       TextFormField(
                         controller: _priceController,
                         decoration: const InputDecoration(
-                          labelText: '单价 (RM)',
+                          labelText: 'Price (RM)',
                           prefixIcon: Icon(Icons.monetization_on),
-                          hintText: '每单位价�?,
+                          hintText: 'Price per unit',
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入单�?;
+                            return 'Enter price';
                           }
                           if (double.tryParse(value) == null) {
-                            return '请输入有效价�?;
+                            return 'Invalid price';
                           }
                           return null;
                         },
@@ -412,14 +422,14 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       TextFormField(
                         controller: _descriptionController,
                         decoration: const InputDecoration(
-                          labelText: '详细描述',
+                          labelText: 'Description',
                           prefixIcon: Icon(Icons.description),
-                          hintText: '描述废料的质量、处理状态等',
+                          hintText: 'Describe quality, condition etc.',
                         ),
                         maxLines: 3,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入详细描�?;
+                            return 'Enter description';
                           }
                           return null;
                         },
@@ -430,13 +440,13 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       TextFormField(
                         controller: _contactController,
                         decoration: const InputDecoration(
-                          labelText: '联系方式',
+                          labelText: 'Contact Info',
                           prefixIcon: Icon(Icons.contact_phone),
-                          hintText: '电话号码或邮�?,
+                          hintText: 'Phone or Email',
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入联系方�?;
+                            return 'Enter contact info';
                           }
                           return null;
                         },
@@ -452,7 +462,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Text(
-                                '附加信息',
+                                'Additional Info',
                                 style: TextStyle(
                                   fontSize: isTablet ? 18 : 16,
                                   fontWeight: FontWeight.w600,
@@ -491,7 +501,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                                             ),
                                             const SizedBox(height: 8),
                                             Text(
-                                              '点击拍照上传废料图片',
+                                              'Tap to take photo',
                                               style: TextStyle(
                                                 color: Colors.grey[600],
                                                 fontSize: isTablet ? 16 : 14,
@@ -525,11 +535,11 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                                     const SizedBox(width: 8),
                                     Expanded(
                                       child: _isLocationLoading
-                                          ? const Text('正在获取位置信息...')
+                                          ? const Text('Getting location...')
                                           : Text(
                                               _currentPosition != null
-                                                  ? '位置已获�?
-                                                  : '位置信息未获�?,
+                                                  ? 'Location Acquired'
+                                                  : 'Location Not Acquired',
                                               style: TextStyle(
                                                 color: _currentPosition != null 
                                                     ? const Color(0xFF2E7D32) 
@@ -541,7 +551,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                                     if (_currentPosition == null && !_isLocationLoading)
                                       TextButton(
                                         onPressed: _getCurrentLocation,
-                                        child: const Text('重新获取'),
+                                        child: const Text('Retry'),
                                       ),
                                   ],
                                 ),
@@ -563,7 +573,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                                   color: Colors.white,
                                 )
                               : Text(
-                                  '发布废料信息',
+                                  'Submit Listing',
                                   style: TextStyle(
                                     fontSize: isTablet ? 18 : 16,
                                     fontWeight: FontWeight.bold,
@@ -593,7 +603,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'PCDS 2030 合规保证',
+                      'PCDS 2030 Compliant',
                       style: TextStyle(
                         fontSize: isTablet ? 18 : 16,
                         fontWeight: FontWeight.bold,
@@ -602,7 +612,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '所有发布的废料信息将经过PCDS 2030合规性审�?确保符合可持续发展标�?,
+                      'All listings are reviewed for PCDS 2030 compliance to ensure sustainability standards.',
                       style: TextStyle(
                         fontSize: isTablet ? 14 : 12,
                         color: Colors.grey[700],

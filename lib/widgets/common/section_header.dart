@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 区块标题组件
-/// 用于页面中不同区块的标题展示，带可选的"查看更多"链接
 class SectionHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
@@ -38,8 +36,7 @@ class SectionHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // 左侧标题
-              Expanded(
+                            Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -60,8 +57,7 @@ class SectionHeader extends StatelessWidget {
                 ),
               ),
 
-              // 右侧操作按钮
-              if (actionText != null || actionIcon != null)
+                            if (actionText != null || actionIcon != null)
                 InkWell(
                   onTap: onActionTap,
                   borderRadius: AppTheme.borderRadiusStandard,
@@ -112,7 +108,6 @@ class SectionHeader extends StatelessWidget {
   }
 }
 
-/// 简洁版区块标题（无副标题）
 class SimpleSectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onMoreTap;
@@ -136,7 +131,6 @@ class SimpleSectionHeader extends StatelessWidget {
   }
 }
 
-/// 带图标的区块标题
 class IconSectionHeader extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -167,8 +161,7 @@ class IconSectionHeader extends StatelessWidget {
           ),
       child: Row(
         children: [
-          // 图标
-          Container(
+                    Container(
             padding: const EdgeInsets.all(AppTheme.spacingSM),
             decoration: BoxDecoration(
               color: (iconColor ?? AppTheme.primary).withOpacity(0.1),
@@ -182,8 +175,7 @@ class IconSectionHeader extends StatelessWidget {
           ),
           const SizedBox(width: AppTheme.spacingMD),
 
-          // 标题
-          Expanded(
+                    Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -204,8 +196,7 @@ class IconSectionHeader extends StatelessWidget {
             ),
           ),
 
-          // 操作按钮
-          if (actionText != null)
+                    if (actionText != null)
             InkWell(
               onTap: onActionTap,
               borderRadius: AppTheme.borderRadiusStandard,
@@ -240,7 +231,6 @@ class IconSectionHeader extends StatelessWidget {
   }
 }
 
-/// 带数量徽章的区块标题
 class BadgeSectionHeader extends StatelessWidget {
   final String title;
   final int count;
@@ -268,8 +258,7 @@ class BadgeSectionHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // 标题和徽�?
-          Row(
+                    Row(
             children: [
               Text(
                 title,
@@ -298,8 +287,7 @@ class BadgeSectionHeader extends StatelessWidget {
             ],
           ),
 
-          // 操作按钮
-          if (actionText != null)
+                    if (actionText != null)
             InkWell(
               onTap: onActionTap,
               borderRadius: AppTheme.borderRadiusStandard,
@@ -334,7 +322,6 @@ class BadgeSectionHeader extends StatelessWidget {
   }
 }
 
-/// 可展开的区块标�?
 class ExpandableSectionHeader extends StatelessWidget {
   final String title;
   final String? subtitle;

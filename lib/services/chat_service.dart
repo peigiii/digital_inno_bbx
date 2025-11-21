@@ -2,43 +2,43 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/message_model.dart';
 
-/// 聊天服务�?
+/// Chat Service
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// 获取当前用户ID
+  /// Get Current User ID
   String? get _currentUserId => _auth.currentUser?.uid;
 
-  /// 获取或创建对�?
+  /// Get or Create Conversation
   ///
-  /// 如果对话已存在，返回对话ID
-  /// 如果对话不存在，创建新对话并返回ID
+  /// If conversation exists, return ID
+  /// If not, create new and return ID
   Future<String> getOrCreateConversation(String otherUserId) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登�?);
+      throw Exception('User not logged in');
     }
 
     if (_currentUserId == otherUserId) {
-      throw Exception('不能与自己对�?);
+      throw Exception('Cannot chat with yourself');
     }
 
-    // 查找现有对话
+    // Find existing conversation
     final existingConversations = await _firestore
         .collection('conversations')
         .where('participantIds', arrayContains: _currentUserId)
         .get();
 
-    // 遍历结果，检查是否包含otherUserId
+    // Check if otherUserId is in participants
     for (var doc in existingConversations.docs) {
       final conversation = ConversationModel.fromDocument(doc);
       if (conversation.participantIds.contains(otherUserId)) {
-        // 找到现有对话
+        // Found existing
         return doc.id;
       }
     }
 
-    // 没找到，创建新对�?
+    // Not found, create new
     final newConversation = ConversationModel(
       id: '',
       participantIds: [_currentUserId!, otherUserId],
@@ -49,18 +49,18 @@ class ChatService {
     return docRef.id;
   }
 
-  /// 发送消�?
+  /// Send Message
   ///
-  /// 参数�?
-  /// - conversationId: 对话ID
-  /// - receiverId: 接收者ID
-  /// - content: 消息内容
-  /// - type: 消息类型（text/image/file/location/listing�?
-  /// - imageUrl: 图片URL（可选）
-  /// - fileUrl: 文件URL（可选）
-  /// - fileName: 文件名（可选）
-  /// - location: 位置信息（可选）
-  /// - listingId: 商品ID（可选）
+  /// Params:
+  /// - conversationId
+  /// - receiverId
+  /// - content
+  /// - type (text/image/file/location/listing)
+  /// - imageUrl (optional)
+  /// - fileUrl (optional)
+  /// - fileName (optional)
+  /// - location (optional)
+  /// - listingId (optional)
   Future<String> sendMessage({
     required String conversationId,
     required String receiverId,
@@ -73,12 +73,12 @@ class ChatService {
     String? listingId,
   }) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登�?);
+      throw Exception('User not logged in');
     }
 
     final now = DateTime.now();
 
-    // 创建消息
+    // Create Message
     final message = MessageModel(
       id: '',
       conversationId: conversationId,
@@ -94,26 +94,26 @@ class ChatService {
       listingId: listingId,
     );
 
-    // 保存消息到Firestore
+    // Save to Firestore
     final docRef = await _firestore.collection('messages').add(message.toMap());
 
-    // 更新对话信息
+    // Update Conversation
     await _firestore.collection('conversations').doc(conversationId).update({
       'lastMessage': content,
       'lastMessageAt': FieldValue.serverTimestamp(),
       'lastMessageSenderId': _currentUserId,
-      // 增加接收者的未读�?
+      // Increment unread count for receiver
       'unreadCount.$receiverId': FieldValue.increment(1),
     });
 
-    // TODO: 发送推送通知给接收�?
+    // TODO: Send push notification
 
     return docRef.id;
   }
 
-  /// 获取对话的消息列�?
+  /// Get Messages Stream
   ///
-  /// 返回最�?00条消息，按时间降序排�?
+  /// Returns last 100 messages, desc order
   Stream<List<MessageModel>> getMessages(String conversationId) {
     return _firestore
         .collection('messages')
@@ -126,7 +126,7 @@ class ChatService {
     });
   }
 
-  /// 获取我的对话列表
+  /// Get My Conversations Stream
   Stream<List<ConversationModel>> getMyConversations() {
     if (_currentUserId == null) {
       return Stream.value([]);
@@ -142,22 +142,20 @@ class ChatService {
     });
   }
 
-  /// 标记消息为已�?
-  ///
-  /// 将对话中所有未读消息标记为已读，并重置未读�?
+  /// Mark Messages as Read
   Future<void> markAsRead(String conversationId) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登�?);
+      throw Exception('User not logged in');
     }
 
     final now = DateTime.now();
 
-    // 重置当前用户的未读数
+    // Reset unread count for current user
     await _firestore.collection('conversations').doc(conversationId).update({
       'unreadCount.$_currentUserId': 0,
     });
 
-    // 批量更新所有未读消�?
+    // Batch update unread messages
     final unreadMessages = await _firestore
         .collection('messages')
         .where('conversationId', isEqualTo: conversationId)
@@ -165,7 +163,6 @@ class ChatService {
         .where('isRead', isEqualTo: false)
         .get();
 
-    // 使用批处理更�?
     final batch = _firestore.batch();
     for (var doc in unreadMessages.docs) {
       batch.update(doc.reference, {
@@ -177,12 +174,10 @@ class ChatService {
     await batch.commit();
   }
 
-  /// 更新输入状�?
-  ///
-  /// 显示"对方正在输入..."提示
+  /// Update Typing Status
   Future<void> updateTypingStatus(String conversationId, bool isTyping) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登�?);
+      throw Exception('User not logged in');
     }
 
     await _firestore.collection('conversations').doc(conversationId).update({
@@ -190,30 +185,30 @@ class ChatService {
     });
   }
 
-  /// 删除消息
+  /// Delete Message
   Future<void> deleteMessage(String messageId) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登�?);
+      throw Exception('User not logged in');
     }
 
-    // 获取消息信息
+    // Get Message
     final messageDoc = await _firestore.collection('messages').doc(messageId).get();
     if (!messageDoc.exists) {
-      throw Exception('消息不存�?);
+      throw Exception('Message not found');
     }
 
     final message = MessageModel.fromDocument(messageDoc);
 
-    // 只能删除自己发送的消息
+    // Permission Check
     if (message.senderId != _currentUserId) {
-      throw Exception('无权删除此消�?);
+      throw Exception('Permission denied to delete message');
     }
 
-    // 删除消息
+    // Delete
     await _firestore.collection('messages').doc(messageId).delete();
   }
 
-  /// 获取单个对话详情
+  /// Get Single Conversation
   Future<ConversationModel?> getConversation(String conversationId) async {
     final doc = await _firestore.collection('conversations').doc(conversationId).get();
     if (!doc.exists) {
@@ -222,7 +217,7 @@ class ChatService {
     return ConversationModel.fromDocument(doc);
   }
 
-  /// 获取未读消息总数
+  /// Get Total Unread Count
   Future<int> getTotalUnreadCount() async {
     if (_currentUserId == null) {
       return 0;
@@ -242,7 +237,7 @@ class ChatService {
     return totalUnread;
   }
 
-  /// 发送图片消�?
+  /// Send Image Message
   Future<String> sendImageMessage({
     required String conversationId,
     required String receiverId,
@@ -252,13 +247,13 @@ class ChatService {
     return await sendMessage(
       conversationId: conversationId,
       receiverId: receiverId,
-      content: caption.isNotEmpty ? caption : '发送了一张图�?,
+      content: caption.isNotEmpty ? caption : 'Sent an image',
       type: 'image',
       imageUrl: imageUrl,
     );
   }
 
-  /// 发送文件消�?
+  /// Send File Message
   Future<String> sendFileMessage({
     required String conversationId,
     required String receiverId,
@@ -268,14 +263,14 @@ class ChatService {
     return await sendMessage(
       conversationId: conversationId,
       receiverId: receiverId,
-      content: '发送了文件�?fileName',
+      content: 'Sent a file: $fileName',
       type: 'file',
       fileUrl: fileUrl,
       fileName: fileName,
     );
   }
 
-  /// 发送位置消�?
+  /// Send Location Message
   Future<String> sendLocationMessage({
     required String conversationId,
     required String receiverId,
@@ -286,7 +281,7 @@ class ChatService {
     return await sendMessage(
       conversationId: conversationId,
       receiverId: receiverId,
-      content: address ?? '发送了位置',
+      content: address ?? 'Sent location',
       type: 'location',
       location: {
         'latitude': latitude,
@@ -296,7 +291,7 @@ class ChatService {
     );
   }
 
-  /// 发送商品链�?
+  /// Send Listing Message
   Future<String> sendListingMessage({
     required String conversationId,
     required String receiverId,
@@ -306,7 +301,7 @@ class ChatService {
     return await sendMessage(
       conversationId: conversationId,
       receiverId: receiverId,
-      content: listingTitle ?? '分享了商�?,
+      content: listingTitle ?? 'Shared a listing',
       type: 'listing',
       listingId: listingId,
     );

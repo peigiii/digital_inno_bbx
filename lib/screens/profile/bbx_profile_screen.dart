@@ -6,7 +6,6 @@ import '../../widgets/bbx_avatar.dart';
 import '../../widgets/bbx_button.dart';
 import '../../widgets/bbx_loading.dart';
 
-/// BBX 个人中心页面（完全重构）
 class BBXProfileScreen extends StatefulWidget {
   const BBXProfileScreen({super.key});
 
@@ -18,8 +17,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
   bool isLoading = true;
 
-  // 用户数据
-  int transactionCount = 0;
+    int transactionCount = 0;
   int offerCount = 0;
   int favoriteCount = 0;
   double walletBalance = 0.0;
@@ -40,8 +38,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     }
 
     try {
-      // 加载用户数据
-      final userDoc = await FirebaseFirestore.instance
+            final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(user!.uid)
           .get();
@@ -54,8 +51,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
         });
       }
 
-      // 加载奖励积分
-      final rewardsDoc = await FirebaseFirestore.instance
+            final rewardsDoc = await FirebaseFirestore.instance
           .collection('rewards')
           .doc(user!.uid)
           .get();
@@ -66,8 +62,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
         });
       }
 
-      // TODO: 加载交易、报价、收藏数�?
-      setState(() {
+            setState(() {
         transactionCount = 12;
         offerCount = 5;
         favoriteCount = 8;
@@ -75,7 +70,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
         isLoading = false;
       });
     } catch (e) {
-      debugPrint('加载用户数据失败: $e');
+      debugPrint('Load user data failed: $e');
       setState(() => isLoading = false);
     }
   }
@@ -93,32 +88,23 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
       backgroundColor: AppTheme.background,
       body: CustomScrollView(
         slivers: [
-          // 顶部个人信息卡片（渐变背景）
-          _buildProfileHeader(),
+                    _buildProfileHeader(),
 
-          // 统计卡片（浮动）
-          _buildStatsCard(),
+                    _buildStatsCard(),
 
-          // 账户管理区域
-          _buildAccountSection(),
+                    _buildAccountSection(),
 
-          // 我的服务区域
-          _buildMyServicesSection(),
+                    _buildMyServicesSection(),
 
-          // 会员专区
-          _buildMembershipSection(),
+                    _buildMembershipSection(),
 
-          // 设置区域
-          _buildSettingsSection(),
+                    _buildSettingsSection(),
 
-          // 帮助与支�?
-          _buildHelpSection(),
+                    _buildHelpSection(),
 
-          // 退出登�?
-          _buildLogoutButton(),
+                    _buildLogoutButton(),
 
-          // 底部间距
-          const SliverToBoxAdapter(
+                    const SliverToBoxAdapter(
             child: SizedBox(height: AppTheme.spacing32),
           ),
         ],
@@ -126,8 +112,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 个人信息头部
-  Widget _buildProfileHeader() {
+    Widget _buildProfileHeader() {
     return SliverToBoxAdapter(
       child: Container(
         height: 220,
@@ -142,29 +127,26 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // 头像
-              Container(
+                            Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 3),
                 ),
                 child: BBXAvatar(
                   imageUrl: user?.photoURL,
-                  name: user?.displayName ?? '用户',
+                  name: user?.displayName ?? 'User',
                   size: 80,
                 ),
               ),
               const SizedBox(height: AppTheme.spacing12),
 
-              // 用户�?
-              Text(
-                user?.displayName ?? '未登�?,
+                            Text(
+                user?.displayName ?? 'Not Logged In',
                 style: AppTheme.heading2.copyWith(color: Colors.white),
               ),
               const SizedBox(height: AppTheme.spacing4),
 
-              // 用户角色标签
-              Container(
+                            Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppTheme.spacing12,
                   vertical: AppTheme.spacing4,
@@ -174,7 +156,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   borderRadius: BorderRadius.circular(AppTheme.radiusFull),
                 ),
                 child: const Text(
-                  '认证用户',
+                  'Verified User',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 12,
@@ -184,8 +166,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               ),
               const SizedBox(height: AppTheme.spacing8),
 
-              // 评分
-              Row(
+                            Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ...List.generate(
@@ -209,8 +190,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               ),
               const SizedBox(height: AppTheme.spacing12),
 
-              // 编辑资料按钮
-              OutlinedButton(
+                            OutlinedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/edit-profile');
                 },
@@ -225,7 +205,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                     vertical: AppTheme.spacing8,
                   ),
                 ),
-                child: const Text('编辑资料'),
+                child: const Text('Edit Profile'),
               ),
             ],
           ),
@@ -234,8 +214,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 统计卡片
-  Widget _buildStatsCard() {
+    Widget _buildStatsCard() {
     return SliverToBoxAdapter(
       child: Transform.translate(
         offset: const Offset(0, -30),
@@ -249,7 +228,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
           ),
           child: Row(
             children: [
-              _buildStatItem('交易�?, transactionCount.toString(), () {
+              _buildStatItem('Transactions', transactionCount.toString(), () {
                 Navigator.pushNamed(context, '/transactions');
               }),
               Container(
@@ -257,7 +236,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 height: 40,
                 color: AppTheme.neutral300,
               ),
-              _buildStatItem('报价�?, offerCount.toString(), () {
+              _buildStatItem('Quotes', offerCount.toString(), () {
                 Navigator.pushNamed(context, '/my-offers');
               }),
               Container(
@@ -265,7 +244,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 height: 40,
                 color: AppTheme.neutral300,
               ),
-              _buildStatItem('收藏�?, favoriteCount.toString(), () {
+              _buildStatItem('Favorites', favoriteCount.toString(), () {
                 Navigator.pushNamed(context, '/favorites');
               }),
             ],
@@ -300,8 +279,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 账户管理区域
-  Widget _buildAccountSection() {
+    Widget _buildAccountSection() {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
@@ -313,7 +291,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('账户管理', style: AppTheme.heading3),
+            const Text('Account Management', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -326,7 +304,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   _buildAccountItem(
                     icon: Icons.account_balance_wallet_rounded,
                     iconColor: const Color(0xFFFFD700),
-                    title: '钱包余额',
+                    title: 'Wallet Balance',
                     trailing: 'RM ${walletBalance.toStringAsFixed(2)}',
                     onTap: () => Navigator.pushNamed(context, '/wallet'),
                   ),
@@ -334,7 +312,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   _buildAccountItem(
                     icon: Icons.workspace_premium_rounded,
                     iconColor: const Color(0xFFFFA500),
-                    title: '会员等级',
+                    title: 'Membership Tier',
                     trailing: _getMembershipDisplayName(membershipTier),
                     onTap: () => Navigator.pushNamed(context, '/subscription'),
                   ),
@@ -342,8 +320,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   _buildAccountItem(
                     icon: Icons.card_giftcard_rounded,
                     iconColor: AppTheme.error,
-                    title: '积分奖励',
-                    trailing: '$rewardPoints �?,
+                    title: 'Rewards',
+                    trailing: '$rewardPoints pts',
                     onTap: () => Navigator.pushNamed(context, '/rewards'),
                   ),
                 ],
@@ -355,15 +333,14 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 我的服务区域
-  Widget _buildMyServicesSection() {
+    Widget _buildMyServicesSection() {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('我的服务', style: AppTheme.heading3),
+            const Text('My Services', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -375,37 +352,37 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 children: [
                   _buildMenuItem(
                     icon: Icons.inventory_2_rounded,
-                    title: '我的商品',
-                    subtitle: '已发�?12 �?,
+                    title: 'My Listings',
+                    subtitle: 'Published: 12',
                     onTap: () => Navigator.pushNamed(context, '/my-listings'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.local_offer_rounded,
-                    title: '我的报价',
-                    subtitle: '待处�?5 �?,
+                    title: 'My Quotes',
+                    subtitle: 'Pending: 5',
                     badge: 5,
                     onTap: () => Navigator.pushNamed(context, '/my-offers'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.receipt_long_rounded,
-                    title: '我的交易',
-                    subtitle: '进行�?2 �?,
+                    title: 'My Transactions',
+                    subtitle: 'In Progress: 2',
                     onTap: () => Navigator.pushNamed(context, '/transactions'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.favorite_rounded,
-                    title: '我的收藏',
-                    subtitle: '已收�?8 �?,
+                    title: 'My Favorites',
+                    subtitle: 'Saved: 8',
                     onTap: () => Navigator.pushNamed(context, '/favorites'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.location_on_rounded,
-                    title: '附近商品',
-                    subtitle: '基于位置筛�?,
+                    title: 'Nearby Items',
+                    subtitle: 'Filtered by Location',
                     onTap: () => Navigator.pushNamed(context, '/nearby'),
                   ),
                 ],
@@ -417,19 +394,17 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 会员专区
-  Widget _buildMembershipSection() {
+    Widget _buildMembershipSection() {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('会员专区', style: AppTheme.heading3),
+            const Text('Membership Zone', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
 
-            // 2x2 网格
-            GridView.count(
+                        GridView.count(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 2,
@@ -439,8 +414,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               children: [
                 _buildMembershipCard(
                   icon: Icons.workspace_premium_rounded,
-                  title: '订阅计划',
-                  subtitle: '升级享更多权�?,
+                  title: 'Subscription',
+                  subtitle: 'Upgrade for more',
                   gradient: const LinearGradient(
                     colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                   ),
@@ -448,8 +423,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 ),
                 _buildMembershipCard(
                   icon: Icons.card_giftcard_rounded,
-                  title: '奖励中心',
-                  subtitle: '赚取 $rewardPoints 积分',
+                  title: 'Rewards Center',
+                  subtitle: 'Earn $rewardPoints pts',
                   gradient: const LinearGradient(
                     colors: [AppTheme.error, Color(0xFFE91E63)],
                   ),
@@ -457,8 +432,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 ),
                 _buildMembershipCard(
                   icon: Icons.confirmation_number_rounded,
-                  title: '优惠�?,
-                  subtitle: '$availableCoupons 张可�?,
+                  title: 'Coupons',
+                  subtitle: '$availableCoupons Available',
                   gradient: const LinearGradient(
                     colors: [AppTheme.accent, Color(0xFF64B5F6)],
                   ),
@@ -467,8 +442,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 ),
                 _buildMembershipCard(
                   icon: Icons.analytics_rounded,
-                  title: '我的统计',
-                  subtitle: '查看交易数据',
+                  title: 'My Stats',
+                  subtitle: 'View Data',
                   gradient: const LinearGradient(
                     colors: [Color(0xFF9C27B0), Color(0xFFBA68C8)],
                   ),
@@ -482,15 +457,14 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 设置区域
-  Widget _buildSettingsSection() {
+    Widget _buildSettingsSection() {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('设置', style: AppTheme.heading3),
+            const Text('Settings', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -502,27 +476,27 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 children: [
                   _buildMenuItem(
                     icon: Icons.settings_rounded,
-                    title: '账户设置',
+                    title: 'Account Settings',
                     onTap: () => Navigator.pushNamed(context, '/account-settings'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.notifications_rounded,
-                    title: '通知设置',
+                    title: 'Notification Settings',
                     onTap: () => Navigator.pushNamed(context, '/notification-settings'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.security_rounded,
-                    title: '隐私设置',
+                    title: 'Privacy Settings',
                     onTap: () => Navigator.pushNamed(context, '/privacy-settings'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.language_rounded,
-                    title: '语言设置',
+                    title: 'Language',
                     trailing: Text(
-                      '中文',
+                      'English',
                       style: AppTheme.body2.copyWith(
                         color: AppTheme.neutral600,
                       ),
@@ -532,12 +506,11 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.dark_mode_rounded,
-                    title: '深色模式',
+                    title: 'Dark Mode',
                     trailing: Switch(
                       value: false,
                       onChanged: (value) {
-                        // TODO: 实现深色模式切换
-                      },
+                                              },
                     ),
                   ),
                 ],
@@ -549,15 +522,14 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 帮助与支�?
-  Widget _buildHelpSection() {
+    Widget _buildHelpSection() {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('帮助与支�?, style: AppTheme.heading3),
+            const Text('Help & Support', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -569,27 +541,26 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 children: [
                   _buildMenuItem(
                     icon: Icons.help_outline_rounded,
-                    title: '帮助中心',
+                    title: 'Help Center',
                     onTap: () => Navigator.pushNamed(context, '/help'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.support_agent_rounded,
-                    title: '联系客服',
+                    title: 'Contact Support',
                     onTap: () => Navigator.pushNamed(context, '/support'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.star_border_rounded,
-                    title: '给我们评�?,
+                    title: 'Rate Us',
                     onTap: () {
-                      // TODO: 打开应用商店评分
-                    },
+                                          },
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.info_outline_rounded,
-                    title: '关于BBX',
+                    title: 'About BBX',
                     trailing: Text(
                       'v1.0.0',
                       style: AppTheme.body2.copyWith(
@@ -607,8 +578,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 退出登录按�?
-  Widget _buildLogoutButton() {
+    Widget _buildLogoutButton() {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
@@ -624,7 +594,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               color: AppTheme.error,
             ),
             title: const Text(
-              '退出登�?,
+              'Logout',
               style: TextStyle(
                 color: AppTheme.error,
                 fontWeight: AppTheme.semibold,
@@ -637,8 +607,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 账户�?
-  Widget _buildAccountItem({
+    Widget _buildAccountItem({
     required IconData icon,
     required Color iconColor,
     required String title,
@@ -675,8 +644,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 菜单�?
-  Widget _buildMenuItem({
+    Widget _buildMenuItem({
     required IconData icon,
     required String title,
     String? subtitle,
@@ -722,8 +690,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 会员卡片
-  Widget _buildMembershipCard({
+    Widget _buildMembershipCard({
     required IconData icon,
     required String title,
     required String subtitle,
@@ -819,15 +786,15 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('退出登�?),
-        content: const Text('确定要退出登录吗�?),
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           BBXPrimaryButton(
-            text: '确定',
+            text: 'Confirm',
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               if (mounted) {

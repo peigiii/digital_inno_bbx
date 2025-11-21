@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 现代化搜索栏组件
-/// Material Design 3 风格，适配 Pixel 5
 class ModernSearchBar extends StatelessWidget {
   final String hintText;
   final VoidCallback? onTap;
@@ -13,7 +11,7 @@ class ModernSearchBar extends StatelessWidget {
 
   const ModernSearchBar({
     super.key,
-    this.hintText = '搜索废料类型、商�?..',
+    this.hintText = '搜索废料类型、商?..',
     this.onTap,
     this.onFilter,
     this.onVoiceSearch,
@@ -33,8 +31,7 @@ class ModernSearchBar extends StatelessWidget {
             height: 56,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(28), // 完全圆角
-              boxShadow: [
+              borderRadius: BorderRadius.circular(28),               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.08),
                   blurRadius: 12,
@@ -46,8 +43,7 @@ class ModernSearchBar extends StatelessWidget {
               children: [
                 const SizedBox(width: AppTheme.spacing20),
                 
-                // 搜索图标
-                Container(
+                                Container(
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
@@ -63,8 +59,7 @@ class ModernSearchBar extends StatelessWidget {
                 
                 const SizedBox(width: AppTheme.spacing12),
 
-                // 提示文字
-                Expanded(
+                                Expanded(
                   child: Text(
                     hintText,
                     style: AppTheme.body1.copyWith(
@@ -73,8 +68,7 @@ class ModernSearchBar extends StatelessWidget {
                   ),
                 ),
 
-                // 语音搜索按钮
-                if (showVoiceSearch) ...[
+                                if (showVoiceSearch) ...[
                   IconButton(
                     onPressed: onVoiceSearch,
                     icon: const Icon(
@@ -85,8 +79,7 @@ class ModernSearchBar extends StatelessWidget {
                   const SizedBox(width: AppTheme.spacing4),
                 ],
 
-                // 筛选按�?
-                if (showFilter) ...[
+                                if (showFilter) ...[
                   IconButton(
                     onPressed: onFilter,
                     icon: Container(
@@ -113,7 +106,6 @@ class ModernSearchBar extends StatelessWidget {
   }
 }
 
-/// 可编辑的搜索输入�?
 class EditableSearchBar extends StatefulWidget {
   final String? initialValue;
   final ValueChanged<String>? onChanged;
@@ -182,8 +174,7 @@ class _EditableSearchBarState extends State<EditableSearchBar> {
         children: [
           const SizedBox(width: AppTheme.spacing20),
           
-          // 搜索图标
-          Container(
+                    Container(
             width: 40,
             height: 40,
             decoration: BoxDecoration(
@@ -199,13 +190,12 @@ class _EditableSearchBarState extends State<EditableSearchBar> {
           
           const SizedBox(width: AppTheme.spacing12),
 
-          // 输入�?
-          Expanded(
+                    Expanded(
             child: TextField(
               controller: _controller,
               focusNode: _focusNode,
               decoration: InputDecoration(
-                hintText: '搜索废料类型、商�?..',
+                hintText: '搜索废料类型、商?..',
                 hintStyle: TextStyle(
                   color: AppTheme.neutral500,
                   fontSize: 16,
@@ -223,8 +213,7 @@ class _EditableSearchBarState extends State<EditableSearchBar> {
             ),
           ),
 
-          // 清除按钮
-          if (_controller.text.isNotEmpty)
+                    if (_controller.text.isNotEmpty)
             IconButton(
               onPressed: () {
                 _controller.clear();
@@ -237,8 +226,7 @@ class _EditableSearchBarState extends State<EditableSearchBar> {
               ),
             ),
 
-          // 语音搜索按钮
-          if (widget.showVoiceSearch)
+                    if (widget.showVoiceSearch)
             IconButton(
               onPressed: widget.onVoiceSearch,
               icon: const Icon(
@@ -254,7 +242,6 @@ class _EditableSearchBarState extends State<EditableSearchBar> {
   }
 }
 
-/// 搜索历史标签
 class SearchHistoryChip extends StatelessWidget {
   final String text;
   final VoidCallback? onTap;
@@ -314,7 +301,6 @@ class SearchHistoryChip extends StatelessWidget {
   }
 }
 
-/// 热门搜索标签
 class TrendingSearchChip extends StatelessWidget {
   final String text;
   final VoidCallback? onTap;

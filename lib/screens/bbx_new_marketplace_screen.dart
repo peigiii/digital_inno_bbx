@@ -10,8 +10,6 @@ import '../widgets/marketplace/product_card.dart';
 import '../widgets/marketplace/supplier_card.dart';
 import 'bbx_listing_detail_screen.dart';
 
-/// BBX 新版市场首页
-/// 现代化设计，参�?Alibaba B2B �?IndiaMART
 class BBXNewMarketplaceScreen extends StatefulWidget {
   const BBXNewMarketplaceScreen({super.key});
 
@@ -69,7 +67,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
         });
       }
     } catch (e) {
-      debugPrint('加载商品失败: $e');
+      debugPrint('Failed to load products: $e');
     }
   }
 
@@ -102,7 +100,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
         });
       }
     } catch (e) {
-      debugPrint('加载更多商品失败: $e');
+      debugPrint('Failed to load more products: $e');
       if (mounted) {
         setState(() {
           _isLoadingMore = false;
@@ -137,7 +135,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: const Text('提交报价'),
+              title: const Text('Submit Quote'),
               content: SingleChildScrollView(
                 child: Form(
                   key: formKey,
@@ -147,17 +145,17 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
                     children: [
                       // Listing info
                       Text(
-                        '废料: ${data['title']}',
+                        'Item: ${data['title']}',
                         style: AppTheme.subtitle1,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '数量: ${data['quantity']} ${data['unit']}',
+                        'Qty: ${data['quantity']} ${data['unit']}',
                         style: AppTheme.body2.copyWith(color: AppTheme.textSecondary),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '原价: RM${data['pricePerUnit']}/${data['unit']}',
+                        'Price: RM${data['pricePerUnit']}/${data['unit']}',
                         style: AppTheme.body2.copyWith(color: AppTheme.textSecondary),
                       ),
                       const Divider(height: 24),
@@ -165,16 +163,16 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
                       // Offer price
                       AppInput(
                         controller: priceController,
-                        label: '您的报价 (RM)',
-                        hint: '输入总价',
+                        label: 'Your Quote (RM)',
+                        hint: 'Enter total price',
                         prefixIcon: Icons.monetization_on,
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入报�?;
+                            return 'Enter quote amount';
                           }
                           if (double.tryParse(value) == null) {
-                            return '请输入有效数�?;
+                            return 'Enter valid number';
                           }
                           return null;
                         },
@@ -198,7 +196,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
                         },
                         child: InputDecorator(
                           decoration: InputDecoration(
-                            labelText: '收集日期',
+                            labelText: 'Collection Date',
                             prefixIcon: const Icon(Icons.calendar_today),
                             border: OutlineInputBorder(
                               borderRadius: AppTheme.borderRadiusStandard,
@@ -207,7 +205,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
                           child: Text(
                             selectedDate != null
                                 ? DateFormat('yyyy-MM-dd').format(selectedDate!)
-                                : '选择收集日期',
+                                : 'Select Collection Date',
                             style: TextStyle(
                               color: selectedDate != null ? AppTheme.textPrimary : AppTheme.textHint,
                             ),
@@ -219,8 +217,8 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
                       // Message
                       TextAreaInput(
                         controller: messageController,
-                        label: '留言（可选）',
-                        hint: '说明您的收集计划或其他信�?,
+                        label: 'Message (Optional)',
+                        hint: 'Details about your collection plan, etc.',
                         minLines: 3,
                         maxLines: 5,
                       ),
@@ -230,13 +228,13 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
               ),
               actions: [
                 SecondaryButton(
-                  text: '取消',
+                  text: 'Cancel',
                   onPressed: () => Navigator.pop(dialogContext),
                   width: 100,
                   height: 40,
                 ),
                 PrimaryButton(
-                  text: '提交',
+                  text: 'Submit',
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       Navigator.pop(dialogContext);
@@ -273,7 +271,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        throw Exception('请先登录');
+        throw Exception('Please login first');
       }
 
       // Get current user data
@@ -283,7 +281,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
           .get();
 
       if (!userDoc.exists) {
-        throw Exception('用户数据不存�?);
+        throw Exception('User data not found');
       }
 
       final userData = userDoc.data() as Map<String, dynamic>;
@@ -310,14 +308,14 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('提交超时，请检查网络连�?);
+              throw Exception('Submission timed out, check network');
             },
           );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('报价提交成功�?),
+            content: Text('Quote submitted successfully'),
             backgroundColor: AppTheme.success,
           ),
         );
@@ -326,7 +324,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('提交失败: $e'),
+            content: Text('Submission failed: $e'),
             backgroundColor: AppTheme.error,
           ),
         );
@@ -373,8 +371,8 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
             // Hot Products Header
             SliverToBoxAdapter(
               child: SectionHeader(
-                title: '🔥 热门商品',
-                actionText: '查看全部',
+                title: '🔥 Hot Products',
+                actionText: 'View All',
                 onActionTap: () {
                   // Navigate to all products
                 },
@@ -410,7 +408,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
         },
         backgroundColor: AppTheme.primary,
         icon: const Icon(Icons.add),
-        label: const Text('发布废料'),
+        label: const Text('Post Waste'),
       ),
     );
   }
@@ -426,7 +424,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
         children: [
           // Logo/Title
           const Text(
-            'BBX 市场',
+            'BBX Marketplace',
             style: AppTheme.h3,
           ),
           const SizedBox(width: AppTheme.spacingMD),
@@ -441,7 +439,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
               ),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: '搜索生物质废料、公司、城�?..',
+                  hintText: 'Search biomass, companies, cities...',
                   hintStyle: AppTheme.body2.copyWith(color: AppTheme.textHint),
                   prefixIcon: const Icon(Icons.search, color: AppTheme.textSecondary),
                   suffixIcon: IconButton(
@@ -470,7 +468,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
             onPressed: () {
               // Show filter dialog
             },
-            tooltip: '筛�?,
+            tooltip: 'Filter',
           ),
         ],
       ),
@@ -499,12 +497,12 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
                 ),
                 const SizedBox(height: AppTheme.spacingMD),
                 Text(
-                  'BBX 生物质交易平�?,
+                  'BBX Biomass Platform',
                   style: AppTheme.h3.copyWith(color: AppTheme.primaryDark),
                 ),
                 const SizedBox(height: AppTheme.spacingSM),
                 Text(
-                  '连接供应商与回收商，共建绿色未来',
+                  'Connecting Suppliers & Recyclers',
                   style: AppTheme.body2.copyWith(color: AppTheme.textSecondary),
                 ),
               ],
@@ -589,7 +587,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
         'carbonReduced': (totalTonnage * 0.85).round(), // Estimate
       };
     } catch (e) {
-      debugPrint('获取统计数据失败: $e');
+      debugPrint('Failed to fetch stats: $e');
       return {
         'totalTonnage': 0,
         'activeUsers': 0,
@@ -603,8 +601,8 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
     return Column(
       children: [
         SectionHeader(
-          title: '�?优质供应�?,
-          actionText: '查看全部',
+          title: '🏆 Top Suppliers',
+          actionText: 'View All',
           onActionTap: () {
             // Navigate to all suppliers
           },
@@ -635,7 +633,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return Center(
                   child: Text(
-                    '暂无供应�?,
+                    'No suppliers found',
                     style: AppTheme.body2.copyWith(color: AppTheme.textSecondary),
                   ),
                 );
@@ -667,10 +665,10 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
       return SliverFillRemaining(
         child: EmptyStateCard(
           icon: Icons.inventory_2_outlined,
-          title: '暂无商品',
-          message: '成为第一个发布废料信息的用户',
+          title: 'No Products',
+          message: 'Be the first to post waste',
           action: PrimaryButton(
-            text: '发布废料',
+            text: 'Post Waste',
             icon: Icons.add,
             onPressed: () {
               Navigator.pushNamed(context, '/waste-list');
@@ -698,8 +696,8 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
       return SliverFillRemaining(
         child: EmptyStateCard(
           icon: Icons.search_off,
-          title: '未找到匹配的商品',
-          message: '请尝试调整搜索条�?,
+          title: 'No matching products',
+          message: 'Try adjusting search criteria',
         ),
       );
     }

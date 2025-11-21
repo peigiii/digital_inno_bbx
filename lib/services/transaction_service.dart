@@ -8,34 +8,34 @@ import '../models/logistics_update_model.dart';
 import '../models/offer_model.dart';
 import '../models/listing_model.dart';
 
-/// 交易服务
+/// Transaction Service
 class TransactionService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  /// 1. 确认交易 - 当报价被接受时，自动创建交易记录
+  /// 1. Confirm Transaction - Create transaction when offer is accepted
   Future<String> confirmTransaction(String offerId) async {
     try {
-      // 获取报价详情
+      // Get Offer Details
       final offerDoc = await _firestore.collection('offers').doc(offerId).get();
       if (!offerDoc.exists) {
-        throw Exception('报价不存�?);
+        throw Exception('Offer not found');
       }
       final offer = OfferModel.fromDocument(offerDoc);
 
-      // 获取商品详情
+      // Get Listing Details
       final listingDoc = await _firestore.collection('listings').doc(offer.listingId).get();
       if (!listingDoc.exists) {
-        throw Exception('商品不存�?);
+        throw Exception('Listing not found');
       }
       final listing = ListingModel.fromDocument(listingDoc);
 
-      // 计算总金�?= 报价金额 + 平台费（3%�?
+      // Calculate Total Amount = Offer Price + Platform Fee (3%)
       final amount = offer.offerPrice;
       final platformFee = amount * 0.03;
       final totalAmount = amount + platformFee;
 
-      // 创建交易记录
+      // Create Transaction Record
       final transactionRef = _firestore.collection('transactions').doc();
       final transaction = TransactionModel(
         id: transactionRef.id,
@@ -50,58 +50,58 @@ class TransactionService {
         paymentStatus: 'pending',
         shippingStatus: 'pending',
         escrowStatus: 'held',
-        deliveryMethod: offer.deliveryMethod, // 从报价继承配送方�?
+        deliveryMethod: offer.deliveryMethod, // Inherit from Offer
         pickupScheduledDate: offer.scheduledPickupDate,
         createdAt: DateTime.now(),
       );
 
-      // 保存交易记录
+      // Save Transaction
       await transactionRef.set(transaction.toMap());
 
-      // 更新报价状态为已完�?
+      // Update Offer Status to Completed
       await _firestore.collection('offers').doc(offerId).update({
         'status': 'completed',
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // TODO: 发送通知给买家和卖家
+      // TODO: Send notifications
 
       return transactionRef.id;
     } catch (e) {
-      throw Exception('创建交易失败: $e');
+      throw Exception('Create transaction failed: $e');
     }
   }
 
-  /// 2. 上传支付凭证
+  /// 2. Upload Payment Proof
   Future<void> uploadPaymentProof(String transactionId, File imageFile) async {
     try {
-      // 上传图片�?Firebase Storage
+      // Upload Image to Firebase Storage
       final storageRef = _storage.ref().child('transactions/$transactionId/payment_proof.jpg');
       final uploadTask = await storageRef.putFile(imageFile);
 
-      // 获取下载URL
+      // Get Download URL
       final downloadUrl = await uploadTask.ref.getDownloadURL();
 
-      // 更新交易记录
+      // Update Transaction
       await _firestore.collection('transactions').doc(transactionId).update({
         'paymentProofUrl': downloadUrl,
         'paymentStatus': 'paid',
         'paidAt': FieldValue.serverTimestamp(),
       });
 
-      // TODO: 发送通知给卖�?
+      // TODO: Send notification to seller
 
     } catch (e) {
-      throw Exception('上传支付凭证失败: $e');
+      throw Exception('Upload payment proof failed: $e');
     }
   }
 
-  /// 3. 标记为已取货
+  /// 3. Mark as Picked Up
   Future<void> markAsPickedUp(String transactionId, File? pickupPhoto) async {
     try {
       String? photoUrl;
 
-      // 可选上传取货照�?
+      // Optional Photo Upload
       if (pickupPhoto != null) {
         final timestamp = DateTime.now().millisecondsSinceEpoch;
         final storageRef = _storage.ref().child('transactions/$transactionId/logistics/pickup_$timestamp.jpg');
@@ -109,29 +109,29 @@ class TransactionService {
         photoUrl = await uploadTask.ref.getDownloadURL();
       }
 
-      // 更新交易状�?
+      // Update Transaction Status
       await _firestore.collection('transactions').doc(transactionId).update({
         'shippingStatus': 'picked_up',
         'actualPickupDate': FieldValue.serverTimestamp(),
         'shippedAt': FieldValue.serverTimestamp(),
       });
 
-      // 创建物流更新记录
+      // Create Logistics Update Record
       await _createLogisticsUpdate(
         transactionId: transactionId,
         status: 'picked_up',
-        description: '卖家已取�?,
+        description: 'Seller marked as Picked Up',
         imageUrl: photoUrl,
       );
 
-      // TODO: 发送通知给买�?
+      // TODO: Send notification to buyer
 
     } catch (e) {
-      throw Exception('标记已取货失�? $e');
+      throw Exception('Mark as picked up failed: $e');
     }
   }
 
-  /// 4. 更新物流状�?
+  /// 4. Update Shipping Status
   Future<void> updateShippingStatus({
     required String transactionId,
     required String newStatus,
@@ -140,20 +140,20 @@ class TransactionService {
     File? photo,
   }) async {
     try {
-      // 验证状态转换合法�?
+      // Validate Transaction
       final transactionDoc = await _firestore.collection('transactions').doc(transactionId).get();
       if (!transactionDoc.exists) {
-        throw Exception('交易不存�?);
+        throw Exception('Transaction not found');
       }
       final transaction = TransactionModel.fromDocument(transactionDoc);
 
-      // 状态转换验�?
+      // Validate Status Transition
       if (!_isValidStatusTransition(transaction.shippingStatus, newStatus)) {
-        throw Exception('无效的状态转�?);
+        throw Exception('Invalid status transition');
       }
 
       String? photoUrl;
-      // 上传照片（如果有�?
+      // Upload Photo if exists
       if (photo != null) {
         final timestamp = DateTime.now().millisecondsSinceEpoch;
         final storageRef = _storage.ref().child('transactions/$transactionId/logistics/$timestamp.jpg');
@@ -161,124 +161,124 @@ class TransactionService {
         photoUrl = await uploadTask.ref.getDownloadURL();
       }
 
-      // 更新交易状�?
+      // Update Transaction Status
       await _firestore.collection('transactions').doc(transactionId).update({
         'shippingStatus': newStatus,
       });
 
-      // 创建物流更新记录
+      // Create Logistics Update Record
       await _createLogisticsUpdate(
         transactionId: transactionId,
         status: newStatus,
         location: location,
-        description: description ?? '物流状态更�?,
+        description: description ?? 'Logistics status updated',
         imageUrl: photoUrl,
       );
 
-      // TODO: 发送通知
+      // TODO: Send notification
 
     } catch (e) {
-      throw Exception('更新物流状态失�? $e');
+      throw Exception('Update shipping status failed: $e');
     }
   }
 
-  /// 5. 买家确认收货
+  /// 5. Confirm Delivery (Buyer)
   Future<void> confirmDelivery(String transactionId) async {
     try {
-      // 更新交易状�?
+      // Update Transaction Status
       await _firestore.collection('transactions').doc(transactionId).update({
         'shippingStatus': 'delivered',
         'deliveryDate': FieldValue.serverTimestamp(),
       });
 
-      // 创建物流更新记录
+      // Create Logistics Update Record
       await _createLogisticsUpdate(
         transactionId: transactionId,
         status: 'delivered',
-        description: '买家已确认收�?,
+        description: 'Buyer confirmed receipt',
       );
 
-      // TODO: 发送通知给卖�?
+      // TODO: Send notification to seller
 
     } catch (e) {
-      throw Exception('确认收货失败: $e');
+      throw Exception('Confirm delivery failed: $e');
     }
   }
 
-  /// 6. 完成交易
+  /// 6. Complete Transaction
   Future<void> completeTransaction(String transactionId) async {
     try {
-      // 获取交易信息
+      // Get Transaction Details
       final transactionDoc = await _firestore.collection('transactions').doc(transactionId).get();
       if (!transactionDoc.exists) {
-        throw Exception('交易不存�?);
+        throw Exception('Transaction not found');
       }
       final transaction = TransactionModel.fromDocument(transactionDoc);
 
-      // 批量更新
+      // Batch Update
       final batch = _firestore.batch();
 
-      // 更新交易状�?
+      // Update Transaction Status
       batch.update(_firestore.collection('transactions').doc(transactionId), {
         'shippingStatus': 'completed',
         'status': 'completed',
         'completedAt': FieldValue.serverTimestamp(),
       });
 
-      // 更新商品状态为已售�?
+      // Update Listing Status to Sold
       batch.update(_firestore.collection('listings').doc(transaction.listingId), {
         'status': 'sold',
         'soldAt': FieldValue.serverTimestamp(),
       });
 
-      // 更新买家交易计数
+      // Update Buyer Transaction Count
       batch.update(_firestore.collection('users').doc(transaction.buyerId), {
         'totalTransactions': FieldValue.increment(1),
       });
 
-      // 更新卖家交易计数
+      // Update Seller Transaction Count
       batch.update(_firestore.collection('users').doc(transaction.sellerId), {
         'totalTransactions': FieldValue.increment(1),
       });
 
-      // 提交批量操作
+      // Commit Batch
       await batch.commit();
 
-      // 创建物流更新记录
+      // Create Logistics Update Record
       await _createLogisticsUpdate(
         transactionId: transactionId,
         status: 'completed',
-        description: '交易已完�?,
+        description: 'Transaction Completed',
       );
 
-      // TODO: 发送通知
+      // TODO: Send notifications
 
     } catch (e) {
-      throw Exception('完成交易失败: $e');
+      throw Exception('Complete transaction failed: $e');
     }
   }
 
-  /// 7. 取消交易
+  /// 7. Cancel Transaction
   Future<void> cancelTransaction(String transactionId, String reason) async {
     try {
-      // 获取交易信息
+      // Get Transaction Details
       final transactionDoc = await _firestore.collection('transactions').doc(transactionId).get();
       if (!transactionDoc.exists) {
-        throw Exception('交易不存�?);
+        throw Exception('Transaction not found');
       }
       final transaction = TransactionModel.fromDocument(transactionDoc);
 
-      // 批量更新
+      // Batch Update
       final batch = _firestore.batch();
 
-      // 更新交易状�?
+      // Update Transaction Status
       final updateData = {
         'status': 'cancelled',
         'cancellationReason': reason,
         'cancelledAt': FieldValue.serverTimestamp(),
       };
 
-      // 如果已支付，标记为待退�?
+      // If Paid, Mark for Refund
       if (transaction.paymentStatus == 'paid') {
         updateData['paymentStatus'] = 'refunded';
         updateData['refundReason'] = reason;
@@ -287,51 +287,50 @@ class TransactionService {
 
       batch.update(_firestore.collection('transactions').doc(transactionId), updateData);
 
-      // 恢复商品为可用状�?
+      // Restore Listing Status
       batch.update(_firestore.collection('listings').doc(transaction.listingId), {
         'status': 'available',
       });
 
-      // 提交批量操作
+      // Commit Batch
       await batch.commit();
 
-      // TODO: 发送通知
+      // TODO: Send notifications
 
     } catch (e) {
-      throw Exception('取消交易失败: $e');
+      throw Exception('Cancel transaction failed: $e');
     }
   }
 
-  /// 8. 获取我的交易列表
+  /// 8. Get My Transactions
   Stream<List<TransactionModel>> getMyTransactions(String userId, {String? status}) {
     try {
       Query query = _firestore.collection('transactions')
           .where('buyerId', isEqualTo: userId)
           .orderBy('createdAt', descending: true);
 
-      // 也需要获取我作为卖家的交�?
+      // Also need seller transactions
       Query sellerQuery = _firestore.collection('transactions')
           .where('sellerId', isEqualTo: userId)
           .orderBy('createdAt', descending: true);
 
-      // 可选按状态筛�?
+      // Optional Status Filter
       if (status != null) {
         query = query.where('shippingStatus', isEqualTo: status);
         sellerQuery = sellerQuery.where('shippingStatus', isEqualTo: status);
       }
 
-      // 合并两个查询结果
-      // 注意：Firestore 不支持直接合并查询，需要分别查询后合并
-      // 这里我们返回买家查询，实际使用时需要特殊处�?
+      // Merge results (Simplified for stream)
+      // Note: This returns buyer transactions. Actual implementation needs merge.
       return query.snapshots().map((snapshot) {
         return snapshot.docs.map((doc) => TransactionModel.fromDocument(doc)).toList();
       });
     } catch (e) {
-      throw Exception('获取交易列表失败: $e');
+      throw Exception('Get transactions failed: $e');
     }
   }
 
-  /// 获取我作为买家的交易
+  /// Get My Buyer Transactions
   Stream<List<TransactionModel>> getMyBuyerTransactions(String userId, {String? status}) {
     try {
       Query query = _firestore
@@ -349,17 +348,17 @@ class TransactionService {
           try {
             return TransactionModel.fromDocument(doc);
           } catch (e) {
-            print('解析交易失败 ${doc.id}: $e');
+            print('Parse transaction failed ${doc.id}: $e');
             return null;
           }
         }).whereType<TransactionModel>().toList();
       });
     } catch (e) {
-      throw Exception('获取买家交易列表失败: $e');
+      throw Exception('Get buyer transactions failed: $e');
     }
   }
 
-  /// 获取我作为卖家的交易
+  /// Get My Seller Transactions
   Stream<List<TransactionModel>> getMySellerTransactions(String userId, {String? status}) {
     try {
       Query query = _firestore
@@ -377,40 +376,40 @@ class TransactionService {
           try {
             return TransactionModel.fromDocument(doc);
           } catch (e) {
-            print('解析交易失败 ${doc.id}: $e');
+            print('Parse transaction failed ${doc.id}: $e');
             return null;
           }
         }).whereType<TransactionModel>().toList();
       });
     } catch (e) {
-      throw Exception('获取卖家交易列表失败: $e');
+      throw Exception('Get seller transactions failed: $e');
     }
   }
 
-  /// 9. 获取交易详情
+  /// 9. Get Transaction Details
   Future<TransactionModel> getTransactionDetails(String transactionId) async {
     try {
       final doc = await _firestore.collection('transactions').doc(transactionId).get();
       if (!doc.exists) {
-        throw Exception('交易不存�?);
+        throw Exception('Transaction not found');
       }
       return TransactionModel.fromDocument(doc);
     } catch (e) {
-      throw Exception('获取交易详情失败: $e');
+      throw Exception('Get transaction details failed: $e');
     }
   }
 
-  /// 获取交易详情（Stream�?
+  /// Get Transaction Details Stream
   Stream<TransactionModel> getTransactionDetailsStream(String transactionId) {
     return _firestore.collection('transactions').doc(transactionId).snapshots().map((doc) {
       if (!doc.exists) {
-        throw Exception('交易不存�?);
+        throw Exception('Transaction not found');
       }
       return TransactionModel.fromDocument(doc);
     });
   }
 
-  /// 10. 获取物流更新记录
+  /// 10. Get Logistics Updates
   Stream<List<LogisticsUpdateModel>> getLogisticsUpdates(String transactionId) {
     try {
       return _firestore
@@ -422,13 +421,13 @@ class TransactionService {
         return snapshot.docs.map((doc) => LogisticsUpdateModel.fromDocument(doc)).toList();
       });
     } catch (e) {
-      throw Exception('获取物流更新失败: $e');
+      throw Exception('Get logistics updates failed: $e');
     }
   }
 
-  // ==================== 私有辅助方法 ====================
+  // ==================== Private Helpers ====================
 
-  /// 创建物流更新记录
+  /// Create Logistics Update Record
   Future<void> _createLogisticsUpdate({
     required String transactionId,
     required String status,
@@ -437,7 +436,7 @@ class TransactionService {
     String? imageUrl,
   }) async {
     try {
-      // 获取当前用户ID
+      // Get Current User ID
       final currentUserId = FirebaseAuth.instance.currentUser?.uid ?? 'system';
 
       final updateRef = _firestore.collection('logistics_updates').doc();
@@ -454,14 +453,14 @@ class TransactionService {
 
       await updateRef.set(update.toMap());
     } catch (e) {
-      // 物流记录创建失败不应该影响主流程
-      print('创建物流记录失败: $e');
+      // Logistics update failure shouldn't block main flow
+      print('Create logistics record failed: $e');
     }
   }
 
-  /// 验证状态转换是否合�?
+  /// Validate Status Transition
   bool _isValidStatusTransition(String currentStatus, String newStatus) {
-    // 定义合法的状态转�?
+    // Define valid transitions
     const validTransitions = {
       'pending': ['picked_up'],
       'picked_up': ['in_transit', 'delivered'],
@@ -473,36 +472,35 @@ class TransactionService {
     return allowedNextStates?.contains(newStatus) ?? false;
   }
 
-  /// 根据用户角色获取交易列表（合并买家和卖家�?
+  /// Get All My Transactions (Buyer + Seller)
   Stream<List<TransactionModel>> getAllMyTransactions(String userId, {String? statusFilter}) {
-    // 这是一个组合查询，需要特殊处�?
-    // 由于 Firestore 限制，我们需要分别查询买家和卖家的交易，然后合并
+    // This is a combined query
+    // Firestore limits prevent direct OR queries on different fields, so we merge streams
 
     final buyerStream = getMyBuyerTransactions(userId, status: statusFilter);
     final sellerStream = getMySellerTransactions(userId, status: statusFilter);
 
-    // 合并两个�?
+    // Merge Streams
     return buyerStream.asyncMap((buyerTransactions) async {
-      // 这种方式不是最优的，实际应该使用更好的流合并方�?
-      // 但为了简单起见，我们暂时这样处理
+      // Note: This isn't optimal stream merging but sufficient for now
       final sellerSnapshot = await sellerStream.first;
 
-      // 合并并去�?
+      // Merge and Deduplicate
       final allTransactions = [...buyerTransactions, ...sellerSnapshot];
 
-      // 按创建时间排�?
+      // Sort by Created At
       allTransactions.sort((a, b) => (b.createdAt ?? DateTime.now()).compareTo(a.createdAt ?? DateTime.now()));
 
       return allTransactions;
     });
   }
 
-  /// 更新交易记录
+  /// Update Transaction Record
   Future<void> updateTransaction(String transactionId, Map<String, dynamic> data) async {
     try {
       await _firestore.collection('transactions').doc(transactionId).update(data);
     } catch (e) {
-      throw Exception('更新交易失败: $e');
+      throw Exception('Update transaction failed: $e');
     }
   }
 }

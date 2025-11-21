@@ -603,11 +603,11 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
 
   Widget _buildHotCategories() {
     final categories = [
-      {'id': 'all', 'label': 'All', 'emoji': '📦'},
+      {'id': 'all', 'label': 'All', 'emoji': ''},
       {'id': 'wood', 'label': 'Wood', 'emoji': '🪵'},
-      {'id': 'palm', 'label': 'Palm', 'emoji': '🌴'},
-      {'id': 'rice', 'label': 'Rice Hull', 'emoji': '🌾'},
-      {'id': 'sugarcane', 'label': 'Sugarcane', 'emoji': '🎋'},
+      {'id': 'palm', 'label': 'Palm', 'emoji': ''},
+      {'id': 'rice', 'label': 'Rice Hull', 'emoji': ''},
+      {'id': 'sugarcane', 'label': 'Sugarcane', 'emoji': ''},
       {'id': 'bamboo', 'label': 'Bamboo', 'emoji': '🎍'},
     ];
 
@@ -702,7 +702,7 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  '💡 Recommended',
+                  ' Recommended',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

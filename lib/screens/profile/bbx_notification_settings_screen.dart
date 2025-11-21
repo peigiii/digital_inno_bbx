@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/bbx_loading.dart';
 
-/// BBX 通知设置页面
 class BBXNotificationSettingsScreen extends StatefulWidget {
   const BBXNotificationSettingsScreen({super.key});
 
@@ -18,13 +17,12 @@ class _BBXNotificationSettingsScreenState
   final User? user = FirebaseAuth.instance.currentUser;
   bool isLoading = true;
 
-  // 通知设置
+  // Notification Settings
   bool pushNotifications = true;
   bool emailNotifications = true;
   bool smsNotifications = false;
 
-  // 通知类型
-  bool newOffers = true;
+    bool newOffers = true;
   bool offerAccepted = true;
   bool offerRejected = true;
   bool newMessages = true;
@@ -78,7 +76,7 @@ class _BBXNotificationSettingsScreenState
 
       setState(() => isLoading = false);
     } catch (e) {
-      debugPrint('加载通知设置失败: $e');
+      debugPrint('Load settings failed: $e');
       setState(() => isLoading = false);
     }
   }
@@ -112,7 +110,7 @@ class _BBXNotificationSettingsScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('设置已保�?),
+            content: Text('Settings saved'),
             backgroundColor: AppTheme.success,
           ),
         );
@@ -121,7 +119,7 @@ class _BBXNotificationSettingsScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('保存失败: $e'),
+            content: Text('Save failed: $e'),
             backgroundColor: AppTheme.error,
           ),
         );
@@ -140,21 +138,20 @@ class _BBXNotificationSettingsScreenState
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('通知设置'),
+        title: const Text('Notification Settings'),
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
           TextButton(
             onPressed: _saveSettings,
-            child: const Text('保存'),
+            child: const Text('Save'),
           ),
         ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(AppTheme.spacing16),
         children: [
-          // 通知方式
-          const Text('通知方式', style: AppTheme.heading3),
+                    const Text('Notification Methods', style: AppTheme.heading3),
           const SizedBox(height: AppTheme.spacing12),
           Container(
             decoration: BoxDecoration(
@@ -166,8 +163,8 @@ class _BBXNotificationSettingsScreenState
               children: [
                 _buildSwitchTile(
                   icon: Icons.notifications_active_outlined,
-                  title: '推送通知',
-                  subtitle: '接收应用内推送消�?,
+                  title: 'Push Notifications',
+                  subtitle: 'Receive in-app push messages',
                   value: pushNotifications,
                   onChanged: (value) {
                     setState(() => pushNotifications = value);
@@ -176,8 +173,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.email_outlined,
-                  title: '邮件通知',
-                  subtitle: '接收邮件提醒',
+                  title: 'Email Notifications',
+                  subtitle: 'Receive email alerts',
                   value: emailNotifications,
                   onChanged: (value) {
                     setState(() => emailNotifications = value);
@@ -186,8 +183,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.sms_outlined,
-                  title: '短信通知',
-                  subtitle: '接收短信提醒',
+                  title: 'SMS Notifications',
+                  subtitle: 'Receive SMS alerts',
                   value: smsNotifications,
                   onChanged: (value) {
                     setState(() => smsNotifications = value);
@@ -199,8 +196,7 @@ class _BBXNotificationSettingsScreenState
 
           const SizedBox(height: AppTheme.spacing24),
 
-          // 通知类型
-          const Text('通知类型', style: AppTheme.heading3),
+                    const Text('Notification Types', style: AppTheme.heading3),
           const SizedBox(height: AppTheme.spacing12),
           Container(
             decoration: BoxDecoration(
@@ -212,8 +208,8 @@ class _BBXNotificationSettingsScreenState
               children: [
                 _buildSwitchTile(
                   icon: Icons.local_offer_outlined,
-                  title: '新报�?,
-                  subtitle: '收到新报价时通知�?,
+                  title: 'New Offers',
+                  subtitle: 'Notify on new offers',
                   value: newOffers,
                   onChanged: (value) {
                     setState(() => newOffers = value);
@@ -222,8 +218,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.check_circle_outlined,
-                  title: '报价被接�?,
-                  subtitle: '报价被接受时通知�?,
+                  title: 'Offer Accepted',
+                  subtitle: 'Notify on offer accepted',
                   value: offerAccepted,
                   onChanged: (value) {
                     setState(() => offerAccepted = value);
@@ -232,8 +228,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.cancel_outlined,
-                  title: '报价被拒�?,
-                  subtitle: '报价被拒绝时通知�?,
+                  title: 'Offer Rejected',
+                  subtitle: 'Notify on offer rejected',
                   value: offerRejected,
                   onChanged: (value) {
                     setState(() => offerRejected = value);
@@ -242,8 +238,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.chat_bubble_outlined,
-                  title: '新消�?,
-                  subtitle: '收到新消息时通知�?,
+                  title: 'New Messages',
+                  subtitle: 'Notify on new messages',
                   value: newMessages,
                   onChanged: (value) {
                     setState(() => newMessages = value);
@@ -252,8 +248,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.receipt_long_outlined,
-                  title: '交易更新',
-                  subtitle: '交易状态变更时通知�?,
+                  title: 'Transaction Updates',
+                  subtitle: 'Notify on transaction status changes',
                   value: transactionUpdates,
                   onChanged: (value) {
                     setState(() => transactionUpdates = value);
@@ -262,8 +258,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.payment_outlined,
-                  title: '支付提醒',
-                  subtitle: '支付相关提醒',
+                  title: 'Payment Reminders',
+                  subtitle: 'Payment related notifications',
                   value: paymentReminders,
                   onChanged: (value) {
                     setState(() => paymentReminders = value);
@@ -275,8 +271,7 @@ class _BBXNotificationSettingsScreenState
 
           const SizedBox(height: AppTheme.spacing24),
 
-          // 其他通知
-          const Text('其他通知', style: AppTheme.heading3),
+                    const Text('Other Notifications', style: AppTheme.heading3),
           const SizedBox(height: AppTheme.spacing12),
           Container(
             decoration: BoxDecoration(
@@ -288,8 +283,8 @@ class _BBXNotificationSettingsScreenState
               children: [
                 _buildSwitchTile(
                   icon: Icons.campaign_outlined,
-                  title: '营销通知',
-                  subtitle: '接收优惠活动信息',
+                  title: 'Marketing',
+                  subtitle: 'Receive promotional offers',
                   value: marketingNotifications,
                   onChanged: (value) {
                     setState(() => marketingNotifications = value);
@@ -298,11 +293,10 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.info_outlined,
-                  title: '系统通知',
-                  subtitle: '接收系统重要通知（不可关闭）',
+                  title: 'System',
+                  subtitle: 'Important system alerts (cannot be disabled)',
                   value: systemNotifications,
-                  onChanged: null, // 系统通知不可关闭
-                ),
+                  onChanged: null,                 ),
               ],
             ),
           ),

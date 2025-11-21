@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// BBX 首页 - 渐进式构建版
-/// 从简单开始，逐步添加功能
 class BBXHomeProgressive extends StatelessWidget {
   const BBXHomeProgressive({super.key});
 
@@ -12,32 +10,25 @@ class BBXHomeProgressive extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 顶部安全区域
             SizedBox(height: MediaQuery.of(context).padding.top),
             
-            // 顶部�?            _buildTopBar(context),
+            _buildTopBar(context),
+            
+            _buildSearchBar(context),
 
-            // 搜索�?            _buildSearchBar(context),
+            _buildSectionTitle(context, 'Waste Categories'),
 
-            // 分类标题
-            _buildSectionTitle(context, '废料分类'),
-
-            // 分类卡片（横向滚动）
             _buildCategories(context),
 
-            // 快捷功能标题
-            _buildSectionTitle(context, '快捷功能'),
+            _buildSectionTitle(context, 'Quick Actions'),
 
-            // 快捷功能网格
             _buildQuickActions(context),
 
             // Banner
             _buildBanner(context),
 
-            // 推荐标题
-            _buildSectionTitle(context, '为你推荐'),
+            _buildSectionTitle(context, 'Recommended'),
 
-            // 商品占位
             _buildProductsPlaceholder(),
 
             const SizedBox(height: 24),
@@ -78,14 +69,14 @@ class BBXHomeProgressive extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '早上�?👋',
+                  'Good Morning 👋',
                   style: TextStyle(
                     fontSize: 12,
                     color: Color(0xFF757575),
                   ),
                 ),
                 Text(
-                  'BBX用户',
+                  'BBX User',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -99,7 +90,7 @@ class BBXHomeProgressive extends StatelessWidget {
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('暂无新通知'),
+                  content: Text('No new notifications'),
                   duration: Duration(seconds: 2),
                 ),
               );
@@ -110,7 +101,7 @@ class BBXHomeProgressive extends StatelessWidget {
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('扫码功能开发中...'),
+                  content: Text('QR Code Scanner coming soon...'),
                   duration: Duration(seconds: 2),
                 ),
               );
@@ -161,7 +152,7 @@ class BBXHomeProgressive extends StatelessWidget {
               const SizedBox(width: 12),
               const Expanded(
                 child: Text(
-                  '搜索废料类型、商�?..',
+                  'Search waste types, items...',
                   style: TextStyle(
                     fontSize: 16,
                     color: Color(0xFF9E9E9E),
@@ -213,24 +204,23 @@ class BBXHomeProgressive extends StatelessWidget {
           const Spacer(),
           GestureDetector(
             onTap: () {
-              if (title == '废料分类') {
+              if (title == 'Waste Categories') {
                 Navigator.pushNamed(context, '/categories');
-              } else if (title == '快捷功能') {
+              } else if (title == 'Quick Actions') {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('查看更多功能...'),
+                    content: Text('More features coming soon...'),
                     duration: Duration(seconds: 2),
                   ),
                 );
-              } else if (title == '为你推荐') {
-                // 跳转到商品列表页
+              } else if (title == 'Recommended') {
                 Navigator.pushNamed(context, '/marketplace');
               }
             },
             child: Row(
               children: const [
                 Text(
-                  '全部',
+                  'All',
                   style: TextStyle(
                     color: Color(0xFF2E7D32),
                     fontSize: 14,
@@ -256,17 +246,17 @@ class BBXHomeProgressive extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          _buildCategoryCard(context, '♻️', '塑料', const Color(0xFF2196F3)),
+          _buildCategoryCard(context, '♻️', 'Plastic', const Color(0xFF2196F3)),
           const SizedBox(width: 8),
-          _buildCategoryCard(context, '🔩', '金属', const Color(0xFFFF9800)),
+          _buildCategoryCard(context, '🔩', 'Metal', const Color(0xFFFF9800)),
           const SizedBox(width: 8),
-          _buildCategoryCard(context, '📄', '纸类', const Color(0xFF8BC34A)),
+          _buildCategoryCard(context, '📄', 'Paper', const Color(0xFF8BC34A)),
           const SizedBox(width: 8),
-          _buildCategoryCard(context, '🍾', '玻璃', const Color(0xFF00BCD4)),
+          _buildCategoryCard(context, '🍾', 'Glass', const Color(0xFF00BCD4)),
           const SizedBox(width: 8),
-          _buildCategoryCard(context, '💻', '电子', const Color(0xFF9C27B0)),
+          _buildCategoryCard(context, '💻', 'E-Waste', const Color(0xFF9C27B0)),
           const SizedBox(width: 8),
-          _buildCategoryCard(context, '🌿', '有机', const Color(0xFF795548)),
+          _buildCategoryCard(context, '🌿', 'Organic', const Color(0xFF795548)),
         ],
       ),
     );
@@ -319,8 +309,8 @@ class BBXHomeProgressive extends StatelessWidget {
               Expanded(
                 child: _buildActionCard(
                   context,
-                  '我的报价',
-                  '待处�?5 �?,
+                  'My Quote',
+                  'Pending: 5',
                   Icons.local_offer_outlined,
                   const Color(0xFFFF6B6B),
                 ),
@@ -329,8 +319,8 @@ class BBXHomeProgressive extends StatelessWidget {
               Expanded(
                 child: _buildActionCard(
                   context,
-                  '我的交易',
-                  '进行�?2 �?,
+                  'My Transactions',
+                  'Ongoing: 2',
                   Icons.receipt_long_outlined,
                   const Color(0xFF4ECDC4),
                 ),
@@ -343,8 +333,8 @@ class BBXHomeProgressive extends StatelessWidget {
               Expanded(
                 child: _buildActionCard(
                   context,
-                  '附近商品',
-                  '查看周边',
+                  'Nearby Items',
+                  'Explore Nearby',
                   Icons.location_on_outlined,
                   const Color(0xFFFFC371),
                 ),
@@ -353,8 +343,8 @@ class BBXHomeProgressive extends StatelessWidget {
               Expanded(
                 child: _buildActionCard(
                   context,
-                  '我的收藏',
-                  '已收�?12 �?,
+                  'My Favorites',
+                  'Saved: 12',
                   Icons.favorite_outline,
                   const Color(0xFFEC6EAD),
                 ),
@@ -375,22 +365,22 @@ class BBXHomeProgressive extends StatelessWidget {
   ) {
     return GestureDetector(
       onTap: () {
-        // 根据标题导航到不同页�?        if (title == '我的报价') {
+        if (title == 'My Quote') {
           Navigator.pushNamed(context, '/my-offers');
-        } else if (title == '我的交易') {
-          Navigator.pushNamed(context, '/transactions'); // 修复：使用正确的路由名称
-        } else if (title == '附近商品') {
+        } else if (title == 'My Transactions') {
+          Navigator.pushNamed(context, '/transactions');
+        } else if (title == 'Nearby Items') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('附近商品功能开发中...'),
+              content: const Text('Nearby Items feature coming soon...'),
               duration: const Duration(seconds: 2),
               backgroundColor: Colors.orange.shade700,
             ),
           );
-        } else if (title == '我的收藏') {
+        } else if (title == 'My Favorites') {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('我的收藏功能开发中...'),
+              content: const Text('My Favorites feature coming soon...'),
               duration: const Duration(seconds: 2),
               backgroundColor: Colors.pink.shade700,
             ),
@@ -458,7 +448,7 @@ class BBXHomeProgressive extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '升级专业�?,
+                      'Upgrade to Pro',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -467,7 +457,7 @@ class BBXHomeProgressive extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      '享受更多特权和功�?,
+                      'Enjoy more privileges and features',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,
@@ -508,7 +498,7 @@ class BBXHomeProgressive extends StatelessWidget {
             ),
             SizedBox(height: 12),
             Text(
-              '商品列表加载区域',
+              'Product List Loading Area',
               style: TextStyle(color: Color(0xFF757575)),
             ),
           ],
@@ -517,4 +507,3 @@ class BBXHomeProgressive extends StatelessWidget {
     );
   }
 }
-

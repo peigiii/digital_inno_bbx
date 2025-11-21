@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../models/message_model.dart';
 import '../../services/chat_service.dart';
 
-/// 聊天详情页面
 class BBXChatScreen extends StatefulWidget {
   final String conversationId;
   final String otherUserId;
@@ -33,8 +32,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
   @override
   void initState() {
     super.initState();
-    // 进入页面时标记为已读
-    Future.delayed(const Duration(milliseconds: 500), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
       _chatService.markAsRead(widget.conversationId);
     });
   }
@@ -46,8 +44,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
     super.dispose();
   }
 
-  /// 发送消�?
-  Future<void> _sendMessage() async {
+    Future<void> _sendMessage() async {
     final content = _messageController.text.trim();
     if (content.isEmpty || _isSending) return;
 
@@ -64,8 +61,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
 
       _messageController.clear();
 
-      // 滚动到底�?
-      if (_scrollController.hasClients) {
+            if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0,
           duration: const Duration(milliseconds: 300),
@@ -114,27 +110,23 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
           IconButton(
             icon: const Icon(Icons.more_vert),
             onPressed: () {
-              // TODO: 显示更多菜单
-            },
+                          },
           ),
         ],
       ),
       body: Column(
         children: [
-          // 消息列表
-          Expanded(
+                    Expanded(
             child: _buildMessageList(),
           ),
 
-          // 输入�?
-          _buildInputBar(),
+                    _buildInputBar(),
         ],
       ),
     );
   }
 
-  /// 消息列表
-  Widget _buildMessageList() {
+    Widget _buildMessageList() {
     return StreamBuilder<List<MessageModel>>(
       stream: _chatService.getMessages(widget.conversationId),
       builder: (context, snapshot) {
@@ -143,7 +135,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('加载失败�?{snapshot.error}'));
+          return Center(child: Text('加载失败?{snapshot.error}'));
         }
 
         final messages = snapshot.data ?? [];
@@ -166,8 +158,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
 
         return ListView.builder(
           controller: _scrollController,
-          reverse: true, // 最新消息在底部
-          padding: const EdgeInsets.all(16),
+          reverse: true,           padding: const EdgeInsets.all(16),
           itemCount: messages.length,
           itemBuilder: (context, index) {
             return _buildMessageBubble(messages[index]);
@@ -177,8 +168,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
     );
   }
 
-  /// 消息气泡
-  Widget _buildMessageBubble(MessageModel message) {
+    Widget _buildMessageBubble(MessageModel message) {
     final isMe = message.senderId == _auth.currentUser?.uid;
 
     return Padding(
@@ -187,8 +177,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
         mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 对方头像（左侧）
-          if (!isMe) ...[
+                    if (!isMe) ...[
             CircleAvatar(
               radius: 16,
               backgroundImage: widget.otherUserAvatar != null
@@ -201,8 +190,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
             const SizedBox(width: 8),
           ],
 
-          // 消息内容
-          Flexible(
+                    Flexible(
             child: Column(
               crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
@@ -249,8 +237,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
     );
   }
 
-  /// 输入�?
-  Widget _buildInputBar() {
+    Widget _buildInputBar() {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -270,18 +257,15 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
       ),
       child: Row(
         children: [
-          // 附件按钮
-          IconButton(
+                    IconButton(
             icon: const Icon(Icons.add_circle_outline),
             onPressed: () {
-              // TODO: 显示附件选项
-            },
+                          },
             color: Colors.grey.shade600,
           ),
           const SizedBox(width: 8),
 
-          // 文本输入�?
-          Expanded(
+                    Expanded(
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
@@ -298,15 +282,13 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                 ),
                 onSubmitted: (_) => _sendMessage(),
                 onChanged: (value) {
-                  // TODO: 更新输入状�?
-                },
+                                  },
               ),
             ),
           ),
           const SizedBox(width: 8),
 
-          // 发送按�?
-          IconButton(
+                    IconButton(
             icon: Icon(
               Icons.send,
               color: _messageController.text.isEmpty ? Colors.grey : Colors.green,
@@ -318,8 +300,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
     );
   }
 
-  /// 格式化时�?
-  String _formatTime(DateTime? dateTime) {
+    String _formatTime(DateTime? dateTime) {
     if (dateTime == null) return '';
     return DateFormat('HH:mm').format(dateTime);
   }

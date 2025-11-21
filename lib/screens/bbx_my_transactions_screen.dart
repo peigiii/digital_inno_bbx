@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/escrow_service.dart';
 import 'transactions/bbx_optimized_transaction_detail_screen.dart';
 
-/// 我的交易页面
-/// 显示用户的购买和销售记�?
 class BBXMyTransactionsScreen extends StatefulWidget {
   const BBXMyTransactionsScreen({super.key});
 
@@ -42,16 +40,14 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
           controller: _tabController,
           tabs: const [
             Tab(text: '我的购买'),
-            Tab(text: '我的销�?),
+            Tab(text: '我的销?),
           ],
         ),
       ),
       body: Column(
         children: [
-          // 筛选器
-          _buildFilterBar(),
-          // 交易列表
-          Expanded(
+                    _buildFilterBar(),
+                    Expanded(
             child: TabBarView(
               controller: _tabController,
               children: [
@@ -75,15 +71,15 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
           children: [
             _buildFilterChip('all', '全部'),
             const SizedBox(width: 8),
-            _buildFilterChip('pending', '待支�?),
+            _buildFilterChip('pending', '待支?),
             const SizedBox(width: 8),
-            _buildFilterChip('paid', '已支�?),
+            _buildFilterChip('paid', '已支?),
             const SizedBox(width: 8),
-            _buildFilterChip('shipped', '已发�?),
+            _buildFilterChip('shipped', '已发?),
             const SizedBox(width: 8),
-            _buildFilterChip('completed', '已完�?),
+            _buildFilterChip('completed', '已完?),
             const SizedBox(width: 8),
-            _buildFilterChip('cancelled', '已取�?),
+            _buildFilterChip('cancelled', '已取?),
           ],
         ),
       ),
@@ -117,8 +113,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
 
         var transactions = snapshot.data!.docs;
 
-        // 应用筛�?
-        if (_selectedFilter != 'all') {
+                if (_selectedFilter != 'all') {
           transactions = transactions.where((doc) {
             final data = doc.data() as Map<String, dynamic>;
             return data['status'] == _selectedFilter;
@@ -169,8 +164,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
 
         var transactions = snapshot.data!.docs;
 
-        // 应用筛�?
-        if (_selectedFilter != 'all') {
+                if (_selectedFilter != 'all') {
           transactions = transactions.where((doc) {
             final data = doc.data() as Map<String, dynamic>;
             return data['status'] == _selectedFilter;
@@ -185,7 +179,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                 Icon(Icons.sell_outlined, size: 64, color: Colors.grey[400]),
                 const SizedBox(height: 16),
                 Text(
-                  '暂无销售记�?,
+                  '暂无销售记?,
                   style: TextStyle(color: Colors.grey[600]),
                 ),
               ],
@@ -247,12 +241,11 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 顶部信息
-              Row(
+                            Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '订单�? ${transactionId.substring(0, 8)}',
+                    '订单? ${transactionId.substring(0, 8)}',
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Container(
@@ -276,23 +269,21 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
               ),
               const SizedBox(height: 12),
 
-              // 商品信息（简化显示）
-              FutureBuilder<DocumentSnapshot>(
+                            FutureBuilder<DocumentSnapshot>(
                 future: FirebaseFirestore.instance
                     .collection('listings')
                     .doc(data['listingId'])
                     .get(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return const Text('商品信息加载�?..');
+                    return const Text('商品信息加载?..');
                   }
 
                   final listingData =
                       snapshot.data!.data() as Map<String, dynamic>;
                   return Row(
                     children: [
-                      // 商品图片
-                      if (listingData['images'] != null &&
+                                            if (listingData['images'] != null &&
                           (listingData['images'] as List).isNotEmpty)
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
@@ -304,8 +295,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                           ),
                         ),
                       const SizedBox(width: 12),
-                      // 商品信息
-                      Expanded(
+                                            Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -333,8 +323,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
               ),
               const SizedBox(height: 12),
 
-              // 底部信息
-              Row(
+                            Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
@@ -346,7 +335,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        isPurchase ? '购买' : '销�?,
+                        isPurchase ? '购买' : '销?,
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[600],
@@ -378,8 +367,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                 ],
               ),
 
-              // 物流信息（如果有�?
-              if (data['trackingNumber'] != null) ...[
+                            if (data['trackingNumber'] != null) ...[
                 const Divider(height: 24),
                 Row(
                   children: [

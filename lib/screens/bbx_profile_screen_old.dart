@@ -26,14 +26,12 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
   Future<void> _loadUserData() async {
     try {
       if (currentUser != null) {
-        // 加载用户基本信息
-        final userDoc = await FirebaseFirestore.instance
+                final userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser!.uid)
             .get();
 
-        // 加载用户积分
-        final rewardsDoc = await FirebaseFirestore.instance
+                final rewardsDoc = await FirebaseFirestore.instance
             .collection('rewards')
             .doc(currentUser!.uid)
             .get();
@@ -59,8 +57,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认退�?),
-        content: const Text('确定要退出登录吗�?),
+        title: const Text('确认退?),
+        content: const Text('确定要退出登录吗?),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -72,7 +70,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('退�?),
+            child: const Text('退?),
           ),
         ],
       ),
@@ -89,15 +87,15 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
   String _getUserTypeLabel(String? userType) {
     switch (userType) {
       case 'producer':
-        return '生产�?;
+        return '生产?';
       case 'processor':
-        return '处理�?;
+        return '处理?';
       case 'recycler':
-        return '回收�?;
+        return '回收?';
       case 'admin':
-        return '管理�?;
+        return '管理?';
       default:
-        return '普通用�?;
+        return '普通用?';
     }
   }
 
@@ -138,16 +136,14 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            // 头像
-            UserAvatarWidget(
+                        UserAvatarWidget(
               photoURL: userData?['photoURL'],
               displayName: userData?['displayName'] ?? currentUser?.email ?? 'User',
               radius: 60,
             ),
             const SizedBox(height: 16),
 
-            // 用户�?
-            Text(
+                        Text(
               userData?['displayName'] ?? currentUser?.displayName ?? 'Unknown User',
               style: const TextStyle(
                 fontSize: 24,
@@ -156,8 +152,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
             ),
             const SizedBox(height: 8),
 
-            // 邮箱
-            Text(
+                        Text(
               currentUser?.email ?? '',
               style: TextStyle(
                 fontSize: 14,
@@ -166,8 +161,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 用户类型徽章
-            Container(
+                        Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: _getUserTypeColor(userData?['userType']),
@@ -196,8 +190,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
             ),
             const SizedBox(height: 32),
 
-            // 信息卡片
-            Card(
+                        Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -213,12 +206,12 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                     _buildInfoRow('联系电话', userData?['contact'] ?? '-'),
                     const Divider(),
                     _buildInfoRow(
-                      '认证状�?,
-                      userData?['verified'] == true ? '�?已认�? : '�?未认�?,
+                      '认证状?,
+                      userData?['verified'] == true ? '?已认? : '?未认?,
                     ),
                     if (userData?['isAdmin'] == true) ...[
                       const Divider(),
-                      _buildInfoRow('权限', '🔑 管理�?),
+                      _buildInfoRow('权限', '🔑 管理?),
                     ],
                   ],
                 ),
@@ -226,8 +219,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
             ),
             const SizedBox(height: 24),
 
-            // 统计信息
-            Row(
+                        Row(
               children: [
                 Expanded(
                   child: _buildStatCard(
@@ -250,8 +242,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
             ),
             const SizedBox(height: 32),
 
-            // 编辑资料按钮
-            SizedBox(
+                        SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () async {
@@ -262,8 +253,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                     ),
                   );
                   if (result == true) {
-                    // 重新加载数据
-                    setState(() {
+                                        setState(() {
                       isLoading = true;
                     });
                     _loadUserData();
@@ -283,13 +273,12 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 退出登录按�?
-            SizedBox(
+                        SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: _logout,
                 icon: const Icon(Icons.logout),
-                label: const Text('退出登�?),
+                label: const Text('退出登?),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,

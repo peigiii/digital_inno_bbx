@@ -39,24 +39,23 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
   Future<void> _loadUserData() async {
     if (currentUser == null) {
       setState(() {
-        errorMessage = '未登�?;
+        errorMessage = '未登?;
         isLoading = false;
       });
       return;
     }
 
     try {
-      print('🔄 开始加载用户数�?..');
+      print('🔄 开始加载用户数?..');
 
-      // 添加超时限制
-      final doc = await FirebaseFirestore.instance
+            final doc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
           .get()
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('加载超时，请检查网络连�?);
+              throw Exception('加载超时，请检查网络连?');
             },
           );
 
@@ -64,7 +63,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
       if (doc.exists) {
         final data = doc.data()!;
-        print('�?用户数据加载成功');
+        print('?用户数据加载成功');
 
         setState(() {
           _nameController.text = data['displayName'] ?? '';
@@ -76,7 +75,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           errorMessage = null;
         });
       } else {
-        print('⚠️ 用户文档不存在，使用默认�?);
+        print('⚠️ 用户文档不存在，使用默认?);
         setState(() {
           _nameController.text = currentUser!.displayName ??
                                   currentUser!.email?.split('@')[0] ??
@@ -86,13 +85,12 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
         });
       }
     } catch (e) {
-      print('�?加载用户数据失败: $e');
+      print('?加载用户数据失败: $e');
       if (mounted) {
         setState(() {
           errorMessage = '加载失败: $e';
           isLoading = false;
-          // 使用默认�?
-          _nameController.text = currentUser!.email?.split('@')[0] ?? 'User';
+                    _nameController.text = currentUser!.email?.split('@')[0] ?? 'User';
         });
       }
     }
@@ -102,8 +100,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
     if (!_formKey.currentState!.validate()) return;
     if (currentUser == null) return;
 
-    // 防止重复提交
-    if (isSaving) return;
+        if (isSaving) return;
 
     setState(() {
       isSaving = true;
@@ -111,7 +108,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
     });
 
     try {
-      print('🔄 开始保存用户资�?..');
+      print('🔄 开始保存用户资?..');
 
       final updates = {
         'displayName': _nameController.text.trim(),
@@ -121,41 +118,37 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
-      // 使用 set 而不�?update，避免文档不存在的问�?
-      await FirebaseFirestore.instance
+            await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
           .set(updates, SetOptions(merge: true))
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('保存超时，请检查网络连�?);
+              throw Exception('保存超时，请检查网络连?');
             },
           );
 
-      // 更新 Firebase Auth 显示名称
-      await currentUser!.updateDisplayName(_nameController.text.trim());
+            await currentUser!.updateDisplayName(_nameController.text.trim());
 
-      print('�?用户资料保存成功');
+      print('?用户资料保存成功');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('�?个人资料已更�?),
+            content: Text('?个人资料已更?),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 2),
           ),
         );
 
-        // 延迟一下再返回，让用户看到成功提示
-        await Future.delayed(const Duration(milliseconds: 500));
+                await Future.delayed(const Duration(milliseconds: 500));
 
         if (mounted) {
-          Navigator.pop(context, true); // 返回 true 表示已更�?
-        }
+          Navigator.pop(context, true);         }
       }
     } catch (e) {
-      print('�?保存失败: $e');
+      print('?保存失败: $e');
       if (mounted) {
         setState(() {
           errorMessage = '保存失败: $e';
@@ -163,7 +156,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('�?保存失败: $e'),
+            content: Text('?保存失败: $e'),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
           ),
@@ -201,14 +194,14 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('�?头像已更�?),
+            content: Text('?头像已更?),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 2),
           ),
         );
       }
     } catch (e) {
-      print('�?上传头像失败: $e');
+      print('?上传头像失败: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -251,8 +244,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
       );
     }
 
-    // 显示错误但仍然允许编�?
-    if (errorMessage != null) {
+        if (errorMessage != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -299,14 +291,12 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // 头像
-            Center(
+                        Center(
               child: Column(
                 children: [
                   Stack(
                     children: [
-                      // 头像显示
-                      if (isUploadingAvatar)
+                                            if (isUploadingAvatar)
                         const CircleAvatar(
                           radius: 60,
                           backgroundColor: Color(0xFF4CAF50),
@@ -336,8 +326,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                             ),
                           ),
                         ),
-                      // 相机图标按钮
-                      Positioned(
+                                            Positioned(
                         bottom: 0,
                         right: 0,
                         child: Container(
@@ -375,18 +364,17 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
             ),
             const SizedBox(height: 24),
 
-            // 姓名
-            TextFormField(
+                        TextFormField(
               controller: _nameController,
               decoration: const InputDecoration(
                 labelText: '姓名 *',
                 prefixIcon: Icon(Icons.person),
                 border: OutlineInputBorder(),
-                helperText: '必填�?,
+                helperText: '必填?,
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return '请输入姓�?;
+                  return '请输入姓?';
                 }
                 return null;
               },
@@ -394,8 +382,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 公司名称
-            TextFormField(
+                        TextFormField(
               controller: _companyController,
               decoration: const InputDecoration(
                 labelText: '公司名称',
@@ -406,8 +393,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 城市
-            TextFormField(
+                        TextFormField(
               controller: _cityController,
               decoration: const InputDecoration(
                 labelText: '城市',
@@ -418,8 +404,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 联系电话
-            TextFormField(
+                        TextFormField(
               controller: _contactController,
               decoration: const InputDecoration(
                 labelText: '联系电话',
@@ -440,8 +425,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 邮箱（只读）
-            TextFormField(
+                        TextFormField(
               initialValue: currentUser?.email ?? '',
               decoration: const InputDecoration(
                 labelText: '邮箱',
@@ -453,8 +437,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
             ),
             const SizedBox(height: 32),
 
-            // 保存按钮
-            ElevatedButton(
+                        ElevatedButton(
               onPressed: isSaving ? null : _saveProfile,
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4CAF50),
@@ -478,7 +461,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                           ),
                         ),
                         SizedBox(width: 12),
-                        Text('保存�?..'),
+                        Text('保存?..'),
                       ],
                     )
                   : const Text(
@@ -491,8 +474,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 调试信息（仅开发模式）
-            if (errorMessage != null)
+                        if (errorMessage != null)
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -506,7 +488,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '提示�?errorMessage',
+                        '提示?errorMessage',
                         style: const TextStyle(fontSize: 12),
                       ),
                     ),

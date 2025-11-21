@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 
-/// 配送方式配置类
+/// Delivery Configuration Class
 class DeliveryConfig {
-  /// 配送方式配�?
+  /// Delivery Method Configuration
   static const Map<String, Map<String, dynamic>> methods = {
     'self_collect': {
-      'label': '自提',
+      'label': 'Self Collect',
       'icon': Icons.store,
-      'color': Color(0xFF4CAF50), // 绿色
-      'description': '到卖家指定地点取�?,
+      'color': Color(0xFF4CAF50), // Green
+      'description': 'Collect from seller specified location',
     },
     'delivery': {
-      'label': '邮寄',
+      'label': 'Delivery',
       'icon': Icons.local_shipping,
-      'color': Color(0xFF2196F3), // 蓝色
-      'description': '卖家安排快递配�?,
+      'color': Color(0xFF2196F3), // Blue
+      'description': 'Seller arranges courier delivery',
     },
   };
 
-  /// 快递公司列�?
+  /// Courier Companies List
   static const List<String> courierCompanies = [
     'Pos Laju',
     'J&T Express',
@@ -28,40 +28,40 @@ class DeliveryConfig {
     'City-Link Express',
     'ABX Express',
     'Skynet',
-    '其他',
+    'Other',
   ];
 
-  /// 获取配送方式标�?
+  /// Get Delivery Method Label
   static String getLabel(String method) {
     return methods[method]?['label'] ?? method;
   }
 
-  /// 获取配送方式图�?
+  /// Get Delivery Method Icon
   static IconData getIcon(String method) {
     return methods[method]?['icon'] ?? Icons.local_shipping;
   }
 
-  /// 获取配送方式颜�?
+  /// Get Delivery Method Color
   static Color getColor(String method) {
     return methods[method]?['color'] ?? Colors.grey;
   }
 
-  /// 获取配送方式描�?
+  /// Get Delivery Method Description
   static String getDescription(String method) {
     return methods[method]?['description'] ?? '';
   }
 
-  /// 是否是自�?
+  /// Is Self Collect
   static bool isSelfCollect(String? method) {
     return method == 'self_collect';
   }
 
-  /// 是否是邮�?
+  /// Is Delivery
   static bool isDelivery(String? method) {
     return method == 'delivery';
   }
 
-  /// 构建配送方式标签组�?
+  /// Build Method Chip
   static Widget buildMethodChip(String method, {bool small = false}) {
     final config = methods[method];
     if (config == null) return const SizedBox.shrink();
@@ -101,7 +101,7 @@ class DeliveryConfig {
     );
   }
 
-  /// 构建邮费提示组件
+  /// Build Shipping Fee Note
   static Widget buildShippingFeeNote() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -116,7 +116,7 @@ class DeliveryConfig {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '邮费需与卖家协�?额外支付)',
+              'Shipping fee to be arranged with seller (Extra payment)',
               style: TextStyle(
                 color: Colors.orange[700],
                 fontSize: 13,

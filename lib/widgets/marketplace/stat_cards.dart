@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 数据统计卡片
 class StatCards extends StatelessWidget {
   final Map<String, dynamic>? stats;
 
@@ -27,25 +26,25 @@ class StatCards extends StatelessWidget {
           _buildStatCard(
             icon: Icons.inventory_2,
             value: '${_formatNumber(totalTonnage)}',
-            label: '总交易量（吨�?,
+            label: 'Total Transactions (tons)',
             color: AppTheme.primary,
           ),
           _buildStatCard(
             icon: Icons.people,
             value: '${_formatNumber(activeUsers)}',
-            label: '活跃用户',
+            label: 'Active Users',
             color: AppTheme.accent,
           ),
           _buildStatCard(
             icon: Icons.check_circle,
             value: '${_formatNumber(completedOrders)}',
-            label: '成交订单',
+            label: 'Completed Orders',
             color: AppTheme.success,
           ),
           _buildStatCard(
             icon: Icons.eco,
             value: '${_formatNumber(carbonReduced)}',
-            label: '减少碳排放（吨）',
+            label: 'Carbon Reduced (tons)',
             color: AppTheme.warning,
           ),
         ],

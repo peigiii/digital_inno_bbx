@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import '../../models/transaction_model.dart';
 import '../../services/transaction_service.dart';
 
-/// 更新物流信息页面
 class BBXUpdateLogisticsScreen extends StatefulWidget {
   final String transactionId;
 
@@ -51,14 +50,13 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('加载失败: $e')),
+          SnackBar(content: Text('Load failed: $e')),
         );
       }
     }
   }
 
-  /// 获取下一个可用状�?
-  String? _getNextStatus(String currentStatus) {
+    String? _getNextStatus(String currentStatus) {
     switch (currentStatus) {
       case 'pending':
         return 'picked_up';
@@ -71,8 +69,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
     }
   }
 
-  /// 获取可选状态列�?
-  List<String> _getAvailableStatuses(String currentStatus) {
+    List<String> _getAvailableStatuses(String currentStatus) {
     switch (currentStatus) {
       case 'pending':
         return ['picked_up'];
@@ -89,7 +86,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
   Widget build(BuildContext context) {
     if (_transaction == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('更新物流信息')),
+        appBar: AppBar(title: const Text('Update Logistics')),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -98,24 +95,23 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
 
     if (availableStatuses.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('更新物流信息')),
+        appBar: AppBar(title: const Text('Update Logistics')),
         body: const Center(
-          child: Text('当前状态无法更新物流信�?),
+          child: Text('Cannot update logistics status in current state'),
         ),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('更新物流信息'),
+        title: const Text('Update Logistics'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 当前状态提�?
-            Card(
+                        Card(
               color: Colors.blue[50],
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -128,7 +124,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            '当前物流状�?,
+                            'Current Status',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
@@ -149,9 +145,8 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
 
             const SizedBox(height: 24),
 
-            // 状态选择
-            const Text(
-              '更新状�?,
+                        const Text(
+              'Update Status',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -163,7 +158,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
               value: _selectedStatus,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: '选择新的状�?,
+                hintText: 'Select New Status',
               ),
               items: availableStatuses.map((status) {
                 return DropdownMenuItem(
@@ -180,9 +175,8 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
 
             const SizedBox(height: 24),
 
-            // 当前位置输入
-            const Text(
-              '当前位置（可选）',
+                        const Text(
+              'Location (Optional)',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -193,7 +187,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
             TextField(
               controller: _locationController,
               decoration: const InputDecoration(
-                hintText: '如：吉隆坡仓�?,
+                hintText: 'e.g. Warehouse KL',
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.location_on),
               ),
@@ -201,16 +195,15 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
 
             const SizedBox(height: 24),
 
-            // 描述输入
-            const Text(
-              '描述信息',
+                        const Text(
+              'Description',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const Text(
-              '请描述当前物流状�?,
+              'Describe current logistics status',
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey,
@@ -223,16 +216,15 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
               maxLines: 4,
               maxLength: 200,
               decoration: const InputDecoration(
-                hintText: '请描述当前物流状�?,
+                hintText: 'Enter description...',
                 border: OutlineInputBorder(),
               ),
             ),
 
             const SizedBox(height: 24),
 
-            // 上传照片
-            const Text(
-              '添加照片证明（可选）',
+                        const Text(
+              'Photo Proof (Optional)',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -265,7 +257,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '点击添加照片',
+                            'Tap to add photo',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 14,
@@ -312,14 +304,13 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
               TextButton.icon(
                 onPressed: _pickPhoto,
                 icon: const Icon(Icons.refresh),
-                label: const Text('重新选择'),
+                label: const Text('Change Photo'),
               ),
             ],
 
             const SizedBox(height: 32),
 
-            // 底部按钮
-            Row(
+                        Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
@@ -327,7 +318,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: const Text('取消'),
+                    child: const Text('Cancel'),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -348,7 +339,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
                               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
-                        : const Text('提交更新'),
+                        : const Text('Submit Update'),
                   ),
                 ),
               ],
@@ -359,8 +350,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
     );
   }
 
-  /// 选择照片
-  Future<void> _pickPhoto() async {
+    Future<void> _pickPhoto() async {
     try {
       final XFile? pickedFile = await _imagePicker.pickImage(
         source: ImageSource.gallery,
@@ -372,12 +362,11 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
       if (pickedFile != null) {
         final File imageFile = File(pickedFile.path);
 
-        // 验证文件大小�?MB�?
-        final fileSize = await imageFile.length();
+                final fileSize = await imageFile.length();
         if (fileSize > 5 * 1024 * 1024) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('图片大小不能超过5MB')),
+              const SnackBar(content: Text('Image size must be less than 5MB')),
             );
           }
           return;
@@ -390,25 +379,23 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('选择照片失败: $e')),
+          SnackBar(content: Text('Pick photo failed: $e')),
         );
       }
     }
   }
 
-  /// 提交更新
-  Future<void> _submitUpdate() async {
-    // 验证
-    if (_selectedStatus == null) {
+    Future<void> _submitUpdate() async {
+        if (_selectedStatus == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请选择状�?)),
+        const SnackBar(content: Text('Please select status')),
       );
       return;
     }
 
     if (_descriptionController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请输入描述信�?)),
+        const SnackBar(content: Text('Please enter description')),
       );
       return;
     }
@@ -428,14 +415,14 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('物流信息已更�?)),
+          const SnackBar(content: Text('Logistics updated successfully')),
         );
         Navigator.pop(context, true);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('提交失败: $e')),
+          SnackBar(content: Text('Submit failed: $e')),
         );
       }
     } finally {
@@ -447,19 +434,18 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
     }
   }
 
-  /// 获取状态显示文�?
-  String _getStatusDisplayText(String status) {
+    String _getStatusDisplayText(String status) {
     switch (status) {
       case 'pending':
-        return '待发�?;
+        return 'Pending';
       case 'picked_up':
-        return '已取�?;
+        return 'Picked Up';
       case 'in_transit':
-        return '运输�?;
+        return 'In Transit';
       case 'delivered':
-        return '已送达';
+        return 'Delivered';
       case 'completed':
-        return '已完�?;
+        return 'Completed';
       default:
         return status;
     }

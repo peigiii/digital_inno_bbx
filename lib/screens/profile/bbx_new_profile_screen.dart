@@ -4,7 +4,6 @@ import '../../theme/app_theme.dart';
 import '../../widgets/bbx_avatar.dart';
 import '../../widgets/bbx_button.dart';
 
-/// BBX 个人中心页面（完全重构）
 class BBXNewProfileScreen extends StatelessWidget {
   const BBXNewProfileScreen({super.key});
 
@@ -16,21 +15,17 @@ class BBXNewProfileScreen extends StatelessWidget {
       backgroundColor: AppTheme.background,
       body: CustomScrollView(
         slivers: [
-          // 顶部个人信息卡片（渐变背景）
-          _buildProfileHeader(user),
+                    _buildProfileHeader(user),
 
-          // 统计卡片（浮动）
-          _buildStatsCard(),
+                    _buildStatsCard(),
 
-          // 功能菜单
-          _buildMenuSections(context),
+                    _buildMenuSections(context),
         ],
       ),
     );
   }
 
-  /// 个人信息头部
-  Widget _buildProfileHeader(User? user) {
+    Widget _buildProfileHeader(User? user) {
     return SliverToBoxAdapter(
       child: Container(
         height: 240,
@@ -41,8 +36,7 @@ class BBXNewProfileScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // 头像
-              Container(
+                            Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 4),
@@ -55,15 +49,13 @@ class BBXNewProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppTheme.spacing16),
 
-              // 用户�?
-              Text(
-                user?.displayName ?? '未登�?,
+                            Text(
+                user?.displayName ?? '未登?,
                 style: AppTheme.heading2.copyWith(color: Colors.white),
               ),
               const SizedBox(height: AppTheme.spacing8),
 
-              // 用户角色标签
-              Container(
+                            Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppTheme.spacing12,
                   vertical: AppTheme.spacing4,
@@ -82,8 +74,7 @@ class BBXNewProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppTheme.spacing8),
 
-              // 评分
-              Row(
+                            Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ...List.generate(
@@ -106,8 +97,7 @@ class BBXNewProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppTheme.spacing16),
 
-              // 编辑资料按钮
-              OutlinedButton(
+                            OutlinedButton(
                 onPressed: () {},
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
@@ -125,8 +115,7 @@ class BBXNewProfileScreen extends StatelessWidget {
     );
   }
 
-  /// 统计卡片
-  Widget _buildStatsCard() {
+    Widget _buildStatsCard() {
     return SliverToBoxAdapter(
       child: Transform.translate(
         offset: const Offset(0, -20),
@@ -140,9 +129,9 @@ class BBXNewProfileScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
-              _buildStatItem('交易�?, '128'),
-              _buildStatItem('报价�?, '45'),
-              _buildStatItem('收藏�?, '23'),
+              _buildStatItem('交易?, '128'),
+              _buildStatItem('Quote?, '45'),
+              _buildStatItem('收藏?, '23'),
             ],
           ),
         ),
@@ -172,45 +161,41 @@ class BBXNewProfileScreen extends StatelessWidget {
     );
   }
 
-  /// 功能菜单
-  Widget _buildMenuSections(BuildContext context) {
+    Widget _buildMenuSections(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacing16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 第一组：我的活动
-            const Text('我的活动', style: AppTheme.heading4),
+                        const Text('我的活动', style: AppTheme.heading4),
             const SizedBox(height: AppTheme.spacing12),
             _buildMenuGroup([
               _MenuItem(Icons.inventory_2_rounded, '我的商品', AppTheme.primary500, '/my-listings', badge: 12),
-              _MenuItem(Icons.local_offer_rounded, '我的报价', AppTheme.secondary500, '/my-offers', badge: 5),
+              _MenuItem(Icons.local_offer_rounded, '我的Quote', AppTheme.secondary500, '/my-offers', badge: 5),
               _MenuItem(Icons.receipt_long_rounded, '我的交易', AppTheme.info, '/transactions', badge: 3),
               _MenuItem(Icons.favorite_rounded, '我的收藏', AppTheme.error, '/favorites', badge: 23),
             ]),
 
             const SizedBox(height: AppTheme.spacing24),
 
-            // 第二组：设置
-            const Text('设置', style: AppTheme.heading4),
+                        const Text('设置', style: AppTheme.heading4),
             const SizedBox(height: AppTheme.spacing12),
             _buildMenuGroup([
-              _MenuItem(Icons.person_outline_rounded, '账户设置', null, '/account-settings'),
-              _MenuItem(Icons.notifications_outlined, '通知设置', null, '/notification-settings'),
+              _MenuItem(Icons.person_outline_rounded, 'Account Settings', null, '/account-settings'),
+              _MenuItem(Icons.notifications_outlined, 'Notification Settings', null, '/notification-settings'),
               _MenuItem(Icons.lock_outline_rounded, '隐私设置', null, '/privacy-settings'),
-              _MenuItem(Icons.language_rounded, '语言设置', null, '/language-settings', trailing: '中文'),
+              _MenuItem(Icons.language_rounded, 'Language', null, '/language-settings', trailing: 'English'),
             ]),
 
             const SizedBox(height: AppTheme.spacing24),
 
-            // 第三组：其他
-            const Text('其他', style: AppTheme.heading4),
+                        const Text('其他', style: AppTheme.heading4),
             const SizedBox(height: AppTheme.spacing12),
             _buildMenuGroup([
               _MenuItem(Icons.help_outline_rounded, '帮助中心', null, '/help'),
               _MenuItem(Icons.info_outline_rounded, '关于我们', null, '/about'),
-              _MenuItem(Icons.logout_rounded, '退出登�?, AppTheme.error, null, isLogout: true),
+              _MenuItem(Icons.logout_rounded, '退出登?, AppTheme.error, null, isLogout: true),
             ]),
           ],
         ),

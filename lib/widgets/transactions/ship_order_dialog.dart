@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../utils/delivery_config.dart';
 import '../../services/transaction_service.dart';
 
-/// 卖家发货对话�?仅邮寄方式使�?
 class ShipOrderDialog extends StatefulWidget {
   final String transactionId;
 
@@ -32,8 +31,7 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
     super.dispose();
   }
 
-  /// 提交发货信息
-  Future<void> _submitShipping() async {
+    Future<void> _submitShipping() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -43,16 +41,14 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
     });
 
     try {
-      // 构建快递信�?
-      final shippingInfo = {
+            final shippingInfo = {
         'courierName': _selectedCourier,
         'trackingNumber': _trackingNumberController.text.trim(),
         'shippedAt': Timestamp.now(),
         'notes': _notesController.text.trim(),
       };
 
-      // 更新交易记录
-      await _transactionService.updateTransaction(
+            await _transactionService.updateTransaction(
         widget.transactionId,
         {
           'shippingInfo': shippingInfo,
@@ -65,7 +61,7 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
         Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('发货信息已提�?),
+            content: Text('发货信息已提?),
             backgroundColor: Colors.green,
           ),
         );
@@ -74,7 +70,7 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('提交失败�?e'),
+            content: Text('Submission failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -95,7 +91,7 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
         children: [
           Icon(Icons.local_shipping, color: Colors.blue),
           SizedBox(width: 8),
-          Text('填写快递单�?),
+          Text('Fill in tracking info',
         ],
       ),
       content: Form(
@@ -105,9 +101,8 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 快递公司选择
-              const Text(
-                '快递公�?*',
+                            const Text(
+                'Courier Company *',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -141,9 +136,8 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
               ),
               const SizedBox(height: 16),
 
-              // 快递单号输�?
-              const Text(
-                '快递单�?*',
+                            const Text(
+                'Tracking Number *',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -153,7 +147,7 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
               TextFormField(
                 controller: _trackingNumberController,
                 decoration: InputDecoration(
-                  hintText: '输入快递单�?,
+                  hintText: 'Enter tracking number',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -164,16 +158,15 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return '请输入快递单�?;
+                    return 'Please enter tracking number';
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 16),
 
-              // 发货备注
-              const Text(
-                '发货备注(可�?',
+                            const Text(
+                'Remarks (Optional)',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -185,7 +178,7 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
                 maxLines: 3,
                 maxLength: 200,
                 decoration: InputDecoration(
-                  hintText: '例如：已打包，预�?天送达',
+                  hintText: 'e.g. Packed, arriving in 3 days',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

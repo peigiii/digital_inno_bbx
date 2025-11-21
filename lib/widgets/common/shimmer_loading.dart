@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../theme/app_theme.dart';
 
-/// 骨架屏基础组件
 class ShimmerBox extends StatelessWidget {
   final double? width;
   final double? height;
@@ -32,7 +31,6 @@ class ShimmerBox extends StatelessWidget {
   }
 }
 
-/// 圆形骨架
 class ShimmerCircle extends StatelessWidget {
   final double size;
 
@@ -58,7 +56,6 @@ class ShimmerCircle extends StatelessWidget {
   }
 }
 
-/// 文本行骨�?
 class ShimmerLine extends StatelessWidget {
   final double? width;
   final double height;
@@ -79,7 +76,6 @@ class ShimmerLine extends StatelessWidget {
   }
 }
 
-/// 列表项骨�?
 class ListItemShimmer extends StatelessWidget {
   final bool showAvatar;
   final bool showTrailing;
@@ -138,7 +134,6 @@ class ListItemShimmer extends StatelessWidget {
   }
 }
 
-/// 卡片骨架
 class CardShimmer extends StatelessWidget {
   final double? height;
   final bool showImage;
@@ -199,7 +194,6 @@ class CardShimmer extends StatelessWidget {
   }
 }
 
-/// 产品卡片骨架
 class ProductCardShimmer extends StatelessWidget {
   const ProductCardShimmer({super.key});
 
@@ -215,8 +209,7 @@ class ProductCardShimmer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 图片
-          const ShimmerBox(
+                    const ShimmerBox(
             width: double.infinity,
             height: 200,
             borderRadius: BorderRadius.vertical(
@@ -228,20 +221,17 @@ class ProductCardShimmer extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 标题
-                const ShimmerLine(
+                                const ShimmerLine(
                   width: double.infinity,
                   height: 18,
                 ),
                 const SizedBox(height: 8),
-                // 描述
-                ShimmerLine(
+                                ShimmerLine(
                   width: MediaQuery.of(context).size.width * 0.6,
                   height: 14,
                 ),
                 const SizedBox(height: 12),
-                // 价格和按�?
-                Row(
+                                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const ShimmerLine(
@@ -265,7 +255,6 @@ class ProductCardShimmer extends StatelessWidget {
   }
 }
 
-/// 表格行骨�?
 class TableRowShimmer extends StatelessWidget {
   final int columns;
 
@@ -299,7 +288,6 @@ class TableRowShimmer extends StatelessWidget {
   }
 }
 
-/// 用户头像骨架
 class AvatarShimmer extends StatelessWidget {
   final double size;
   final bool showLabel;
@@ -327,7 +315,6 @@ class AvatarShimmer extends StatelessWidget {
   }
 }
 
-/// 统计卡片骨架
 class StatCardShimmer extends StatelessWidget {
   const StatCardShimmer({super.key});
 
@@ -376,7 +363,6 @@ class StatCardShimmer extends StatelessWidget {
   }
 }
 
-/// 页面加载骨架（整页）
 class PageLoadingShimmer extends StatelessWidget {
   final int itemCount;
 
@@ -395,7 +381,6 @@ class PageLoadingShimmer extends StatelessWidget {
   }
 }
 
-/// 网格加载骨架
 class GridLoadingShimmer extends StatelessWidget {
   final int itemCount;
   final int crossAxisCount;

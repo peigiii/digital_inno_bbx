@@ -1,16 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 物流更新记录模型
 class LogisticsUpdateModel {
   final String id;
-  final String transactionId; // 所属交易ID
-  final String status; // 状态更�?
-  final String? location; // 当前位置
-  final String description; // 描述信息
-  final String? imageUrl; // 图片证明（如取货照片�?
-  final String createdBy; // 创建人ID
-  final DateTime createdAt; // 创建时间
-
+  final String transactionId;   final String status;   final String? location;   final String description;   final String? imageUrl;   final String createdBy;   final DateTime createdAt; 
   LogisticsUpdateModel({
     required this.id,
     required this.transactionId,
@@ -22,14 +14,12 @@ class LogisticsUpdateModel {
     required this.createdAt,
   });
 
-  /// �?Firestore 文档创建
-  factory LogisticsUpdateModel.fromDocument(DocumentSnapshot doc) {
+    factory LogisticsUpdateModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return LogisticsUpdateModel.fromMap(doc.id, data);
   }
 
-  /// �?Map 创建
-  factory LogisticsUpdateModel.fromMap(String id, Map<String, dynamic> data) {
+    factory LogisticsUpdateModel.fromMap(String id, Map<String, dynamic> data) {
     return LogisticsUpdateModel(
       id: id,
       transactionId: data['transactionId'] ?? '',
@@ -42,8 +32,7 @@ class LogisticsUpdateModel {
     );
   }
 
-  /// 转换�?Map（用于Firestore�?
-  Map<String, dynamic> toMap() {
+    Map<String, dynamic> toMap() {
     return {
       'transactionId': transactionId,
       'status': status,
@@ -55,8 +44,7 @@ class LogisticsUpdateModel {
     };
   }
 
-  /// 复制并修改部分字�?
-  LogisticsUpdateModel copyWith({
+    LogisticsUpdateModel copyWith({
     String? status,
     String? location,
     String? description,
@@ -74,19 +62,18 @@ class LogisticsUpdateModel {
     );
   }
 
-  /// 获取状态显示文�?
-  String get statusDisplay {
+    String get statusDisplay {
     switch (status) {
       case 'pending':
-        return '待发�?;
+        return '待发?';
       case 'picked_up':
-        return '已取�?;
+        return '已取?';
       case 'in_transit':
-        return '运输�?;
+        return '运输?';
       case 'delivered':
-        return '已送达';
+        return 'Delivered';
       case 'completed':
-        return '已完�?;
+        return '已完?';
       default:
         return status;
     }

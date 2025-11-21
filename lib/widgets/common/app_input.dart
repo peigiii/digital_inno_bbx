@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../theme/app_theme.dart';
 
-/// 统一的文本输入框
 class AppInput extends StatefulWidget {
   final TextEditingController? controller;
   final String? label;
@@ -90,7 +89,6 @@ class _AppInputState extends State<AppInput> {
   Widget build(BuildContext context) {
     Widget? suffix = widget.suffixIcon;
 
-    // 如果没有自定�?suffix 且文本不为空，显示清除按�?
     if (suffix == null && _showClearButton && widget.enabled && !widget.readOnly) {
       suffix = IconButton(
         icon: const Icon(Icons.clear, size: 20),
@@ -165,7 +163,6 @@ class _AppInputState extends State<AppInput> {
   }
 }
 
-/// 密码输入框（带显�?隐藏切换�?
 class PasswordInput extends StatefulWidget {
   final TextEditingController? controller;
   final String? label;
@@ -205,8 +202,8 @@ class _PasswordInputState extends State<PasswordInput> {
   Widget build(BuildContext context) {
     return AppInput(
       controller: widget.controller,
-      label: widget.label ?? '密码',
-      hint: widget.hint ?? '请输入密�?,
+      label: widget.label ?? 'Password',
+      hint: widget.hint ?? 'Enter password',
       errorText: widget.errorText,
       prefixIcon: Icons.lock_outline,
       suffixIcon: IconButton(
@@ -226,7 +223,6 @@ class _PasswordInputState extends State<PasswordInput> {
   }
 }
 
-/// 搜索输入�?
 class SearchInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? hint;
@@ -247,7 +243,7 @@ class SearchInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppInput(
       controller: controller,
-      hint: hint ?? '搜索...',
+      hint: hint ?? 'Search...',
       prefixIcon: Icons.search,
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.search,
@@ -257,7 +253,6 @@ class SearchInput extends StatelessWidget {
   }
 }
 
-/// 多行文本输入�?
 class TextAreaInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? label;
@@ -302,7 +297,6 @@ class TextAreaInput extends StatelessWidget {
   }
 }
 
-/// 数字输入�?
 class NumberInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? label;
@@ -365,16 +359,15 @@ class NumberInput extends StatelessWidget {
           (value) {
             if (value == null || value.isEmpty) return null;
             final number = double.tryParse(value);
-            if (number == null) return '请输入有效的数字';
-            if (min != null && number < min!) return '最小值为 $min';
-            if (max != null && number > max!) return '最大值为 $max';
+            if (number == null) return 'Invalid number';
+            if (min != null && number < min!) return 'Minimum value is $min';
+            if (max != null && number > max!) return 'Maximum value is $max';
             return null;
           },
     );
   }
 }
 
-/// 下拉选择输入�?
 class DropdownInput<T> extends StatelessWidget {
   final T? value;
   final String? label;

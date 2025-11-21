@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/subscription_model.dart';
 
-/// 订阅服务
 class SubscriptionService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// 获取当前用户的订阅信�?
-  Future<SubscriptionModel?> getCurrentSubscription() async {
+    Future<SubscriptionModel?> getCurrentSubscription() async {
     try {
       final userId = _auth.currentUser?.uid;
       if (userId == null) return null;
@@ -19,19 +17,17 @@ class SubscriptionService {
           .get();
 
       if (!doc.exists) {
-        // 如果没有订阅记录，创建免费订�?
-        return await _createFreeSubscription(userId);
+                return await _createFreeSubscription(userId);
       }
 
       return SubscriptionModel.fromFirestore(doc);
     } catch (e) {
-      print('获取订阅信息失败: $e');
+      print('Failed to get subscription info: $e');
       return null;
     }
   }
 
-  /// 创建免费订阅
-  Future<SubscriptionModel> _createFreeSubscription(String userId) async {
+    Future<SubscriptionModel> _createFreeSubscription(String userId) async {
     final now = DateTime.now();
     final subscription = SubscriptionModel(
       id: userId,
@@ -43,10 +39,10 @@ class SubscriptionService {
       price: 0,
       period: '永久',
       features: [
-        '发布 5 个商�?,
-        '基础搜索功能',
-        '查看报价',
-        '社区支持',
+        'Post 5 items',
+        'Basic search',
+        'View Quote',
+        'Community Support',
       ],
       createdAt: now,
       updatedAt: now,
@@ -60,14 +56,13 @@ class SubscriptionService {
     return subscription;
   }
 
-  /// 订阅计划
-  Future<bool> subscribe(
+    Future<bool> subscribe(
     SubscriptionPlanType planType,
     String period,
   ) async {
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登�?);
+      if (userId == null) throw Exception('User not logged in');
 
       final planDetails = _getPlanDetails(planType, period);
       final now = DateTime.now();
@@ -92,8 +87,7 @@ class SubscriptionService {
           .doc(userId)
           .set(subscription.toMap());
 
-      // 更新用户文档中的订阅计划
-      await _firestore.collection('users').doc(userId).update({
+            await _firestore.collection('users').doc(userId).update({
         'subscriptionPlan': planType.toString().split('.').last,
         'subscriptionStatus': 'active',
         'subscriptionUpdatedAt': FieldValue.serverTimestamp(),
@@ -101,16 +95,15 @@ class SubscriptionService {
 
       return true;
     } catch (e) {
-      print('订阅失败: $e');
+      print('Subscription failed: $e');
       return false;
     }
   }
 
-  /// 取消订阅
-  Future<bool> cancelSubscription() async {
+    Future<bool> cancelSubscription() async {
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登�?);
+      if (userId == null) throw Exception('User not logged in');
 
       await _firestore.collection('subscriptions').doc(userId).update({
         'status': 'cancelled',
@@ -124,13 +117,12 @@ class SubscriptionService {
 
       return true;
     } catch (e) {
-      print('取消订阅失败: $e');
+      print('Failed to cancel subscription: $e');
       return false;
     }
   }
 
-  /// 获取所有可用计�?
-  List<Map<String, dynamic>> getAvailablePlans() {
+    List<Map<String, dynamic>> getAvailablePlans() {
     return [
       {
         'type': SubscriptionPlanType.free,
@@ -138,10 +130,10 @@ class SubscriptionService {
         'priceMonthly': 0,
         'priceYearly': 0,
         'features': [
-          '发布 5 个商�?,
-          '基础搜索功能',
-          '查看报价',
-          '社区支持',
+          'Post 5 items',
+          'Basic search',
+          'View Quote',
+          'Community Support',
         ],
       },
       {
@@ -150,11 +142,11 @@ class SubscriptionService {
         'priceMonthly': 29,
         'priceYearly': 99,
         'features': [
-          '发布 50 个商�?,
-          '高级搜索',
-          '优先展示',
-          '数据分析',
-          '客服支持',
+          'Post 50 items',
+          'Advanced Search',
+          'Priority Listing',
+          'Data Analytics',
+          'Customer Support',
         ],
       },
       {
@@ -163,12 +155,12 @@ class SubscriptionService {
         'priceMonthly': 59,
         'priceYearly': 199,
         'features': [
-          '无限发布',
-          'ESG 合规报告',
-          '高级数据分析',
-          '物流优化',
-          '专属客服',
-          'API 访问',
+          'Unlimited Posting',
+          'ESG Compliance Report',
+          'Advanced Analytics',
+          'Logistics Optimization',
+          'Dedicated Support',
+          'API Access',
         ],
       },
       {
@@ -177,20 +169,19 @@ class SubscriptionService {
         'priceMonthly': 149,
         'priceYearly': 499,
         'features': [
-          'Professional 所有功�?,
-          '多用户账�?,
-          '定制化报�?,
-          '白标解决方案',
-          '专属客户经理',
-          '优先技术支�?,
-          'SLA 保证',
+          'All Professional features',
+          'Multi-user account',
+          'Custom Reports',
+          'White-label Solution',
+          'Dedicated Account Manager',
+          'Priority Tech Support',
+          'SLA Guarantee',
         ],
       },
     ];
   }
 
-  /// 获取计划详情
-  Map<String, dynamic> _getPlanDetails(
+    Map<String, dynamic> _getPlanDetails(
     SubscriptionPlanType planType,
     String period,
   ) {
@@ -200,7 +191,7 @@ class SubscriptionService {
       orElse: () => plans[0],
     );
 
-    final price = period == '1�? ? plan['priceYearly'] : plan['priceMonthly'];
+    final price = period == '1? ? plan['priceYearly'] : plan['priceMonthly'];
 
     return {
       'price': price.toDouble(),
@@ -208,11 +199,10 @@ class SubscriptionService {
     };
   }
 
-  /// 计算结束日期
-  DateTime _calculateEndDate(DateTime startDate, String period) {
+    DateTime _calculateEndDate(DateTime startDate, String period) {
     if (period == '1个月') {
       return startDate.add(const Duration(days: 30));
-    } else if (period == '1�?) {
+    } else if (period == '1?) {
       return DateTime(
         startDate.year + 1,
         startDate.month,
@@ -222,8 +212,7 @@ class SubscriptionService {
     return startDate.add(const Duration(days: 30));
   }
 
-  /// 检查订阅是否过�?
-  Future<void> checkAndUpdateExpiredSubscriptions() async {
+    Future<void> checkAndUpdateExpiredSubscriptions() async {
     try {
       final userId = _auth.currentUser?.uid;
       if (userId == null) return;
@@ -249,7 +238,7 @@ class SubscriptionService {
         });
       }
     } catch (e) {
-      print('检查订阅状态失�? $e');
+      print('Failed to check subscription: $e');
     }
   }
 }

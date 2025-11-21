@@ -5,9 +5,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../theme/app_theme.dart';
-import '../widgets/common/app_button.dart';
 import '../widgets/common/shimmer_loading.dart';
 import '../widgets/marketplace/product_card.dart';
+import '../services/chat_service.dart';
+import 'chat/bbx_chat_screen.dart';
 
 class BBXListingDetailScreen extends StatefulWidget {
   final String listingId;
@@ -27,6 +28,8 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   bool _isDescriptionExpanded = false;
   late GoogleMapController _mapController;
   final PageController _imagePageController = PageController();
+  final ChatService _chatService = ChatService();
+  bool _isStartingChat = false;
 
   @override
   void dispose() {
@@ -45,9 +48,11 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         .doc(widget.listingId)
         .get();
 
-    setState(() {
-      _isFavorite = favDoc.exists;
-    });
+    if (mounted) {
+      setState(() {
+        _isFavorite = favDoc.exists;
+      });
+    }
   }
 
   Future<void> _toggleFavorite() async {
@@ -74,23 +79,28 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       });
     }
 
-    setState(() {
-      _isFavorite = !_isFavorite;
-    });
+    if (mounted) {
+      setState(() {
+        _isFavorite = !_isFavorite;
+      });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(_isFavorite ? 'Added to favorites' : 'Removed from favorites'),
-        duration: const Duration(seconds: 1),
-      ),
-    );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_isFavorite ? 'Added to favorites' : 'Removed from favorites'),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    }
   }
 
   void _shareListing(Map<String, dynamic> data) {
+    final price = _getPrice(data);
+    final unit = _getUnitLabel(data);
+    final quantity = _getQuantity(data);
     Share.share(
       'Check out this listing: ${data['wasteType']}\n'
-      'Price: RM ${data['pricePerTon']}/ton\n'
-      'Quantity: ${data['quantity']} tons',
+      'Price: RM ${price.toStringAsFixed(2)}/$unit\n'
+      'Quantity: $quantity $unit',
       subject: data['wasteType'],
     );
   }
@@ -199,162 +209,182 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             return const Center(child: Text('Listing not found'));
           }
 
-          final images = (data['imageUrls'] as List<dynamic>?)?.cast<String>() ?? [];
+          List<String> images =
+              (data['imageUrls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [];
+          // Fix for single image url field
+          final singleImage = data['imageUrl'];
+          if (images.isEmpty && singleImage is String && singleImage.isNotEmpty) {
+            images = [singleImage];
+          }
           final hasImages = images.isNotEmpty;
 
-          return CustomScrollView(
-            slivers: [
-              // Image carousel AppBar
-              SliverAppBar(
-                expandedHeight: 400,
-                pinned: true,
-                backgroundColor: AppTheme.primary,
-                leading: IconButton(
-                  icon: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.arrow_back, color: Colors.white),
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                actions: [
-                  IconButton(
-                    icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3),
-                        shape: BoxShape.circle,
+          return Stack(
+            children: [
+              CustomScrollView(
+                slivers: [
+                  // Image carousel AppBar
+                  SliverAppBar(
+                    expandedHeight: 400,
+                    pinned: true,
+                    backgroundColor: AppTheme.primary,
+                    leading: IconButton(
+                      icon: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.3),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.arrow_back, color: Colors.white),
                       ),
-                      child: const Icon(Icons.share, color: Colors.white),
+                      onPressed: () => Navigator.pop(context),
                     ),
-                    onPressed: () => _shareListing(data),
-                  ),
-                  IconButton(
-                    icon: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.3),
-                        shape: BoxShape.circle,
+                    actions: [
+                      IconButton(
+                        icon: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.3),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(Icons.share, color: Colors.white),
+                        ),
+                        onPressed: () => _shareListing(data),
                       ),
-                      child: Icon(
-                        _isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: _isFavorite ? Colors.red : Colors.white,
+                      IconButton(
+                        icon: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.3),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            _isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: _isFavorite ? Colors.red : Colors.white,
+                          ),
+                        ),
+                        onPressed: _toggleFavorite,
                       ),
-                    ),
-                    onPressed: _toggleFavorite,
-                  ),
-                ],
-                flexibleSpace: FlexibleSpaceBar(
-                  background: hasImages
-                      ? Stack(
-                          children: [
-                            PageView.builder(
-                              controller: _imagePageController,
-                              onPageChanged: (index) {
-                                setState(() {
-                                  _currentImageIndex = index;
-                                });
-                              },
-                              itemCount: images.length,
-                              itemBuilder: (context, index) {
-                                return CachedNetworkImage(
-                                  imageUrl: images[index],
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      const ShimmerBox(width: double.infinity, height: 400),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error, size: 80),
-                                );
-                              },
-                            ),
-                            // Image indicator
-                            if (images.length > 1)
-                              Positioned(
-                                bottom: 16,
-                                left: 0,
-                                right: 0,
-                                child: Center(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 6,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: Text(
-                                      '${_currentImageIndex + 1} / ${images.length}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
+                    ],
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: hasImages
+                          ? Stack(
+                              children: [
+                                PageView.builder(
+                                  controller: _imagePageController,
+                                  onPageChanged: (index) {
+                                    setState(() {
+                                      _currentImageIndex = index;
+                                    });
+                                  },
+                                  itemCount: images.length,
+                                  itemBuilder: (context, index) {
+                                    return CachedNetworkImage(
+                                      imageUrl: images[index],
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const ShimmerBox(width: double.infinity, height: 400),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error, size: 80),
+                                    );
+                                  },
+                                ),
+                                // Image indicator
+                                if (images.length > 1)
+                                  Positioned(
+                                    bottom: 16,
+                                    left: 0,
+                                    right: 0,
+                                    child: Center(
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.5),
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Text(
+                                          '${_currentImageIndex + 1} / ${images.length}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
+                              ],
+                            )
+                          : Container(
+                              color: AppTheme.backgroundGrey,
+                              child: const Icon(
+                                Icons.image_not_supported,
+                                size: 100,
+                                color: AppTheme.textLight,
                               ),
-                          ],
-                        )
-                      : Container(
-                          color: AppTheme.backgroundGrey,
-                          child: const Icon(
-                            Icons.image_not_supported,
-                            size: 100,
-                            color: AppTheme.textLight,
-                          ),
-                        ),
-                ),
+                            ),
+                    ),
+                  ),
+
+                  // Content
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Price and title section
+                        _buildPriceSection(data),
+
+                        const Divider(height: 1),
+
+                        // Supplier info card
+                        _buildSupplierCard(data),
+
+                        const Divider(height: 1),
+
+                        // Product specifications
+                        _buildSpecifications(data),
+
+                        const Divider(height: 1),
+
+                        // Description
+                        _buildDescription(data),
+
+                        const Divider(height: 1),
+
+                        // Location with map
+                        _buildLocation(data),
+
+                        const Divider(height: 1),
+
+                        // Similar products
+                        _buildSimilarProducts(data),
+
+                        const SizedBox(height: 80), // Space for bottom bar
+                      ],
+                    ),
+                  ),
+                ],
               ),
-
-              // Content
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Price and title section
-                    _buildPriceSection(data),
-
-                    const Divider(height: 1),
-
-                    // Supplier info card
-                    _buildSupplierCard(data),
-
-                    const Divider(height: 1),
-
-                    // Product specifications
-                    _buildSpecifications(data),
-
-                    const Divider(height: 1),
-
-                    // Description
-                    _buildDescription(data),
-
-                    const Divider(height: 1),
-
-                    // Location with map
-                    _buildLocation(data),
-
-                    const Divider(height: 1),
-
-                    // Similar products
-                    _buildSimilarProducts(data),
-
-                    const SizedBox(height: 80), // Space for bottom bar
-                  ],
-                ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: _buildBottomActionBar(data),
               ),
             ],
           );
         },
       ),
-      bottomNavigationBar: _buildBottomActionBar(),
     );
   }
 
   Widget _buildPriceSection(Map<String, dynamic> data) {
+    final price = _getPrice(data);
+    final unit = _getUnitLabel(data);
+    final quantity = _getQuantity(data);
+    final status = (data['status'] ?? 'available').toString();
+
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
@@ -368,16 +398,16 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'RM ${data['pricePerTon']}',
+                      'RM ${price.toStringAsFixed(2)}',
                       style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: AppTheme.primary,
                       ),
                     ),
-                    const Text(
-                      'per ton',
-                      style: TextStyle(
+                    Text(
+                      'per $unit',
+                      style: const TextStyle(
                         fontSize: 14,
                         color: AppTheme.textLight,
                       ),
@@ -391,15 +421,15 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: data['status'] == 'available'
+                  color: status == 'available'
                       ? AppTheme.success.withOpacity(0.1)
                       : AppTheme.error.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  data['status'] == 'available' ? 'Available' : 'Sold Out',
+                  status == 'available' ? 'Available' : 'Sold Out',
                   style: TextStyle(
-                    color: data['status'] == 'available'
+                    color: status == 'available'
                         ? AppTheme.success
                         : AppTheme.error,
                     fontWeight: FontWeight.bold,
@@ -422,7 +452,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               const Icon(Icons.inventory_2_outlined, size: 16, color: AppTheme.textLight),
               const SizedBox(width: 4),
               Text(
-                'Available: ${data['quantity']} tons',
+                'Available: $quantity $unit',
                 style: const TextStyle(
                   color: AppTheme.textLight,
                   fontSize: 14,
@@ -441,7 +471,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          // 配送方式说�?          Container(
+          Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.blue[50],
@@ -456,7 +486,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     const Icon(Icons.local_shipping, size: 16, color: Colors.blue),
                     const SizedBox(width: 8),
                     Text(
-                      '🚚 配送方�?,
+                      'Delivery Method',
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -471,7 +501,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     Icon(Icons.check_circle, size: 14, color: Colors.green[700]),
                     const SizedBox(width: 6),
                     const Text(
-                      '支持自提',
+                      'Pickup Available',
                       style: TextStyle(fontSize: 13),
                     ),
                   ],
@@ -483,7 +513,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     const SizedBox(width: 6),
                     const Expanded(
                       child: Text(
-                        '支持邮寄(邮费与卖家协�?',
+                        'Shipping Available (Negotiable)',
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -498,10 +528,19 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   }
 
   Widget _buildSupplierCard(Map<String, dynamic> data) {
+    // Add null check for userId
+    final userId = data['userId'];
+    if (userId == null) {
+      return const Padding(
+        padding: EdgeInsets.all(AppTheme.spacingLG),
+        child: Text('Supplier information unavailable'),
+      );
+    }
+
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance
           .collection('users')
-          .doc(data['userId'])
+          .doc(userId)
           .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -512,7 +551,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         }
 
         final userData = snapshot.data!.data() as Map<String, dynamic>?;
-        if (userData == null) return const SizedBox.shrink();
+        // Fallback for deleted users
+        final displayName = userData?['displayName'] ?? 'Unknown User';
+        final isVerified = userData?['isVerified'] == true;
 
         return Container(
           padding: const EdgeInsets.all(AppTheme.spacingLG),
@@ -534,7 +575,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     radius: 30,
                     backgroundColor: AppTheme.primary.withOpacity(0.1),
                     child: Text(
-                      (userData['displayName'] ?? 'U')[0].toUpperCase(),
+                      displayName[0].toUpperCase(),
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -550,14 +591,14 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                         Row(
                           children: [
                             Text(
-                              userData['displayName'] ?? 'Unknown User',
+                              displayName,
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(width: 8),
-                            if (userData['isVerified'] == true)
+                            if (isVerified)
                               const Icon(
                                 Icons.verified,
                                 size: 20,
@@ -570,17 +611,17 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                           children: [
                             const Icon(Icons.star, size: 16, color: Colors.amber),
                             const SizedBox(width: 4),
-                            Text(
+                            const Text(
                               '4.8',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(width: 8),
-                            Text(
+                            const Text(
                               '(125 reviews)',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 14,
                                 color: AppTheme.textLight,
                               ),
@@ -610,9 +651,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        // Navigate to chat
-                      },
+                      onPressed: _isStartingChat
+                          ? null
+                          : () => _startChatWithSeller(data),
                       icon: const Icon(Icons.chat_bubble_outline, size: 18),
                       label: const Text('Chat'),
                       style: ElevatedButton.styleFrom(
@@ -632,10 +673,14 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   }
 
   Widget _buildSpecifications(Map<String, dynamic> data) {
+    final price = _getPrice(data);
+    final unit = _getUnitLabel(data);
+    final quantity = _getQuantity(data);
+
     final specs = [
       {'label': 'Waste Type', 'value': data['wasteType'] ?? '-'},
-      {'label': 'Quantity', 'value': '${data['quantity']} tons'},
-      {'label': 'Price', 'value': 'RM ${data['pricePerTon']}/ton'},
+      {'label': 'Quantity', 'value': '$quantity $unit'},
+      {'label': 'Price', 'value': 'RM ${price.toStringAsFixed(2)}/$unit'},
       {'label': 'Moisture Content', 'value': data['moistureContent'] ?? '-'},
       {'label': 'Collection Date', 'value': _formatDate(data['collectionDate'])},
       {'label': 'Location', 'value': _getLocationDisplay(data['location'])},
@@ -747,8 +792,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   }
 
   Widget _buildLocation(Map<String, dynamic> data) {
-    final latitude = (data['latitude'] as num?)?.toDouble() ?? 5.9804;
-    final longitude = (data['longitude'] as num?)?.toDouble() ?? 116.0735;
+    final latLng = _getLatLng(data);
 
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacingLG),
@@ -783,13 +827,13 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               height: 200,
               child: GoogleMap(
                 initialCameraPosition: CameraPosition(
-                  target: LatLng(latitude, longitude),
+                  target: latLng,
                   zoom: 14,
                 ),
                 markers: {
                   Marker(
                     markerId: const MarkerId('listing_location'),
-                    position: LatLng(latitude, longitude),
+                    position: latLng,
                   ),
                 },
                 zoomControlsEnabled: false,
@@ -896,7 +940,10 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     );
   }
 
-  Widget _buildBottomActionBar() {
+  Widget _buildBottomActionBar(Map<String, dynamic> data) {
+    final sellerId = data['userId'] as String?;
+    final isOwnListing = sellerId != null && sellerId == FirebaseAuth.instance.currentUser?.uid;
+
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacingMD),
       decoration: BoxDecoration(
@@ -910,94 +957,192 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         ],
       ),
       child: SafeArea(
-        child: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('listings')
-              .doc(widget.listingId)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const SizedBox.shrink();
-            }
-
-            final data = snapshot.data!.data() as Map<String, dynamic>?;
-            if (data == null) return const SizedBox.shrink();
-
-            return Row(
-              children: [
-                IconButton(
-                  onPressed: _toggleFavorite,
-                  icon: Icon(
-                    _isFavorite ? Icons.favorite : Icons.favorite_border,
-                    color: _isFavorite ? Colors.red : AppTheme.textSecondary,
-                  ),
-                  style: IconButton.styleFrom(
-                    backgroundColor: AppTheme.backgroundGrey,
-                    padding: const EdgeInsets.all(12),
-                  ),
+        top: false,
+        child: Row(
+          children: [
+            IconButton(
+              onPressed: _toggleFavorite,
+              icon: Icon(
+                _isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: _isFavorite ? Colors.red : AppTheme.textSecondary,
+              ),
+              style: IconButton.styleFrom(
+                backgroundColor: AppTheme.backgroundGrey,
+                padding: const EdgeInsets.all(12),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: _isStartingChat || isOwnListing
+                    ? null
+                    : () => _startChatWithSeller(data),
+                icon: const Icon(Icons.chat_bubble_outline, size: 20),
+                label: const Text('Contact'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  side: const BorderSide(color: AppTheme.primary),
+                  foregroundColor: AppTheme.primary,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () {
-                      // Navigate to chat
-                    },
-                    icon: const Icon(Icons.chat_bubble_outline, size: 20),
-                    label: const Text('Contact'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      side: const BorderSide(color: AppTheme.primary),
-                      foregroundColor: AppTheme.primary,
-                    ),
-                  ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: data['status'] == 'available' && !isOwnListing
+                    ? () => _showQuoteDialog(data)
+                    : null,
+                icon: const Icon(Icons.request_quote, size: 20),
+                label: const Text('Get Quote'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  backgroundColor: AppTheme.primary,
+                  foregroundColor: Colors.white,
+                  disabledBackgroundColor: AppTheme.dividerLight,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: data['status'] == 'available'
-                        ? () => _showQuoteDialog(data)
-                        : null,
-                    icon: const Icon(Icons.request_quote, size: 20),
-                    label: const Text('Get Quote'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: AppTheme.primary,
-                      foregroundColor: Colors.white,
-                      disabledBackgroundColor: AppTheme.dividerLight,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
+  Future<void> _startChatWithSeller(Map<String, dynamic> data) async {
+    final sellerId = data['userId'] as String?;
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (sellerId == null || sellerId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Seller information not available')),
+      );
+      return;
+    }
+
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please login to start a chat')),
+      );
+      Navigator.pushNamed(context, '/login');
+      return;
+    }
+
+    if (sellerId == currentUser.uid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('This is your own listing')),
+      );
+      return;
+    }
+
+    if (_isStartingChat) return;
+
+    setState(() {
+      _isStartingChat = true;
+    });
+
+    try {
+      final conversationId = await _chatService.getOrCreateConversation(sellerId);
+      final sellerDoc =
+          await FirebaseFirestore.instance.collection('users').doc(sellerId).get();
+      final sellerData = sellerDoc.data() ?? {};
+      final sellerName = (sellerData['displayName'] ??
+              sellerData['companyName'] ??
+              sellerData['email'] ??
+              'Seller')
+          .toString();
+      final sellerAvatar = sellerData['photoURL'] as String?;
+
+      if (!mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BBXChatScreen(
+            conversationId: conversationId,
+            otherUserId: sellerId,
+            otherUserName: sellerName.isEmpty ? 'Seller' : sellerName,
+            otherUserAvatar: sellerAvatar,
+          ),
+        ),
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Unable to start chat: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isStartingChat = false;
+        });
+      }
+    }
+  }
+
+  double _getPrice(Map<String, dynamic> data) {
+    final raw = data['pricePerUnit'] ?? data['pricePerTon'] ?? data['price'] ?? 0;
+    if (raw is num) return raw.toDouble();
+    if (raw is String) return double.tryParse(raw) ?? 0;
+    return 0;
+  }
+
+  double _getQuantity(Map<String, dynamic> data) {
+    final raw = data['quantity'] ?? 0;
+    if (raw is num) return raw.toDouble();
+    if (raw is String) return double.tryParse(raw) ?? 0;
+    return 0;
+  }
+
+  String _getUnitLabel(Map<String, dynamic> data) {
+    final unit = data['unit'];
+    if (unit is String && unit.isNotEmpty) return unit;
+    if (data['pricePerTon'] != null) return 'ton';
+    return 'unit';
+  }
+
   String _getLocationDisplay(dynamic location) {
     if (location == null) return 'Location not specified';
 
-    // 如果是字符串，直接返�?    if (location is String) return location;
-
-    // 如果是Map（包含latitude和longitude�?    if (location is Map<String, dynamic>) {
-      final lat = location['latitude'];
-      final lng = location['longitude'];
+    if (location is Map<String, dynamic>) {
+      final lat = (location['latitude'] as num?)?.toDouble();
+      final lng = (location['longitude'] as num?)?.toDouble();
       if (lat != null && lng != null) {
         return '${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}';
       }
-      // 如果有address字段，返回address
       if (location['address'] != null) {
         return location['address'].toString();
       }
     }
 
-    // 如果是GeoPoint类型
     if (location is GeoPoint) {
       return '${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}';
     }
 
+    if (location is String && location.isNotEmpty) {
+      return location;
+    }
+
     return 'Location not specified';
+  }
+
+  LatLng _getLatLng(Map<String, dynamic> data) {
+    final location = data['location'];
+    double? latitude;
+    double? longitude;
+
+    if (location is Map<String, dynamic>) {
+      latitude = (location['latitude'] as num?)?.toDouble();
+      longitude = (location['longitude'] as num?)?.toDouble();
+    } else if (location is GeoPoint) {
+      latitude = location.latitude;
+      longitude = location.longitude;
+    }
+
+    latitude ??= (data['latitude'] as num?)?.toDouble();
+    longitude ??= (data['longitude'] as num?)?.toDouble();
+
+    return LatLng(latitude ?? 5.9804, longitude ?? 116.0735);
   }
 
   String _formatDate(dynamic timestamp) {

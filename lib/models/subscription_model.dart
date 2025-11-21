@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 订阅计划类型
 enum SubscriptionPlanType {
   free,
   basic,
@@ -8,7 +7,10 @@ enum SubscriptionPlanType {
   enterprise,
 }
 
+<<<<<<< Updated upstream
 /// 订阅状�?
+=======
+>>>>>>> Stashed changes
 enum SubscriptionStatus {
   active,
   inactive,
@@ -16,7 +18,6 @@ enum SubscriptionStatus {
   cancelled,
 }
 
-/// 订阅模型
 class SubscriptionModel {
   final String id;
   final String userId;
@@ -25,8 +26,12 @@ class SubscriptionModel {
   final DateTime startDate;
   final DateTime? endDate;
   final double price;
+<<<<<<< Updated upstream
   final String period; // '1个月', '1�? �?
   final List<String> features;
+=======
+  final String period;   final List<String> features;
+>>>>>>> Stashed changes
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -44,8 +49,12 @@ class SubscriptionModel {
     required this.updatedAt,
   });
 
+<<<<<<< Updated upstream
   /// �?Firestore 文档创建
   factory SubscriptionModel.fromFirestore(DocumentSnapshot doc) {
+=======
+    factory SubscriptionModel.fromFirestore(DocumentSnapshot doc) {
+>>>>>>> Stashed changes
     final data = doc.data() as Map<String, dynamic>;
 
     return SubscriptionModel(
@@ -64,8 +73,12 @@ class SubscriptionModel {
     );
   }
 
+<<<<<<< Updated upstream
   /// �?Map 创建
   factory SubscriptionModel.fromMap(Map<String, dynamic> data) {
+=======
+    factory SubscriptionModel.fromMap(Map<String, dynamic> data) {
+>>>>>>> Stashed changes
     return SubscriptionModel(
       id: data['id'] ?? '',
       userId: data['userId'] ?? '',
@@ -91,8 +104,12 @@ class SubscriptionModel {
     );
   }
 
+<<<<<<< Updated upstream
   /// 转换�?Map
   Map<String, dynamic> toMap() {
+=======
+    Map<String, dynamic> toMap() {
+>>>>>>> Stashed changes
     return {
       'userId': userId,
       'planType': planType.toString().split('.').last,
@@ -107,24 +124,25 @@ class SubscriptionModel {
     };
   }
 
+<<<<<<< Updated upstream
   /// 是否激�?
   bool get isActive => status == SubscriptionStatus.active;
+=======
+    bool get isActive => status == SubscriptionStatus.active;
+>>>>>>> Stashed changes
 
-  /// 是否过期
-  bool get isExpired {
+    bool get isExpired {
     if (endDate == null) return false;
     return DateTime.now().isAfter(endDate!);
   }
 
-  /// 剩余天数
-  int get daysRemaining {
+    int get daysRemaining {
     if (endDate == null) return 0;
     final difference = endDate!.difference(DateTime.now());
     return difference.inDays;
   }
 
-  /// 获取计划显示名称
-  String get planDisplayName {
+    String get planDisplayName {
     switch (planType) {
       case SubscriptionPlanType.free:
         return 'Free';
@@ -137,6 +155,7 @@ class SubscriptionModel {
     }
   }
 
+<<<<<<< Updated upstream
   /// 获取状态显示名�?
   String get statusDisplayName {
     switch (status) {
@@ -148,6 +167,18 @@ class SubscriptionModel {
         return '已过�?;
       case SubscriptionStatus.cancelled:
         return '已取�?;
+=======
+    String get statusDisplayName {
+    switch (status) {
+      case SubscriptionStatus.active:
+        return '激?';
+      case SubscriptionStatus.inactive:
+        return '未激?';
+      case SubscriptionStatus.expired:
+        return '已过?';
+      case SubscriptionStatus.cancelled:
+        return '已取?';
+>>>>>>> Stashed changes
     }
   }
 

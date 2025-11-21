@@ -5,8 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 
 class PDFGeneratorService {
-  /// 生成合规护照 PDF
-  Future<File> generateCompliancePassport({
+    Future<File> generateCompliancePassport({
     required String transactionId,
     required Map<String, dynamic> producer,
     required Map<String, dynamic> processor,
@@ -138,8 +137,7 @@ class PDFGeneratorService {
     return file;
   }
 
-  /// 构建 PDF 头部
-  pw.Widget _buildHeader() {
+    pw.Widget _buildHeader() {
     return pw.Container(
       width: double.infinity,
       padding: const pw.EdgeInsets.all(20),
@@ -171,8 +169,7 @@ class PDFGeneratorService {
     );
   }
 
-  /// 构建信息段落
-  pw.Widget _buildSection(String title, List<List<String>> items) {
+    pw.Widget _buildSection(String title, List<List<String>> items) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -215,8 +212,7 @@ class PDFGeneratorService {
     );
   }
 
-  /// 构建合规认证部分
-  pw.Widget _buildComplianceSection() {
+    pw.Widget _buildComplianceSection() {
     return pw.Container(
       padding: const pw.EdgeInsets.all(15),
       decoration: pw.BoxDecoration(
@@ -247,8 +243,7 @@ class PDFGeneratorService {
     );
   }
 
-  /// 构建检查项
-  pw.Widget _buildCheckItem(String text) {
+    pw.Widget _buildCheckItem(String text) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 3),
       child: pw.Row(
@@ -262,7 +257,7 @@ class PDFGeneratorService {
             ),
             child: pw.Center(
               child: pw.Text(
-                '�?,
+                '?,
                 style: const pw.TextStyle(
                   fontSize: 8,
                   color: PdfColors.white,

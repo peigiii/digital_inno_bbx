@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 奖励交易类型
 enum RewardTransactionType {
   earn,
   redeem,
 }
 
-/// 会员等级
 enum MemberTier {
   bronze,
   silver,
@@ -14,7 +12,6 @@ enum MemberTier {
   platinum,
 }
 
-/// 奖励交易记录
 class RewardTransaction {
   final String id;
   final RewardTransactionType type;
@@ -55,7 +52,6 @@ class RewardTransaction {
   }
 }
 
-/// 每日任务
 class DailyTask {
   final String id;
   final String title;
@@ -125,7 +121,6 @@ class DailyTask {
   }
 }
 
-/// 奖励模型
 class RewardModel {
   final String id;
   final String userId;
@@ -180,8 +175,7 @@ class RewardModel {
     };
   }
 
-  /// 获取会员等级显示名称
-  String get tierDisplayName {
+    String get tierDisplayName {
     switch (tier) {
       case MemberTier.bronze:
         return 'Bronze';
@@ -194,8 +188,7 @@ class RewardModel {
     }
   }
 
-  /// 获取会员等级图标
-  String get tierIcon {
+    String get tierIcon {
     switch (tier) {
       case MemberTier.bronze:
         return '🥉';
@@ -208,8 +201,7 @@ class RewardModel {
     }
   }
 
-  /// 计算下一等级所需积分
-  int get pointsToNextTier {
+    int get pointsToNextTier {
     switch (tier) {
       case MemberTier.bronze:
         return 500 - points;
@@ -218,12 +210,15 @@ class RewardModel {
       case MemberTier.gold:
         return 5000 - points;
       case MemberTier.platinum:
+<<<<<<< Updated upstream
         return 0; // 已是最高等�?
     }
+=======
+        return 0;     }
+>>>>>>> Stashed changes
   }
 
-  /// 获取下一等级名称
-  String? get nextTierName {
+    String? get nextTierName {
     switch (tier) {
       case MemberTier.bronze:
         return 'Silver';
@@ -232,8 +227,12 @@ class RewardModel {
       case MemberTier.gold:
         return 'Platinum';
       case MemberTier.platinum:
+<<<<<<< Updated upstream
         return null; // 已是最高等�?
     }
+=======
+        return null;     }
+>>>>>>> Stashed changes
   }
 
   static MemberTier _parseTier(String? value) {
@@ -249,8 +248,7 @@ class RewardModel {
     }
   }
 
-  /// 添加积分
-  RewardModel addPoints(int pointsToAdd, String reason) {
+    RewardModel addPoints(int pointsToAdd, String reason) {
     final newTransaction = RewardTransaction(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: RewardTransactionType.earn,
@@ -262,8 +260,12 @@ class RewardModel {
     final newTransactions = [newTransaction, ...transactions];
     final newPoints = points + pointsToAdd;
 
+<<<<<<< Updated upstream
     // 计算新等�?
     MemberTier newTier = tier;
+=======
+        MemberTier newTier = tier;
+>>>>>>> Stashed changes
     if (newPoints >= 5000) {
       newTier = MemberTier.platinum;
     } else if (newPoints >= 1500) {
@@ -282,10 +284,9 @@ class RewardModel {
     );
   }
 
-  /// 兑换积分
-  RewardModel redeemPoints(int pointsToRedeem, String reason) {
+    RewardModel redeemPoints(int pointsToRedeem, String reason) {
     if (pointsToRedeem > points) {
-      throw Exception('积分不足');
+      throw Exception('Insufficient points');
     }
 
     final newTransaction = RewardTransaction(

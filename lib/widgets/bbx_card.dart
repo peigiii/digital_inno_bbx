@@ -3,7 +3,6 @@ import '../theme/app_theme.dart';
 import 'bbx_chip.dart';
 import 'bbx_avatar.dart';
 
-/// BBX 基础卡片组件
 class BBXCard extends StatelessWidget {
   final Widget child;
   final VoidCallback? onTap;
@@ -48,7 +47,6 @@ class BBXCard extends StatelessWidget {
   }
 }
 
-/// BBX 商品卡片组件
 class BBXListingCard extends StatelessWidget {
   final String imageUrl;
   final String title;
@@ -92,8 +90,7 @@ class BBXListingCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 商品图片
-          Stack(
+                    Stack(
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.only(
@@ -117,14 +114,12 @@ class BBXListingCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // 分类标签
-              Positioned(
+                            Positioned(
                 top: AppTheme.spacing8,
                 left: AppTheme.spacing8,
                 child: BBXCategoryChip(category: category, isSmall: true),
               ),
-              // 收藏按钮
-              if (onFavorite != null)
+                            if (onFavorite != null)
                 Positioned(
                   top: AppTheme.spacing8,
                   right: AppTheme.spacing8,
@@ -147,8 +142,7 @@ class BBXListingCard extends StatelessWidget {
             ],
           ),
 
-          // 商品信息
-          Padding(
+                    Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppTheme.spacing12,
               vertical: AppTheme.spacing8,
@@ -157,8 +151,7 @@ class BBXListingCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 商品标题
-                Text(
+                                Text(
                   title,
                   style: AppTheme.heading4,
                   maxLines: 1,
@@ -166,8 +159,7 @@ class BBXListingCard extends StatelessWidget {
                 ),
                 const SizedBox(height: AppTheme.spacing4),
 
-                // 卖家信息
-                if (sellerName != null)
+                                if (sellerName != null)
                   Row(
                     children: [
                       BBXAvatar(
@@ -210,8 +202,7 @@ class BBXListingCard extends StatelessWidget {
 
                 const SizedBox(height: AppTheme.spacing4),
 
-                // 数量
-                if (quantity != null)
+                                if (quantity != null)
                   Text(
                     quantity!,
                     style: AppTheme.body2.copyWith(
@@ -221,8 +212,7 @@ class BBXListingCard extends StatelessWidget {
 
                 const SizedBox(height: AppTheme.spacing4),
 
-                // 价格和按�?
-                Row(
+                                Row(
                   children: [
                     Expanded(
                       child: RichText(
@@ -254,7 +244,7 @@ class BBXListingCard extends StatelessWidget {
                       ),
                       child: const Center(
                         child: Text(
-                          '报价',
+                          'Quote',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,
@@ -274,7 +264,6 @@ class BBXListingCard extends StatelessWidget {
   }
 }
 
-/// BBX 报价卡片组件
 class BBXOfferCard extends StatelessWidget {
   final String status;
   final String listingTitle;
@@ -314,8 +303,7 @@ class BBXOfferCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 顶部：状态和时间
-          Row(
+                    Row(
             children: [
               BBXStatusChip.status(status, isSmall: true),
               const Spacer(),
@@ -330,11 +318,9 @@ class BBXOfferCard extends StatelessWidget {
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 商品信息
-          Row(
+                    Row(
             children: [
-              // 商品图片
-              ClipRRect(
+                            ClipRRect(
                 borderRadius: AppTheme.borderRadiusMedium,
                 child: Image.network(
                   listingImage,
@@ -351,8 +337,7 @@ class BBXOfferCard extends StatelessWidget {
               ),
               const SizedBox(width: AppTheme.spacing12),
 
-              // 商品详情
-              Expanded(
+                            Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -379,8 +364,7 @@ class BBXOfferCard extends StatelessWidget {
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 报价信息
-          Container(
+                    Container(
             padding: const EdgeInsets.all(AppTheme.spacing12),
             decoration: BoxDecoration(
               color: AppTheme.neutral50,
@@ -413,7 +397,7 @@ class BBXOfferCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '报价',
+                        'Quote',
                         style: AppTheme.caption.copyWith(
                           color: AppTheme.neutral600,
                         ),
@@ -448,8 +432,7 @@ class BBXOfferCard extends StatelessWidget {
             ),
           ),
 
-          // 对方信息
-          if (sellerName != null) ...[
+                    if (sellerName != null) ...[
             const SizedBox(height: AppTheme.spacing12),
             Row(
               children: [
@@ -475,8 +458,7 @@ class BBXOfferCard extends StatelessWidget {
             ),
           ],
 
-          // 操作按钮
-          if (actions != null && actions!.isNotEmpty) ...[
+                    if (actions != null && actions!.isNotEmpty) ...[
             const SizedBox(height: AppTheme.spacing12),
             Row(
               children: [
@@ -493,7 +475,6 @@ class BBXOfferCard extends StatelessWidget {
   }
 }
 
-/// BBX 交易卡片组件
 class BBXTransactionCard extends StatelessWidget {
   final String transactionId;
   final String status;
@@ -531,8 +512,7 @@ class BBXTransactionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 顶部：交易编号和状�?
-          Row(
+                    Row(
             children: [
               Text(
                 '#${transactionId.substring(transactionId.length - 6)}',
@@ -548,8 +528,7 @@ class BBXTransactionCard extends StatelessWidget {
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 商品信息
-          Row(
+                    Row(
             children: [
               ClipRRect(
                 borderRadius: AppTheme.borderRadiusMedium,
@@ -594,8 +573,7 @@ class BBXTransactionCard extends StatelessWidget {
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 金额
-          RichText(
+                    RichText(
             text: TextSpan(
               style: AppTheme.heading2.copyWith(
                 color: AppTheme.primary500,
@@ -607,25 +585,23 @@ class BBXTransactionCard extends StatelessWidget {
             ),
           ),
 
-          // 时间信息
-          const SizedBox(height: AppTheme.spacing8),
+                    const SizedBox(height: AppTheme.spacing8),
           Text(
-            '创建时间�?createdAt',
+            '创建时间?createdAt',
             style: AppTheme.caption.copyWith(
               color: AppTheme.neutral500,
             ),
           ),
           if (estimatedPickupDate != null)
             Text(
-              '预计取货�?estimatedPickupDate',
+              '预计取货?estimatedPickupDate',
               style: AppTheme.caption.copyWith(
                 color: AppTheme.neutral700,
                 fontWeight: AppTheme.semibold,
               ),
             ),
 
-          // 对方信息
-          if (otherPartyName != null) ...[
+                    if (otherPartyName != null) ...[
             const SizedBox(height: AppTheme.spacing12),
             Row(
               children: [
@@ -643,8 +619,7 @@ class BBXTransactionCard extends StatelessWidget {
             ),
           ],
 
-          // 快捷操作
-          if (quickActions != null && quickActions!.isNotEmpty) ...[
+                    if (quickActions != null && quickActions!.isNotEmpty) ...[
             const SizedBox(height: AppTheme.spacing12),
             Row(
               children: [

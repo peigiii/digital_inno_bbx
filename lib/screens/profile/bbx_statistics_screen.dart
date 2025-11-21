@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/bbx_loading.dart';
 
-/// BBX 统计页面
 class BBXStatisticsScreen extends StatefulWidget {
   const BBXStatisticsScreen({super.key});
 
@@ -15,8 +14,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
   bool isLoading = true;
 
-  // 统计数据
-  int totalListings = 0;
+    int totalListings = 0;
   int totalOffers = 0;
   int totalTransactions = 0;
   double totalRevenue = 0.0;
@@ -32,8 +30,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
   }
 
   Future<void> _loadStatistics() async {
-    // TODO: �?Firestore 加载实际数据
-    await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
 
     setState(() {
       totalListings = 24;
@@ -61,7 +58,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('我的统计'),
+        title: const Text('My Statistics'),
         backgroundColor: Colors.white,
         elevation: 0,
       ),
@@ -70,8 +67,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 财务概览
-            const Text('财务概览', style: AppTheme.heading3),
+                        const Text('Financial Overview', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -88,7 +84,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
                     children: [
                       Expanded(
                         child: _buildFinancialItem(
-                          '总收�?,
+                          'Total Revenue',
                           totalRevenue,
                           Icons.trending_up,
                           AppTheme.success,
@@ -101,7 +97,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
                       ),
                       Expanded(
                         child: _buildFinancialItem(
-                          '总支�?,
+                          'Total Expense',
                           totalExpense,
                           Icons.trending_down,
                           AppTheme.error,
@@ -116,7 +112,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        '净利润',
+                        'Net Profit',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -138,24 +134,22 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
 
             const SizedBox(height: AppTheme.spacing24),
 
-            // 业务统计
-            const Text('业务统计', style: AppTheme.heading3),
+                        const Text('Business Stats', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             _buildStatGrid([
-              _StatItem('发布商品', totalListings, Icons.inventory_2_rounded,
+              _StatItem('Published', totalListings, Icons.inventory_2_rounded,
                   AppTheme.primary500),
-              _StatItem('收到报价', totalOffers, Icons.local_offer_rounded,
+              _StatItem('Offers Received', totalOffers, Icons.local_offer_rounded,
                   AppTheme.secondary500),
-              _StatItem('完成交易', totalTransactions,
+              _StatItem('Completed', totalTransactions,
                   Icons.check_circle_rounded, AppTheme.success),
-              _StatItem('商品浏览', totalViews, Icons.visibility_rounded,
+              _StatItem('Views', totalViews, Icons.visibility_rounded,
                   AppTheme.info),
             ]),
 
             const SizedBox(height: AppTheme.spacing24),
 
-            // 评价统计
-            const Text('评价统计', style: AppTheme.heading3),
+                        const Text('Ratings', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -168,8 +162,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
                 children: [
                   Row(
                     children: [
-                      // 评分
-                      Column(
+                                            Column(
                         children: [
                           Text(
                             averageRating.toStringAsFixed(1),
@@ -193,7 +186,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '$totalReviews 条评�?,
+                            '$totalReviews Reviews',
                             style: AppTheme.caption,
                           ),
                         ],
@@ -201,8 +194,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
 
                       const SizedBox(width: AppTheme.spacing32),
 
-                      // 评分分布
-                      Expanded(
+                                            Expanded(
                         child: Column(
                           children: [
                             _buildRatingBar(5, 32),
@@ -221,8 +213,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
 
             const SizedBox(height: AppTheme.spacing24),
 
-            // 月度趋势（简化版�?
-            const Text('月度趋势', style: AppTheme.heading3),
+                        const Text('Monthly Trend', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               height: 200,
@@ -243,7 +234,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
                     ),
                     SizedBox(height: AppTheme.spacing8),
                     Text(
-                      '图表功能开发中',
+                      'Chart Coming Soon',
                       style: TextStyle(
                         color: AppTheme.neutral500,
                         fontSize: 14,

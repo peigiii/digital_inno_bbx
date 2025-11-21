@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// BBX 首页 - 极简�?
-/// 用最基础的代码测试白屏问�?
 class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
   const BBXOptimizedHomeScreenMinimal({super.key});
 
@@ -13,8 +11,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // 顶部�?
-              Container(
+                            Container(
                 color: Colors.white,
                 padding: const EdgeInsets.all(16),
                 child: Row(
@@ -44,7 +41,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '早上�?👋',
+                            '早上?👋',
                             style: TextStyle(
                               fontSize: 12,
                               color: Color(0xFF757575),
@@ -72,8 +69,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                 ),
               ),
 
-              // 搜索�?
-              Container(
+                            Container(
                 color: Colors.white,
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 child: Container(
@@ -108,7 +104,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                       const SizedBox(width: 12),
                       const Expanded(
                         child: Text(
-                          '搜索废料类型、商�?..',
+                          '搜索废料类型、商?..',
                           style: TextStyle(
                             fontSize: 16,
                             color: Color(0xFF9E9E9E),
@@ -140,8 +136,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
 
               const SizedBox(height: 8),
 
-              // 分类区域标题
-              Padding(
+                            Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
@@ -175,8 +170,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // 分类卡片（横向滚动）
-              SizedBox(
+                            SizedBox(
                 height: 100,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
@@ -199,8 +193,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              // 快捷功能标题
-              const Padding(
+                            const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Align(
                   alignment: Alignment.centerLeft,
@@ -216,8 +209,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // 快捷功能网格
-              Padding(
+                            Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: GridView.count(
                   shrinkWrap: true,
@@ -228,14 +220,14 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                   childAspectRatio: 1.5,
                   children: [
                     _buildActionCard(
-                      '我的报价',
-                      '待处�?5 �?,
+                      '我的Quote',
+                      '待处?5 ?,
                       Icons.local_offer_outlined,
                       const Color(0xFFFF6B6B),
                     ),
                     _buildActionCard(
                       '我的交易',
-                      '进行�?2 �?,
+                      '进行?2 ?,
                       Icons.receipt_long_outlined,
                       const Color(0xFF4ECDC4),
                     ),
@@ -247,7 +239,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                     ),
                     _buildActionCard(
                       '我的收藏',
-                      '已收�?12 �?,
+                      '已收?12 ?,
                       Icons.favorite_outline,
                       const Color(0xFFEC6EAD),
                     ),
@@ -275,7 +267,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '升级专业�?,
+                              '升级专业?,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -284,7 +276,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              '享受更多特权和功�?,
+                              '享受更多特权和功?,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -315,8 +307,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              // 商品列表标题
-              Padding(
+                            Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
@@ -350,8 +341,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              // 商品占位
-              Container(
+                            Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 height: 200,
                 decoration: BoxDecoration(

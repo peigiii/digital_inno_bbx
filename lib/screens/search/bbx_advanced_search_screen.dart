@@ -3,7 +3,7 @@ import '../../models/listing_model.dart';
 import '../../services/search_service.dart';
 import '../../utils/app_constants.dart';
 
-/// 高级搜索页面
+/// Advanced Search Screen
 class BBXAdvancedSearchScreen extends StatefulWidget {
   const BBXAdvancedSearchScreen({super.key});
 
@@ -15,7 +15,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
   final _searchService = SearchService();
   final _keywordController = TextEditingController();
 
-  // 筛选条�?
+  // Filter Conditions
   final Set<String> _selectedWasteTypes = {};
   RangeValues _priceRange = const RangeValues(0, 1000);
   RangeValues _quantityRange = const RangeValues(0, 100);
@@ -24,7 +24,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
   String _sortBy = 'date';
   bool _ascending = false;
 
-  // 搜索结果
+  // Search Results
   List<ListingModel> _results = [];
   bool _isSearching = false;
   bool _hasSearched = false;
@@ -35,7 +35,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     super.dispose();
   }
 
-  /// 执行搜索
+  /// Perform Search
   Future<void> _performSearch() async {
     setState(() {
       _isSearching = true;
@@ -63,7 +63,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('搜索失败�?e'),
+            content: Text('Search failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -77,7 +77,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     }
   }
 
-  /// 重置筛选条�?
+  /// Reset Filters
   void _resetFilters() {
     setState(() {
       _keywordController.clear();
@@ -97,13 +97,13 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('高级搜索'),
+        title: const Text('Advanced Search'),
         elevation: 0,
         actions: [
           TextButton(
             onPressed: _resetFilters,
             child: const Text(
-              '重置',
+              'Reset',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -111,60 +111,60 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
       ),
       body: Column(
         children: [
-          // 筛选条件区�?
+          // Filter Section
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                // 关键词输入框
+                // Keyword Input
                 _buildKeywordField(),
                 const SizedBox(height: 24),
 
-                // 废料类型
+                // Waste Type
                 _buildWasteTypesSection(),
                 const SizedBox(height: 24),
 
-                // 价格范围
+                // Price Range
                 _buildPriceRangeSection(),
                 const SizedBox(height: 24),
 
-                // 数量范围
+                // Quantity Range
                 _buildQuantityRangeSection(),
                 const SizedBox(height: 24),
 
-                // 最低评�?
+                // Min Rating
                 _buildMinRatingSection(),
                 const SizedBox(height: 24),
 
-                // 认证筛�?
+                // Verification Filter
                 _buildVerifiedOnlySection(),
                 const SizedBox(height: 24),
 
-                // 排序方式
+                // Sort By
                 _buildSortBySection(),
                 const SizedBox(height: 24),
 
-                // 升序排列
+                // Ascending
                 _buildAscendingSection(),
                 const SizedBox(height: 80),
               ],
             ),
           ),
 
-          // 搜索按钮（固定在底部�?
+          // Search Button (Fixed at bottom)
           _buildSearchButton(),
         ],
       ),
     );
   }
 
-  /// 关键词输入框
+  /// Keyword Input Field
   Widget _buildKeywordField() {
     return TextField(
       controller: _keywordController,
       decoration: InputDecoration(
         prefixIcon: const Icon(Icons.search),
-        hintText: '输入商品名称或描�?..',
+        hintText: 'Enter keyword...',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
         ),
@@ -172,7 +172,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     );
   }
 
-  /// 废料类型选择
+  /// Waste Types Section
   Widget _buildWasteTypesSection() {
     final wasteTypes = WasteTypeConstants.allTypes;
 
@@ -180,7 +180,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '废料类型',
+          'Waste Type',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 12),
@@ -210,13 +210,13 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     );
   }
 
-  /// 价格范围
+  /// Price Range Section
   Widget _buildPriceRangeSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '价格范围',
+          'Price Range',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
@@ -243,18 +243,18 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     );
   }
 
-  /// 数量范围
+  /// Quantity Range Section
   Widget _buildQuantityRangeSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '数量范围',
+          'Quantity Range',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
         Text(
-          '${_quantityRange.start.toStringAsFixed(0)} - ${_quantityRange.end.toStringAsFixed(0)} �?,
+          '${_quantityRange.start.toStringAsFixed(0)} - ${_quantityRange.end.toStringAsFixed(0)} tons',
           style: TextStyle(color: Colors.grey.shade700),
         ),
         RangeSlider(
@@ -263,8 +263,8 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
           max: 100,
           divisions: 20,
           labels: RangeLabels(
-            '${_quantityRange.start.toStringAsFixed(0)} �?,
-            '${_quantityRange.end.toStringAsFixed(0)} �?,
+            '${_quantityRange.start.toStringAsFixed(0)}',
+            '${_quantityRange.end.toStringAsFixed(0)}',
           ),
           onChanged: (values) {
             setState(() {
@@ -276,18 +276,18 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     );
   }
 
-  /// 最低评�?
+  /// Min Rating Section
   Widget _buildMinRatingSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '最低评�?,
+          'Min Rating',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
         Text(
-          '${_minRating.toStringAsFixed(1)} 星以�?,
+          '${_minRating.toStringAsFixed(1)} stars and up',
           style: TextStyle(color: Colors.grey.shade700),
         ),
         Slider(
@@ -295,7 +295,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
           min: 0,
           max: 5,
           divisions: 10,
-          label: '${_minRating.toStringAsFixed(1)} �?,
+          label: '${_minRating.toStringAsFixed(1)}',
           onChanged: (value) {
             setState(() {
               _minRating = value;
@@ -306,10 +306,10 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     );
   }
 
-  /// 认证筛�?
+  /// Verified Only Section
   Widget _buildVerifiedOnlySection() {
     return SwitchListTile(
-      title: const Text('只显示认证卖�?),
+      title: const Text('Verified Sellers Only'),
       value: _verifiedOnly,
       onChanged: (value) {
         setState(() {
@@ -320,13 +320,13 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     );
   }
 
-  /// 排序方式
+  /// Sort By Section
   Widget _buildSortBySection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '排序方式',
+          'Sort By',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 12),
@@ -334,7 +334,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
           spacing: 8,
           children: [
             ChoiceChip(
-              label: const Text('最�?),
+              label: const Text('Latest'),
               selected: _sortBy == 'date',
               onSelected: (selected) {
                 if (selected) {
@@ -345,7 +345,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
               },
             ),
             ChoiceChip(
-              label: const Text('价格'),
+              label: const Text('Price'),
               selected: _sortBy == 'price',
               onSelected: (selected) {
                 if (selected) {
@@ -356,7 +356,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
               },
             ),
             ChoiceChip(
-              label: const Text('数量'),
+              label: const Text('Quantity'),
               selected: _sortBy == 'quantity',
               onSelected: (selected) {
                 if (selected) {
@@ -372,11 +372,11 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     );
   }
 
-  /// 升序排列
+  /// Ascending Order Section
   Widget _buildAscendingSection() {
     return SwitchListTile(
-      title: const Text('升序排列'),
-      subtitle: Text(_ascending ? '从低到高' : '从高到低'),
+      title: const Text('Ascending Order'),
+      subtitle: Text(_ascending ? 'Low to High' : 'High to Low'),
       value: _ascending,
       onChanged: (value) {
         setState(() {
@@ -387,7 +387,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
     );
   }
 
-  /// 搜索按钮
+  /// Search Button
   Widget _buildSearchButton() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -427,7 +427,7 @@ class _BBXAdvancedSearchScreenState extends State<BBXAdvancedSearchScreen> {
                     const Icon(Icons.search, color: Colors.white),
                     const SizedBox(width: 8),
                     Text(
-                      _hasSearched ? '搜索 (${_results.length} 个结�?' : '搜索',
+                      _hasSearched ? 'Show Results (${_results.length})' : 'Search',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

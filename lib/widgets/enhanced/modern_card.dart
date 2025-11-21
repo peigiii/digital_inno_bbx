@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 现代化商品卡片组�?- 优化�?
-/// 适配 Pixel 5 (393 x 851 dp)
 class ModernListingCard extends StatelessWidget {
   final String imageUrl;
   final String title;
@@ -16,8 +14,7 @@ class ModernListingCard extends StatelessWidget {
   final int? reviewCount;
   final bool isVerified;
   final bool isFavorited;
-  final String? heroTag; // 添加 Hero 动画标签
-  final VoidCallback? onTap;
+  final String? heroTag;   final VoidCallback? onTap;
   final VoidCallback? onFavorite;
 
   const ModernListingCard({
@@ -34,8 +31,7 @@ class ModernListingCard extends StatelessWidget {
     this.reviewCount,
     this.isVerified = false,
     this.isFavorited = false,
-    this.heroTag, // 可选参�?
-    this.onTap,
+    this.heroTag,     this.onTap,
     this.onFavorite,
   });
 
@@ -62,18 +58,15 @@ class ModernListingCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 图片区域 (16:9 比例)
-                _buildImageSection(),
+                                _buildImageSection(),
                 
-                // 信息区域
-                Padding(
+                                Padding(
                   padding: const EdgeInsets.all(AppTheme.spacing12),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 商品标题
-                      Text(
+                                            Text(
                         title,
                         style: AppTheme.heading4.copyWith(height: 1.3),
                         maxLines: 2,
@@ -81,8 +74,7 @@ class ModernListingCard extends StatelessWidget {
                       ),
                       const SizedBox(height: AppTheme.spacing4),
 
-                      // 位置信息
-                      if (location != null)
+                                            if (location != null)
                         Row(
                           children: [
                             const Icon(
@@ -106,8 +98,7 @@ class ModernListingCard extends StatelessWidget {
 
                       const SizedBox(height: AppTheme.spacing8),
 
-                      // 价格和操作按�?
-                      Row(
+                                            Row(
                         children: [
                           Expanded(
                             child: Column(
@@ -137,8 +128,7 @@ class ModernListingCard extends StatelessWidget {
                             ),
                           ),
                           
-                          // 报价按钮
-                          Container(
+                                                    Container(
                             height: 36,
                             padding: const EdgeInsets.symmetric(
                               horizontal: AppTheme.spacing16,
@@ -156,7 +146,7 @@ class ModernListingCard extends StatelessWidget {
                             ),
                             child: const Center(
                               child: Text(
-                                '立即报价',
+                                '立即Quote',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -168,15 +158,13 @@ class ModernListingCard extends StatelessWidget {
                         ],
                       ),
 
-                      // 卖家信息
-                      if (sellerName != null) ...[
+                                            if (sellerName != null) ...[
                         const SizedBox(height: AppTheme.spacing8),
                         const Divider(height: 1),
                         const SizedBox(height: AppTheme.spacing8),
                         Row(
                           children: [
-                            // 头像
-                            CircleAvatar(
+                                                        CircleAvatar(
                               radius: 12,
                               backgroundColor: AppTheme.primary100,
                               backgroundImage: sellerAvatar != null
@@ -195,8 +183,7 @@ class ModernListingCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             
-                            // 卖家名和认证
-                            Expanded(
+                                                        Expanded(
                               child: Row(
                                 children: [
                                   Flexible(
@@ -222,8 +209,7 @@ class ModernListingCard extends StatelessWidget {
                               ),
                             ),
 
-                            // 评分
-                            if (rating != null) ...[
+                                                        if (rating != null) ...[
                               const SizedBox(width: 8),
                               Icon(
                                 Icons.star_rounded,
@@ -253,12 +239,10 @@ class ModernListingCard extends StatelessWidget {
     );
   }
 
-  /// 构建图片区域
-  Widget _buildImageSection() {
+    Widget _buildImageSection() {
     return Stack(
       children: [
-        // 主图�?(16:9 比例，最大高�?200dp)
-        AspectRatio(
+                AspectRatio(
           aspectRatio: 16 / 9,
           child: ClipRRect(
             borderRadius: const BorderRadius.only(
@@ -311,8 +295,7 @@ class ModernListingCard extends StatelessWidget {
           ),
         ),
 
-        // 分类标签（左上角�?
-        Positioned(
+                Positioned(
           top: AppTheme.spacing8,
           left: AppTheme.spacing8,
           child: Container(
@@ -335,8 +318,7 @@ class ModernListingCard extends StatelessWidget {
           ),
         ),
 
-        // 收藏按钮（右上角�?
-        if (onFavorite != null)
+                if (onFavorite != null)
           Positioned(
             top: AppTheme.spacing8,
             right: AppTheme.spacing8,
@@ -373,7 +355,6 @@ class ModernListingCard extends StatelessWidget {
   }
 }
 
-/// 现代化报价卡片组�?
 class ModernOfferCard extends StatelessWidget {
   final String status;
   final String statusLabel;
@@ -426,8 +407,7 @@ class ModernOfferCard extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: AppTheme.borderRadiusLarge,
               border: Border.all(color: AppTheme.neutral200, width: 1),
-              // 左侧状态条
-              boxShadow: [
+                            boxShadow: [
                 BoxShadow(
                   color: statusColor.withOpacity(0.2),
                   blurRadius: 0,
@@ -439,8 +419,7 @@ class ModernOfferCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 顶部：状态和时间
-                Padding(
+                                Padding(
                   padding: const EdgeInsets.all(AppTheme.spacing12),
                   child: Row(
                     children: [
@@ -481,14 +460,12 @@ class ModernOfferCard extends StatelessWidget {
 
                 const Divider(height: 1),
 
-                // 商品信息
-                Padding(
+                                Padding(
                   padding: const EdgeInsets.all(AppTheme.spacing12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // 商品图片
-                      ClipRRect(
+                                            ClipRRect(
                         borderRadius: AppTheme.borderRadiusMedium,
                         child: Image.network(
                           listingImage,
@@ -510,8 +487,7 @@ class ModernOfferCard extends StatelessWidget {
                       ),
                       const SizedBox(width: AppTheme.spacing12),
 
-                      // 商品详情
-                      Expanded(
+                                            Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -523,8 +499,7 @@ class ModernOfferCard extends StatelessWidget {
                             ),
                             const SizedBox(height: AppTheme.spacing4),
                             
-                            // 分类标签
-                            Container(
+                                                        Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppTheme.spacing8,
                                 vertical: AppTheme.spacing4,
@@ -551,8 +526,7 @@ class ModernOfferCard extends StatelessWidget {
                   ),
                 ),
 
-                // 报价信息
-                Container(
+                                Container(
                   margin: const EdgeInsets.symmetric(horizontal: AppTheme.spacing12),
                   padding: const EdgeInsets.all(AppTheme.spacing12),
                   decoration: BoxDecoration(
@@ -568,8 +542,7 @@ class ModernOfferCard extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      // 原价
-                      Expanded(
+                                            Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -591,13 +564,13 @@ class ModernOfferCard extends StatelessWidget {
                         ),
                       ),
 
-                      // 报价
+                      // Quote
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '我的报价',
+                              '我的Quote',
                               style: AppTheme.caption.copyWith(
                                 color: AppTheme.neutral600,
                               ),
@@ -613,8 +586,7 @@ class ModernOfferCard extends StatelessWidget {
                         ),
                       ),
 
-                      // 折扣标签
-                      if (discountPercent > 0)
+                                            if (discountPercent > 0)
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: AppTheme.spacing8,
@@ -638,8 +610,7 @@ class ModernOfferCard extends StatelessWidget {
                   ),
                 ),
 
-                // 卖家信息
-                if (sellerName != null) ...[
+                                if (sellerName != null) ...[
                   Padding(
                     padding: const EdgeInsets.fromLTRB(
                       AppTheme.spacing12,
@@ -681,8 +652,7 @@ class ModernOfferCard extends StatelessWidget {
                   ),
                 ],
 
-                // 操作按钮
-                if (actions != null) ...[
+                                if (actions != null) ...[
                   const Divider(height: 1),
                   Padding(
                     padding: const EdgeInsets.all(AppTheme.spacing12),

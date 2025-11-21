@@ -25,8 +25,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
 
   Future<void> _refreshOffers() async {
     setState(() {
-      // 触发重建以刷�?StreamBuilder
-    });
+          });
   }
 
   Stream<QuerySnapshot> _getOffersStream() {
@@ -75,7 +74,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                     color: Color(0xFF4CAF50),
                   ),
                   SizedBox(height: 16),
-                  Text('处理�?..'),
+                  Text('处理?..'),
                 ],
               ),
             ),
@@ -102,7 +101,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
             .get();
 
         if (!listingDoc.exists) {
-          throw Exception('废料信息不存�?);
+          throw Exception('废料信息不存?');
         }
 
         final listingData = listingDoc.data() as Map<String, dynamic>;
@@ -141,7 +140,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
         await batch.commit().timeout(
           const Duration(seconds: 15),
           onTimeout: () {
-            throw Exception('操作超时，请检查网络连�?);
+            throw Exception('操作超时，请检查网络连?');
           },
         );
 
@@ -195,7 +194,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('报价�?{newStatus == "accepted" ? "接受" : "拒绝"}'),
+            content: Text('Quote?{newStatus == "accepted" ? "接受" : "拒绝"}'),
             backgroundColor: newStatus == "accepted"
                 ? const Color(0xFF4CAF50)
                 : const Color(0xFFF44336),
@@ -231,7 +230,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: '搜索报价...',
+                    hintText: '搜索Quote...',
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
@@ -338,8 +337,8 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty && _selectedStatus == 'all'
-                              ? '暂无报价'
-                              : '未找到匹配的报价',
+                              ? '暂无Quote'
+                              : '未找到匹配的Quote',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -348,7 +347,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                         if (_searchQuery.isEmpty && _selectedStatus == 'all') ...[
                           const SizedBox(height: 8),
                           Text(
-                            '还没有收到任何报�?,
+                            '还没有收到任何报?,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[500],

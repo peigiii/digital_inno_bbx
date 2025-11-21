@@ -5,7 +5,6 @@ import '../../widgets/bbx_empty_state.dart';
 import '../../widgets/bbx_button.dart';
 import '../../utils/responsive.dart';
 
-/// BBX 搜索页面（独立）
 class BBXNewSearchScreen extends StatefulWidget {
   const BBXNewSearchScreen({super.key});
 
@@ -17,20 +16,19 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocus = FocusNode();
   bool _showResults = false;
-  List<String> _searchHistory = ['PET塑料�?, '废铁', '纸箱'];
+  List<String> _searchHistory = ['PET Plastic', 'Scrap Metal', 'Cardboard'];
   final List<String> _hotSearches = [
-    '塑料�?,
-    '废铁',
-    '纸箱',
-    '电子废料',
-    '玻璃�?,
-    '废纸',
+    'Plastic',
+    'Scrap Metal',
+    'Cardboard',
+    'E-Waste',
+    'Glass',
+    'Paper',
   ];
 
   @override
   void initState() {
     super.initState();
-    // 自动聚焦
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _searchFocus.requestFocus();
     });
@@ -61,10 +59,8 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部搜索�?
             _buildSearchBar(),
 
-            // 内容区域
             Expanded(
               child: _showResults
                   ? _buildSearchResults()
@@ -76,7 +72,6 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
     );
   }
 
-  /// 搜索�?
   Widget _buildSearchBar() {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -103,7 +98,7 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
               focusNode: _searchFocus,
               onSubmitted: (_) => _onSearch(),
               decoration: InputDecoration(
-                hintText: '搜索废料类型、商�?..',
+                hintText: 'Search waste types, companies...',
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -125,7 +120,7 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
           BBXIconButton(
             icon: Icons.tune_rounded,
             onPressed: () {
-              // 打开筛选抽�?
+              // Filter
             },
             size: 40,
           ),
@@ -134,15 +129,13 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
     );
   }
 
-  /// 搜索建议（未输入时）
   Widget _buildSearchSuggestions() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppTheme.spacing16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 热门搜索
-          const Text('热门搜索', style: AppTheme.heading4),
+          const Text('Popular Searches', style: AppTheme.heading4),
           const SizedBox(height: AppTheme.spacing12),
           Wrap(
             spacing: AppTheme.spacing8,
@@ -173,14 +166,13 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
 
           const SizedBox(height: AppTheme.spacing24),
 
-          // 搜索历史
           if (_searchHistory.isNotEmpty) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('搜索历史', style: AppTheme.heading4),
+                const Text('Search History', style: AppTheme.heading4),
                 BBXTextButton(
-                  text: '清除',
+                  text: 'Clear',
                   onPressed: () {
                     setState(() {
                       _searchHistory.clear();
@@ -224,21 +216,19 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
     );
   }
 
-  /// 搜索结果
   Widget _buildSearchResults() {
     return Column(
       children: [
-        // 结果统计和排�?
         Container(
           padding: const EdgeInsets.all(AppTheme.spacing16),
           child: Row(
             children: [
-              const Text('找到 0 个结�?, style: AppTheme.body2),
+              const Text('Found 0 results', style: AppTheme.body2),
               const Spacer(),
               DropdownButton<String>(
-                value: '最新发�?,
+                value: 'Newest',
                 underline: const SizedBox(),
-                items: ['最新发�?, '价格从低到高', '价格从高到低']
+                items: ['Newest', 'Price: Low to High', 'Price: High to Low']
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
                 onChanged: (value) {},
@@ -247,10 +237,9 @@ class _BBXNewSearchScreenState extends State<BBXNewSearchScreen> {
           ),
         ),
 
-        // 搜索结果列表
         Expanded(
           child: BBXEmptyState.noSearchResults(
-            buttonText: '清除筛�?,
+            buttonText: 'Clear Filters',
             onButtonPressed: () {
               setState(() {
                 _showResults = false;

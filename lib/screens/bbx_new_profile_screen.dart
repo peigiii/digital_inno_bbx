@@ -26,7 +26,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     if (user == null) return;
 
     try {
-      print('🔧 [个人中心] 开始创建用户文�? ${user!.uid}');
+      print('🔧 [Profile] Creating user document: ${user!.uid}');
 
       await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
         'uid': user!.uid,
@@ -40,25 +40,25 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
         'userType': 'producer',
       }, SetOptions(merge: true));
 
-      print('�?[个人中心] 用户文档创建成功');
+      print('✅ [Profile] User document created successfully');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('用户数据初始化成�?),
+            content: Text('User data initialized successfully'),
             backgroundColor: Colors.green,
           ),
         );
         setState(() {
-          _statisticsFuture = _loadUserStatistics(); // 重新加载统计数据
+          _statisticsFuture = _loadUserStatistics();
         });
       }
     } catch (e) {
-      print('�?[个人中心] 创建用户文档失败: $e');
+      print('❌ [Profile] Failed to create user document: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('初始化失�? $e'),
+            content: Text('Initialization failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -133,24 +133,22 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
             .doc(user!.uid)
             .snapshots(),
         builder: (context, snapshot) {
-          // 处理加载状�?
           if (snapshot.connectionState == ConnectionState.waiting) {
-            print('🔄 [个人中心] 加载�?..');
+            print('🔄 [Profile] Loading...');
             return const Center(child: CircularProgressIndicator());
           }
 
-          // 处理错误状�?
           if (snapshot.hasError) {
-            print('�?[个人中心] StreamBuilder 错误: ${snapshot.error}');
+            print('❌ [Profile] StreamBuilder error: ${snapshot.error}');
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text(
-                    '加载失败',
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  const Text(
+                    'Failed to load',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -161,18 +159,17 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {}); // 触发重新构建
+                      setState(() {});
                     },
-                    child: const Text('重试'),
+                    child: const Text('Retry'),
                   ),
                 ],
               ),
             );
           }
 
-          // 处理无数据状�?
           if (!snapshot.hasData || snapshot.data == null) {
-            print('⚠️ [个人中心] 无数�? hasData=${snapshot.hasData}');
+            print('⚠️ [Profile] No data: hasData=${snapshot.hasData}');
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -180,25 +177,23 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                   const Icon(Icons.person_off, size: 64, color: Colors.grey),
                   const SizedBox(height: 16),
                   const Text(
-                    '用户数据不存�?,
+                    'User data not found',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: () async {
-                      // 尝试创建用户文档
                       await _createUserDocument();
                     },
-                    child: const Text('初始化用户数�?),
+                    child: const Text('Initialize User Data'),
                   ),
                 ],
               ),
             );
           }
 
-          // 检查文档是否存�?
           if (!snapshot.data!.exists) {
-            print('⚠️ [个人中心] 用户文档不存�?);
+            print('⚠️ [Profile] User document does not exist');
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -206,7 +201,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                   const Icon(Icons.person_off, size: 64, color: Colors.grey),
                   const SizedBox(height: 16),
                   const Text(
-                    '用户文档不存�?,
+                    'User document does not exist',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
@@ -219,7 +214,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                     onPressed: () async {
                       await _createUserDocument();
                     },
-                    child: const Text('创建用户数据'),
+                    child: const Text('Create User Data'),
                   ),
                 ],
               ),
@@ -228,11 +223,10 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
 
           final userData = snapshot.data!.data() as Map<String, dynamic>?;
 
-          // 安全的日志输�?
           if (userData != null) {
-            print('�?[个人中心] 数据加载成功: ${userData.keys.join(", ")}');
+            print('✅ [Profile] Data loaded successfully: ${userData.keys.join(", ")}');
           } else {
-            print('⚠️ [个人中心] 用户数据为空，使用默认�?);
+            print('⚠️ [Profile] User data empty, using defaults');
           }
 
           return CustomScrollView(
@@ -412,7 +406,6 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
               FutureBuilder<Map<String, dynamic>>(
                 future: _statisticsFuture,
                 builder: (context, snapshot) {
-                  // 显示加载状�?
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Row(
                       children: [
@@ -443,7 +436,6 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                     );
                   }
 
-                  // 获取数据并确保所有值都有默认�?
                   final stats = snapshot.data ?? {};
                   final listings = stats['listings'] ?? 0;
                   final transactions = stats['transactions'] ?? 0;
@@ -485,7 +477,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                   Navigator.pushNamed(context, '/subscription-management');
                 },
                 icon: const Icon(Icons.workspace_premium, size: 18),
-                label: const Text('管理订阅'),
+                label: const Text('Manage Subscription'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.white,
                   side: const BorderSide(color: Colors.white),
@@ -826,7 +818,6 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     );
   }
 
-  /// 获取订阅计划显示名称
   String _getSubscriptionDisplayName(String? plan) {
     if (plan == null) return 'Free Member';
 
@@ -843,7 +834,6 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     }
   }
 
-  /// 获取订阅计划图标
   IconData _getSubscriptionIcon(String? plan) {
     if (plan == null) return Icons.person;
 
@@ -860,7 +850,6 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     }
   }
 
-  /// 加载用户统计数据
   Future<Map<String, dynamic>> _loadUserStatistics() async {
     if (user == null) {
       return {
@@ -871,42 +860,37 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     }
 
     try {
-      // 使用并行查询而不�?whereIn（避免索引问题）
       final futures = await Future.wait([
-        // 查询所有用户的列表（不过滤状态，客户端过滤）
         FirebaseFirestore.instance
             .collection('listings')
             .where('userId', isEqualTo: user!.uid)
-            .limit(100) // 限制最�?00条，避免超时
+            .limit(100)
             .get()
             .timeout(
               const Duration(seconds: 5),
-              onTimeout: () => throw TimeoutException('列表查询超时'),
+              onTimeout: () => throw TimeoutException('Listings query timed out'),
             ),
-        // 查询已完成的交易
         FirebaseFirestore.instance
             .collection('transactions')
             .where('sellerId', isEqualTo: user!.uid)
             .where('status', isEqualTo: 'completed')
-            .limit(100) // 限制最�?00�?
+            .limit(100)
             .get()
             .timeout(
               const Duration(seconds: 5),
-              onTimeout: () => throw TimeoutException('交易查询超时'),
+              onTimeout: () => throw TimeoutException('Transactions query timed out'),
             ),
       ]);
 
       final listingsSnapshot = futures[0];
       final transactionsSnapshot = futures[1];
 
-      // 客户端过滤状态（避免 whereIn 需要索引）
       final validStatuses = ['available', 'sold', 'active'];
       final validListings = listingsSnapshot.docs.where((doc) {
         final status = doc.data()['status'] as String?;
         return status != null && validStatuses.contains(status);
       }).length;
 
-      // 计算总收�?
       double totalRevenue = 0.0;
       for (var doc in transactionsSnapshot.docs) {
         final data = doc.data();
@@ -914,7 +898,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
         totalRevenue += (sellerAmount is num) ? sellerAmount.toDouble() : 0.0;
       }
 
-      print('�?[个人中心] 统计数据加载成功: $validListings 个列�? ${transactionsSnapshot.docs.length} 笔交�?);
+      print('✅ [Profile] Stats loaded: $validListings listings, ${transactionsSnapshot.docs.length} transactions');
 
       return {
         'listings': validListings,
@@ -922,14 +906,14 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
         'revenue': totalRevenue,
       };
     } on TimeoutException catch (e) {
-      print('⏱️ [个人中心] 查询超时: $e');
+      print('⏱️ [Profile] Query timed out: $e');
       return {
         'listings': 0,
         'transactions': 0,
         'revenue': 0.0,
       };
     } catch (e) {
-      print('�?[个人中心] 加载统计数据失败: $e');
+      print('❌ [Profile] Failed to load stats: $e');
       return {
         'listings': 0,
         'transactions': 0,

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-/// 超级简单的测试页面
 class BBXTestHomeScreen extends StatelessWidget {
   const BBXTestHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    print('BBXTestHomeScreen build() called'); // 调试日志
-    
+    print('BBXTestHomeScreen build() called');     
     try {
       return Scaffold(
         appBar: AppBar(
@@ -25,7 +23,7 @@ class BBXTestHomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                '�?页面加载成功�?,
+                '?页面加载成功?,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -33,17 +31,17 @@ class BBXTestHomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Text(
-                '如果你看到这个页�?,
+                '如果你看到这个页?,
                 style: TextStyle(fontSize: 16),
               ),
               const Text(
-                '说明路由和基础框架都正�?,
+                '说明路由和基础框架都正?,
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
-                  print('按钮被点�?);
+                  print('按钮被点?);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('交互正常')),
                   );

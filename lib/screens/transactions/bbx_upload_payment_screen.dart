@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../services/transaction_service.dart';
 
-/// 上传支付凭证页面
+/// Upload Payment Proof Screen
 class BBXUploadPaymentScreen extends StatefulWidget {
   final String transactionId;
 
@@ -35,14 +35,14 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('上传支付凭证'),
+        title: const Text('Upload Payment Proof'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 说明文字
+            // Instructions
             Card(
               color: Colors.blue[50],
               child: Padding(
@@ -55,7 +55,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                         Icon(Icons.info_outline, color: Colors.blue[700]),
                         const SizedBox(width: 8),
                         const Text(
-                          '请上传支付凭�?,
+                          'Please upload payment proof',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -65,7 +65,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '�?支持的格式：JPG, PNG\n�?文件大小不超�?MB\n�?请确保凭证清晰可�?,
+                      'Supports JPG, PNG\nMax size 5MB\nEnsure proof is clear',
                       style: TextStyle(
                         color: Colors.grey[700],
                         fontSize: 13,
@@ -78,9 +78,9 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
 
             const SizedBox(height: 24),
 
-            // 支付方式选择
+            // Payment Method Selection
             const Text(
-              '支付方式',
+              'Payment Method',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -89,8 +89,8 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
             const SizedBox(height: 12),
 
             RadioListTile<String>(
-              title: const Text('现金支付'),
-              subtitle: const Text('面对面现金交�?),
+              title: const Text('Cash on Delivery'),
+              subtitle: const Text('Pay cash upon collection'),
               value: 'cash',
               groupValue: _selectedPaymentMethod,
               onChanged: (value) {
@@ -101,8 +101,8 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
             ),
 
             RadioListTile<String>(
-              title: const Text('银行转账'),
-              subtitle: const Text('通过银行转账支付'),
+              title: const Text('Bank Transfer'),
+              subtitle: const Text('Pay via Bank Transfer'),
               value: 'bank_transfer',
               groupValue: _selectedPaymentMethod,
               onChanged: (value) {
@@ -113,8 +113,8 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
             ),
 
             RadioListTile<String>(
-              title: const Text('电子钱包'),
-              subtitle: const Text('通过电子钱包支付'),
+              title: const Text('E-Wallet'),
+              subtitle: const Text('Pay via E-Wallet'),
               value: 'ewallet',
               groupValue: _selectedPaymentMethod,
               onChanged: (value) {
@@ -126,7 +126,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
 
             const SizedBox(height: 24),
 
-            // 提示信息
+            // Hints
             if (_selectedPaymentMethod == 'cash')
               Container(
                 padding: const EdgeInsets.all(12),
@@ -141,7 +141,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
-                        '现金支付请在取货时当面交�?,
+                        'Please pay cash directly to the seller upon collection',
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -164,8 +164,8 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                     Expanded(
                       child: Text(
                         _selectedPaymentMethod == 'bank_transfer'
-                            ? '请上传银行转账截图作为凭�?
-                            : '请上传电子钱包支付截图作为凭�?,
+                            ? 'Please upload bank transfer receipt'
+                            : 'Please upload e-wallet payment receipt',
                         style: const TextStyle(fontSize: 13),
                       ),
                     ),
@@ -175,9 +175,9 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
 
             const SizedBox(height: 24),
 
-            // 图片上传区域
+            // Image Upload Section
             const Text(
-              '支付凭证图片',
+              'Proof Image',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -210,7 +210,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            '点击上传',
+                            'Tap to upload',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 16,
@@ -257,15 +257,15 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
               TextButton.icon(
                 onPressed: _pickImage,
                 icon: const Icon(Icons.refresh),
-                label: const Text('重新选择'),
+                label: const Text('Change Image'),
               ),
             ],
 
             const SizedBox(height: 24),
 
-            // 备注输入�?
+            // Notes Input
             const Text(
-              '备注（可选）',
+              'Notes (Optional)',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -278,7 +278,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
               maxLines: 3,
               maxLength: 200,
               decoration: const InputDecoration(
-                hintText: '添加备注（可选）',
+                hintText: 'Add notes here...',
                 border: OutlineInputBorder(),
                 counterText: '',
               ),
@@ -286,7 +286,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
 
             const SizedBox(height: 32),
 
-            // 底部按钮
+            // Buttons
             Row(
               children: [
                 Expanded(
@@ -295,7 +295,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: const Text('取消'),
+                    child: const Text('Cancel'),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -316,7 +316,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
-                        : const Text('提交凭证'),
+                        : const Text('Submit Proof'),
                   ),
                 ),
               ],
@@ -327,7 +327,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
     );
   }
 
-  /// 选择图片
+  /// Pick Image
   Future<void> _pickImage() async {
     try {
       final XFile? pickedFile = await _imagePicker.pickImage(
@@ -340,12 +340,12 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
       if (pickedFile != null) {
         final File imageFile = File(pickedFile.path);
 
-        // 验证文件大小�?MB�?
+        // Validate File Size (5MB)
         final fileSize = await imageFile.length();
         if (fileSize > 5 * 1024 * 1024) {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('图片大小不能超过5MB')),
+              const SnackBar(content: Text('Image size must be less than 5MB')),
             );
           }
           return;
@@ -358,18 +358,18 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('选择图片失败: $e')),
+          SnackBar(content: Text('Pick image failed: $e')),
         );
       }
     }
   }
 
-  /// 提交支付凭证
+  /// Submit Payment Proof
   Future<void> _submitPaymentProof() async {
-    // 验证
+    // Validation
     if (_selectedImage == null && _selectedPaymentMethod != 'cash') {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请上传支付凭证图�?)),
+        const SnackBar(content: Text('Please upload payment proof image')),
       );
       return;
     }
@@ -380,7 +380,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
 
     try {
       if (_selectedImage != null) {
-        // 上传支付凭证
+        // Upload Payment Proof
         await _transactionService.uploadPaymentProof(
           widget.transactionId,
           _selectedImage!,
@@ -389,14 +389,14 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('支付凭证已提�?)),
+          const SnackBar(content: Text('Payment proof submitted successfully')),
         );
         Navigator.pop(context, true);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('提交失败: $e')),
+          SnackBar(content: Text('Submit failed: $e')),
         );
       }
     } finally {

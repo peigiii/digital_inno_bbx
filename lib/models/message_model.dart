@@ -1,22 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 消息模型
 class MessageModel {
   final String id;
   final String conversationId;
   final String senderId;
   final String receiverId;
-  final String content; // 消息内容
-  final String type; // 消息类型：text/image/file/location/listing
-  final DateTime? createdAt;
-  final bool isRead; // 是否已读
-  final DateTime? readAt; // 已读时间
-  final String? imageUrl; // 图片URL（当type=image�?
-  final String? fileUrl; // 文件URL（当type=file�?
-  final String? fileName; // 文件名（当type=file�?
-  final Map<String, dynamic>? location; // 位置信息（当type=location�?
-  final String? listingId; // 商品ID（当type=listing�?
-
+  final String content;   final String type;   final DateTime? createdAt;
+  final bool isRead;   final DateTime? readAt;   final String? imageUrl;   final String? fileUrl;   final String? fileName;   final Map<String, dynamic>? location;   final String? listingId; 
   MessageModel({
     required this.id,
     required this.conversationId,
@@ -34,14 +24,12 @@ class MessageModel {
     this.listingId,
   });
 
-  /// �?Firestore 文档创建
-  factory MessageModel.fromDocument(DocumentSnapshot doc) {
+    factory MessageModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return MessageModel.fromMap(doc.id, data);
   }
 
-  /// �?Map 创建
-  factory MessageModel.fromMap(String id, Map<String, dynamic> data) {
+    factory MessageModel.fromMap(String id, Map<String, dynamic> data) {
     return MessageModel(
       id: id,
       conversationId: data['conversationId'] ?? '',
@@ -60,8 +48,7 @@ class MessageModel {
     );
   }
 
-  /// 转换�?Map（用于Firestore�?
-  Map<String, dynamic> toMap() {
+    Map<String, dynamic> toMap() {
     return {
       'conversationId': conversationId,
       'senderId': senderId,
@@ -79,8 +66,7 @@ class MessageModel {
     };
   }
 
-  /// 复制并修改部分字�?
-  MessageModel copyWith({
+    MessageModel copyWith({
     String? content,
     String? type,
     bool? isRead,
@@ -109,20 +95,15 @@ class MessageModel {
     );
   }
 
-  /// 是否为文本消�?
-  bool get isText => type == 'text';
+    bool get isText => type == 'text';
 
-  /// 是否为图片消�?
-  bool get isImage => type == 'image';
+    bool get isImage => type == 'image';
 
-  /// 是否为文件消�?
-  bool get isFile => type == 'file';
+    bool get isFile => type == 'file';
 
-  /// 是否为位置消�?
-  bool get isLocation => type == 'location';
+    bool get isLocation => type == 'location';
 
-  /// 是否为商品链�?
-  bool get isListing => type == 'listing';
+    bool get isListing => type == 'listing';
 
   @override
   String toString() {
@@ -130,16 +111,9 @@ class MessageModel {
   }
 }
 
-/// 对话模型
 class ConversationModel {
   final String id;
-  final List<String> participantIds; // 两个用户的ID
-  final String? lastMessage; // 最后一条消息内�?
-  final DateTime? lastMessageAt; // 最后消息时�?
-  final String? lastMessageSenderId; // 最后消息发送者ID
-  final Map<String, int> unreadCount; // 未读数：userId -> count
-  final Map<String, bool> isTyping; // 正在输入：userId -> isTyping
-  final DateTime? createdAt;
+  final List<String> participantIds;   final String? lastMessage;   final DateTime? lastMessageAt;   final String? lastMessageSenderId;   final Map<String, int> unreadCount;   final Map<String, bool> isTyping;   final DateTime? createdAt;
 
   ConversationModel({
     required this.id,
@@ -152,14 +126,12 @@ class ConversationModel {
     this.createdAt,
   });
 
-  /// �?Firestore 文档创建
-  factory ConversationModel.fromDocument(DocumentSnapshot doc) {
+    factory ConversationModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return ConversationModel.fromMap(doc.id, data);
   }
 
-  /// �?Map 创建
-  factory ConversationModel.fromMap(String id, Map<String, dynamic> data) {
+    factory ConversationModel.fromMap(String id, Map<String, dynamic> data) {
     return ConversationModel(
       id: id,
       participantIds: (data['participantIds'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
@@ -178,8 +150,7 @@ class ConversationModel {
     );
   }
 
-  /// 转换�?Map（用于Firestore�?
-  Map<String, dynamic> toMap() {
+    Map<String, dynamic> toMap() {
     return {
       'participantIds': participantIds,
       'lastMessage': lastMessage,
@@ -191,8 +162,7 @@ class ConversationModel {
     };
   }
 
-  /// 复制并修改部分字�?
-  ConversationModel copyWith({
+    ConversationModel copyWith({
     List<String>? participantIds,
     String? lastMessage,
     DateTime? lastMessageAt,
@@ -212,13 +182,11 @@ class ConversationModel {
     );
   }
 
-  /// 获取某用户的未读�?
-  int getUnreadCount(String userId) {
+    int getUnreadCount(String userId) {
     return unreadCount[userId] ?? 0;
   }
 
-  /// 获取对方的用户ID
-  String? getOtherParticipantId(String currentUserId) {
+    String? getOtherParticipantId(String currentUserId) {
     try {
       return participantIds.firstWhere((id) => id != currentUserId);
     } catch (e) {
@@ -226,8 +194,7 @@ class ConversationModel {
     }
   }
 
-  /// 检查某用户是否正在输入
-  bool isUserTyping(String userId) {
+    bool isUserTyping(String userId) {
     return isTyping[userId] ?? false;
   }
 

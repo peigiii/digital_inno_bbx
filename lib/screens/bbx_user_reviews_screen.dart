@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 用户评价展示页面
-/// 显示用户收到的所有评价和统计信息
 class BBXUserReviewsScreen extends StatefulWidget {
   final String userId;
 
@@ -28,12 +26,9 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
       ),
       body: Column(
         children: [
-          // 评价统计卡片
-          _buildStatsCard(),
-          // 筛选栏
-          _buildFilterBar(),
-          // 评价列表
-          Expanded(child: _buildReviewsList()),
+                    _buildStatsCard(),
+                    _buildFilterBar(),
+                    Expanded(child: _buildReviewsList()),
         ],
       ),
     );
@@ -68,8 +63,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
           );
         }
 
-        // 计算统计数据
-        double totalRating = 0;
+                double totalRating = 0;
         Map<int, int> ratingDistribution = {5: 0, 4: 0, 3: 0, 2: 0, 1: 0};
 
         for (var doc in reviews) {
@@ -88,8 +82,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // 平均评分
-                Row(
+                                Row(
                   children: [
                     Expanded(
                       flex: 2,
@@ -105,7 +98,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
                           _buildStars(averageRating),
                           const SizedBox(height: 8),
                           Text(
-                            '$totalReviews 条评�?,
+                            '$totalReviews 条评?,
                             style: TextStyle(color: Colors.grey[600]),
                           ),
                         ],
@@ -191,11 +184,11 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
           children: [
             _buildFilterChip('all', '全部'),
             const SizedBox(width: 8),
-            _buildFilterChip('5', '好评 (5�?'),
+            _buildFilterChip('5', '好评 (5?'),
             const SizedBox(width: 8),
-            _buildFilterChip('3-4', '中评 (3-4�?'),
+            _buildFilterChip('3-4', '中评 (3-4?'),
             const SizedBox(width: 8),
-            _buildFilterChip('1-2', '差评 (1-2�?'),
+            _buildFilterChip('1-2', '差评 (1-2?'),
             const SizedBox(width: 8),
             _buildFilterChip('images', '有图'),
           ],
@@ -236,8 +229,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
 
         var reviews = snapshot.data!.docs;
 
-        // 应用筛�?
-        reviews = reviews.where((doc) {
+                reviews = reviews.where((doc) {
           final data = doc.data() as Map<String, dynamic>;
           final rating = (data['overallRating'] ?? 0.0).toDouble();
 
@@ -284,8 +276,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 评价者信息和评分
-            Row(
+                        Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (isAnonymous)
@@ -339,8 +330,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
             ),
             const SizedBox(height: 12),
 
-            // 多维度评�?
-            if (data['descriptionScore'] != null ||
+                        if (data['descriptionScore'] != null ||
                 data['serviceScore'] != null ||
                 data['deliveryScore'] != null) ...[
               Wrap(
@@ -367,8 +357,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
               const SizedBox(height: 12),
             ],
 
-            // 标签
-            if (data['tags'] != null && (data['tags'] as List).isNotEmpty) ...[
+                        if (data['tags'] != null && (data['tags'] as List).isNotEmpty) ...[
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -387,8 +376,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
               const SizedBox(height: 12),
             ],
 
-            // 评价内容
-            if (data['comment'] != null && data['comment'].isNotEmpty) ...[
+                        if (data['comment'] != null && data['comment'].isNotEmpty) ...[
               Text(
                 data['comment'],
                 style: TextStyle(color: Colors.grey[800]),
@@ -396,8 +384,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
               const SizedBox(height: 12),
             ],
 
-            // 评价图片
-            if (data['images'] != null &&
+                        if (data['images'] != null &&
                 (data['images'] as List).isNotEmpty) ...[
               SizedBox(
                 height: 100,
@@ -424,8 +411,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
               const SizedBox(height: 12),
             ],
 
-            // 时间
-            Row(
+                        Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(

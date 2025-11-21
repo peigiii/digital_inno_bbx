@@ -5,8 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
-/// 争议解决中心
-/// 处理交易纠纷和争�?
 class BBXDisputeCenterScreen extends StatefulWidget {
   const BBXDisputeCenterScreen({super.key});
 
@@ -43,9 +41,9 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
           isScrollable: true,
           tabs: const [
             Tab(text: '全部'),
-            Tab(text: '处理�?),
-            Tab(text: '已解�?),
-            Tab(text: '已关�?),
+            Tab(text: '处理?),
+            Tab(text: '已解?),
+            Tab(text: '已关?),
           ],
         ),
       ),
@@ -131,19 +129,19 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
     switch (status) {
       case 'open':
         statusColor = Colors.orange;
-        statusLabel = '待处�?;
+        statusLabel = '待处?;
         break;
       case 'investigating':
         statusColor = Colors.blue;
-        statusLabel = '调查�?;
+        statusLabel = '调查?;
         break;
       case 'resolved':
         statusColor = Colors.green;
-        statusLabel = '已解�?;
+        statusLabel = '已解?;
         break;
       case 'closed':
         statusColor = Colors.grey;
-        statusLabel = '已关�?;
+        statusLabel = '已关?;
         break;
       default:
         statusColor = Colors.grey;
@@ -181,8 +179,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 头部
-              Row(
+                            Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
@@ -219,8 +216,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
               ),
               const SizedBox(height: 12),
 
-              // 描述
-              Text(
+                            Text(
                 data['description'] ?? '',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -228,8 +224,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
               ),
               const SizedBox(height: 12),
 
-              // 底部信息
-              Row(
+                            Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
@@ -253,7 +248,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
                             size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Text(
-                          '${(data['evidence'] as List).length} 个证�?,
+                          '${(data['evidence'] as List).length} 个证?,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -296,7 +291,6 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
   }
 }
 
-/// 创建争议表单
 class CreateDisputeSheet extends StatefulWidget {
   const CreateDisputeSheet({super.key});
 
@@ -332,8 +326,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
 
       setState(() => _isLoading = true);
 
-      // 上传�?Firebase Storage
-      final userId = _auth.currentUser!.uid;
+            final userId = _auth.currentUser!.uid;
       final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = FirebaseStorage.instance
           .ref()
@@ -366,7 +359,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
 
     if (_descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请填写问题描�?)),
+        const SnackBar(content: Text('请填写问题描?)),
       );
       return;
     }
@@ -388,8 +381,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
         'resolvedAt': null,
       });
 
-      // 更新交易状�?
-      await _firestore
+            await _firestore
           .collection('transactions')
           .doc(_selectedTransactionId)
           .update({
@@ -401,7 +393,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('争议已提�?)),
+          const SnackBar(content: Text('争议已提?)),
         );
       }
     } catch (e) {
@@ -433,8 +425,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
               ),
               const SizedBox(height: 24),
 
-              // 选择交易
-              const Text(
+                            const Text(
                 '选择相关交易',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
@@ -442,8 +433,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
               _buildTransactionSelector(),
               const SizedBox(height: 24),
 
-              // 争议类型
-              const Text(
+                            const Text(
                 '争议类型',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
@@ -476,8 +466,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
               ),
               const SizedBox(height: 24),
 
-              // 问题描述
-              const Text(
+                            const Text(
                 '问题描述',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
@@ -492,8 +481,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
               ),
               const SizedBox(height: 24),
 
-              // 上传证据
-              const Text(
+                            const Text(
                 '上传证据',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
@@ -560,8 +548,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
               ),
               const SizedBox(height: 24),
 
-              // 提交按钮
-              SizedBox(
+                            SizedBox(
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
@@ -623,7 +610,6 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
   }
 }
 
-/// 争议详情页面
 class DisputeDetailSheet extends StatelessWidget {
   final String disputeId;
   final Map<String, dynamic> disputeData;
@@ -662,13 +648,11 @@ class DisputeDetailSheet extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-              // 争议信息
-              _buildInfoSection('争议类型', _getTypeLabel(disputeData['type'])),
-              _buildInfoSection('状�?, _getStatusLabel(disputeData['status'])),
+                            _buildInfoSection('争议类型', _getTypeLabel(disputeData['type'])),
+              _buildInfoSection('状?, _getStatusLabel(disputeData['status'])),
               _buildInfoSection('描述', disputeData['description'] ?? '-'),
 
-              // 证据
-              if (disputeData['evidence'] != null &&
+                            if (disputeData['evidence'] != null &&
                   (disputeData['evidence'] as List).isNotEmpty) ...[
                 const SizedBox(height: 24),
                 const Text(
@@ -700,8 +684,7 @@ class DisputeDetailSheet extends StatelessWidget {
                 ),
               ],
 
-              // 解决方案
-              if (disputeData['resolution'] != null) ...[
+                            if (disputeData['resolution'] != null) ...[
                 const SizedBox(height: 24),
                 const Text(
                   '解决方案',
@@ -763,13 +746,13 @@ class DisputeDetailSheet extends StatelessWidget {
   String _getStatusLabel(String? status) {
     switch (status) {
       case 'open':
-        return '待处�?;
+        return '待处?';
       case 'investigating':
-        return '调查�?;
+        return '调查?';
       case 'resolved':
-        return '已解�?;
+        return '已解?';
       case 'closed':
-        return '已关�?;
+        return '已关?';
       default:
         return '未知';
     }

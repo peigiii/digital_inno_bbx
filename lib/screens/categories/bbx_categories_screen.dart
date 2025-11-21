@@ -3,7 +3,6 @@ import '../../theme/app_theme.dart';
 import '../../utils/page_transitions.dart';
 import 'bbx_category_listings_screen.dart';
 
-/// BBX 分类页面
 class BBXCategoriesScreen extends StatelessWidget {
   const BBXCategoriesScreen({super.key});
 
@@ -29,8 +28,7 @@ class BBXCategoriesScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.search_rounded),
             onPressed: () {
-              // 打开搜索页面
-            },
+                          },
           ),
         ],
       ),
@@ -85,7 +83,7 @@ class BBXCategoriesScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: AppTheme.spacing4),
                   Text(
-                    '${category['count']} 个商�?,
+                    '${category['count']} 个商?,
                     style: AppTheme.caption.copyWith(
                       color: Colors.white.withOpacity(0.9),
                     ),

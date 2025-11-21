@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// BBX 全屏加载组件
 class BBXFullScreenLoading extends StatelessWidget {
   final String? message;
 
@@ -37,7 +36,6 @@ class BBXFullScreenLoading extends StatelessWidget {
   }
 }
 
-/// BBX 列表加载组件（骨架屏�?
 class BBXListLoading extends StatelessWidget {
   final int itemCount;
   final double itemHeight;
@@ -68,7 +66,6 @@ class BBXListLoading extends StatelessWidget {
   }
 }
 
-/// BBX 卡片加载组件
 class BBXCardLoading extends StatelessWidget {
   final double? width;
   final double? height;
@@ -93,7 +90,6 @@ class BBXCardLoading extends StatelessWidget {
   }
 }
 
-/// BBX 按钮加载组件
 class BBXButtonLoading extends StatelessWidget {
   final double? width;
   final double? height;
@@ -126,7 +122,6 @@ class BBXButtonLoading extends StatelessWidget {
   }
 }
 
-/// Shimmer 加载动画组件
 class _ShimmerLoading extends StatefulWidget {
   const _ShimmerLoading();
 

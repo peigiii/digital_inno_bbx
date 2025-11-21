@@ -5,11 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
-/// 证书管理页面
-/// 管理用户的资质证书和认证文件
 class BBXCertificatesScreen extends StatefulWidget {
-  final String? userId; // 如果为null，显示当前用户的证书
-
+  final String? userId; 
   const BBXCertificatesScreen({
     super.key,
     this.userId,
@@ -135,8 +132,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 证书图片
-            Expanded(
+                        Expanded(
               child: Stack(
                 fit: StackFit.expand,
                 children: [
@@ -147,8 +143,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
                           child: Icon(Icons.description,
                               size: 48, color: Colors.grey[400]),
                         ),
-                  // 状态标�?
-                  Positioned(
+                                    Positioned(
                     top: 8,
                     right: 8,
                     child: _buildStatusBadge(status),
@@ -156,8 +151,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
                 ],
               ),
             ),
-            // 证书信息
-            Padding(
+                        Padding(
               padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,7 +192,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
     switch (status) {
       case 'approved':
         color = Colors.green;
-        label = '已认�?;
+        label = '已认?;
         break;
       case 'rejected':
         color = Colors.red;
@@ -206,7 +200,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
         break;
       default:
         color = Colors.orange;
-        label = '待审�?;
+        label = '待审?;
     }
 
     return Container(
@@ -241,14 +235,12 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 证书图片
-            if (data['imageUrl'] != null)
+                        if (data['imageUrl'] != null)
               Image.network(
                 data['imageUrl'],
                 fit: BoxFit.contain,
               ),
-            // 证书信息
-            Padding(
+                        Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -279,8 +271,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
                 ],
               ),
             ),
-            // 关闭按钮
-            Padding(
+                        Padding(
               padding: const EdgeInsets.all(16),
               child: SizedBox(
                 width: double.infinity,
@@ -309,7 +300,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
       case 'quality_cert':
         return '质量认证';
       case 'safety_cert':
-        return '安全生产许可�?;
+        return '安全生产许可?';
       case 'other':
         return '其他证书';
       default:
@@ -323,7 +314,6 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
   }
 }
 
-/// 添加证书表单
 class AddCertificateSheet extends StatefulWidget {
   const AddCertificateSheet({super.key});
 
@@ -387,7 +377,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
   Future<void> _submit() async {
     if (_imageUrl == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请上传证书图�?)),
+        const SnackBar(content: Text('请上传证书图?)),
       );
       return;
     }
@@ -445,8 +435,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
               ),
               const SizedBox(height: 24),
 
-              // 证书类型
-              const Text('证书类型', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('证书类型', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 value: _selectedType,
@@ -457,7 +446,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
                   DropdownMenuItem(value: 'iso_cert', child: Text('ISO 认证')),
                   DropdownMenuItem(value: 'environmental_cert', child: Text('环保认证')),
                   DropdownMenuItem(value: 'quality_cert', child: Text('质量认证')),
-                  DropdownMenuItem(value: 'safety_cert', child: Text('安全生产许可�?)),
+                  DropdownMenuItem(value: 'safety_cert', child: Text('安全生产许可?)),
                   DropdownMenuItem(value: 'other', child: Text('其他证书')),
                 ],
                 onChanged: (value) {
@@ -468,8 +457,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
               ),
               const SizedBox(height: 16),
 
-              // 颁发机构
-              const Text('颁发机构', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('颁发机构', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               TextField(
                 controller: _issuerController,
@@ -480,8 +468,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
               ),
               const SizedBox(height: 16),
 
-              // 证书编号
-              const Text('证书编号', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('证书编号', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               TextField(
                 controller: _numberController,
@@ -492,8 +479,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
               ),
               const SizedBox(height: 16),
 
-              // 有效�?
-              const Text('有效期至 (可�?', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('有效期至 (可?', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               InkWell(
                 onTap: () async {
@@ -521,8 +507,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
               ),
               const SizedBox(height: 24),
 
-              // 证书图片
-              const Text('证书图片', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('证书图片', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               if (_imageUrl != null)
                 Stack(
@@ -563,8 +548,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
                 ),
               const SizedBox(height: 24),
 
-              // 提交按钮
-              SizedBox(
+                            SizedBox(
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(

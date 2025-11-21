@@ -4,7 +4,6 @@ import '../../models/listing_model.dart';
 import '../../services/offer_service.dart';
 import '../../utils/delivery_config.dart';
 
-/// 提交报价页面
 class BBXMakeOfferScreen extends StatefulWidget {
   final ListingModel listing;
 
@@ -25,8 +24,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
   final _offerService = OfferService();
 
   DateTime? _scheduledPickupDate;
-  String _deliveryMethod = 'self_collect'; // 默认自提
-  bool _isLoading = false;
+  String _deliveryMethod = 'self_collect';   bool _isLoading = false;
   double? _discountPercentage;
 
   @override
@@ -37,28 +35,24 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     super.dispose();
   }
 
-  /// 格式化地址显示
-  String _formatLocation() {
+    String _formatLocation() {
     final location = widget.listing.location;
-    if (location == null) return '地址未提�?;
+    if (location == null) return '地址未提?';
 
-    // 尝试获取地址字符�?
-    if (location['address'] != null) {
+        if (location['address'] != null) {
       return location['address'].toString();
     }
 
-    // 如果只有经纬度，显示坐标
-    final lat = location['latitude'];
+        final lat = location['latitude'];
     final lng = location['longitude'];
     if (lat != null && lng != null) {
       return '位置: $lat, $lng';
     }
 
-    return '地址未提�?;
+    return '地址未提?';
   }
 
-  /// 计算折扣百分�?
-  void _calculateDiscount() {
+    void _calculateDiscount() {
     final offerPrice = double.tryParse(_offerPriceController.text);
     if (offerPrice != null && widget.listing.pricePerUnit > 0) {
       setState(() {
@@ -71,8 +65,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     }
   }
 
-  /// 选择收集日期
-  Future<void> _selectPickupDate() async {
+    Future<void> _selectPickupDate() async {
     final now = DateTime.now();
     final tomorrow = now.add(const Duration(days: 1));
     final maxDate = now.add(const Duration(days: 30));
@@ -94,8 +87,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     }
   }
 
-  /// 提交报价
-  Future<void> _submitOffer() async {
+    Future<void> _submitOffer() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -124,7 +116,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('报价已提交，等待卖家回复'),
+            content: Text('Quote已提交，等待卖家回复'),
             backgroundColor: Colors.green,
           ),
         );
@@ -133,7 +125,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('提交失败�?e'),
+            content: Text('Submission failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -151,7 +143,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('提交报价'),
+        title: const Text('提交Quote'),
         elevation: 0,
       ),
       body: Form(
@@ -159,40 +151,32 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // 商品信息卡片
-            _buildListingCard(),
+                        _buildListingCard(),
             const SizedBox(height: 24),
 
-            // 报价金额
-            _buildOfferPriceField(),
+                        _buildOfferPriceField(),
             const SizedBox(height: 24),
 
-            // 预计收集日期
-            _buildPickupDateField(),
+                        _buildPickupDateField(),
             const SizedBox(height: 24),
 
-            // 收集方式
-            _buildDeliveryMethodSection(),
+                        _buildDeliveryMethodSection(),
             const SizedBox(height: 24),
 
-            // 附加消息
-            _buildMessageField(),
+                        _buildMessageField(),
             const SizedBox(height: 24),
 
-            // 提示信息
-            _buildHintBox(),
+                        _buildHintBox(),
             const SizedBox(height: 24),
 
-            // 提交按钮
-            _buildSubmitButton(),
+                        _buildSubmitButton(),
           ],
         ),
       ),
     );
   }
 
-  /// 商品信息卡片
-  Widget _buildListingCard() {
+    Widget _buildListingCard() {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -232,13 +216,12 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     );
   }
 
-  /// 报价金额输入�?
-  Widget _buildOfferPriceField() {
+    Widget _buildOfferPriceField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '报价金额 *',
+          'Quote金额 *',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
@@ -248,14 +231,14 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
           decoration: InputDecoration(
             prefixText: 'RM ',
             suffixText: '/${widget.listing.unit}',
-            hintText: '输入您的报价',
+            hintText: '输入您的Quote',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return '请输入报价金�?;
+              return '请输入Quote金?';
             }
             final price = double.tryParse(value);
             if (price == null || price <= 0) {
@@ -300,8 +283,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     );
   }
 
-  /// 预计收集日期选择�?
-  Widget _buildPickupDateField() {
+    Widget _buildPickupDateField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -324,7 +306,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                 const SizedBox(width: 12),
                 Text(
                   _scheduledPickupDate != null
-                      ? DateFormat('yyyy年MM月dd�?).format(_scheduledPickupDate!)
+                      ? DateFormat('yyyy年MM月dd?).format(_scheduledPickupDate!)
                       : '选择日期',
                   style: TextStyle(
                     fontSize: 16,
@@ -339,19 +321,17 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     );
   }
 
-  /// 配送方式选择
-  Widget _buildDeliveryMethodSection() {
+    Widget _buildDeliveryMethodSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '🚚 配送方�?*',
+          '🚚 配送方?*',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
 
-        // 自提选项
-        RadioListTile<String>(
+                RadioListTile<String>(
           title: const Text(
             '自提',
             style: TextStyle(fontWeight: FontWeight.w600),
@@ -361,7 +341,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
             children: [
               const SizedBox(height: 4),
               const Text(
-                '到卖家指定地点取�?,
+                '到卖家指定地点取?,
                 style: TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 4),
@@ -393,8 +373,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
 
         const SizedBox(height: 8),
 
-        // 邮寄选项
-        RadioListTile<String>(
+                RadioListTile<String>(
           title: const Text(
             '邮寄',
             style: TextStyle(fontWeight: FontWeight.w600),
@@ -404,7 +383,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
             children: [
               const SizedBox(height: 4),
               const Text(
-                '卖家安排快递配�?,
+                '卖家安排快递配?,
                 style: TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 8),
@@ -420,7 +399,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                     Icon(Icons.info_outline, size: 14, color: Colors.orange[700]),
                     const SizedBox(width: 4),
                     Text(
-                      '邮费需与卖家协�?额外支付)',
+                      '邮费需与卖家协?额外支付)',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.orange[700],
@@ -442,16 +421,15 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
 
         const SizedBox(height: 16),
 
-        // 配送备�?
-        TextFormField(
+                TextFormField(
           controller: _deliveryNoteController,
           maxLines: 2,
           maxLength: 200,
           decoration: InputDecoration(
-            labelText: '💬 配送备�?可�?',
+            labelText: '💬 配送备?可?',
             hintText: _deliveryMethod == 'self_collect'
-                ? '例如：希望明天下午自�?
-                : '例如：希望尽快发�?,
+                ? '例如：希望明天下午自?
+                : '例如：希望尽快发?,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -461,8 +439,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     );
   }
 
-  /// 附加消息输入�?
-  Widget _buildMessageField() {
+    Widget _buildMessageField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -486,8 +463,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     );
   }
 
-  /// 提示信息�?
-  Widget _buildHintBox() {
+    Widget _buildHintBox() {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -513,9 +489,9 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '�?报价有效期为 48 小时\n'
-                  '�?卖家可能接受、拒绝或还价\n'
-                  '�?请确保您的报价合�?,
+                  '?Quote有效期为 48 小时\n'
+                  '?卖家可能接受、拒绝或还价\n'
+                  '?请确保您的Quote合?,
                   style: TextStyle(
                     fontSize: 13,
                     color: Colors.blue.shade900,
@@ -529,8 +505,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
     );
   }
 
-  /// 提交按钮
-  Widget _buildSubmitButton() {
+    Widget _buildSubmitButton() {
     return SizedBox(
       height: 50,
       child: ElevatedButton(
@@ -551,7 +526,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                 ),
               )
             : const Text(
-                '提交报价',
+                '提交Quote',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
               ),
       ),

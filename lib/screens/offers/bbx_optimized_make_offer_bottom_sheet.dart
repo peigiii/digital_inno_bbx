@@ -4,8 +4,6 @@ import '../../theme/app_theme.dart';
 import '../../models/listing_model.dart';
 import '../../services/offer_service.dart';
 
-/// BBX 报价底部弹窗 - 现代化设�?
-/// 适配 Pixel 5, Material Design 3
 class BBXOptimizedMakeOfferBottomSheet extends StatefulWidget {
   final ListingModel listing;
 
@@ -164,7 +162,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                 ),
                 const SizedBox(width: 12),
                 const Expanded(
-                  child: Text('报价已提交，等待卖家回复'),
+                  child: Text('Quote已提交，等待卖家回复'),
                 ),
               ],
             ),
@@ -180,7 +178,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('提交失败�?e'),
+            content: Text('Submission failed: $e'),
             backgroundColor: AppTheme.error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -220,11 +218,9 @@ class _BBXOptimizedMakeOfferBottomSheetState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 顶部手柄和标�?
-            _buildHeader(),
+                        _buildHeader(),
 
-            // 内容区域（可滚动�?
-            Flexible(
+                        Flexible(
               child: SingleChildScrollView(
                 padding: EdgeInsets.only(
                   bottom: mediaQuery.viewInsets.bottom + AppTheme.spacing16,
@@ -235,17 +231,13 @@ class _BBXOptimizedMakeOfferBottomSheetState
                     opacity: _fadeAnimation,
                     child: Column(
                       children: [
-                        // 商品信息卡片
-                        _buildListingCard(),
+                                                _buildListingCard(),
 
-                        // 报价输入区域
-                        _buildOfferPriceSection(),
+                                                _buildOfferPriceSection(),
 
-                        // 其他选项（可展开�?
-                        _buildOptionalSection(),
+                                                _buildOptionalSection(),
 
-                        // 提交按钮
-                        _buildSubmitButton(),
+                                                _buildSubmitButton(),
 
                         const SizedBox(height: AppTheme.spacing16),
                       ],
@@ -260,8 +252,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
     );
   }
 
-  /// 顶部手柄和标�?
-  Widget _buildHeader() {
+    Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing12),
       decoration: const BoxDecoration(
@@ -273,8 +264,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
       ),
       child: Column(
         children: [
-          // 拖动手柄
-          Container(
+                    Container(
             width: 40,
             height: 4,
             decoration: BoxDecoration(
@@ -284,8 +274,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
           ),
           const SizedBox(height: AppTheme.spacing12),
 
-          // 标题
-          Row(
+                    Row(
             children: [
               const SizedBox(width: AppTheme.spacing16),
               IconButton(
@@ -297,7 +286,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
               ),
               const Expanded(
                 child: Text(
-                  '提交报价',
+                  '提交Quote',
                   style: AppTheme.heading3,
                   textAlign: TextAlign.center,
                 ),
@@ -310,8 +299,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
     );
   }
 
-  /// 商品信息卡片
-  Widget _buildListingCard() {
+    Widget _buildListingCard() {
     return Container(
       margin: const EdgeInsets.all(AppTheme.spacing16),
       padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -322,8 +310,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
       ),
       child: Row(
         children: [
-          // 商品图片
-          ClipRRect(
+                    ClipRRect(
             borderRadius: AppTheme.borderRadiusMedium,
             child: Image.network(
               widget.listing.imageUrls.isNotEmpty
@@ -347,8 +334,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
           ),
           const SizedBox(width: AppTheme.spacing12),
 
-          // 商品信息
-          Expanded(
+                    Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -393,8 +379,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
     );
   }
 
-  /// 报价输入区域
-  Widget _buildOfferPriceSection() {
+    Widget _buildOfferPriceSection() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
       padding: const EdgeInsets.all(AppTheme.spacing20),
@@ -409,8 +394,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
       ),
       child: Column(
         children: [
-          // 标题
-          Row(
+                    Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
@@ -426,7 +410,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
               ),
               const SizedBox(width: AppTheme.spacing12),
               const Text(
-                '您的报价',
+                '您的Quote',
                 style: AppTheme.heading4,
               ),
             ],
@@ -434,8 +418,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
 
           const SizedBox(height: AppTheme.spacing20),
 
-          // 报价输入�?
-          Row(
+                    Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
@@ -473,7 +456,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '请输入报价金�?;
+                      return '请输入Quote金?';
                     }
                     final price = double.tryParse(value);
                     if (price == null || price <= 0) {
@@ -497,8 +480,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
             ],
           ),
 
-          // 折扣显示
-          if (_discountPercentage != null) ...[
+                    if (_discountPercentage != null) ...[
             const SizedBox(height: AppTheme.spacing16),
             AnimatedContainer(
               duration: const Duration(milliseconds: 300),
@@ -538,8 +520,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
             ),
           ],
 
-          // 快捷选项
-          const SizedBox(height: AppTheme.spacing16),
+                    const SizedBox(height: AppTheme.spacing16),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -558,8 +539,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
     );
   }
 
-  /// 快捷选项按钮
-  Widget _buildQuickOptionChip(String label, double price) {
+    Widget _buildQuickOptionChip(String label, double price) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -589,8 +569,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
     );
   }
 
-  /// 可选项区域
-  Widget _buildOptionalSection() {
+    Widget _buildOptionalSection() {
     return Container(
       margin: const EdgeInsets.fromLTRB(
         AppTheme.spacing16,
@@ -605,8 +584,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
       ),
       child: Column(
         children: [
-          // 展开/收起按钮
-          InkWell(
+                    InkWell(
             onTap: () {
               setState(() {
                 _showDetails = !_showDetails;
@@ -639,16 +617,14 @@ class _BBXOptimizedMakeOfferBottomSheetState
             ),
           ),
 
-          // 展开的详细选项
-          if (_showDetails) ...[
+                    if (_showDetails) ...[
             const Divider(height: 1),
             Padding(
               padding: const EdgeInsets.all(AppTheme.spacing16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 预计收集日期
-                  InkWell(
+                                    InkWell(
                     onTap: _selectPickupDate,
                     child: Container(
                       padding: const EdgeInsets.all(AppTheme.spacing12),
@@ -677,7 +653,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                                 const SizedBox(height: 2),
                                 Text(
                                   _scheduledPickupDate != null
-                                      ? DateFormat('yyyy年MM月dd�?)
+                                      ? DateFormat('yyyy年MM月dd?)
                                           .format(_scheduledPickupDate!)
                                       : '选择日期',
                                   style: AppTheme.body2.copyWith(
@@ -698,14 +674,13 @@ class _BBXOptimizedMakeOfferBottomSheetState
 
                   const SizedBox(height: AppTheme.spacing16),
 
-                  // 附加消息
-                  TextFormField(
+                                    TextFormField(
                     controller: _messageController,
                     maxLines: 3,
                     maxLength: 200,
                     decoration: InputDecoration(
                       labelText: '附加消息',
-                      hintText: '向卖家说明您的需�?..',
+                      hintText: '向卖家说明您的需?..',
                       border: OutlineInputBorder(
                         borderRadius: AppTheme.borderRadiusMedium,
                       ),
@@ -729,8 +704,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
     );
   }
 
-  /// 提交按钮
-  Widget _buildSubmitButton() {
+    Widget _buildSubmitButton() {
     return Container(
       margin: const EdgeInsets.all(AppTheme.spacing16),
       height: 56,
@@ -770,7 +744,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                       ),
                       SizedBox(width: 8),
                       Text(
-                        '提交报价',
+                        '提交Quote',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

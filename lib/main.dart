@@ -8,8 +8,7 @@ import 'screens/bbx_new_marketplace_screen.dart';
 import 'screens/bbx_listing_detail_screen.dart';
 import 'screens/bbx_new_profile_screen.dart';
 import 'screens/bbx_splash_screen.dart';
-import 'screens/bbx_main_screen.dart'; // �?新增：主页面（带新底部导航）
-import 'screens/bbx_modern_home_screen.dart';
+import 'screens/bbx_main_screen.dart'; import 'screens/bbx_modern_home_screen.dart';
 import 'screens/bbx_market_browse_screen.dart';
 import 'screens/bbx_profile_cards_screen.dart';
 import 'screens/bbx_subscription_screen.dart';
@@ -65,7 +64,7 @@ void main() async {
     if (currentUser != null) {
       await UserInitializer.ensureUserDocumentExists();
       await UserInitializer.fixUserDocument(currentUser.uid);
-      debugPrint('�?用户文档初始化完�?);
+      debugPrint('[Done] Init complete');
     }
   } catch (e) {
     debugPrint('User initialization error: $e');
@@ -105,7 +104,7 @@ class BBXApp extends StatelessWidget {
       home: const BBXSplashScreen(),
       routes: {
         '/login': (context) => const BBXLoginScreen(),
-        '/home': (context) => const BBXMainScreen(), // �?修改：使用新的主页面
+        // '/home' moved to onGenerateRoute to support arguments
         '/waste-list': (context) => const BBXListWasteScreen(),
         '/marketplace': (context) => const BBXNewMarketplaceScreen(),
         '/profile': (context) => const BBXProfileScreen(),
@@ -127,6 +126,23 @@ class BBXApp extends StatelessWidget {
       },
       onGenerateRoute: (settings) {
         // Handle routes with arguments
+        if (settings.name == '/home') {
+          final args = settings.arguments as Map<String, dynamic>?;
+          final initialIndex = args?['index'] as int? ?? 0;
+          return MaterialPageRoute(
+            builder: (context) => BBXMainScreen(initialIndex: initialIndex),
+          );
+        }
+
+        if (settings.name == '/listing-detail') {
+          final args = settings.arguments as Map<String, dynamic>;
+          return MaterialPageRoute(
+            builder: (context) => BBXListingDetailScreen(
+              listingId: args['listingId'] as String,
+            ),
+          );
+        }
+
         if (settings.name == '/payment') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(

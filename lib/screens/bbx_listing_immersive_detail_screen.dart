@@ -95,13 +95,11 @@ class _BBXListingImmersiveDetailScreenState
             .doc(widget.listingId)
             .snapshots(),
         builder: (context, snapshot) {
-          // 处理加载状�?
-          if (snapshot.connectionState == ConnectionState.waiting) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // 处理错误
-          if (snapshot.hasError) {
+                    if (snapshot.hasError) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -119,9 +117,8 @@ class _BBXListingImmersiveDetailScreenState
             );
           }
 
-          // 检查数据是否存�?
-          if (!snapshot.hasData || snapshot.data == null) {
-            return const Center(child: Text('数据不存�?));
+                    if (!snapshot.hasData || snapshot.data == null) {
+            return const Center(child: Text('Data not found'));
           }
 
           final data = snapshot.data!.data() as Map<String, dynamic>?;
@@ -741,7 +738,7 @@ class _BBXListingImmersiveDetailScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            '💡 Similar Products',
+            ' Similar Products',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -937,24 +934,20 @@ class _BBXListingImmersiveDetailScreenState
   String _getLocationDisplay(dynamic location) {
     if (location == null) return 'Location not specified';
 
-    // 如果是字符串，直接返�?
-    if (location is String) return location;
+        if (location is String) return location;
 
-    // 如果是Map（包含latitude和longitude�?
-    if (location is Map<String, dynamic>) {
+        if (location is Map<String, dynamic>) {
       final lat = location['latitude'];
       final lng = location['longitude'];
       if (lat != null && lng != null) {
         return '${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}';
       }
-      // 如果有address字段，返回address
-      if (location['address'] != null) {
+            if (location['address'] != null) {
         return location['address'].toString();
       }
     }
 
-    // 如果是GeoPoint类型
-    if (location is GeoPoint) {
+        if (location is GeoPoint) {
       return '${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}';
     }
 

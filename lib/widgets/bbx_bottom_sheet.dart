@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// BBX 标准底部弹窗组件
 class BBXBottomSheet extends StatelessWidget {
   final String? title;
   final Widget child;
@@ -64,8 +63,7 @@ class BBXBottomSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // 顶部手柄
-          if (showHandle)
+                    if (showHandle)
             Container(
               margin: const EdgeInsets.only(top: AppTheme.spacing12),
               width: 40,
@@ -76,8 +74,7 @@ class BBXBottomSheet extends StatelessWidget {
               ),
             ),
 
-          // 标题�?
-          if (title != null)
+                    if (title != null)
             Container(
               padding: const EdgeInsets.all(AppTheme.spacing16),
               child: Row(
@@ -98,8 +95,7 @@ class BBXBottomSheet extends StatelessWidget {
               ),
             ),
 
-          // 内容
-          Flexible(
+                    Flexible(
             child: child,
           ),
         ],
@@ -108,7 +104,6 @@ class BBXBottomSheet extends StatelessWidget {
   }
 }
 
-/// 筛选底部弹�?
 class BBXFilterBottomSheet extends StatelessWidget {
   final List<Widget> filters;
   final VoidCallback onReset;
@@ -128,7 +123,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
   }) async {
     return BBXBottomSheet.show<Map<String, dynamic>>(
       context: context,
-      title: '筛选条�?,
+      title: '筛选条?,
       height: MediaQuery.of(context).size.height * 0.8,
       child: BBXFilterBottomSheet(
         filters: filters,
@@ -144,8 +139,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // 筛选内�?
-        Expanded(
+                Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(AppTheme.spacing16),
             child: Column(
@@ -155,8 +149,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
           ),
         ),
 
-        // 底部按钮
-        Container(
+                Container(
           padding: const EdgeInsets.all(AppTheme.spacing16),
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -180,7 +173,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
                 flex: 2,
                 child: ElevatedButton(
                   onPressed: onApply,
-                  child: const Text('应用筛�?),
+                  child: const Text('应用筛?),
                 ),
               ),
             ],

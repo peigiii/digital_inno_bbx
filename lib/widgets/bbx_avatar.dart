@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// BBX 头像组件
 class BBXAvatar extends StatelessWidget {
   final String? imageUrl;
   final String? name;
@@ -88,7 +87,6 @@ class BBXAvatar extends StatelessWidget {
   }
 }
 
-/// BBX 带角标的头像组件
 class BBXAvatarWithBadge extends StatelessWidget {
   final String? imageUrl;
   final String? name;
@@ -162,7 +160,6 @@ class BBXAvatarWithBadge extends StatelessWidget {
   }
 }
 
-/// BBX 在线状态头像组�?
 class BBXAvatarOnline extends StatelessWidget {
   final String? imageUrl;
   final String? name;
@@ -211,7 +208,6 @@ class BBXAvatarOnline extends StatelessWidget {
   }
 }
 
-/// BBX 认证头像组件
 class BBXAvatarVerified extends StatelessWidget {
   final String? imageUrl;
   final String? name;

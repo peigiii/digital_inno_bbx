@@ -5,7 +5,6 @@ import '../../theme/app_theme.dart';
 import '../../widgets/bbx_button.dart';
 import '../../widgets/bbx_loading.dart';
 
-/// BBX 账户设置页面
 class BBXAccountSettingsScreen extends StatefulWidget {
   const BBXAccountSettingsScreen({super.key});
 
@@ -71,7 +70,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
 
       setState(() => isLoading = false);
     } catch (e) {
-      debugPrint('加载用户数据失败: $e');
+      debugPrint('Load user data failed: $e');
       setState(() => isLoading = false);
     }
   }
@@ -93,13 +92,12 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // 更新 Firebase Auth 显示名称
-      await user!.updateDisplayName(_displayNameController.text.trim());
+            await user!.updateDisplayName(_displayNameController.text.trim());
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('保存成功'),
+            content: Text('Saved successfully'),
             backgroundColor: AppTheme.success,
           ),
         );
@@ -108,7 +106,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('保存失败: $e'),
+            content: Text('Save failed: $e'),
             backgroundColor: AppTheme.error,
           ),
         );
@@ -129,7 +127,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('账户设置'),
+        title: const Text('Account Settings'),
         backgroundColor: Colors.white,
         elevation: 0,
         actions: [
@@ -145,7 +143,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
           else
             TextButton(
               onPressed: _saveChanges,
-              child: const Text('保存'),
+              child: const Text('Save'),
             ),
         ],
       ),
@@ -154,8 +152,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
         child: ListView(
           padding: const EdgeInsets.all(AppTheme.spacing16),
           children: [
-            // 个人信息
-            const Text('个人信息', style: AppTheme.heading3),
+                        const Text('Personal Info', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -169,12 +166,12 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                   TextFormField(
                     controller: _displayNameController,
                     decoration: const InputDecoration(
-                      labelText: '姓名',
+                      labelText: 'Name',
                       prefixIcon: Icon(Icons.person_outline),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '请输入姓�?;
+                        return 'Please enter name';
                       }
                       return null;
                     },
@@ -183,7 +180,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                   TextFormField(
                     controller: _phoneController,
                     decoration: InputDecoration(
-                      labelText: '手机号码',
+                      labelText: 'Phone Number',
                       prefixIcon: const Icon(Icons.phone_outlined),
                       suffixIcon: isPhoneVerified
                           ? const Icon(
@@ -192,9 +189,8 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                             )
                           : TextButton(
                               onPressed: () {
-                                // TODO: 实现手机验证
-                              },
-                              child: const Text('验证'),
+                                                              },
+                              child: const Text('Verify'),
                             ),
                     ),
                     keyboardType: TextInputType.phone,
@@ -203,7 +199,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                   TextFormField(
                     controller: _addressController,
                     decoration: const InputDecoration(
-                      labelText: '地址',
+                      labelText: 'Address',
                       prefixIcon: Icon(Icons.location_on_outlined),
                     ),
                     maxLines: 2,
@@ -214,8 +210,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
 
             const SizedBox(height: AppTheme.spacing24),
 
-            // 公司信息
-            const Text('公司信息', style: AppTheme.heading3),
+                        const Text('Company Info', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -229,7 +224,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                   TextFormField(
                     controller: _companyController,
                     decoration: const InputDecoration(
-                      labelText: '公司名称',
+                      labelText: 'Company Name',
                       prefixIcon: Icon(Icons.business_outlined),
                     ),
                   ),
@@ -239,8 +234,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
 
             const SizedBox(height: AppTheme.spacing24),
 
-            // 账户安全
-            const Text('账户安全', style: AppTheme.heading3),
+                        const Text('Security', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -252,29 +246,28 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                 children: [
                   ListTile(
                     leading: const Icon(Icons.email_outlined),
-                    title: const Text('邮箱'),
-                    subtitle: Text(email ?? '未设�?),
+                    title: const Text('Email'),
+                    subtitle: Text(email ?? 'Not set'),
                     trailing: isVerified
                         ? const Icon(Icons.verified, color: AppTheme.success)
                         : TextButton(
                             onPressed: () {
-                              // TODO: 发送验证邮�?
-                            },
-                            child: const Text('验证'),
+                                                          },
+                            child: const Text('Verify'),
                           ),
                   ),
                   const Divider(height: 1, indent: 56),
                   ListTile(
                     leading: const Icon(Icons.lock_outline),
-                    title: const Text('修改密码'),
+                    title: const Text('Change Password'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => _showChangePasswordDialog(),
                   ),
                   const Divider(height: 1, indent: 56),
                   ListTile(
                     leading: const Icon(Icons.verified_user_outlined),
-                    title: const Text('实名认证'),
-                    subtitle: Text(isVerified ? '已认�? : '未认�?),
+                    title: const Text('Identity Verification'),
+                    subtitle: Text(isVerified ? 'Verified' : 'Unverified'),
                     trailing: Icon(
                       isVerified ? Icons.check_circle : Icons.chevron_right,
                       color: isVerified ? AppTheme.success : null,
@@ -282,8 +275,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                     onTap: isVerified
                         ? null
                         : () {
-                            // TODO: 跳转到实名认证页�?
-                          },
+                                                      },
                   ),
                 ],
               ),
@@ -291,8 +283,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
 
             const SizedBox(height: AppTheme.spacing24),
 
-            // 危险操作
-            const Text('危险操作', style: AppTheme.heading3),
+                        const Text('Danger Zone', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -303,7 +294,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
               child: ListTile(
                 leading: const Icon(Icons.delete_forever, color: AppTheme.error),
                 title: const Text(
-                  '删除账户',
+                  'Delete Account',
                   style: TextStyle(color: AppTheme.error),
                 ),
                 trailing: const Icon(Icons.chevron_right),
@@ -324,7 +315,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('修改密码'),
+        title: const Text('Change Password'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -332,7 +323,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
               controller: currentPasswordController,
               obscureText: true,
               decoration: const InputDecoration(
-                labelText: '当前密码',
+                labelText: 'Current Password',
                 prefixIcon: Icon(Icons.lock_outline),
               ),
             ),
@@ -341,7 +332,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
               controller: newPasswordController,
               obscureText: true,
               decoration: const InputDecoration(
-                labelText: '新密�?,
+                labelText: 'New Password',
                 prefixIcon: Icon(Icons.lock_outline),
               ),
             ),
@@ -350,7 +341,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
               controller: confirmPasswordController,
               obscureText: true,
               decoration: const InputDecoration(
-                labelText: '确认新密�?,
+                labelText: 'Confirm Password',
                 prefixIcon: Icon(Icons.lock_outline),
               ),
             ),
@@ -359,21 +350,20 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           BBXPrimaryButton(
-            text: '确认',
+            text: 'Confirm',
             onPressed: () async {
               if (newPasswordController.text !=
                   confirmPasswordController.text) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('两次输入的密码不一�?)),
+                  const SnackBar(content: Text('Passwords do not match')),
                 );
                 return;
               }
 
-              // TODO: 实现密码修改逻辑
-              Navigator.pop(context);
+                            Navigator.pop(context);
             },
             height: 40,
           ),
@@ -386,22 +376,21 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('删除账户'),
+        title: const Text('Delete Account'),
         content: const Text(
-          '删除账户后，所有数据将被永久删除且无法恢复。\n\n确定要删除账户吗�?,
+          'Deleting account is permanent. All data will be lost.\n\nAre you sure you want to delete your account?',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              // TODO: 实现账户删除逻辑
-              Navigator.pop(context);
+                            Navigator.pop(context);
             },
             style: TextButton.styleFrom(foregroundColor: AppTheme.error),
-            child: const Text('确认删除'),
+            child: const Text('Confirm Delete'),
           ),
         ],
       ),

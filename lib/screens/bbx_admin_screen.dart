@@ -38,19 +38,17 @@ class _BBXAdminScreenState extends State<BBXAdminScreen> {
         final isAdmin = userDoc.data()?['isAdmin'] ?? false;
 
         if (!isAdmin && mounted) {
-          // 非管理员，返回上一页并显示提示
-          Navigator.pop(context);
+                    Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('无权限访问管理面�?),
+              content: Text('无权限访问管理面?),
               backgroundColor: Colors.red,
             ),
           );
         }
       }
     } catch (e) {
-      // 错误处理
-      if (mounted) {
+            if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

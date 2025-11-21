@@ -1,19 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 优惠券状�?
 enum CouponStatus {
   available,
   used,
   expired,
 }
 
-/// 优惠券类�?
 enum CouponType {
-  fixed, // 固定金额
-  percentage, // 百分比折�?
-}
+  fixed,   percentage, }
 
-/// 优惠券模�?
 class CouponModel {
   final String id;
   final String userId;
@@ -21,9 +16,7 @@ class CouponModel {
   final String title;
   final String description;
   final CouponType discountType;
-  final int discount; // 折扣值（如果是fixed则是金额，如果是percentage则是百分比）
-  final double minAmount; // 最小使用金�?
-  final CouponStatus status;
+  final int discount;   final double minAmount;   final CouponStatus status;
   final DateTime expiryDate;
   final DateTime? usedAt;
   final String? usedInTransactionId;
@@ -122,18 +115,14 @@ class CouponModel {
     };
   }
 
-  /// 是否可用
-  bool get isAvailable =>
+    bool get isAvailable =>
       status == CouponStatus.available && !isExpired;
 
-  /// 是否已过�?
-  bool get isExpired => DateTime.now().isAfter(expiryDate);
+    bool get isExpired => DateTime.now().isAfter(expiryDate);
 
-  /// 是否已使�?
-  bool get isUsed => status == CouponStatus.used;
+    bool get isUsed => status == CouponStatus.used;
 
-  /// 计算折扣金额
-  double calculateDiscount(double amount) {
+    double calculateDiscount(double amount) {
     if (!isAvailable || amount < minAmount) {
       return 0.0;
     }
@@ -146,15 +135,13 @@ class CouponModel {
     }
   }
 
-  /// 计算最终金�?
-  double calculateFinalAmount(double amount) {
+    double calculateFinalAmount(double amount) {
     final discountAmount = calculateDiscount(amount);
     final finalAmount = amount - discountAmount;
     return finalAmount < 0 ? 0 : finalAmount;
   }
 
-  /// 获取折扣显示文本
-  String get discountDisplayText {
+    String get discountDisplayText {
     if (discountType == CouponType.fixed) {
       return 'RM $discount';
     } else {
@@ -162,15 +149,14 @@ class CouponModel {
     }
   }
 
-  /// 获取状态显示名�?
-  String get statusDisplayName {
+    String get statusDisplayName {
     switch (status) {
       case CouponStatus.available:
         return '可用';
       case CouponStatus.used:
-        return '已使�?;
+        return '已使?';
       case CouponStatus.expired:
-        return '已过�?;
+        return '已过?';
     }
   }
 
@@ -185,8 +171,7 @@ class CouponModel {
     }
   }
 
-  /// 标记为已使用
-  CouponModel markAsUsed(String transactionId) {
+    CouponModel markAsUsed(String transactionId) {
     return copyWith(
       status: CouponStatus.used,
       usedAt: DateTime.now(),

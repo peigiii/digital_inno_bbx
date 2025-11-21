@@ -3,8 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../services/payment_service.dart';
 import '../theme/app_theme.dart';
 
-/// 支付页面
-/// 用户选择订阅计划后进入此页面完成支付
 class BBXPaymentScreen extends StatefulWidget {
   final String planName;
   final int planPrice;
@@ -35,7 +33,7 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('支付订单'),
+        title: const Text('Payment'),
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
       ),
@@ -61,7 +59,7 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '订单摘要',
+                    'Order Summary',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -69,35 +67,35 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
                   ),
                   const SizedBox(height: 16),
                   _buildSummaryRow(
-                    '订阅计划',
+                    'Subscription Plan',
                     widget.planName,
                     isTitle: true,
                   ),
                   const SizedBox(height: 8),
                   _buildSummaryRow(
-                    '订阅周期',
+                    'Billing Cycle',
                     widget.planPeriod,
                   ),
                   const Divider(height: 24),
                   _buildSummaryRow(
-                    '订阅费用',
+                    'Subscription Fee',
                     'RM ${widget.planPrice.toStringAsFixed(2)}',
                   ),
                   const SizedBox(height: 8),
                   _buildSummaryRow(
-                    '平台�?(${fees['platformFee']! / widget.planPrice * 100}%)',
+                    'Platform Fee (${(fees['platformFee']! / widget.planPrice * 100).toStringAsFixed(0)}%)',
                     'RM ${fees['platformFee']!.toStringAsFixed(2)}',
                     isSmall: true,
                   ),
                   const SizedBox(height: 8),
                   _buildSummaryRow(
-                    '支付网关�?,
+                    'Payment Gateway Fee',
                     'RM ${fees['paymentGatewayFee']!.toStringAsFixed(2)}',
                     isSmall: true,
                   ),
                   const Divider(height: 24),
                   _buildSummaryRow(
-                    '总计',
+                    'Total',
                     'RM ${fees['buyerPays']!.toStringAsFixed(2)}',
                     isTotal: true,
                   ),
@@ -124,7 +122,7 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '选择支付方式',
+                    'Select Payment Method',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -171,7 +169,7 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
                         });
                       },
                       child: const Text(
-                        '我已阅读并同意订阅服务条款和隐私政策',
+                        'I agree to the Terms of Service and Privacy Policy',
                         style: TextStyle(fontSize: 14),
                       ),
                     ),
@@ -210,7 +208,7 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
                           ),
                         )
                       : Text(
-                          '立即支付 RM ${fees['buyerPays']!.toStringAsFixed(2)}',
+                          'Pay Now RM ${fees['buyerPays']!.toStringAsFixed(2)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -354,17 +352,17 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
 
   Future<void> _processPayment() async {
     if (currentUser == null) {
-      _showError('请先登录');
+      _showError('Please login first');
       return;
     }
 
     if (selectedPaymentMethod == null) {
-      _showError('请选择支付方式');
+      _showError('Please select payment method');
       return;
     }
 
     if (!agreedToTerms) {
-      _showError('请同意服务条�?);
+      _showError('Please agree to terms');
       return;
     }
 
@@ -373,25 +371,21 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
     });
 
     try {
-      print('🔄 [支付页面] 开始处理支�?..');
-      print('📋 计划: ${widget.planName}');
-      print('💰 金额: RM ${widget.planPrice}');
-      print('💳 支付方式: $selectedPaymentMethod');
+      // ignore: avoid_print
+      print('🔄 [Payment Page] Processing payment...');
+      // ignore: avoid_print
+      print('📋 Plan: ${widget.planName}');
+      // ignore: avoid_print
+      print('💰 Amount: RM ${widget.planPrice}');
+      // ignore: avoid_print
+      print('💳 Method: $selectedPaymentMethod');
 
-      // 模拟支付处理（实际应调用 PaymentService�?
       await Future.delayed(const Duration(seconds: 2));
 
-      // TODO: 实际支付集成
-      // final result = await _paymentService.createPaymentIntent(
-      //   amount: widget.planPrice.toDouble(),
-      //   currency: 'myr',
-      //   transactionId: 'subscription_${DateTime.now().millisecondsSinceEpoch}',
-      // );
-
-      print('�?[支付页面] 支付成功');
+      // ignore: avoid_print
+      print('✅ [Payment Page] Payment successful');
 
       if (mounted) {
-        // 导航到确认页�?
         Navigator.pushReplacementNamed(
           context,
           '/payment-confirmation',
@@ -404,8 +398,9 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
         );
       }
     } catch (e) {
-      print('�?[支付页面] 支付失败: $e');
-      _showError('支付失败: $e');
+      // ignore: avoid_print
+      print('❌ [Payment Page] Payment failed: $e');
+      _showError('Payment failed: $e');
     } finally {
       if (mounted) {
         setState(() {

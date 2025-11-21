@@ -4,7 +4,7 @@ import '../../models/offer_model.dart';
 import '../../services/offer_service.dart';
 import '../../utils/delivery_config.dart';
 
-/// 我的报价页面
+/// My Offers Screen
 class BBXMyOffersScreen extends StatefulWidget {
   const BBXMyOffersScreen({super.key});
 
@@ -32,13 +32,13 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('我的报价'),
+        title: const Text('My Offers'),
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: '我发出的'),
-            Tab(text: '我收到的'),
+            Tab(text: 'Sent'),
+            Tab(text: 'Received'),
           ],
         ),
       ),
@@ -52,7 +52,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     );
   }
 
-  /// 我发出的报价标签�?
+  /// My Sent Offers Tab
   Widget _buildMyOffersTab() {
     return StreamBuilder<List<OfferModel>>(
       stream: _offerService.getMyOffers(),
@@ -62,13 +62,13 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('加载失败�?{snapshot.error}'));
+          return Center(child: Text('Load failed: ${snapshot.error}'));
         }
 
         final offers = snapshot.data ?? [];
 
         if (offers.isEmpty) {
-          return _buildEmptyState('暂无报价', '您还没有发出过报�?);
+          return _buildEmptyState('No Offers', 'You haven\'t made any offers yet');
         }
 
         return ListView.builder(
@@ -82,7 +82,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     );
   }
 
-  /// 我收到的报价标签�?
+  /// Received Offers Tab
   Widget _buildReceivedOffersTab() {
     return StreamBuilder<List<OfferModel>>(
       stream: _offerService.getReceivedOffers(),
@@ -92,13 +92,13 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('加载失败�?{snapshot.error}'));
+          return Center(child: Text('Load failed: ${snapshot.error}'));
         }
 
         final offers = snapshot.data ?? [];
 
         if (offers.isEmpty) {
-          return _buildEmptyState('暂无报价', '还没有人向您发出报价');
+          return _buildEmptyState('No Offers', 'No offers received yet');
         }
 
         return ListView.builder(
@@ -112,7 +112,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     );
   }
 
-  /// 空状�?
+  /// Empty State
   Widget _buildEmptyState(String title, String message) {
     return Center(
       child: Column(
@@ -138,7 +138,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     );
   }
 
-  /// 报价卡片
+  /// Offer Card
   Widget _buildOfferCard(OfferModel offer, {required bool isBuyer}) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
@@ -149,7 +149,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 状态标�?
+            // Status Badge
             Row(
               children: [
                 _buildStatusBadge(offer.status),
@@ -162,7 +162,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
             ),
             const SizedBox(height: 12),
 
-            // 报价金额
+            // Offer Amount
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -206,19 +206,19 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
             ),
             const SizedBox(height: 12),
 
-            // 买家/卖家信息
+            // Buyer/Seller Info
             Text(
-              isBuyer ? '卖家�?{offer.sellerId}' : '买家�?{offer.recyclerName}',
+              isBuyer ? 'Seller: ${offer.sellerId}' : 'Buyer: ${offer.recyclerName}',
               style: const TextStyle(fontSize: 14),
             ),
 
-            // 配送方式标�?
+            // Delivery Method Badge
             if (offer.deliveryMethod != null) ...[
               const SizedBox(height: 8),
               DeliveryConfig.buildMethodChip(offer.deliveryMethod!, small: true),
             ],
 
-            // 留言
+            // Message
             if (offer.message.isNotEmpty) ...[
               const SizedBox(height: 8),
               Container(
@@ -236,7 +236,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
               ),
             ],
 
-            // 还价信息
+            // Counter Offer Info
             if (offer.status == 'negotiating' && offer.counterOfferPrice != null) ...[
               const SizedBox(height: 12),
               Container(
@@ -254,7 +254,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
                         Icon(Icons.sync_alt, size: 16, color: Colors.blue.shade700),
                         const SizedBox(width: 8),
                         Text(
-                          '卖家还价',
+                          'Seller Counter Offer',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.blue.shade900,
@@ -283,7 +283,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
               ),
             ],
 
-            // 操作按钮
+            // Action Buttons
             if (offer.canAccept || offer.status == 'negotiating') ...[
               const SizedBox(height: 16),
               _buildActionButtons(offer, isBuyer),
@@ -294,7 +294,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     );
   }
 
-  /// 状态标�?
+  /// Status Badge
   Widget _buildStatusBadge(String status) {
     Color color;
     switch (status) {
@@ -335,30 +335,30 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     );
   }
 
-  /// 获取状态文�?
+  /// Get Status Text
   String _getStatusText(String status) {
     switch (status) {
       case 'pending':
-        return '待处�?;
+        return 'Pending';
       case 'negotiating':
-        return '议价�?;
+        return 'Negotiating';
       case 'accepted':
-        return '已接�?;
+        return 'Accepted';
       case 'rejected':
-        return '已拒�?;
+        return 'Rejected';
       case 'expired':
-        return '已过�?;
+        return 'Expired';
       case 'cancelled':
-        return '已取�?;
+        return 'Cancelled';
       default:
         return status;
     }
   }
 
-  /// 操作按钮
+  /// Action Buttons
   Widget _buildActionButtons(OfferModel offer, bool isBuyer) {
     if (isBuyer && offer.status == 'negotiating') {
-      // 买家接受还价
+      // Buyer Accept Counter Offer
       return SizedBox(
         width: double.infinity,
         child: ElevatedButton(
@@ -371,7 +371,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
             ),
           ),
           child: const Text(
-            '接受还价',
+            'Accept Counter Offer',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ),
@@ -379,7 +379,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     }
 
     if (!isBuyer && offer.canAccept) {
-      // 卖家操作：接受、拒绝、还�?
+      // Seller Actions: Accept, Reject, Counter
       return Row(
         children: [
           Expanded(
@@ -391,7 +391,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text('拒绝'),
+              child: const Text('Reject'),
             ),
           ),
           const SizedBox(width: 8),
@@ -406,7 +406,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
                 ),
               ),
               child: const Text(
-                '接受',
+                'Accept',
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -415,7 +415,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
           IconButton(
             onPressed: () => _counterOffer(offer),
             icon: const Icon(Icons.sync_alt),
-            tooltip: '还价',
+            tooltip: 'Counter Offer',
             color: Colors.blue,
           ),
         ],
@@ -425,21 +425,21 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     return const SizedBox.shrink();
   }
 
-  /// 接受报价
+  /// Accept Offer
   Future<void> _acceptOffer(OfferModel offer) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认接受'),
-        content: Text('确定接受该报价：RM ${offer.offerPrice.toStringAsFixed(2)}�?),
+        title: const Text('Confirm Accept'),
+        content: Text('Confirm accept this quote: RM ${offer.offerPrice.toStringAsFixed(2)}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('确定'),
+            child: const Text('Confirm'),
           ),
         ],
       ),
@@ -452,7 +452,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('已接受报�?),
+            content: Text('Offer Accepted'),
             backgroundColor: Colors.green,
           ),
         );
@@ -461,7 +461,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('操作失败�?e'),
+            content: Text('Action failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -469,23 +469,23 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     }
   }
 
-  /// 拒绝报价
+  /// Reject Offer
   Future<void> _rejectOffer(OfferModel offer) async {
     final reasonController = TextEditingController();
 
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('拒绝报价'),
+        title: const Text('Reject Offer'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('请说明拒绝原因：'),
+            const Text('Please provide reason:'),
             const SizedBox(height: 16),
             TextField(
               controller: reasonController,
               decoration: const InputDecoration(
-                hintText: '输入原因...',
+                hintText: 'Reason...',
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
@@ -495,11 +495,11 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('确定'),
+            child: const Text('Confirm'),
           ),
         ],
       ),
@@ -512,7 +512,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('已拒绝报�?),
+            content: Text('Offer Rejected'),
             backgroundColor: Colors.orange,
           ),
         );
@@ -521,7 +521,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('操作失败�?e'),
+            content: Text('Action failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -529,7 +529,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     }
   }
 
-  /// 还价
+  /// Counter Offer
   Future<void> _counterOffer(OfferModel offer) async {
     final priceController = TextEditingController();
     final messageController = TextEditingController();
@@ -537,7 +537,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('还价'),
+        title: const Text('Counter Offer'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -545,7 +545,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
               controller: priceController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               decoration: const InputDecoration(
-                labelText: '还价金额',
+                labelText: 'Price',
                 prefixText: 'RM ',
                 border: OutlineInputBorder(),
               ),
@@ -554,8 +554,8 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
             TextField(
               controller: messageController,
               decoration: const InputDecoration(
-                labelText: '说明',
-                hintText: '告诉买家您的理由...',
+                labelText: 'Message',
+                hintText: 'Reason...',
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
@@ -565,11 +565,11 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('确定'),
+            child: const Text('Confirm'),
           ),
         ],
       ),
@@ -581,7 +581,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     if (price == null || price <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('请输入有效的金额'),
+          content: Text('Invalid amount'),
           backgroundColor: Colors.red,
         ),
       );
@@ -593,7 +593,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('还价已发�?),
+            content: Text('Counter offer sent'),
             backgroundColor: Colors.blue,
           ),
         );
@@ -602,7 +602,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('操作失败�?e'),
+            content: Text('Action failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -610,21 +610,21 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     }
   }
 
-  /// 接受还价
+  /// Accept Counter Offer
   Future<void> _acceptCounterOffer(OfferModel offer) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认接受还价'),
-        content: Text('确定接受卖家还价：RM ${offer.counterOfferPrice!.toStringAsFixed(2)}�?),
+        title: const Text('Accept Counter Offer'),
+        content: Text('Confirm accept counter offer: RM ${offer.counterOfferPrice!.toStringAsFixed(2)}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('确定'),
+            child: const Text('Confirm'),
           ),
         ],
       ),
@@ -637,7 +637,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('已接受还�?),
+            content: Text('Counter Offer Accepted'),
             backgroundColor: Colors.green,
           ),
         );
@@ -646,7 +646,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('操作失败�?e'),
+            content: Text('Action failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -654,7 +654,7 @@ class _BBXMyOffersScreenState extends State<BBXMyOffersScreen> with SingleTicker
     }
   }
 
-  /// 格式化日�?
+  /// Format Date
   String _formatDate(DateTime? date) {
     if (date == null) return '';
     return DateFormat('yyyy-MM-dd HH:mm').format(date);

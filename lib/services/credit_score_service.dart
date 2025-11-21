@@ -1,46 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-/// 信用评分系统
 ///
-/// 评分因素�?
-/// 1. 认证状态（+20分）
-/// 2. 交易完成率（0-30分）
-/// 3. 平均评分�?-25分）
-/// 4. 响应速度�?-15分）
-/// 5. 争议率（0-10分，争议越少分越高）
 ///
-/// 总分�?00�?
 class CreditScoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// 计算用户信用评分
-  Future<Map<String, dynamic>> calculateCreditScore(String userId) async {
+    Future<Map<String, dynamic>> calculateCreditScore(String userId) async {
     try {
-      // 1. 认证状态评�?(0-20�?
-      final verificationScore = await _getVerificationScore(userId);
+            final verificationScore = await _getVerificationScore(userId);
 
-      // 2. 交易完成率评�?(0-30�?
-      final completionScore = await _getCompletionScore(userId);
+            final completionScore = await _getCompletionScore(userId);
 
-      // 3. 平均评分 (0-25�?
-      final reviewScore = await _getReviewScore(userId);
+            final reviewScore = await _getReviewScore(userId);
 
-      // 4. 响应速度评分 (0-15�?
-      final responseScore = await _getResponseScore(userId);
+            final responseScore = await _getResponseScore(userId);
 
-      // 5. 争议率评�?(0-10�?
-      final disputeScore = await _getDisputeScore(userId);
+            final disputeScore = await _getDisputeScore(userId);
 
-      // 计算总分
-      final totalScore = verificationScore +
+            final totalScore = verificationScore +
           completionScore +
           reviewScore +
           responseScore +
           disputeScore;
 
-      // 确定信用等级
-      final creditLevel = _getCreditLevel(totalScore);
+            final creditLevel = _getCreditLevel(totalScore);
 
       return {
         'totalScore': totalScore.toInt(),
@@ -75,8 +59,7 @@ class CreditScoreService {
     }
   }
 
-  /// 认证状态评�?
-  Future<double> _getVerificationScore(String userId) async {
+    Future<double> _getVerificationScore(String userId) async {
     try {
       final doc = await _firestore.collection('verifications').doc(userId).get();
 
@@ -87,17 +70,13 @@ class CreditScoreService {
 
       if (status == 'approved') {
         final type = data['type'];
-        // 不同认证类型给不同分�?
-        switch (type) {
+                switch (type) {
           case 'phone':
           case 'email':
-            return 10; // 基础认证
-          case 'business':
-            return 15; // 企业认证
-          case 'identity':
+            return 10;           case 'business':
+            return 15;           case 'identity':
           case 'bank':
-            return 20; // 高级认证
-          default:
+            return 20;           default:
             return 5;
         }
       }
@@ -108,17 +87,14 @@ class CreditScoreService {
     }
   }
 
-  /// 交易完成率评�?
-  Future<double> _getCompletionScore(String userId) async {
+    Future<double> _getCompletionScore(String userId) async {
     try {
-      // 获取所有销售交�?
-      final salesQuery = await _firestore
+            final salesQuery = await _firestore
           .collection('transactions')
           .where('sellerId', isEqualTo: userId)
           .get();
 
-      if (salesQuery.docs.isEmpty) return 15; // 新用户给予基础�?
-
+      if (salesQuery.docs.isEmpty) return 15; 
       int totalTransactions = salesQuery.docs.length;
       int completedTransactions = 0;
 
@@ -130,22 +106,19 @@ class CreditScoreService {
       }
 
       final completionRate = completedTransactions / totalTransactions;
-      return completionRate * 30; // 最�?0�?
-    } catch (e) {
+      return completionRate * 30;     } catch (e) {
       return 0;
     }
   }
 
-  /// 平均评分
-  Future<double> _getReviewScore(String userId) async {
+    Future<double> _getReviewScore(String userId) async {
     try {
       final reviewsQuery = await _firestore
           .collection('reviews')
           .where('revieweeId', isEqualTo: userId)
           .get();
 
-      if (reviewsQuery.docs.isEmpty) return 12.5; // 新用户给予中等分
-
+      if (reviewsQuery.docs.isEmpty) return 12.5; 
       double totalRating = 0;
       for (var doc in reviewsQuery.docs) {
         final data = doc.data();
@@ -153,25 +126,21 @@ class CreditScoreService {
       }
 
       final averageRating = totalRating / reviewsQuery.docs.length;
-      return (averageRating / 5) * 25; // 最�?5�?
-    } catch (e) {
+      return (averageRating / 5) * 25;     } catch (e) {
       return 0;
     }
   }
 
-  /// 响应速度评分
-  Future<double> _getResponseScore(String userId) async {
+    Future<double> _getResponseScore(String userId) async {
     try {
-      // 获取用户的消息响应数�?
-      final messagesQuery = await _firestore
+            final messagesQuery = await _firestore
           .collection('messages')
           .where('receiverId', isEqualTo: userId)
           .where('read', isEqualTo: true)
           .limit(50)
           .get();
 
-      if (messagesQuery.docs.isEmpty) return 7.5; // 新用户给予中等分
-
+      if (messagesQuery.docs.isEmpty) return 7.5; 
       int totalResponseTime = 0;
       int count = 0;
 
@@ -191,30 +160,20 @@ class CreditScoreService {
 
       final avgResponseTime = totalResponseTime / count;
 
-      // 响应时间越短，分数越�?
-      if (avgResponseTime < 30) return 15; // 30分钟�?
-      if (avgResponseTime < 60) return 12; // 1小时�?
-      if (avgResponseTime < 180) return 9; // 3小时�?
-      if (avgResponseTime < 360) return 6; // 6小时�?
-      return 3; // 6小时以上
-    } catch (e) {
+            if (avgResponseTime < 30) return 15;       if (avgResponseTime < 60) return 12;       if (avgResponseTime < 180) return 9;       if (avgResponseTime < 360) return 6;       return 3;     } catch (e) {
       return 7.5;
     }
   }
 
-  /// 争议率评�?
-  Future<double> _getDisputeScore(String userId) async {
+    Future<double> _getDisputeScore(String userId) async {
     try {
-      // 获取相关交易�?
-      final transactionsQuery = await _firestore
+            final transactionsQuery = await _firestore
           .collection('transactions')
           .where('sellerId', isEqualTo: userId)
           .get();
 
-      if (transactionsQuery.docs.isEmpty) return 5; // 新用户给予中等分
-
-      // 获取争议�?
-      final disputesQuery = await _firestore
+      if (transactionsQuery.docs.isEmpty) return 5; 
+            final disputesQuery = await _firestore
           .collection('disputes')
           .where('transactionId',
               whereIn: transactionsQuery.docs.map((d) => d.id).toList())
@@ -223,19 +182,12 @@ class CreditScoreService {
       final disputeRate =
           disputesQuery.docs.length / transactionsQuery.docs.length;
 
-      // 争议率越低，分数越高
-      if (disputeRate == 0) return 10; // 无争�?
-      if (disputeRate < 0.05) return 8; // 争议�?< 5%
-      if (disputeRate < 0.10) return 6; // 争议�?< 10%
-      if (disputeRate < 0.15) return 4; // 争议�?< 15%
-      return 2; // 争议�?>= 15%
-    } catch (e) {
+            if (disputeRate == 0) return 10;       if (disputeRate < 0.05) return 8;       if (disputeRate < 0.10) return 6;       if (disputeRate < 0.15) return 4;       return 2;     } catch (e) {
       return 5;
     }
   }
 
-  /// 获取信用等级
-  Map<String, dynamic> _getCreditLevel(double score) {
+    Map<String, dynamic> _getCreditLevel(double score) {
     if (score >= 90) {
       return {
         'level': 'excellent',
@@ -260,7 +212,7 @@ class CreditScoreService {
     } else if (score >= 60) {
       return {
         'level': 'average',
-        'label': '一�?,
+        'label': '一?,
         'stars': 2,
         'color': 'orange',
       };
@@ -274,8 +226,7 @@ class CreditScoreService {
     }
   }
 
-  /// 保存信用评分到用户文�?
-  Future<void> saveCreditScore(String userId) async {
+    Future<void> saveCreditScore(String userId) async {
     final scoreData = await calculateCreditScore(userId);
 
     await _firestore.collection('users').doc(userId).update({
@@ -284,8 +235,7 @@ class CreditScoreService {
     });
   }
 
-  /// 获取用户信用评分
-  Future<Map<String, dynamic>?> getCreditScore(String userId) async {
+    Future<Map<String, dynamic>?> getCreditScore(String userId) async {
     try {
       final doc = await _firestore.collection('users').doc(userId).get();
 
@@ -298,8 +248,7 @@ class CreditScoreService {
     }
   }
 
-  /// 批量更新信用评分（管理员功能�?
-  Future<void> batchUpdateCreditScores() async {
+    Future<void> batchUpdateCreditScores() async {
     try {
       final usersQuery = await _firestore.collection('users').get();
 
@@ -312,7 +261,6 @@ class CreditScoreService {
   }
 }
 
-/// 信用评分组件 - 可在其他页面使用
 class CreditScoreBadge extends StatelessWidget {
   final String userId;
   final bool showDetails;
@@ -363,7 +311,7 @@ class CreditScoreBadge extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                showDetails ? '$label ($score�?' : label,
+                showDetails ? '$label ($score?' : label,
                 style: TextStyle(
                   fontSize: 12,
                   color: _getColor(stars),

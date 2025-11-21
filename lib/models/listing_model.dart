@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 废料列表模型
 class ListingModel {
   final String id;
   final String userId;
@@ -40,14 +39,12 @@ class ListingModel {
     this.expiresAt,
   });
 
-  /// �?Firestore 文档创建
-  factory ListingModel.fromDocument(DocumentSnapshot doc) {
+    factory ListingModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return ListingModel.fromMap(doc.id, data);
   }
 
-  /// �?Map 创建
-  factory ListingModel.fromMap(String id, Map<String, dynamic> data) {
+    factory ListingModel.fromMap(String id, Map<String, dynamic> data) {
     return ListingModel(
       id: id,
       userId: data['userId'] ?? '',
@@ -69,8 +66,7 @@ class ListingModel {
     );
   }
 
-  /// 转换�?Map（用于Firestore�?
-  Map<String, dynamic> toMap() {
+    Map<String, dynamic> toMap() {
     return {
       'userId': userId,
       'userEmail': userEmail,
@@ -91,8 +87,7 @@ class ListingModel {
     };
   }
 
-  /// 复制并修改部分字�?
-  ListingModel copyWith({
+    ListingModel copyWith({
     String? title,
     String? description,
     String? wasteType,
@@ -127,64 +122,57 @@ class ListingModel {
     );
   }
 
-  /// 计算总价
-  double get totalPrice => quantity * pricePerUnit;
+    double get totalPrice => quantity * pricePerUnit;
 
-  /// 是否可用
-  bool get isAvailable => status == 'available';
+    bool get isAvailable => status == 'available';
 
-  /// 是否已过�?
-  bool get isExpired {
+    bool get isExpired {
     if (expiresAt == null) return false;
     return DateTime.now().isAfter(expiresAt!);
   }
 
-  /// 是否通过合规审核
-  bool get isCompliant => complianceStatus == 'approved';
+    bool get isCompliant => complianceStatus == 'approved';
 
-  /// 获取位置坐标
-  double? get latitude => location?['latitude'] as double?;
+    double? get latitude => location?['latitude'] as double?;
   double? get longitude => location?['longitude'] as double?;
 
-  /// 获取废料类型显示文本
-  String get wasteTypeDisplay {
+    String get wasteTypeDisplay {
     switch (wasteType) {
       case 'EFB (Empty Fruit Bunches)':
-        return '棕榈空果�?;
+        return 'EFB (Empty Fruit Bunches)';
       case 'POME (Palm Oil Mill Effluent)':
-        return '棕榈油厂废水';
+        return 'POME';
       case 'Palm Shell':
-        return '棕榈�?;
+        return 'Palm Shell';
       case 'Palm Fiber':
-        return '棕榈纤维';
+        return 'Palm Fiber';
       case 'Palm Kernel Cake':
-        return '棕榈仁饼';
+        return 'Palm Kernel Cake';
       case 'Coconut Husk':
-        return '椰壳';
+        return 'Coconut Husk';
       case 'Rice Husk':
-        return '稻壳';
+        return 'Rice Husk';
       case 'Sugarcane Bagasse':
-        return '甘蔗�?;
+        return 'Sugarcane Bagasse';
       case 'Wood Chips':
-        return '木屑';
+        return 'Wood Chips';
       case 'Other Biomass':
-        return '其他生物�?;
+        return 'Other Biomass';
       default:
         return wasteType;
     }
   }
 
-  /// 获取状态显示文�?
-  String get statusDisplay {
+    String get statusDisplay {
     switch (status) {
       case 'available':
         return '可用';
       case 'pending':
-        return '待处�?;
+        return 'Pending';
       case 'sold':
-        return '已售�?;
+        return 'Sold';
       case 'expired':
-        return '已过�?;
+        return 'Expired';
       default:
         return status;
     }

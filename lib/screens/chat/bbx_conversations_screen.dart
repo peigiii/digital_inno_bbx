@@ -6,7 +6,7 @@ import '../../models/message_model.dart';
 import '../../services/chat_service.dart';
 import 'bbx_chat_screen.dart';
 
-/// 对话列表页面
+/// Conversations Screen
 class BBXConversationsScreen extends StatefulWidget {
   const BBXConversationsScreen({super.key});
 
@@ -25,13 +25,13 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('消息'),
+        title: const Text('Messages'),
         elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              // TODO: 实现搜索功能
+              // TODO: Implement search
             },
           ),
         ],
@@ -44,7 +44,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('加载失败�?{snapshot.error}'));
+            return Center(child: Text('Load failed: ${snapshot.error}'));
           }
 
           final conversations = snapshot.data ?? [];
@@ -64,7 +64,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
     );
   }
 
-  /// 空状�?
+  /// Empty State
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -73,7 +73,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
           Icon(Icons.chat_bubble_outline, size: 80, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
-            '暂无消息',
+            'No messages yet',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -82,7 +82,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '开始与其他用户聊天�?,
+            'Start chatting with other users',
             style: TextStyle(color: Colors.grey.shade500),
           ),
         ],
@@ -90,7 +90,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
     );
   }
 
-  /// 对话列表�?
+  /// Conversation List Item
   Widget _buildConversationTile(ConversationModel conversation) {
     final otherUserId = conversation.getOtherParticipantId(_currentUserId!);
     if (otherUserId == null) return const SizedBox.shrink();
@@ -99,7 +99,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
       future: _getUserInfo(otherUserId),
       builder: (context, snapshot) {
         final userInfo = snapshot.data ?? {};
-        final displayName = userInfo['displayName'] ?? '未知用户';
+        final displayName = userInfo['displayName'] ?? 'Unknown User';
         final photoURL = userInfo['photoURL'];
 
         final unreadCount = conversation.getUnreadCount(_currentUserId!);
@@ -180,7 +180,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
     );
   }
 
-  /// 获取用户信息
+  /// Get User Info
   Future<Map<String, dynamic>> _getUserInfo(String userId) async {
     try {
       final doc = await _firestore.collection('users').doc(userId).get();
@@ -190,7 +190,7 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
     }
   }
 
-  /// 格式化时�?
+  /// Format Time
   String _formatTime(DateTime? dateTime) {
     if (dateTime == null) return '';
 
@@ -198,17 +198,16 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
     final difference = now.difference(dateTime);
 
     if (difference.inDays == 0) {
-      // 今天：显示时�?
+      // Today
       return DateFormat('HH:mm').format(dateTime);
     } else if (difference.inDays == 1) {
-      // 昨天
-      return '昨天';
+      // Yesterday
+      return 'Yesterday';
     } else if (difference.inDays < 7) {
-      // 本周：显示星�?
-      const weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-      return weekdays[dateTime.weekday - 1];
+      // This Week
+      return DateFormat('EEEE').format(dateTime); // Day name
     } else {
-      // 更早：显示日�?
+      // Older
       return DateFormat('MM/dd').format(dateTime);
     }
   }

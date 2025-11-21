@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// BBX 状态标签组�?
 class BBXStatusChip extends StatelessWidget {
   final String label;
   final Color? backgroundColor;
@@ -18,8 +17,7 @@ class BBXStatusChip extends StatelessWidget {
     this.isSmall = false,
   });
 
-  /// 根据状态返回对应的颜色
-  factory BBXStatusChip.status(String status, {bool isSmall = false}) {
+    factory BBXStatusChip.status(String status, {bool isSmall = false}) {
     Color bgColor;
     Color txtColor;
     String label;
@@ -28,52 +26,52 @@ class BBXStatusChip extends StatelessWidget {
       case 'pending':
         bgColor = AppTheme.warning.withOpacity(0.1);
         txtColor = AppTheme.warning;
-        label = '待处�?;
+        label = '待处?;
         break;
       case 'confirmed':
         bgColor = AppTheme.info.withOpacity(0.1);
         txtColor = AppTheme.info;
-        label = '已确�?;
+        label = '已确?;
         break;
       case 'paid':
         bgColor = AppTheme.success.withOpacity(0.1);
         txtColor = AppTheme.success;
-        label = '已支�?;
+        label = '已支?;
         break;
       case 'in_transit':
         bgColor = AppTheme.accent.withOpacity(0.1);
         txtColor = AppTheme.accent;
-        label = '运输�?;
+        label = '运输?;
         break;
       case 'completed':
         bgColor = AppTheme.success.withOpacity(0.1);
         txtColor = AppTheme.success;
-        label = '已完�?;
+        label = '已完?;
         break;
       case 'cancelled':
         bgColor = AppTheme.error.withOpacity(0.1);
         txtColor = AppTheme.error;
-        label = '已取�?;
+        label = '已取?;
         break;
       case 'negotiating':
         bgColor = AppTheme.info.withOpacity(0.1);
         txtColor = AppTheme.info;
-        label = '议价�?;
+        label = '议价?;
         break;
       case 'accepted':
         bgColor = AppTheme.success.withOpacity(0.1);
         txtColor = AppTheme.success;
-        label = '已接�?;
+        label = '已接?;
         break;
       case 'rejected':
         bgColor = AppTheme.error.withOpacity(0.1);
         txtColor = AppTheme.error;
-        label = '已拒�?;
+        label = '已拒?;
         break;
       case 'expired':
         bgColor = AppTheme.neutral400.withOpacity(0.1);
         txtColor = AppTheme.neutral600;
-        label = '已过�?;
+        label = '已过?;
         break;
       default:
         bgColor = AppTheme.neutral300;
@@ -126,7 +124,6 @@ class BBXStatusChip extends StatelessWidget {
   }
 }
 
-/// BBX 分类标签组件
 class BBXCategoryChip extends StatelessWidget {
   final String category;
   final bool isSmall;
@@ -191,7 +188,6 @@ class BBXCategoryChip extends StatelessWidget {
   }
 }
 
-/// BBX 筛选标签组�?
 class BBXFilterChip extends StatelessWidget {
   final String label;
   final bool isSelected;

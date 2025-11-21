@@ -14,8 +14,7 @@ class NotificationService {
 
   Future<void> initialize() async {
     try {
-      // 请求权限
-      final settings = await _fcm.requestPermission(
+            final settings = await _fcm.requestPermission(
         alert: true,
         badge: true,
         sound: true,
@@ -25,8 +24,7 @@ class NotificationService {
         print('用户授予通知权限');
       }
 
-      // 初始化本地通知
-      const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+            const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
       const iosSettings = DarwinInitializationSettings();
       const initSettings = InitializationSettings(
         android: androidSettings,
@@ -38,22 +36,18 @@ class NotificationService {
         onDidReceiveNotificationResponse: _onNotificationTapped,
       );
 
-      // 获取并保�?FCM token
-      final token = await _fcm.getToken();
+            final token = await _fcm.getToken();
       if (token != null) {
         await _saveToken(token);
       }
 
-      // 监听 token 刷新
-      _fcm.onTokenRefresh.listen(_saveToken);
+            _fcm.onTokenRefresh.listen(_saveToken);
 
-      // 监听前台消息
-      FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
+            FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
-      // 监听后台消息点击
-      FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessage);
+            FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessage);
     } catch (e) {
-      print('通知初始化失�? $e');
+      print('通知初始化失? $e');
     }
   }
 
@@ -66,17 +60,14 @@ class NotificationService {
           .collection('users')
           .doc(user.uid);
 
-      // 使用 set 而不�?update，自动创建或更新
-      await docRef.set({
+            await docRef.set({
         'fcmToken': token,
         'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true)); // merge: true 保留其他字段
-
-      print('�?FCM token 保存成功');
+      }, SetOptions(merge: true)); 
+      print('?FCM token 保存成功');
     } catch (e) {
-      print('�?保存 FCM token 失败: $e');
-      // 不抛出错误，避免影响应用启动
-    }
+      print('?保存 FCM token 失败: $e');
+          }
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
@@ -91,13 +82,11 @@ class NotificationService {
   }
 
   void _handleBackgroundMessage(RemoteMessage message) {
-    // 处理点击通知后的导航
-    print('用户点击了通知: ${message.data}');
+        print('用户点击了通知: ${message.data}');
   }
 
   void _onNotificationTapped(NotificationResponse response) {
-    // 处理通知点击
-    print('通知被点�? ${response.payload}');
+        print('通知被点? ${response.payload}');
   }
 
   Future<void> _showLocalNotification(
@@ -132,8 +121,7 @@ class NotificationService {
     }
   }
 
-  // 发送通知到特定用�?
-  Future<void> sendNotification({
+    Future<void> sendNotification({
     required String userId,
     required String title,
     required String body,

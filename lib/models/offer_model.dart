@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 报价模型
 class OfferModel {
   final String id;
   final String listingId;
@@ -10,20 +9,11 @@ class OfferModel {
   final String? recyclerContact;
   final String producerId; // sellerId
   final double offerPrice;
-  final double originalPrice; // 商品原价
-  final String message;
-  final String? sellerResponse; // 卖家回复
-  final double? counterOfferPrice; // 还价金额
-  final DateTime? collectionDate; // 预计收集日期
-  final DateTime? scheduledPickupDate; // 预计收集日期（别名）
-  final String? deliveryMethod; // 收集方式：self_pickup/platform_logistics/seller_delivery �?self_collect/delivery（新�?
-  final String? deliveryNote; // 配送备�?
-  final String status; // pending, negotiating, accepted, rejected, expired, cancelled
+  final double originalPrice;   final String message;
+  final String? sellerResponse;   final double? counterOfferPrice;   final DateTime? collectionDate;   final DateTime? scheduledPickupDate;   final String? deliveryMethod;   final String? deliveryNote;   final String status; // pending, negotiating, accepted, rejected, expired, cancelled
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final DateTime? expiresAt; // 48小时过期
-  final DateTime? respondedAt; // 卖家回复时间
-  final String? rejectionReason;
+  final DateTime? expiresAt;   final DateTime? respondedAt;   final String? rejectionReason;
 
   OfferModel({
     required this.id,
@@ -50,14 +40,12 @@ class OfferModel {
     this.rejectionReason,
   });
 
-  /// �?Firestore 文档创建
-  factory OfferModel.fromDocument(DocumentSnapshot doc) {
+    factory OfferModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return OfferModel.fromMap(doc.id, data);
   }
 
-  /// �?Map 创建
-  factory OfferModel.fromMap(String id, Map<String, dynamic> data) {
+    factory OfferModel.fromMap(String id, Map<String, dynamic> data) {
     return OfferModel(
       id: id,
       listingId: data['listingId'] ?? '',
@@ -86,18 +74,15 @@ class OfferModel {
     );
   }
 
-  /// 转换�?Map（用于Firestore�?
-  Map<String, dynamic> toMap() {
+    Map<String, dynamic> toMap() {
     return {
       'listingId': listingId,
       'recyclerId': recyclerId,
-      'buyerId': recyclerId, // 别名
-      'recyclerName': recyclerName,
+      'buyerId': recyclerId,       'recyclerName': recyclerName,
       'recyclerCompany': recyclerCompany,
       'recyclerContact': recyclerContact,
       'producerId': producerId,
-      'sellerId': producerId, // 别名
-      'offerPrice': offerPrice,
+      'sellerId': producerId,       'offerPrice': offerPrice,
       'originalPrice': originalPrice,
       'message': message,
       'sellerResponse': sellerResponse,
@@ -115,8 +100,7 @@ class OfferModel {
     };
   }
 
-  /// 复制并修改部分字�?
-  OfferModel copyWith({
+    OfferModel copyWith({
     double? offerPrice,
     double? originalPrice,
     String? message,
@@ -157,65 +141,54 @@ class OfferModel {
     );
   }
 
-  /// 计算折扣百分�?
-  double get discountPercentage {
+    double get discountPercentage {
     if (originalPrice <= 0) return 0;
     return ((originalPrice - offerPrice) / originalPrice * 100);
   }
 
-  /// 检查是否过�?
-  bool get isExpired {
+    bool get isExpired {
     if (expiresAt == null) return false;
     return DateTime.now().isAfter(expiresAt!);
   }
 
-  /// 检查是否可以接�?
-  bool get canAccept {
+    bool get canAccept {
     return status == 'pending' || status == 'negotiating';
   }
 
-  /// 检查是否可以议�?
-  bool get canNegotiate {
+    bool get canNegotiate {
     return status == 'pending' && !isExpired;
   }
 
-  /// 是否待处�?
-  bool get isPending => status == 'pending';
+    bool get isPending => status == 'pending';
 
-  /// 是否已接�?
-  bool get isAccepted => status == 'accepted';
+    bool get isAccepted => status == 'accepted';
 
-  /// 是否已拒�?
-  bool get isRejected => status == 'rejected';
+    bool get isRejected => status == 'rejected';
 
-  /// 是否已取�?
-  bool get isCancelled => status == 'cancelled';
+    bool get isCancelled => status == 'cancelled';
 
-  /// 是否正在议价
-  bool get isNegotiating => status == 'negotiating';
+    bool get isNegotiating => status == 'negotiating';
 
-  /// 获取状态显示文�?
-  String get statusDisplay {
+    String get statusDisplay {
     switch (status) {
       case 'pending':
-        return '待处�?;
+        return 'Pending';
       case 'negotiating':
-        return '议价�?;
+        return 'Negotiating';
       case 'accepted':
-        return '已接�?;
+        return 'Accepted';
       case 'rejected':
-        return '已拒�?;
+        return 'Rejected';
       case 'expired':
-        return '已过�?;
+        return 'Expired';
       case 'cancelled':
-        return '已取�?;
+        return 'Cancelled';
       default:
         return status;
     }
   }
 
-  /// 获取收集方式显示文本
-  String get deliveryMethodDisplay {
+    String get deliveryMethodDisplay {
     switch (deliveryMethod) {
       case 'self_pickup':
         return '自行收集';
@@ -228,15 +201,13 @@ class OfferModel {
       case 'delivery':
         return '邮寄';
       default:
-        return deliveryMethod ?? '未指�?;
+        return deliveryMethod ?? 'Not specified';
     }
   }
 
-  /// 别名：buyerId
-  String get buyerId => recyclerId;
+    String get buyerId => recyclerId;
 
-  /// 别名：sellerId
-  String get sellerId => producerId;
+    String get sellerId => producerId;
 
   @override
   String toString() {

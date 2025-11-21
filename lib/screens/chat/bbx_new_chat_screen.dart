@@ -7,7 +7,6 @@ import '../../widgets/bbx_button.dart';
 import '../../widgets/bbx_bottom_sheet.dart';
 import '../../widgets/bbx_notification.dart';
 
-/// BBX 聊天详情页（完全重构�?
 class BBXNewChatScreen extends StatefulWidget {
   final String conversationId;
   final String otherUserName;
@@ -43,13 +42,11 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
       appBar: _buildAppBar(),
       body: Column(
         children: [
-          // 消息列表
-          Expanded(
+                    Expanded(
             child: _buildMessagesList(),
           ),
 
-          // 输入�?
-          _buildInputBar(),
+                    _buildInputBar(),
         ],
       ),
     );
@@ -103,8 +100,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     );
   }
 
-  /// 消息列表
-  Widget _buildMessagesList() {
+    Widget _buildMessagesList() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('conversations')
@@ -115,7 +111,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('加载失败�?{snapshot.error}'));
+          return Center(child: Text('加载失败?{snapshot.error}'));
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -156,8 +152,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     );
   }
 
-  /// 消息气泡
-  Widget _buildMessageBubble(DocumentSnapshot doc) {
+    Widget _buildMessageBubble(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     final user = FirebaseAuth.instance.currentUser;
     final isMine = data['senderId'] == user?.uid;
@@ -237,8 +232,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     );
   }
 
-  /// 消息内容
-  Widget _buildMessageContent(String type, String message, bool isMine) {
+    Widget _buildMessageContent(String type, String message, bool isMine) {
     switch (type) {
       case 'text':
         return Text(
@@ -319,8 +313,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     }
   }
 
-  /// 输入�?
-  Widget _buildInputBar() {
+    Widget _buildInputBar() {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing16),
       decoration: const BoxDecoration(
@@ -333,8 +326,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
         top: false,
         child: Row(
           children: [
-            // 附件按钮
-            BBXIconButton(
+                        BBXIconButton(
               icon: Icons.add_circle_rounded,
               onPressed: _showAttachmentOptions,
               color: AppTheme.neutral600,
@@ -342,8 +334,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
             ),
             const SizedBox(width: AppTheme.spacing8),
 
-            // 输入�?
-            Expanded(
+                        Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: AppTheme.spacing16,
@@ -370,8 +361,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
 
             const SizedBox(width: AppTheme.spacing8),
 
-            // 发送按�?
-            if (_messageController.text.isNotEmpty)
+                        if (_messageController.text.isNotEmpty)
               Container(
                 width: 48,
                 height: 48,
@@ -400,8 +390,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     );
   }
 
-  /// 发送消�?
-  Future<void> _sendMessage() async {
+    Future<void> _sendMessage() async {
     if (_messageController.text.trim().isEmpty) return;
 
     final message = _messageController.text.trim();
@@ -423,8 +412,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      // 更新对话的最后消�?
-      await FirebaseFirestore.instance
+            await FirebaseFirestore.instance
           .collection('conversations')
           .doc(widget.conversationId)
           .update({
@@ -432,8 +420,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
         'lastMessageTime': FieldValue.serverTimestamp(),
       });
 
-      // 滚动到底�?
-      if (_scrollController.hasClients) {
+            if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0,
           duration: const Duration(milliseconds: 300),
@@ -445,11 +432,10 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     }
   }
 
-  /// 显示附件选项
-  void _showAttachmentOptions() {
+    void _showAttachmentOptions() {
     BBXBottomSheet.show(
       context: context,
-      title: '发�?,
+      title: '发?,
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacing16),
         child: GridView.count(
@@ -518,8 +504,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     );
   }
 
-  /// 显示更多选项
-  void _showMoreOptions() {
+    void _showMoreOptions() {
     showModalBottomSheet(
       context: context,
       builder: (context) => SafeArea(

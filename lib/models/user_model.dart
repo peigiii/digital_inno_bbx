@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 用户模型
 class UserModel {
   final String uid;
   final String email;
@@ -40,14 +39,12 @@ class UserModel {
     this.updatedAt,
   });
 
-  /// �?Firestore 文档创建
-  factory UserModel.fromDocument(DocumentSnapshot doc) {
+    factory UserModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return UserModel.fromMap(doc.id, data);
   }
 
-  /// �?Map 创建
-  factory UserModel.fromMap(String uid, Map<String, dynamic> data) {
+    factory UserModel.fromMap(String uid, Map<String, dynamic> data) {
     return UserModel(
       uid: uid,
       email: data['email'] ?? '',
@@ -69,8 +66,7 @@ class UserModel {
     );
   }
 
-  /// 转换�?Map（用于Firestore�?
-  Map<String, dynamic> toMap() {
+    Map<String, dynamic> toMap() {
     return {
       'email': email,
       'displayName': displayName,
@@ -91,8 +87,7 @@ class UserModel {
     };
   }
 
-  /// 复制并修改部分字�?
-  UserModel copyWith({
+    UserModel copyWith({
     String? email,
     String? displayName,
     String? photoURL,
@@ -129,46 +124,41 @@ class UserModel {
     );
   }
 
-  /// 获取用户类型显示文本
-  String get userTypeDisplay {
+    String get userTypeDisplay {
     switch (userType) {
       case 'producer':
-        return '生产�?;
+        return 'Producer';
       case 'processor':
-        return '处理�?;
+        return 'Processor';
       case 'recycler':
-        return '回收�?;
+        return 'Recycler';
       case 'public':
-        return '普通用�?;
+        return 'Public User';
       default:
         return userType;
     }
   }
 
-  /// 获取订阅计划显示文本
-  String get subscriptionPlanDisplay {
+    String get subscriptionPlanDisplay {
     switch (subscriptionPlan) {
       case 'free':
-        return '免费�?;
+        return 'Free';
       case 'basic':
-        return '基础�?;
+        return 'Basic';
       case 'professional':
-        return '专业�?;
+        return 'Professional';
       case 'enterprise':
-        return '企业�?;
+        return 'Enterprise';
       default:
         return subscriptionPlan;
     }
   }
 
-  /// 是否是高级用�?
-  bool get isPremium => subscriptionPlan != 'free';
+    bool get isPremium => subscriptionPlan != 'free';
 
-  /// 获取信用评分
-  int? get creditScoreValue => creditScore?['totalScore'] as int?;
+    int? get creditScoreValue => creditScore?['totalScore'] as int?;
 
-  /// 获取信用等级
-  String? get creditLevel => creditScore?['creditLevel'] as String?;
+    String? get creditLevel => creditScore?['creditLevel'] as String?;
 
   @override
   String toString() {

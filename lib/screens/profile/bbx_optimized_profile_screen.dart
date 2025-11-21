@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// BBX 个人中心 - 完全优化�?
-/// Material Design 3 风格，适配 Pixel 5
 class BBXOptimizedProfileScreen extends StatefulWidget {
   const BBXOptimizedProfileScreen({super.key});
 
@@ -14,7 +12,6 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
   final User? user = FirebaseAuth.instance.currentUser;
   bool isLoading = true;
 
-  // 用户数据（开发模式默认值）
   int transactionCount = 12;
   int offerCount = 5;
   int favoriteCount = 8;
@@ -30,9 +27,10 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
   }
 
   Future<void> _loadUserData() async {
-    // 模拟加载
     await Future.delayed(const Duration(milliseconds: 500));
-    setState(() => isLoading = false);
+    if (mounted) {
+      setState(() => isLoading = false);
+    }
   }
 
   @override
@@ -48,25 +46,18 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
       backgroundColor: const Color(0xFFF5F5F5),
       body: CustomScrollView(
         slivers: [
-          // 顶部渐变卡片
           _buildGradientHeader(),
 
-          // 统计卡片（浮动设计，负margin�?
           _buildFloatingStatsCard(),
 
-          // 账户管理小卡�?
           _buildAccountCards(),
 
-          // 会员专区（金色渐变）
           _buildMembershipSection(),
 
-          // 我的服务菜单
           _buildMyServicesSection(),
 
-          // 设置菜单
           _buildSettingsSection(),
 
-          // 退出登�?
           _buildLogoutButton(),
 
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -75,7 +66,6 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     );
   }
 
-  /// 顶部渐变背景卡片
   Widget _buildGradientHeader() {
     return SliverToBoxAdapter(
       child: Container(
@@ -97,7 +87,6 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 头像
                 Container(
                   width: 80,
                   height: 80,
@@ -109,9 +98,8 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
                   child: const Icon(Icons.person, size: 40, color: Color(0xFF2E7D32)),
                 ),
                 const SizedBox(height: 12),
-                // 用户�?
                 Text(
-                  user?.displayName ?? '用户',
+                  user?.displayName ?? 'User',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -119,7 +107,6 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 4),
-                // 邮箱
                 Text(
                   user?.email ?? '',
                   style: TextStyle(
@@ -135,11 +122,10 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     );
   }
 
-  /// 浮动统计卡片（负margin设计�?
   Widget _buildFloatingStatsCard() {
     return SliverToBoxAdapter(
       child: Transform.translate(
-        offset: const Offset(0, -32), // 负margin效果
+        offset: const Offset(0, -32),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.all(20),
@@ -157,11 +143,11 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildStatItem('交易�?, '$transactionCount', Icons.receipt_long),
+              _buildStatItem('Transactions', '$transactionCount', Icons.receipt_long),
               _buildDivider(),
-              _buildStatItem('报价�?, '$offerCount', Icons.local_offer),
+              _buildStatItem('Quotes', '$offerCount', Icons.local_offer),
               _buildDivider(),
-              _buildStatItem('收藏�?, '$favoriteCount', Icons.favorite),
+              _buildStatItem('Favorites', '$favoriteCount', Icons.favorite),
             ],
           ),
         ),
@@ -202,7 +188,6 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     );
   }
 
-  /// 账户管理彩色卡片�?x2网格�?
   Widget _buildAccountCards() {
     return SliverToBoxAdapter(
       child: Padding(
@@ -211,7 +196,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '账户管理',
+              'Account Management',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -227,29 +212,29 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
               childAspectRatio: 1.8,
               children: [
                 _buildAccountCard(
-                  '钱包余额',
+                  'Wallet Balance',
                   'RM ${walletBalance.toStringAsFixed(2)}',
                   Icons.account_balance_wallet,
                   const LinearGradient(colors: [Color(0xFFFFC371), Color(0xFFFF5F6D)]),
                   () => Navigator.pushNamed(context, '/wallet'),
                 ),
                 _buildAccountCard(
-                  '会员等级',
+                  'Membership Tier',
                   membershipTier == 'free' ? 'Free' : 'Premium',
                   Icons.workspace_premium,
                   const LinearGradient(colors: [Color(0xFFFFD700), Color(0xFFFFA500)]),
                   () => Navigator.pushNamed(context, '/subscription'),
                 ),
                 _buildAccountCard(
-                  '积分奖励',
-                  '$rewardPoints �?,
+                  'Reward Points',
+                  '$rewardPoints Points',
                   Icons.stars,
                   const LinearGradient(colors: [Color(0xFFEC6EAD), Color(0xFF3494E6)]),
                   () => Navigator.pushNamed(context, '/rewards'),
                 ),
                 _buildAccountCard(
-                  '优惠�?,
-                  '$availableCoupons 张可�?,
+                  'Coupons',
+                  '$availableCoupons Available',
                   Icons.confirmation_number,
                   const LinearGradient(colors: [Color(0xFF4ECDC4), Color(0xFF44A08D)]),
                   () => Navigator.pushNamed(context, '/coupons'),
@@ -316,7 +301,6 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     );
   }
 
-  /// 会员专区（金色渐变）
   Widget _buildMembershipSection() {
     return SliverToBoxAdapter(
       child: Container(
@@ -344,7 +328,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '升级专业�?,
+                    'Upgrade to Pro',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -353,7 +337,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '享受更多特权和功�?,
+                    'Enjoy more features',
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       fontSize: 14,
@@ -369,7 +353,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: const Text(
-                '立即升级',
+                'Upgrade Now',
                 style: TextStyle(
                   color: Color(0xFFFFA500),
                   fontWeight: FontWeight.w600,
@@ -382,7 +366,6 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     );
   }
 
-  /// 我的服务菜单
   Widget _buildMyServicesSection() {
     return SliverToBoxAdapter(
       child: Container(
@@ -397,29 +380,28 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
             const Padding(
               padding: EdgeInsets.all(16),
               child: Text(
-                '我的服务',
+                'My Services',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            _buildMenuItem(Icons.inventory_2_outlined, '我的商品', '已发�?12 �?, '/marketplace'),
+            _buildMenuItem(Icons.inventory_2_outlined, 'My Items', 'Posted: 12', '/marketplace'),
             const Divider(height: 1, indent: 56),
-            _buildMenuItem(Icons.local_offer_outlined, '我的报价', '待处�?5 �?, '/my-offers'),
+            _buildMenuItem(Icons.local_offer_outlined, 'My Quotes', 'Pending: 5', '/my-offers'),
             const Divider(height: 1, indent: 56),
-            _buildMenuItem(Icons.receipt_long_outlined, '我的交易', '进行�?2 �?, '/transactions'),
+            _buildMenuItem(Icons.receipt_long_outlined, 'My Transactions', 'Ongoing: 2', '/transactions'),
             const Divider(height: 1, indent: 56),
-            _buildMenuItem(Icons.chat_bubble_outline, '消息通知', '3 条未�?, '/messages'),
+            _buildMenuItem(Icons.chat_bubble_outline, 'Notifications', '3 Unread', '/messages'),
             const Divider(height: 1, indent: 56),
-            _buildMenuItem(Icons.bar_chart_outlined, '我的统计', '查看交易数据', '/statistics'),
+            _buildMenuItem(Icons.bar_chart_outlined, 'My Statistics', 'View Data', '/statistics'),
           ],
         ),
       ),
     );
   }
 
-  /// 设置菜单
   Widget _buildSettingsSection() {
     return SliverToBoxAdapter(
       child: Container(
@@ -434,22 +416,22 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
             const Padding(
               padding: EdgeInsets.all(16),
               child: Text(
-                '设置',
+                'Settings',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            _buildMenuItem(Icons.settings_outlined, '账户设置', '个人信息、安�?, '/account-settings'),
+            _buildMenuItem(Icons.settings_outlined, 'Account Settings', 'Personal Info, Security', '/account-settings'),
             const Divider(height: 1, indent: 56),
-            _buildMenuItem(Icons.notifications_outlined, '通知设置', '推送、消息提�?, '/notification-settings'),
+            _buildMenuItem(Icons.notifications_outlined, 'Notification Settings', 'Push, Message Alerts', '/notification-settings'),
             const Divider(height: 1, indent: 56),
-            _buildMenuItem(Icons.language_outlined, '语言设置', '中文', null),
+            _buildMenuItem(Icons.language_outlined, 'Language', 'English', null),
             const Divider(height: 1, indent: 56),
-            _buildMenuItem(Icons.help_outline, '帮助中心', '常见问题', null),
+            _buildMenuItem(Icons.help_outline, 'Help Center', 'FAQ', null),
             const Divider(height: 1, indent: 56),
-            _buildMenuItem(Icons.info_outline, '关于我们', 'BBX v1.0.0', null),
+            _buildMenuItem(Icons.info_outline, 'About Us', 'BBX v1.0.0', null),
           ],
         ),
       ),
@@ -466,7 +448,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('$title 功能开发中...'),
+                content: Text('$title feature coming soon...'),
                 duration: const Duration(seconds: 2),
               ),
             );
@@ -521,7 +503,6 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     );
   }
 
-  /// 退出登录按钮（单独区域，红色）
   Widget _buildLogoutButton() {
     return SliverToBoxAdapter(
       child: Container(
@@ -543,7 +524,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
                   Icon(Icons.logout, color: Color(0xFFF44336), size: 22),
                   SizedBox(width: 8),
                   Text(
-                    '退出登�?,
+                    'Logout',
                     style: TextStyle(
                       color: Color(0xFFF44336),
                       fontSize: 16,
@@ -563,12 +544,12 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('退出登�?),
-        content: const Text('确定要退出登录吗�?),
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () async {
@@ -578,7 +559,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
               }
             },
             child: const Text(
-              '确定',
+              'Confirm',
               style: TextStyle(color: Color(0xFFF44336)),
             ),
           ),
@@ -587,4 +568,3 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     );
   }
 }
-

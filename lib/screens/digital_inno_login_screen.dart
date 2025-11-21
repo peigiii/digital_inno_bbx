@@ -43,7 +43,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('登录失败: ${e.toString()}'),
+            content: Text('Login failed: ${e.toString()}'),
             backgroundColor: Colors.red,
           ),
         );
@@ -155,7 +155,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            '登录�?BBX 平台',
+                            'Login to BBX',
                             style: TextStyle(
                               fontSize: isTablet ? 24 : 20,
                               fontWeight: FontWeight.bold,
@@ -169,17 +169,17 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                           TextFormField(
                             controller: _emailController,
                             decoration: const InputDecoration(
-                              labelText: '邮箱地址',
+                              labelText: 'Email Address',
                               prefixIcon: Icon(Icons.email),
-                              hintText: '请输入您的邮�?,
+                              hintText: 'Please enter your email',
                             ),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return '请输入邮箱地址';
+                                return 'Please enter email';
                               }
                               if (!value.contains('@')) {
-                                return '请输入有效的邮箱地址';
+                                return 'Please enter valid email';
                               }
                               return null;
                             },
@@ -190,7 +190,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                           TextFormField(
                             controller: _passwordController,
                             decoration: InputDecoration(
-                              labelText: '密码',
+                              labelText: 'Password',
                               prefixIcon: const Icon(Icons.lock),
                               suffixIcon: IconButton(
                                 icon: Icon(
@@ -204,15 +204,15 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                                   });
                                 },
                               ),
-                              hintText: '请输入密�?,
+                              hintText: 'Please enter password',
                             ),
                             obscureText: _obscurePassword,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return '请输入密�?;
+                                return 'Please enter password';
                               }
                               if (value.length < 6) {
-                                return '密码长度至少6�?;
+                                return 'Password must be at least 6 chars';
                               }
                               return null;
                             },
@@ -229,7 +229,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                                       color: Colors.white,
                                     )
                                   : const Text(
-                                      '登录',
+                                      'Login',
                                       style: TextStyle(fontSize: 16),
                                     ),
                             ),
@@ -245,7 +245,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                                 side: const BorderSide(color: Color(0xFF2E7D32)),
                               ),
                               child: const Text(
-                                '注册新账�?,
+                                'Create New Account',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Color(0xFF2E7D32),
@@ -280,7 +280,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'PCDS 2030 合规认证平台',
+                          'PCDS 2030 Compliant Platform',
                           style: TextStyle(
                             color: const Color(0xFF2E7D32),
                             fontWeight: FontWeight.w600,

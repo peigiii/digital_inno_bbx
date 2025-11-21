@@ -21,10 +21,10 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
   }
 
   Future<void> _loadSubscriptionData() async {
-    print('🔍 [订阅页面] 开始加载订阅数�?);
+    print('🔍 [Subscription Page] Starting to load subscription data...');
 
     if (currentUser == null) {
-      print('�?[订阅页面] 用户未登�?);
+      print('❌ [Subscription Page] User not logged in');
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -33,11 +33,10 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
       return;
     }
 
-    print('�?[订阅页面] 用户已登�? ${currentUser!.email}');
-    print('🔄 [订阅页面] 查询 Firestore 用户文档...');
+    print('👤 [Subscription Page] User logged in: ${currentUser!.email}');
+    print('🔄 [Subscription Page] Querying Firestore user document...');
 
     try {
-      // 添加 10 秒超�?
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
@@ -45,42 +44,41 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              print('⏱️ [订阅页面] Firestore 查询超时�?0秒）');
-              throw Exception('查询超时，请检查网络连�?);
+              print('⏱️ [Subscription Page] Firestore query timed out (10s)');
+              throw Exception('Query timed out, please check network connection');
             },
           );
 
-      print('📄 [订阅页面] 文档查询完成，存�? ${userDoc.exists}');
+      print('📄 [Subscription Page] Document query completed, exists: ${userDoc.exists}');
 
       if (!mounted) {
-        print('⚠️ [订阅页面] Widget 已销毁，停止更新');
+        print('⚠️ [Subscription Page] Widget disposed, stopping update');
         return;
       }
 
       if (userDoc.exists) {
         final plan = userDoc.data()?['subscriptionPlan'] ?? 'free';
-        print('�?[订阅页面] 当前计划: $plan');
+        print('📋 [Subscription Page] Current plan: $plan');
         setState(() {
           currentPlan = plan;
           isLoading = false;
         });
       } else {
-        print('⚠️ [订阅页面] 用户文档不存在，使用默认计划');
+        print('⚠️ [Subscription Page] User document does not exist, using default plan');
         setState(() {
           currentPlan = 'free';
           isLoading = false;
         });
       }
     } catch (e) {
-      print('�?[订阅页面] 加载失败: $e');
+      print('❌ [Subscription Page] Load failed: $e');
       if (mounted) {
         setState(() {
           isLoading = false;
         });
-        // 显示错误提示
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('加载订阅信息失败: $e'),
+            content: Text('Failed to load subscription info: $e'),
             backgroundColor: Colors.orange,
             duration: const Duration(seconds: 5),
           ),
@@ -90,14 +88,14 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
   }
 
   Future<void> _selectPlan(String planName, int price) async {
-    print('🎯 [订阅页面] 用户选择计划: $planName (RM $price)');
+    print('🎯 [Subscription Page] User selected plan: $planName (RM $price)');
 
     if (currentUser == null) {
-      print('�?[订阅页面] 用户未登�?);
+      print('❌ [Subscription Page] User not logged in');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('请先登录'),
+            content: Text('Please login first'),
             backgroundColor: Colors.red,
           ),
         );
@@ -105,17 +103,16 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
       return;
     }
 
-    // 免费计划直接更新，无需支付
     if (price == 0) {
       final confirm = await showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('确认选择免费计划'),
-          content: const Text('您将使用免费计划，可随时升级到付费计划�?),
+          title: const Text('Confirm Free Plan'),
+          content: const Text('You will use the Free plan. You can upgrade anytime.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('取消'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () => Navigator.pop(context, true),
@@ -123,14 +120,14 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
                 backgroundColor: const Color(0xFF4CAF50),
                 foregroundColor: Colors.white,
               ),
-              child: const Text('确认'),
+              child: const Text('Confirm'),
             ),
           ],
         ),
       );
 
       if (confirm != true) {
-        print('�?[订阅页面] 用户取消选择');
+        print('🚫 [Subscription Page] User cancelled selection');
         return;
       }
 
@@ -144,7 +141,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
           'subscriptionStatus': 'active',
         }).timeout(const Duration(seconds: 10));
 
-        print('�?[订阅页面] 免费计划已激�?);
+        print('✅ [Subscription Page] Free plan activated');
 
         if (mounted) {
           setState(() {
@@ -153,17 +150,17 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('已选择免费计划'),
+              content: Text('Selected Free plan'),
               backgroundColor: Colors.green,
             ),
           );
         }
       } catch (e) {
-        print('�?[订阅页面] 更新失败: $e');
+        print('❌ [Subscription Page] Update failed: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('选择计划失败: $e'),
+              content: Text('Failed to select plan: $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -172,8 +169,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
       return;
     }
 
-    // 付费计划：导航到支付页面
-    print('💳 [订阅页面] 导航到支付页�?..');
+    print('💳 [Subscription Page] Navigating to payment page...');
 
     if (mounted) {
       Navigator.pushNamed(
@@ -182,7 +178,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
         arguments: {
           'planName': planName,
           'planPrice': price,
-          'planPeriod': '1�?,
+          'planPeriod': '/mo',
         },
       );
     }
@@ -193,7 +189,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
     if (isLoading) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('订阅计划'),
+          title: const Text('Subscription Plan'),
           backgroundColor: const Color(0xFF4CAF50),
           foregroundColor: Colors.white,
         ),
@@ -205,7 +201,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('订阅计划'),
+        title: const Text('Subscription Plan'),
         backgroundColor: const Color(0xFF4CAF50),
         foregroundColor: Colors.white,
       ),
@@ -215,7 +211,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '选择适合您的计划',
+              'Choose the plan that fits you',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -223,7 +219,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              '当前计划: ${_getPlanDisplayName(currentPlan)}',
+              'Current Plan: ${_getPlanDisplayName(currentPlan)}',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[600],
@@ -235,13 +231,13 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             _buildPlanCard(
               'Free',
               'RM 0',
-              '/�?,
+              '/mo',
               [
-                '3天试用（个人�?,
-                '7天试用（公司�?,
-                '最�?5 个列�?,
-                '基础功能',
-                '社区支持',
+                '3-day trial (Personal)',
+                '7-day trial (Company)',
+                'Max 5 listings',
+                'Basic features',
+                'Community Support',
               ],
               currentPlan == 'free',
               Colors.grey,
@@ -252,13 +248,13 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             _buildPlanCard(
               'Basic',
               'RM 99',
-              '/�?,
+              '/mo',
               [
-                '无限列表',
-                '优先匹配',
-                '基础报告',
-                '邮件支持',
-                '数据导出',
+                'Unlimited listings',
+                'Priority matching',
+                'Basic reports',
+                'Email support',
+                'Data export',
               ],
               currentPlan == 'basic',
               Colors.blue,
@@ -269,14 +265,14 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             _buildPlanCard(
               'Professional',
               'RM 199',
-              '/�?,
+              '/mo',
               [
-                'Basic 所有功�?,
-                'ESG 合规报告',
-                '高级数据分析',
-                '物流优化',
-                '专属客服',
-                'API 访问',
+                'All Basic features',
+                'ESG Compliance Report',
+                'Advanced Analytics',
+                'Logistics Optimization',
+                'Dedicated Support',
+                'API Access',
               ],
               currentPlan == 'professional',
               const Color(0xFF4CAF50),
@@ -287,15 +283,15 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             _buildPlanCard(
               'Enterprise',
               'RM 499',
-              '/�?,
+              '/mo',
               [
-                'Professional 所有功�?,
-                '多用户账�?,
-                '定制化报�?,
-                '白标解决方案',
-                '专属客户经理',
-                '优先技术支�?,
-                'SLA 保证',
+                'All Professional features',
+                'Multi-user account',
+                'Custom Reports',
+                'White-label Solution',
+                'Dedicated Account Manager',
+                'Priority Tech Support',
+                'SLA Guarantee',
               ],
               currentPlan == 'enterprise',
               Colors.purple,
@@ -317,7 +313,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
                       Icon(Icons.info_outline, color: Colors.blue),
                       SizedBox(width: 8),
                       Text(
-                        '支付说明',
+                        'Payment Instructions',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -327,10 +323,10 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '�?选择计划后，请联系管理员完成支付\n'
-                    '�?支持银行转账、支付宝等方式\n'
-                    '�?付款�?24 小时内激活\n'
-                    '�?可随时升级或降级计划',
+                    '• After selecting a plan, please contact admin to complete payment\n'
+                    '• Supports Bank Transfer, E-Wallet, etc.\n'
+                    '• Activation within 24 hours of payment\n'
+                    '• Upgrade or downgrade anytime',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                 ],
@@ -347,11 +343,11 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
       case 'free':
         return 'Free';
       case 'basic':
-        return 'Basic (RM 99/�?';
+        return 'Basic (RM 99/mo)';
       case 'professional':
-        return 'Professional (RM 199/�?';
+        return 'Professional (RM 199/mo)';
       case 'enterprise':
-        return 'Enterprise (RM 499/�?';
+        return 'Enterprise (RM 499/mo)';
       default:
         return 'Free';
     }
@@ -427,7 +423,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
-                      '当前计划',
+                      'Current Plan',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -468,7 +464,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
                   ),
                 ),
                 child: Text(
-                  isCurrentPlan ? '当前计划' : '选择计划',
+                  isCurrentPlan ? 'Current Plan' : 'Select Plan',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 统一卡片容器
-/// 提供标准的圆角、阴影、内边距
 class AppCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry? padding;
@@ -56,7 +54,6 @@ class AppCard extends StatelessWidget {
   }
 }
 
-/// 带标题的卡片
 class TitledCard extends StatelessWidget {
   final String title;
   final Widget child;
@@ -102,7 +99,6 @@ class TitledCard extends StatelessWidget {
   }
 }
 
-/// 信息卡片（用于提示、警告等�?
 class InfoCard extends StatelessWidget {
   final String message;
   final InfoCardType type;
@@ -199,7 +195,6 @@ enum InfoCardType {
   error,
 }
 
-/// 统计卡片（用于展示数字指标）
 class StatCard extends StatelessWidget {
   final String label;
   final String value;
@@ -273,7 +268,6 @@ class StatCard extends StatelessWidget {
   }
 }
 
-/// 列表项卡片（适用于列表中的项目）
 class ListItemCard extends StatelessWidget {
   final Widget leading;
   final String title;
@@ -335,7 +329,6 @@ class ListItemCard extends StatelessWidget {
   }
 }
 
-/// 空状态卡�?
 class EmptyStateCard extends StatelessWidget {
   final IconData icon;
   final String title;

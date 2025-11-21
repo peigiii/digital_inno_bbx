@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// BBX 应用颜色系统（Material Design 3 标准�?
-/// �?Pixel 5 优化的现代化配色方案
 class AppColors {
   AppColors._();
 
   // ============================================================================
-  // 主色�?- 环保绿色（Primary�?
-  // ============================================================================
+    // ============================================================================
   
   static const Color primary = Color(0xFF2E7D32);
   static const Color primaryDark = Color(0xFF1B5E20);
@@ -18,15 +15,13 @@ class AppColors {
   static const Color primary200 = Color(0xFFA5D6A7);
   static const Color primary300 = Color(0xFF81C784);
   static const Color primary400 = Color(0xFF66BB6A);
-  static const Color primary500 = Color(0xFF4CAF50);  // 主色
-  static const Color primary600 = Color(0xFF43A047);
+  static const Color primary500 = Color(0xFF4CAF50);    static const Color primary600 = Color(0xFF43A047);
   static const Color primary700 = Color(0xFF388E3C);
   static const Color primary800 = Color(0xFF2E7D32);
   static const Color primary900 = Color(0xFF1B5E20);
 
   // ============================================================================
-  // 次要色系 - 橙色（Secondary�?
-  // ============================================================================
+    // ============================================================================
   
   static const Color secondary = Color(0xFFF57C00);
   static const Color secondaryLight = Color(0xFFFFB74D);
@@ -44,82 +39,55 @@ class AppColors {
   static const Color secondary900 = Color(0xFFE65100);
 
   // ============================================================================
-  // 语义色系 - 状态颜�?
-  // ============================================================================
+    // ============================================================================
   
-  /// 成功 - 绿色
-  static const Color success = Color(0xFF4CAF50);
+    static const Color success = Color(0xFF4CAF50);
   static const Color successLight = Color(0xFFC8E6C9);
   static const Color successDark = Color(0xFF2E7D32);
   
-  /// 警告 - 橙黄�?
-  static const Color warning = Color(0xFFFF9800);
+    static const Color warning = Color(0xFFFF9800);
   static const Color warningLight = Color(0xFFFFE0B2);
   static const Color warningDark = Color(0xFFF57C00);
   
-  /// 错误 - 红色
-  static const Color error = Color(0xFFF44336);
+    static const Color error = Color(0xFFF44336);
   static const Color errorLight = Color(0xFFFFCDD2);
   static const Color errorDark = Color(0xFFC62828);
   
-  /// 信息 - 蓝色
-  static const Color info = Color(0xFF2196F3);
+    static const Color info = Color(0xFF2196F3);
   static const Color infoLight = Color(0xFFBBDEFB);
   static const Color infoDark = Color(0xFF1976D2);
 
   // ============================================================================
-  // 中性色�?- 文字和背�?
-  // ============================================================================
+    // ============================================================================
   
-  /// 文字颜色
-  static const Color text = Color(0xFF212121);
+    static const Color text = Color(0xFF212121);
   static const Color textPrimary = Color(0xFF212121);
   static const Color textSecondary = Color(0xFF616161);
   static const Color textTertiary = Color(0xFF9E9E9E);
   static const Color textDisabled = Color(0xFFBDBDBD);
   static const Color textHint = Color(0xFF9E9E9E);
   
-  /// 背景颜色
-  static const Color background = Color(0xFFF5F5F5);
+    static const Color background = Color(0xFFF5F5F5);
   static const Color backgroundLight = Color(0xFFFAFAFA);
   static const Color surface = Colors.white;
   static const Color surfaceVariant = Color(0xFFF5F5F5);
   
-  /// 分割线和边框
-  static const Color divider = Color(0xFFE0E0E0);
+    static const Color divider = Color(0xFFE0E0E0);
   static const Color border = Color(0xFFE0E0E0);
   static const Color borderLight = Color(0xFFEEEEEE);
 
   // ============================================================================
-  // 废料分类颜色 - 用于图标和标�?
-  // ============================================================================
+    // ============================================================================
   
-  static const Color plastic = Color(0xFF2196F3);       // 塑料 - 蓝色
-  static const Color metal = Color(0xFFFF9800);         // 金属 - 橙色
-  static const Color paper = Color(0xFF8BC34A);         // 纸类 - 浅绿
-  static const Color glass = Color(0xFF00BCD4);         // 玻璃 - 青色
-  static const Color electronic = Color(0xFF9C27B0);    // 电子 - 紫色
-  static const Color organic = Color(0xFF795548);       // 有机 - 棕色
-  static const Color construction = Color(0xFF607D8B);  // 建筑 - 灰蓝
-  static const Color textile = Color(0xFFE91E63);       // 纺织 - 粉红
-  static const Color rubber = Color(0xFF424242);        // 橡胶 - 深灰
-  static const Color others = Color(0xFF9E9E9E);        // 其他 - 灰色
-
+  static const Color plastic = Color(0xFF2196F3);         static const Color metal = Color(0xFFFF9800);           static const Color paper = Color(0xFF8BC34A);           static const Color glass = Color(0xFF00BCD4);           static const Color electronic = Color(0xFF9C27B0);      static const Color organic = Color(0xFF795548);         static const Color construction = Color(0xFF607D8B);    static const Color textile = Color(0xFFE91E63);         static const Color rubber = Color(0xFF424242);          static const Color others = Color(0xFF9E9E9E);        
   // ============================================================================
-  // 会员等级颜色
-  // ============================================================================
+    // ============================================================================
   
-  static const Color memberFree = Color(0xFF9E9E9E);        // Free - 灰色
-  static const Color memberBasic = Color(0xFF2196F3);       // Basic - 蓝色
-  static const Color memberProfessional = Color(0xFF9C27B0); // Professional - 紫色
-  static const Color memberEnterprise = Color(0xFFFFD700);   // Enterprise - 金色
-
+  static const Color memberFree = Color(0xFF9E9E9E);          static const Color memberBasic = Color(0xFF2196F3);         static const Color memberProfessional = Color(0xFF9C27B0);   static const Color memberEnterprise = Color(0xFFFFD700);   
   // ============================================================================
-  // 辅助功能 - 获取分类颜色
-  // ============================================================================
+    // ============================================================================
   
-  /// 根据废料类型获取对应颜色
-  static Color getCategoryColor(String category) {
+    static Color getCategoryColor(String category) {
     switch (category.toLowerCase().trim()) {
       case 'plastic':
         return plastic;
@@ -144,13 +112,11 @@ class AppColors {
     }
   }
 
-  /// 获取分类浅色背景
-  static Color getCategoryLightColor(String category) {
+    static Color getCategoryLightColor(String category) {
     return getCategoryColor(category).withOpacity(0.1);
   }
 
-  /// 根据状态获取颜�?
-  static Color getStatusColor(String status) {
+    static Color getStatusColor(String status) {
     switch (status.toLowerCase().trim()) {
       case 'active':
       case 'available':
@@ -172,13 +138,11 @@ class AppColors {
     }
   }
 
-  /// 获取状态浅色背�?
-  static Color getStatusLightColor(String status) {
+    static Color getStatusLightColor(String status) {
     return getStatusColor(status).withOpacity(0.1);
   }
 
-  /// 根据会员等级获取颜色
-  static Color getMembershipColor(String tier) {
+    static Color getMembershipColor(String tier) {
     switch (tier.toLowerCase().trim()) {
       case 'free':
         return memberFree;
@@ -194,8 +158,7 @@ class AppColors {
   }
 
   // ============================================================================
-  // 渐变色系
-  // ============================================================================
+    // ============================================================================
   
   static const LinearGradient primaryGradient = LinearGradient(
     colors: [primary600, primary400],
@@ -221,8 +184,7 @@ class AppColors {
     end: Alignment.bottomRight,
   );
 
-  /// 根据废料类型生成渐变
-  static LinearGradient getCategoryGradient(String category) {
+    static LinearGradient getCategoryGradient(String category) {
     final color = getCategoryColor(category);
     return LinearGradient(
       colors: [color, color.withOpacity(0.7)],
@@ -232,16 +194,14 @@ class AppColors {
   }
 
   // ============================================================================
-  // 阴影颜色
-  // ============================================================================
+    // ============================================================================
   
   static Color shadowColor = Colors.black.withOpacity(0.08);
   static Color shadowColorDark = Colors.black.withOpacity(0.16);
   static Color shadowColorLight = Colors.black.withOpacity(0.04);
 
   // ============================================================================
-  // 覆盖层颜�?
-  // ============================================================================
+    // ============================================================================
   
   static Color overlayLight = Colors.black.withOpacity(0.3);
   static Color overlayMedium = Colors.black.withOpacity(0.5);

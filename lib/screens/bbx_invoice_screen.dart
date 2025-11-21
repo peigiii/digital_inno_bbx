@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../theme/app_theme.dart';
 
-/// 发票查看页面
-/// 显示订阅支付的详细发票信�?
+/// Invoice Details Screen
+/// Displays detailed invoice information for subscription payments
 class BBXInvoiceScreen extends StatelessWidget {
   final String paymentId;
 
   const BBXInvoiceScreen({
-    Key? key,
+    super.key,
     required this.paymentId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('支付发票'),
+        title: const Text('Payment Invoice'),
         backgroundColor: AppTheme.primary,
         foregroundColor: Colors.white,
         actions: [
@@ -25,14 +25,14 @@ class BBXInvoiceScreen extends StatelessWidget {
             onPressed: () {
               _shareInvoice(context);
             },
-            tooltip: '分享发票',
+            tooltip: 'Share Invoice',
           ),
           IconButton(
             icon: const Icon(Icons.download),
             onPressed: () {
               _downloadInvoice(context);
             },
-            tooltip: '下载发票',
+            tooltip: 'Download Invoice',
           ),
         ],
       ),
@@ -53,7 +53,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                 children: [
                   const Icon(Icons.error, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('加载失败: ${snapshot.error}'),
+                  Text('Load failed: ${snapshot.error}'),
                 ],
               ),
             );
@@ -66,7 +66,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.receipt_long, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text('发票不存�?),
+                  Text('Invoice not found'),
                 ],
               ),
             );
@@ -90,7 +90,7 @@ class BBXInvoiceScreen extends StatelessWidget {
     final userEmail = payment['userEmail'] ?? '';
     final isSimulated = payment['simulatedPayment'] == true;
 
-    // 计算费用
+    // Calculate Fees
     final platformFee = amount * 0.03;
     final paymentGatewayFee = amount * 0.015;
     final subtotal = amount;
@@ -131,7 +131,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '订阅支付发票',
+                      'Subscription Invoice',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
@@ -150,7 +150,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Text(
-                      '测试发票',
+                      'Test Invoice',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.orange,
@@ -166,15 +166,15 @@ class BBXInvoiceScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Invoice details
-            _buildInfoRow('发票编号', paymentId),
+            _buildInfoRow('Invoice No', paymentId),
             const SizedBox(height: 12),
             _buildInfoRow(
-              '开票日�?,
+              'Invoice Date',
               createdAt != null ? _formatDate(createdAt.toDate()) : 'N/A',
             ),
             const SizedBox(height: 12),
             _buildInfoRow(
-              '支付日期',
+              'Payment Date',
               paidAt != null ? _formatDate(paidAt.toDate()) : 'N/A',
             ),
 
@@ -184,16 +184,16 @@ class BBXInvoiceScreen extends StatelessWidget {
 
             // Customer info
             const Text(
-              '客户信息',
+              'Customer Info',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow('用户 ID', userId),
+            _buildInfoRow('User ID', userId),
             const SizedBox(height: 12),
-            _buildInfoRow('邮箱', userEmail),
+            _buildInfoRow('Email', userEmail),
 
             const SizedBox(height: 24),
             const Divider(),
@@ -201,7 +201,7 @@ class BBXInvoiceScreen extends StatelessWidget {
 
             // Items
             const Text(
-              '项目明细',
+              'Item Details',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -226,7 +226,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '$planName 订阅计划',
+                              '$planName Subscription Plan',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -234,7 +234,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '订阅周期�?�?,
+                              'Subscription Period',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[600],
@@ -259,15 +259,15 @@ class BBXInvoiceScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Calculation
-            _buildCalculationRow('小计', subtotal, false),
+            _buildCalculationRow('Subtotal', subtotal, false),
             const SizedBox(height: 8),
-            _buildCalculationRow('平台服务�?(3%)', platformFee, false),
+            _buildCalculationRow('Platform Fee (3%)', platformFee, false),
             const SizedBox(height: 8),
-            _buildCalculationRow('支付网关�?(1.5%)', paymentGatewayFee, false),
+            _buildCalculationRow('Gateway Fee (1.5%)', paymentGatewayFee, false),
             const SizedBox(height: 12),
             const Divider(),
             const SizedBox(height: 12),
-            _buildCalculationRow('总计', total, true),
+            _buildCalculationRow('Total', total, true),
 
             const SizedBox(height: 24),
             const Divider(),
@@ -275,7 +275,7 @@ class BBXInvoiceScreen extends StatelessWidget {
 
             // Payment method
             const Text(
-              '支付方式',
+              'Payment Method',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -320,7 +320,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '备注',
+                    'Remarks',
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
@@ -328,7 +328,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '此发票为订阅服务支付凭证。如有任何疑问，请联系客服�?,
+                    'This invoice serves as proof of payment. Contact support for any questions.',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],
@@ -337,7 +337,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                   if (isSimulated) ...[
                     const SizedBox(height: 8),
                     Text(
-                      '注意：此为测试环境生成的发票，仅供开发测试使用�?,
+                      'Note: This is a test invoice generated in a development environment.',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.orange[700],
@@ -421,13 +421,13 @@ class BBXInvoiceScreen extends StatelessWidget {
   String _getPaymentMethodName(String method) {
     switch (method) {
       case 'fpx':
-        return 'FPX 网银转账';
+        return 'FPX Online Banking';
       case 'ewallet':
-        return '电子钱包';
+        return 'E-Wallet';
       case 'credit_card':
-        return '信用�?借记�?;
+        return 'Credit/Debit Card';
       case 'cash':
-        return '现金支付';
+        return 'Cash Payment';
       default:
         return method;
     }
@@ -441,7 +441,7 @@ class BBXInvoiceScreen extends StatelessWidget {
   void _shareInvoice(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('分享功能即将推出'),
+        content: Text('Share feature coming soon'),
         duration: Duration(seconds: 2),
       ),
     );
@@ -450,7 +450,7 @@ class BBXInvoiceScreen extends StatelessWidget {
   void _downloadInvoice(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('PDF 下载功能即将推出'),
+        content: Text('PDF Download feature coming soon'),
         duration: Duration(seconds: 2),
       ),
     );
