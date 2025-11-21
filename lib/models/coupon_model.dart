@@ -62,12 +62,13 @@ class CouponModel {
       discount: data['discount'] ?? 0,
       minAmount: (data['minAmount'] ?? 0).toDouble(),
       status: _parseStatus(data['status']),
-      expiryDate: (data['expiryDate'] as Timestamp).toDate(),
+      expiryDate: (data['expiryDate'] as Timestamp?)?.toDate() ??
+          DateTime.now().add(Duration(days: 30)),
       usedAt:
           data['usedAt'] != null ? (data['usedAt'] as Timestamp).toDate() : null,
       usedInTransactionId: data['usedInTransactionId'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 

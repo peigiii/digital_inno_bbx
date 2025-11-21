@@ -254,26 +254,22 @@ class OfferService {
       return Stream.value([]);
     }
 
-    // 开发模式：如果用户没有数据，显示所有offers供测试
     return _firestore
         .collection('offers')
+        .where('buyerId', isEqualTo: _currentUserId)
         .orderBy('createdAt', descending: true)
-        .limit(50) // 限制数量避免性能问题
+        .limit(50)
         .snapshots()
-        .asyncMap((snapshot) async {
-      final allOffers = snapshot.docs.map((doc) => OfferModel.fromDocument(doc)).toList();
-      
-      // 优先显示当前用户的offers
-      final myOffers = allOffers.where((o) => o.buyerId == _currentUserId).toList();
-      
-      // 如果没有自己的数据，返回所有数据供测试（标记为测试数据）
-      if (myOffers.isEmpty && allOffers.isNotEmpty) {
-        debugPrint('⚠️ 开发模式：显示所有offers数据（当前用户ID: $_currentUserId）');
-        return allOffers;
-      }
-      
-      return myOffers;
-    });
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            try {
+              return OfferModel.fromDocument(doc);
+            } catch (e) {
+              print('解析报价失败 ${doc.id}: $e');
+              return null;
+            }
+          }).whereType<OfferModel>().toList();
+        });
   }
 
   /// 获取我收到的报价（卖家视角）
@@ -282,26 +278,22 @@ class OfferService {
       return Stream.value([]);
     }
 
-    // 开发模式：如果用户没有数据，显示所有offers供测试
     return _firestore
         .collection('offers')
+        .where('sellerId', isEqualTo: _currentUserId)
         .orderBy('createdAt', descending: true)
-        .limit(50) // 限制数量避免性能问题
+        .limit(50)
         .snapshots()
-        .asyncMap((snapshot) async {
-      final allOffers = snapshot.docs.map((doc) => OfferModel.fromDocument(doc)).toList();
-      
-      // 优先显示当前用户收到的offers
-      final myOffers = allOffers.where((o) => o.sellerId == _currentUserId).toList();
-      
-      // 如果没有自己的数据，返回所有数据供测试
-      if (myOffers.isEmpty && allOffers.isNotEmpty) {
-        debugPrint('⚠️ 开发模式：显示所有offers数据（当前用户ID: $_currentUserId）');
-        return allOffers;
-      }
-      
-      return myOffers;
-    });
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            try {
+              return OfferModel.fromDocument(doc);
+            } catch (e) {
+              print('解析报价失败 ${doc.id}: $e');
+              return null;
+            }
+          }).whereType<OfferModel>().toList();
+        });
   }
 
   /// 获取某商品的所有报价

@@ -20,7 +20,7 @@ service cloud.firestore {
       allow delete: if false;
     }
     
-    match /waste_listings/{listingId} {
+    match /listings/{listingId} {
       allow read: if true;
       allow create: if isAuthenticated();
       allow update: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
@@ -42,17 +42,75 @@ service cloud.firestore {
     }
     
     match /conversations/{conversationId} {
-      allow read: if isAuthenticated() && request.auth.uid in resource.data.participants;
+      allow read: if isAuthenticated() && request.auth.uid in resource.data.participantIds;
       allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && request.auth.uid in resource.data.participants;
-      
-      match /messages/{messageId} {
-        allow read: if isAuthenticated() && request.auth.uid in get(/databases/$(database)/documents/conversations/$(conversationId)).data.participants;
-        allow create: if isAuthenticated();
-        allow update: if isAuthenticated();
-      }
+      allow update: if isAuthenticated() && request.auth.uid in resource.data.participantIds;
+      allow delete: if false;
     }
-    
+
+    // Messages - 只有发送者和接收者可以访问
+    match /messages/{messageId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.senderId;
+      allow update: if isAuthenticated() && request.auth.uid == resource.data.senderId;
+      allow delete: if isAuthenticated() && request.auth.uid == resource.data.senderId;
+    }
+
+    // Logistics Updates - 物流更新记录
+    match /logistics_updates/{updateId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Favorites - 只能访问自己的收藏
+    match /user_favorites/{userId}/listings/{listingId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow delete: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if false;
+    }
+
+    // Coupons - 只能访问自己的优惠券
+    match /coupons/{couponId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if false;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    // Subscriptions - 只能访问自己的订阅
+    match /subscriptions/{subscriptionId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    // Rewards - 只能访问自己的奖励
+    match /rewards/{rewardId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // Quote Requests - 报价请求
+    match /quote_requests/{quoteId} {
+      allow read: if isAuthenticated() && (
+        request.auth.uid == resource.data.buyerId ||
+        request.auth.uid == resource.data.sellerId ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        request.auth.uid == resource.data.sellerId ||
+        isAdmin()
+      );
+      allow delete: if isAuthenticated() && request.auth.uid == resource.data.buyerId;
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
