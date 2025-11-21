@@ -45,19 +45,19 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('我的交易'),
+        title: const Text('My Transactions'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: '进行�?),
-            Tab(text: '已完�?),
-            Tab(text: '已取�?),
+            Tab(text: 'In Progress'),
+            Tab(text: 'Completed'),
+            Tab(text: 'Cancelled'),
           ],
         ),
       ),
       body: _currentUserId == null
           ? ErrorStateWidget.permissionDenied(
-              message: '请先登录以查看您的交易记录',
+              message: 'Please login to view your transaction history',
               onBack: () => Navigator.pop(context),
             )
           : TabBarView(
@@ -83,7 +83,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
               children: [
                 CircularProgressIndicator(),
                 SizedBox(height: 16),
-                Text('正在加载交易记录...'),
+                Text('Loading transaction records...'),
               ],
             ),
           );
@@ -175,7 +175,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '交易编号: ${transaction.id.substring(transaction.id.length - 6)}',
+                    'Transaction ID: ${transaction.id.substring(transaction.id.length - 6)}',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
@@ -226,7 +226,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              listing?.title ?? '加载�?..',
+                              listing?.title ?? 'Loading...',
                               style: const TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
@@ -261,7 +261,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '交易金额',
+                        'Transaction Amount',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 12,
@@ -277,7 +277,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '平台�?,
+                        'Platform Fee',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 12,
@@ -293,7 +293,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        '总金�?,
+                        'Total Amount',
                         style: TextStyle(
                           color: Colors.grey[600],
                           fontSize: 12,
@@ -361,7 +361,7 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        '${isBuyer ? '卖家' : '买家'}: ${otherUser?.displayName ?? '加载�?..'}',
+                        '${isBuyer ? 'Seller' : 'Buyer'}: ${otherUser?.displayName ?? 'Loading...'}',
                         style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 13,
@@ -482,15 +482,15 @@ class _BBXTransactionsScreenState extends State<BBXTransactionsScreen> with Sing
   String _getStatusText(String status) {
     switch (status) {
       case 'pending':
-        return '待发�?;
+        return 'Pending Shipment';
       case 'picked_up':
-        return '已取�?;
+        return 'Picked Up';
       case 'in_transit':
-        return '运输�?;
+        return 'In Transit';
       case 'delivered':
-        return '已送达';
+        return 'Delivered';
       case 'completed':
-        return '已完�?;
+        return 'Delivered';
       default:
         return status;
     }

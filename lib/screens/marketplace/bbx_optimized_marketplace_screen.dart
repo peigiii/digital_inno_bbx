@@ -23,12 +23,12 @@ class _BBXOptimizedMarketplaceScreenState
   final TextEditingController _searchController = TextEditingController();
 
   final List<Map<String, dynamic>> _categories = [
-    {'id': 'all', 'label': '📦 全部', 'color': Color(0xFF43A047)},
-    {'id': 'EFB (Empty Fruit Bunches)', 'label': '🌴 棕榈果串', 'color': Color(0xFFFF9800)},
-    {'id': 'Palm Shell', 'label': '🥥 棕榈�?, 'color': Color(0xFF8BC34A)},
-    {'id': 'Wood Chips', 'label': '🪵 木屑', 'color': Color(0xFF795548)},
-    {'id': 'Plastic', 'label': '♻️ 塑料', 'color': Color(0xFF2196F3)},
-    {'id': 'Metal', 'label': '🔩 金属', 'color': Color(0xFF607D8B)},
+    {'id': 'all', 'label': '📦 All', 'color': Color(0xFF43A047)},
+    {'id': 'EFB (Empty Fruit Bunches)', 'label': '🌴 EFB', 'color': Color(0xFFFF9800)},
+    {'id': 'Palm Shell', 'label': '🥥 Palm Shell', 'color': Color(0xFF8BC34A)},
+    {'id': 'Wood Chips', 'label': '🪵 Wood Chips', 'color': Color(0xFF795548)},
+    {'id': 'Plastic', 'label': '♻️ Plastic', 'color': Color(0xFF2196F3)},
+    {'id': 'Metal', 'label': '🔩 Metal', 'color': Color(0xFF607D8B)},
   ];
 
   @override
@@ -79,7 +79,7 @@ class _BBXOptimizedMarketplaceScreenState
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: '搜索生物质废�?..',
+              hintText: 'Search biomass waste...',
               prefixIcon: const Icon(Icons.search, color: AppTheme.primary500),
               suffixIcon: IconButton(
                 icon: const Icon(Icons.tune),
