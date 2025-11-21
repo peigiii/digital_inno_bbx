@@ -7,6 +7,8 @@ import '../../widgets/bbx_chip.dart';
 import '../../widgets/bbx_button.dart';
 import '../../widgets/bbx_empty_state.dart';
 import '../../widgets/bbx_loading.dart';
+import '../../widgets/state/error_state_widget.dart';
+import '../../widgets/state/empty_state_widget.dart';
 import '../../models/offer_model.dart';
 
 /// BBX 我的报价页面（完全重构）
@@ -33,11 +35,11 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
   final Map<String, String> _filterLabels = {
     'all': '全部',
-    'pending': '待处�?,
-    'negotiating': '议价�?,
-    'accepted': '已接�?,
-    'rejected': '已拒�?,
-    'expired': '已过�?,
+    'pending': '待处�?,
+    'negotiating': '议价�?,
+    'accepted': '已接�?,
+    'rejected': '已拒�?,
+    'expired': '已过�?,
   };
 
   @override
@@ -204,14 +206,19 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
   Widget _buildSentOffersList() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      return BBXEmptyState.noData(description: '请先登录');
+      return ErrorStateWidget.permissionDenied(
+        message: '请先登录以查看您的报价',
+        onBack: () => Navigator.pop(context),
+      );
     }
 
     return StreamBuilder<QuerySnapshot>(
       stream: _getOffersStream(user.uid, isSent: true),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return BBXEmptyState.noData(description: '加载失败');
+          return ErrorStateWidget.network(
+            onRetry: () => setState(() {}),
+          );
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -219,14 +226,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return BBXEmptyState.noData(
-            description: '暂无报价记录',
-            action: BBXPrimaryButton(
-              text: '去逛�?,
-              onPressed: () {
-                Navigator.pushNamed(context, '/home');
-              },
-            ),
+          return EmptyStateWidget.noOffers(
+            onBrowse: () => Navigator.pushNamed(context, '/home'),
           );
         }
 
@@ -246,14 +247,19 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
   Widget _buildReceivedOffersList() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      return BBXEmptyState.noData(description: '请先登录');
+      return ErrorStateWidget.permissionDenied(
+        message: '请先登录以查看收到的报价',
+        onBack: () => Navigator.pop(context),
+      );
     }
 
     return StreamBuilder<QuerySnapshot>(
       stream: _getOffersStream(user.uid, isSent: false),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return BBXEmptyState.noData(description: '加载失败');
+          return ErrorStateWidget.network(
+            onRetry: () => setState(() {}),
+          );
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -261,8 +267,10 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
         }
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return BBXEmptyState.noData(
-            description: '暂无收到的报�?,
+          return EmptyStateWidget(
+            icon: Icons.inbox_outlined,
+            title: '暂无收到的报价',
+            message: '当买家对您的商品提交报价时\n会显示在这里',
           );
         }
 
@@ -278,7 +286,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-  /// 获取报价�?
+  /// 获取报价�?
   Stream<QuerySnapshot> _getOffersStream(String userId, {required bool isSent}) {
     var query = FirebaseFirestore.instance
         .collection('offers')
@@ -324,7 +332,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 商品信息（简化版�?
+          // 商品信息（简化版�?
           Row(
             children: [
               Container(
@@ -605,7 +613,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
               Expanded(
                 flex: 2,
                 child: BBXPrimaryButton(
-                  text: '接受当前�?,
+                  text: '接受当前�?,
                   onPressed: () {},
                   height: 40,
                 ),
@@ -631,9 +639,9 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     if (difference.inDays > 0) {
       return '${difference.inDays}天前';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时�?;
+      return '${difference.inHours}小时�?;
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟�?;
+      return '${difference.inMinutes}分钟�?;
     } else {
       return '刚刚';
     }

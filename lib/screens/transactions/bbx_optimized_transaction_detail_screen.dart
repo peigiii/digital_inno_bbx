@@ -13,10 +13,11 @@ import '../../services/transaction_service.dart';
 import '../../services/listing_service.dart';
 import '../../services/user_service.dart';
 import '../../utils/delivery_config.dart';
+import '../../widgets/state/error_state_widget.dart';
 import 'bbx_upload_payment_screen.dart';
 import 'bbx_update_logistics_screen.dart';
 
-/// BBX 交易详情�?- 完全优化�?
+/// BBX 交易详情�?- 完全优化�?
 /// Material Design 3 风格，适配 Pixel 5
 class BBXOptimizedTransactionDetailScreen extends StatefulWidget {
   final String transactionId;
@@ -70,16 +71,56 @@ class _BBXOptimizedTransactionDetailScreenState
             .getTransactionDetailsStream(widget.transactionId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('交易详情'),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                elevation: 0,
+              ),
+              body: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text('正在加载交易信息...'),
+                  ],
+                ),
+              ),
+            );
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text('加载失败: ${snapshot.error}'));
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('交易详情'),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                elevation: 0,
+              ),
+              body: ErrorStateWidget.network(
+                onRetry: () => setState(() {}),
+                onBack: () => Navigator.pop(context),
+              ),
+            );
           }
 
           final transaction = snapshot.data;
           if (transaction == null) {
-            return const Center(child: Text('交易不存�?));
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('交易详情'),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                elevation: 0,
+              ),
+              body: ErrorStateWidget.notFound(
+                title: '交易不存在',
+                message: '该交易可能已被删除或不存在',
+                onBack: () => Navigator.pop(context),
+              ),
+            );
           }
 
           final bool isBuyer = transaction.buyerId == _currentUserId;
@@ -89,7 +130,7 @@ class _BBXOptimizedTransactionDetailScreenState
               CustomScrollView(
                 controller: _scrollController,
                 slivers: [
-                  // 1. 顶部状态区域（渐变背景�?
+                  // 1. 顶部状态区域（渐变背景�?
                   _buildStatusHeader(transaction),
 
                   // 内容列表
@@ -97,7 +138,7 @@ class _BBXOptimizedTransactionDetailScreenState
                     padding: const EdgeInsets.all(16),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                        // 2. 进度指示�?
+                        // 2. 进度指示�?
                         _buildModernProgressIndicator(transaction),
                         const SizedBox(height: 16),
 
@@ -116,7 +157,7 @@ class _BBXOptimizedTransactionDetailScreenState
                         _buildAmountCard(transaction),
                         const SizedBox(height: 24),
 
-                        // 6. 交易方信�?
+                        // 6. 交易方信�?
                         _buildSectionTitle(isBuyer ? '卖家信息' : '买家信息'),
                         _buildUserInfoCard(
                           isBuyer ? transaction.sellerId : transaction.buyerId,
@@ -124,7 +165,7 @@ class _BBXOptimizedTransactionDetailScreenState
                         const SizedBox(height: 24),
 
                         // 7. 物流信息
-                        _buildSectionTitle('物流配�?),
+                        _buildSectionTitle('物流配�?),
                         _buildLogisticsInfoCard(transaction),
                         const SizedBox(height: 24),
 
@@ -135,8 +176,8 @@ class _BBXOptimizedTransactionDetailScreenState
                           const SizedBox(height: 24),
                         ],
 
-                        // 9. 物流时间�?
-                        _buildSectionTitle('物流动�?),
+                        // 9. 物流时间�?
+                        _buildSectionTitle('物流动�?),
                         _buildLogisticsTimeline(transaction),
                         
                         // 底部留白
@@ -147,10 +188,10 @@ class _BBXOptimizedTransactionDetailScreenState
                 ],
               ),
 
-              // 自定�?AppBar
+              // 自定�?AppBar
               _buildCustomAppBar(),
 
-              // 10. 底部操作�?
+              // 10. 底部操作�?
               Positioned(
                 left: 0,
                 right: 0,
@@ -195,7 +236,7 @@ class _BBXOptimizedTransactionDetailScreenState
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(width: 48), // 占位，保持标题居�?
+                const SizedBox(width: 48), // 占位，保持标题居�?
               ],
             ),
           ),
@@ -292,7 +333,7 @@ class _BBXOptimizedTransactionDetailScreenState
             Icon(Icons.error_outline, color: Colors.red),
             SizedBox(width: 12),
             Text(
-              '交易已取�?,
+              '交易已取�?,
               style: TextStyle(
                 color: Colors.red,
                 fontWeight: FontWeight.bold,
@@ -463,7 +504,7 @@ class _BBXOptimizedTransactionDetailScreenState
                     onTap: () {
                       Clipboard.setData(ClipboardData(text: value));
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('已复制到剪贴�?)),
+                        const SnackBar(content: Text('已复制到剪贴�?)),
                       );
                     },
                     child: const Icon(Icons.copy, size: 16, color: AppTheme.primary500),
@@ -484,7 +525,7 @@ class _BBXOptimizedTransactionDetailScreenState
           _buildInfoRow('交易编号', transaction.id, copyable: true),
           _buildInfoRow('创建时间', _formatDateTime(transaction.createdAt)),
           _buildInfoRow(
-            '支付状�?, 
+            '支付状�?, 
             transaction.paymentStatusDisplay,
             valueColor: transaction.paymentStatus == 'paid' ? AppTheme.success : AppTheme.warning,
           ),
@@ -578,7 +619,7 @@ class _BBXOptimizedTransactionDetailScreenState
       child: Column(
         children: [
           _buildInfoRow('商品总额', 'RM ${transaction.amount.toStringAsFixed(2)}'),
-          _buildInfoRow('平台服务�?(3%)', 'RM ${transaction.platformFee.toStringAsFixed(2)}'),
+          _buildInfoRow('平台服务�?(3%)', 'RM ${transaction.platformFee.toStringAsFixed(2)}'),
           const Divider(height: 24),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -711,7 +752,7 @@ class _BBXOptimizedTransactionDetailScreenState
               ),
               const SizedBox(width: 12),
               Text(
-                isSelfCollect ? '自提交易' : '物流配�?,
+                isSelfCollect ? '自提交易' : '物流配�?,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -733,7 +774,7 @@ class _BBXOptimizedTransactionDetailScreenState
                   SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      '请联系卖家获取详细取货地址，并按约定时间前往�?,
+                      '请联系卖家获取详细取货地址，并按约定时间前往�?,
                       style: TextStyle(
                         fontSize: 13,
                         color: AppTheme.primary800,
@@ -744,9 +785,9 @@ class _BBXOptimizedTransactionDetailScreenState
               ),
             ),
           ] else ...[
-            // 快递信息逻辑同上，这里简化显�?
+            // 快递信息逻辑同上，这里简化显�?
             if (transaction.shippingInfo != null)
-               _buildInfoRow('快递单�?, transaction.shippingInfo!['trackingNumber'] ?? '--', copyable: true),
+               _buildInfoRow('快递单�?, transaction.shippingInfo!['trackingNumber'] ?? '--', copyable: true),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(12),
@@ -761,7 +802,7 @@ class _BBXOptimizedTransactionDetailScreenState
                   Expanded(
                     child: Text(
                       transaction.shippingInfo != null 
-                          ? '已发货，请留意查�? 
+                          ? '已发货，请留意查�? 
                           : '等待卖家发货',
                       style: TextStyle(
                         fontSize: 13,
@@ -821,7 +862,7 @@ class _BBXOptimizedTransactionDetailScreenState
           return _buildCard(
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 16),
-              child: Center(child: Text('暂无物流动�?, style: TextStyle(color: Colors.grey))),
+              child: Center(child: Text('暂无物流动�?, style: TextStyle(color: Colors.grey))),
             ),
           );
         }
@@ -903,7 +944,7 @@ class _BBXOptimizedTransactionDetailScreenState
   Widget _buildBottomActionBar(TransactionModel transaction, bool isBuyer) {
     List<Widget> buttons = [];
 
-    // 逻辑同原版，但样式优�?
+    // 逻辑同原版，但样式优�?
     if (transaction.canPayment() && isBuyer) {
       buttons.add(_buildActionButton(
         '上传凭证',
@@ -924,7 +965,7 @@ class _BBXOptimizedTransactionDetailScreenState
       ));
     } else if (transaction.canPickup() && !isBuyer) {
       buttons.add(_buildActionButton(
-        '标记已取�?,
+        '标记已取�?,
         Colors.orange,
         () => _markAsPickedUp(transaction),
       ));
@@ -1031,7 +1072,7 @@ class _BBXOptimizedTransactionDetailScreenState
   Future<void> _markAsPickedUp(TransactionModel transaction) async {
     try {
       await _transactionService.markAsPickedUp(transaction.id, null);
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('已标记为已取�?)));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('已标记为已取�?)));
     } catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('操作失败: $e')));
     }
@@ -1042,7 +1083,7 @@ class _BBXOptimizedTransactionDetailScreenState
     // Simplified for brevity in this view, but needs full implementation
     try {
       await _transactionService.confirmDelivery(transaction.id);
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('已确认收�?)));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('已确认收�?)));
     } catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('操作失败: $e')));
     }
@@ -1051,7 +1092,7 @@ class _BBXOptimizedTransactionDetailScreenState
   Future<void> _completeTransaction(TransactionModel transaction) async {
       try {
       await _transactionService.completeTransaction(transaction.id);
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('交易已完�?)));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('交易已完�?)));
     } catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('操作失败: $e')));
     }
@@ -1062,7 +1103,7 @@ class _BBXOptimizedTransactionDetailScreenState
     // Placeholder for simplicity
      try {
         await _transactionService.cancelTransaction(transaction.id, "用户取消");
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('交易已取�?)));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('交易已取�?)));
       } catch (e) {
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('操作失败: $e')));
       }
