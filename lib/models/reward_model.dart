@@ -163,8 +163,8 @@ class RewardModel {
               ?.map((t) => DailyTask.fromMap(t as Map<String, dynamic>))
               .toList() ??
           [],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
@@ -218,7 +218,7 @@ class RewardModel {
       case MemberTier.gold:
         return 5000 - points;
       case MemberTier.platinum:
-        return 0; // 已是最高等�?
+        return 0; // 已是最高等�?
     }
   }
 
@@ -232,7 +232,7 @@ class RewardModel {
       case MemberTier.gold:
         return 'Platinum';
       case MemberTier.platinum:
-        return null; // 已是最高等�?
+        return null; // 已是最高等�?
     }
   }
 
@@ -262,7 +262,7 @@ class RewardModel {
     final newTransactions = [newTransaction, ...transactions];
     final newPoints = points + pointsToAdd;
 
-    // 计算新等�?
+    // 计算新等�?
     MemberTier newTier = tier;
     if (newPoints >= 5000) {
       newTier = MemberTier.platinum;

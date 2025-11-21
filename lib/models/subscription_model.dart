@@ -8,7 +8,7 @@ enum SubscriptionPlanType {
   enterprise,
 }
 
-/// 订阅状�?
+/// 订阅状�?
 enum SubscriptionStatus {
   active,
   inactive,
@@ -25,7 +25,7 @@ class SubscriptionModel {
   final DateTime startDate;
   final DateTime? endDate;
   final double price;
-  final String period; // '1个月', '1�? �?
+  final String period; // '1个月', '1�? �?
   final List<String> features;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -44,7 +44,7 @@ class SubscriptionModel {
     required this.updatedAt,
   });
 
-  /// �?Firestore 文档创建
+  /// �?Firestore 文档创建
   factory SubscriptionModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
 
@@ -53,18 +53,18 @@ class SubscriptionModel {
       userId: data['userId'] ?? '',
       planType: _parsePlanType(data['planType']),
       status: _parseStatus(data['status']),
-      startDate: (data['startDate'] as Timestamp).toDate(),
+      startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       endDate:
           data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
       price: (data['price'] ?? 0).toDouble(),
       period: data['period'] ?? '1个月',
       features: List<String>.from(data['features'] ?? []),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
-  /// �?Map 创建
+  /// �?Map 创建
   factory SubscriptionModel.fromMap(Map<String, dynamic> data) {
     return SubscriptionModel(
       id: data['id'] ?? '',
@@ -91,7 +91,7 @@ class SubscriptionModel {
     );
   }
 
-  /// 转换�?Map
+  /// 转换�?Map
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
@@ -107,7 +107,7 @@ class SubscriptionModel {
     };
   }
 
-  /// 是否激�?
+  /// 是否激�?
   bool get isActive => status == SubscriptionStatus.active;
 
   /// 是否过期
@@ -137,17 +137,17 @@ class SubscriptionModel {
     }
   }
 
-  /// 获取状态显示名�?
+  /// 获取状态显示名�?
   String get statusDisplayName {
     switch (status) {
       case SubscriptionStatus.active:
-        return '激�?;
+        return '激�?;
       case SubscriptionStatus.inactive:
-        return '未激�?;
+        return '未激�?;
       case SubscriptionStatus.expired:
-        return '已过�?;
+        return '已过�?;
       case SubscriptionStatus.cancelled:
-        return '已取�?;
+        return '已取�?;
     }
   }
 
