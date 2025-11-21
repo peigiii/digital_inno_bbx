@@ -209,7 +209,7 @@ class _BBXMarketBrowseScreenState extends State<BBXMarketBrowseScreen> {
 
   Query _buildQuery() {
     Query query = FirebaseFirestore.instance
-        .collection('waste_listings')
+        .collection('listings')
         .where('status', isEqualTo: 'available');
 
     if (_selectedCategory != null && _selectedCategory != 'all') {

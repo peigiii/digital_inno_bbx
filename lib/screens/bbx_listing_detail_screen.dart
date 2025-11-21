@@ -182,7 +182,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     return Scaffold(
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .doc(widget.listingId)
             .snapshots(),
         builder: (context, snapshot) {
@@ -836,7 +836,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             height: 240,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('waste_listings')
+                  .collection('listings')
                   .where('wasteType', isEqualTo: data['wasteType'])
                   .where('status', isEqualTo: 'available')
                   .limit(5)
@@ -913,7 +913,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       child: SafeArea(
         child: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
-              .collection('waste_listings')
+              .collection('listings')
               .doc(widget.listingId)
               .snapshots(),
           builder: (context, snapshot) {

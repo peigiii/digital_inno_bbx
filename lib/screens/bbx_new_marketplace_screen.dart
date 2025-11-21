@@ -50,7 +50,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
   Future<void> _loadInitialProducts() async {
     try {
       Query query = FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .where('status', isEqualTo: 'available')
           .orderBy('createdAt', descending: true)
           .limit(_productsPerPage);
@@ -82,7 +82,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
 
     try {
       Query query = FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .where('status', isEqualTo: 'available')
           .orderBy('createdAt', descending: true)
           .startAfterDocument(_lastDocument!)
@@ -552,7 +552,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
     try {
       // Fetch real stats from Firestore
       final listingsSnapshot = await FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .where('status', isEqualTo: 'available')
           .get();
 

@@ -149,7 +149,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
       };
 
       await FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .add(wasteListing)
           .timeout(
             const Duration(seconds: 10),

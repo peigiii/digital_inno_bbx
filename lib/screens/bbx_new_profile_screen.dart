@@ -875,7 +875,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
       final futures = await Future.wait([
         // 查询所有用户的列表（不过滤状态，客户端过滤）
         FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .where('userId', isEqualTo: user!.uid)
             .limit(100) // 限制最多100条，避免超时
             .get()

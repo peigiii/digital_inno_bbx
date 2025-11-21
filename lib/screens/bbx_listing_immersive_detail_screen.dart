@@ -91,7 +91,7 @@ class _BBXListingImmersiveDetailScreenState
       backgroundColor: Colors.white,
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .doc(widget.listingId)
             .snapshots(),
         builder: (context, snapshot) {
@@ -752,7 +752,7 @@ class _BBXListingImmersiveDetailScreenState
             height: 180,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('waste_listings')
+                  .collection('listings')
                   .where('wasteType', isEqualTo: data['wasteType'])
                   .where('status', isEqualTo: 'available')
                   .limit(5)

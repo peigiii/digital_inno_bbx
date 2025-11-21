@@ -281,7 +281,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
     ];
 
     for (final listing in listings) {
-      await firestore.collection('waste_listings').add({
+      await firestore.collection('listings').add({
         ...listing,
         'userId': currentUser?.uid ?? 'test-user',
         'createdAt': FieldValue.serverTimestamp(),
@@ -296,7 +296,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
 
     // 获取一些测试列表 ID
     final listingsSnapshot = await firestore
-        .collection('waste_listings')
+        .collection('listings')
         .limit(3)
         .get();
 
@@ -380,9 +380,9 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
       final firestore = FirebaseFirestore.instance;
       final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-      // 清除 waste_listings
+      // 清除 listings
       setState(() => _statusMessage = '清除废料列表...');
-      final listings = await firestore.collection('waste_listings').get();
+      final listings = await firestore.collection('listings').get();
       for (final doc in listings.docs) {
         await doc.reference.delete();
       }

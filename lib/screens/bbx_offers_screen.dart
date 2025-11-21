@@ -97,7 +97,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
       if (newStatus == 'accepted') {
         // Get listing data
         final listingDoc = await FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .doc(offerData['listingId'])
             .get();
 
@@ -109,7 +109,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
 
         // Update listing status to sold
         final listingRef = FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .doc(offerData['listingId']);
         batch.update(listingRef, {
           'status': 'sold',

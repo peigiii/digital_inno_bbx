@@ -600,7 +600,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
   Widget _buildListView(bool isTablet) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .where('status', isEqualTo: 'available')
           .limit(20)
           .snapshots(),

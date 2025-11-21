@@ -359,7 +359,7 @@ class RewardsConstants {
 /// Firestore Collection 名称
 class CollectionConstants {
   static const String users = 'users';
-  static const String listings = 'waste_listings';
+  static const String listings = 'listings';
   static const String offers = 'offers';
   static const String transactions = 'transactions';
   static const String conversations = 'conversations';

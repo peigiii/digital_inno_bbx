@@ -329,7 +329,7 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
       child: StreamBuilder<QuerySnapshot>(
         stream: user != null
             ? FirebaseFirestore.instance
-                .collection('waste_listings')
+                .collection('listings')
                 .where('userId', isEqualTo: user!.uid)
                 .snapshots()
             : null,
@@ -727,7 +727,7 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
             height: 240,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('waste_listings')
+                  .collection('listings')
                   .where('status', isEqualTo: 'available')
                   .limit(5)
                   .snapshots(),

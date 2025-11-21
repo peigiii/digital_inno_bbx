@@ -43,7 +43,7 @@ class SearchService {
     bool ascending = false,
   }) async {
     // 构建基础查询
-    Query query = _firestore.collection('waste_listings');
+    Query query = _firestore.collection('listings');
 
     // 基础条件：只查询可用的商品
     query = query.where('status', isEqualTo: 'available');
@@ -149,7 +149,7 @@ class SearchService {
     final preferences = await _getUserPreferences(_currentUserId!);
 
     // 构建查询
-    Query query = _firestore.collection('waste_listings');
+    Query query = _firestore.collection('listings');
 
     // 基础条件
     query = query.where('status', isEqualTo: 'available');
@@ -206,7 +206,7 @@ class SearchService {
       // 获取商品的废料类型
       final wasteTypes = <String>[];
       for (var listingId in listingIds.take(10)) {
-        final listingDoc = await _firestore.collection('waste_listings').doc(listingId).get();
+        final listingDoc = await _firestore.collection('listings').doc(listingId).get();
         if (listingDoc.exists) {
           final listing = ListingModel.fromDocument(listingDoc);
           wasteTypes.add(listing.wasteType);
@@ -377,7 +377,7 @@ class SearchService {
   }) async {
     // 临时实现：返回所有可用商品
     final snapshot = await _firestore
-        .collection('waste_listings')
+        .collection('listings')
         .where('status', isEqualTo: 'available')
         .orderBy('createdAt', descending: true)
         .limit(20)
