@@ -1,0 +1,33 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // 允许认证用户上传图片到自己的目录
+    match /users/{userId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // 商品图片 - 任何人可读，只有所有者可写
+    match /listings/{listingId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // 交易相关图片 - 只有交易参与者可访问
+    match /transactions/{transactionId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // 聊天图片 - 认证用户可上传
+    match /chat/{conversationId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    // 默认拒绝所有其他访问
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
