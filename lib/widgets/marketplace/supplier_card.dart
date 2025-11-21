@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common/common.dart';
 
-/// 供应商卡片组件
+/// 供应商卡片组�?
 class SupplierCard extends StatelessWidget {
   final DocumentSnapshot doc;
   final VoidCallback? onTap;
@@ -17,7 +17,7 @@ class SupplierCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = doc.data() as Map<String, dynamic>;
-    final displayName = data['displayName'] ?? data['email']?.split('@').first ?? '供应商';
+    final displayName = data['displayName'] ?? data['email']?.split('@').first ?? '供应�?;
     final companyName = data['companyName'] ?? displayName;
     final city = data['city'] ?? data['address'] ?? '未知地区';
     final avatarUrl = data['avatarUrl'];
@@ -25,7 +25,7 @@ class SupplierCard extends StatelessWidget {
     final rating = data['rating'] ?? 4.5;
     final photoURL = data['photoURL'];
 
-    // 使用 photoURL 或 avatarUrl
+    // 使用 photoURL �?avatarUrl
     final imageUrl = photoURL ?? avatarUrl;
 
     return Container(

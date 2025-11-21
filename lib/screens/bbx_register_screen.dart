@@ -25,7 +25,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
-  // 管理员 email 列表
+  // 管理�?email 列表
   final List<String> _adminEmails = [
     'admin@bbx.com',
     'peiyin5917@gmail.com',
@@ -58,7 +58,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
       );
 
       if (credential.user != null) {
-        // 检查是否是管理员 email
+        // 检查是否是管理�?email
         final email = _emailController.text.trim().toLowerCase();
         final isAdmin = _adminEmails.map((e) => e.toLowerCase()).contains(email);
 
@@ -90,12 +90,12 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
           // 显示成功消息
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(isAdmin ? '注册成功！您已获得管理员权限' : '注册成功！'),
+              content: Text(isAdmin ? '注册成功！您已获得管理员权限' : '注册成功�?),
               backgroundColor: const Color(0xFF4CAF50),
             ),
           );
 
-          // 导航到主页
+          // 导航到主�?
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const BBXMainScreen()),
@@ -106,11 +106,11 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
     } on FirebaseAuthException catch (e) {
       String message = '注册失败';
       if (e.code == 'email-already-in-use') {
-        message = '该邮箱已被注册';
+        message = '该邮箱已被注�?;
       } else if (e.code == 'weak-password') {
-        message = '密码强度太弱，请使用至少6位字符';
+        message = '密码强度太弱，请使用至少6位字�?;
       } else if (e.code == 'invalid-email') {
-        message = '邮箱格式不正确';
+        message = '邮箱格式不正�?;
       }
 
       if (mounted) {
@@ -142,7 +142,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF1F8E9),
       appBar: AppBar(
-        title: const Text('注册新账户'),
+        title: const Text('注册新账�?),
         backgroundColor: const Color(0xFF4CAF50),
         foregroundColor: Colors.white,
       ),
@@ -176,13 +176,13 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                       ),
                       const SizedBox(height: 24),
 
-                      // 用户名
+                      // 用户�?
                       TextFormField(
                         controller: _nameController,
                         decoration: InputDecoration(
-                          labelText: '用户名',
+                          labelText: '用户�?,
                           prefixIcon: const Icon(Icons.person),
-                          hintText: '请输入您的名字',
+                          hintText: '请输入您的名�?,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -202,7 +202,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                         decoration: InputDecoration(
                           labelText: '邮箱地址',
                           prefixIcon: const Icon(Icons.email),
-                          hintText: '请输入您的邮箱',
+                          hintText: '请输入您的邮�?,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -246,10 +246,10 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                         obscureText: _obscurePassword,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入密码';
+                            return '请输入密�?;
                           }
                           if (value.length < 6) {
-                            return '密码长度至少6位';
+                            return '密码长度至少6�?;
                           }
                           return null;
                         },
@@ -274,7 +274,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                               });
                             },
                           ),
-                          hintText: '请再次输入密码',
+                          hintText: '请再次输入密�?,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -282,10 +282,10 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                         obscureText: _obscureConfirmPassword,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请确认密码';
+                            return '请确认密�?;
                           }
                           if (value != _passwordController.text) {
-                            return '两次输入的密码不一致';
+                            return '两次输入的密码不一�?;
                           }
                           return null;
                         },
@@ -305,19 +305,19 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                         items: const [
                           DropdownMenuItem(
                             value: 'producer',
-                            child: Text('生产者 (Producer)'),
+                            child: Text('生产�?(Producer)'),
                           ),
                           DropdownMenuItem(
                             value: 'processor',
-                            child: Text('处理者 (Processor)'),
+                            child: Text('处理�?(Processor)'),
                           ),
                           DropdownMenuItem(
                             value: 'recycler',
-                            child: Text('回收商 (Recycler)'),
+                            child: Text('回收�?(Recycler)'),
                           ),
                           DropdownMenuItem(
                             value: 'public',
-                            child: Text('普通用户'),
+                            child: Text('普通用�?),
                           ),
                         ],
                         onChanged: (value) {
@@ -334,7 +334,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                         decoration: InputDecoration(
                           labelText: '公司名称（可选）',
                           prefixIcon: const Icon(Icons.business),
-                          hintText: '请输入公司名称',
+                          hintText: '请输入公司名�?,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -348,14 +348,14 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                         decoration: InputDecoration(
                           labelText: '城市',
                           prefixIcon: const Icon(Icons.location_city),
-                          hintText: '请输入所在城市',
+                          hintText: '请输入所在城�?,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入城市';
+                            return '请输入城�?;
                           }
                           return null;
                         },
@@ -368,7 +368,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                         decoration: InputDecoration(
                           labelText: '联系电话（可选）',
                           prefixIcon: const Icon(Icons.phone),
-                          hintText: '请输入联系电话',
+                          hintText: '请输入联系电�?,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -394,7 +394,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                '使用管理员邮箱注册将自动获得管理员权限',
+                                '使用管理员邮箱注册将自动获得管理员权�?,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: const Color(0xFF2E7D32),
@@ -434,7 +434,7 @@ class _BBXRegisterScreenState extends State<BBXRegisterScreen> {
                       TextButton(
                         onPressed: () => Navigator.pop(context),
                         child: const Text(
-                          '已有账户？返回登录',
+                          '已有账户？返回登�?,
                           style: TextStyle(
                             color: Color(0xFF2E7D32),
                           ),

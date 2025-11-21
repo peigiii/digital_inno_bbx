@@ -11,7 +11,7 @@ import '../../models/listing_model.dart';
 import '../offers/bbx_new_make_offer_screen.dart';
 import '../../utils/page_transitions.dart';
 
-/// BBX 商品详情页（完全重构）
+/// BBX 商品详情页（完全重构�?
 class BBXNewListingDetailScreen extends StatefulWidget {
   final String listingId;
 
@@ -47,15 +47,15 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('加载失败：${snapshot.error}'));
+            return Center(child: Text('加载失败�?{snapshot.error}'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const BBXFullScreenLoading(message: '加载中...');
+            return const BBXFullScreenLoading(message: '加载�?..');
           }
 
           if (!snapshot.hasData || !snapshot.data!.exists) {
-            return const Center(child: Text('商品不存在'));
+            return const Center(child: Text('商品不存�?));
           }
 
           final listing = ListingModel.fromDocument(snapshot.data!);
@@ -92,7 +92,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                 ],
               ),
 
-              // 底部操作栏
+              // 底部操作�?
               _buildBottomActionBar(listing),
             ],
           );
@@ -154,7 +154,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                 });
                 BBXNotification.showSuccess(
                   context,
-                  _isFavorited ? '已添加到收藏' : '已取消收藏',
+                  _isFavorited ? '已添加到收藏' : '已取消收�?,
                 );
               },
             ),
@@ -202,7 +202,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                 );
               },
             ),
-            // 指示器
+            // 指示�?
             if (displayImages.length > 1)
               Positioned(
                 bottom: 16,
@@ -290,7 +290,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
 
               // 发布时间
               Text(
-                '发布于 ${listing.createdAt != null ? _formatDate(listing.createdAt!) : '未知时间'}',
+                '发布�?${listing.createdAt != null ? _formatDate(listing.createdAt!) : '未知时间'}',
                 style: AppTheme.caption.copyWith(
                   color: AppTheme.neutral500,
                 ),
@@ -319,7 +319,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               children: [
                 _buildInfoItem(
                   Icons.inventory_2_outlined,
-                  '总数量',
+                  '总数�?,
                   '${listing.quantity} ${listing.unit}',
                 ),
                 const SizedBox(width: AppTheme.spacing8),
@@ -433,7 +433,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                         const SizedBox(width: 4),
                         const Flexible(
                           child: Text(
-                            '128笔交易',
+                            '128笔交�?,
                             style: TextStyle(fontSize: 11),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -523,7 +523,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
           children: [
             const Text('取货地址', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
-            // 地图预览占位符
+            // 地图预览占位�?
             Container(
               height: 200,
               decoration: BoxDecoration(
@@ -651,7 +651,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     );
   }
 
-  /// 底部操作栏
+  /// 底部操作�?
   Widget _buildBottomActionBar(Listing listing) {
     return Positioned(
       bottom: 0,
@@ -718,9 +718,9 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
     } else if (difference.inDays > 0) {
       return '${difference.inDays}天前';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时前';
+      return '${difference.inHours}小时�?;
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟前';
+      return '${difference.inMinutes}分钟�?;
     } else {
       return '刚刚';
     }

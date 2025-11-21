@@ -38,7 +38,7 @@ class NotificationService {
         onDidReceiveNotificationResponse: _onNotificationTapped,
       );
 
-      // 获取并保存 FCM token
+      // 获取并保�?FCM token
       final token = await _fcm.getToken();
       if (token != null) {
         await _saveToken(token);
@@ -53,7 +53,7 @@ class NotificationService {
       // 监听后台消息点击
       FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessage);
     } catch (e) {
-      print('通知初始化失败: $e');
+      print('通知初始化失�? $e');
     }
   }
 
@@ -66,15 +66,15 @@ class NotificationService {
           .collection('users')
           .doc(user.uid);
 
-      // 使用 set 而不是 update，自动创建或更新
+      // 使用 set 而不�?update，自动创建或更新
       await docRef.set({
         'fcmToken': token,
         'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true)); // merge: true 保留其他字段
 
-      print('✅ FCM token 保存成功');
+      print('�?FCM token 保存成功');
     } catch (e) {
-      print('❌ 保存 FCM token 失败: $e');
+      print('�?保存 FCM token 失败: $e');
       // 不抛出错误，避免影响应用启动
     }
   }
@@ -97,7 +97,7 @@ class NotificationService {
 
   void _onNotificationTapped(NotificationResponse response) {
     // 处理通知点击
-    print('通知被点击: ${response.payload}');
+    print('通知被点�? ${response.payload}');
   }
 
   Future<void> _showLocalNotification(
@@ -132,7 +132,7 @@ class NotificationService {
     }
   }
 
-  // 发送通知到特定用户
+  // 发送通知到特定用�?
   Future<void> sendNotification({
     required String userId,
     required String title,

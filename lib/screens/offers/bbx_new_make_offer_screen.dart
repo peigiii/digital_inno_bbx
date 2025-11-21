@@ -7,7 +7,7 @@ import '../../widgets/bbx_chip.dart';
 import '../../widgets/bbx_notification.dart';
 import '../../models/listing_model.dart';
 
-/// BBX 提交报价页面（完全重构 - 底部弹窗）
+/// BBX 提交报价页面（完全重�?- 底部弹窗�?
 class BBXNewMakeOfferScreen extends StatefulWidget {
   final Listing listing;
 
@@ -24,7 +24,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
   final TextEditingController _offerController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   DateTime? _pickupDate;
-  String _deliveryMethod = 'pickup'; // pickup 或 delivery
+  String _deliveryMethod = 'pickup'; // pickup �?delivery
   String? _selectedQuickAmount;
   bool _isSubmitting = false;
 
@@ -81,7 +81,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             ),
           ),
 
-          // 标题栏
+          // 标题�?
           Padding(
             padding: const EdgeInsets.all(AppTheme.spacing16),
             child: Row(
@@ -136,7 +136,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             ),
           ),
 
-          // 底部操作区
+          // 底部操作�?
           _buildBottomAction(),
         ],
       ),
@@ -257,7 +257,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
                 borderRadius: BorderRadius.circular(AppTheme.radiusFull),
               ),
               child: Text(
-                '比原价${_discount >= 0 ? "低" : "高"} ${_discount.abs().toStringAsFixed(1)}%',
+                '比原�?{_discount >= 0 ? "�? : "�?} ${_discount.abs().toStringAsFixed(1)}%',
                 style: AppTheme.caption.copyWith(
                   color: _discountColor,
                   fontWeight: AppTheme.semibold,
@@ -280,15 +280,15 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
         Row(
           children: [
             Expanded(
-              child: _buildQuickAmountButton('原价9折', 0.9),
+              child: _buildQuickAmountButton('原价9�?, 0.9),
             ),
             const SizedBox(width: AppTheme.spacing8),
             Expanded(
-              child: _buildQuickAmountButton('原价8折', 0.8),
+              child: _buildQuickAmountButton('原价8�?, 0.8),
             ),
             const SizedBox(width: AppTheme.spacing8),
             Expanded(
-              child: _buildQuickAmountButton('原价7折', 0.7),
+              child: _buildQuickAmountButton('原价7�?, 0.7),
             ),
           ],
         ),
@@ -340,7 +340,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
           title: const Text('收货日期', style: AppTheme.body1),
           trailing: Text(
             _pickupDate != null
-                ? '${_pickupDate!.month}月${_pickupDate!.day}日'
+                ? '${_pickupDate!.month}�?{_pickupDate!.day}�?
                 : '选择日期',
             style: AppTheme.body2.copyWith(
               color: AppTheme.neutral600,
@@ -421,7 +421,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             const Text('留言', style: AppTheme.heading3),
             const SizedBox(width: AppTheme.spacing8),
             Text(
-              '(可选)',
+              '(可�?',
               style: AppTheme.caption.copyWith(
                 color: AppTheme.neutral500,
               ),
@@ -434,7 +434,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
           maxLines: 3,
           maxLength: 200,
           decoration: const InputDecoration(
-            hintText: '向卖家说明您的需求...',
+            hintText: '向卖家说明您的需�?..',
             border: OutlineInputBorder(),
           ),
         ),
@@ -458,7 +458,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             children: [
               _buildPriceRow('报价金额', _offerAmount),
               const SizedBox(height: AppTheme.spacing8),
-              _buildPriceRow('平台服务费 (3%)', _offerAmount * 0.03),
+              _buildPriceRow('平台服务�?(3%)', _offerAmount * 0.03),
               const Divider(height: AppTheme.spacing24),
               _buildPriceRow(
                 '预计总额',
@@ -492,7 +492,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
     );
   }
 
-  /// 底部操作区
+  /// 底部操作�?
   Widget _buildBottomAction() {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -535,7 +535,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
   /// 提交报价
   Future<void> _submitOffer() async {
     if (_offerAmount == 0) {
-      BBXNotification.showError(context, '请输入报价金额');
+      BBXNotification.showError(context, '请输入报价金�?);
       return;
     }
 
@@ -569,7 +569,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
 
       if (!mounted) return;
 
-      // 显示成功对话框
+      // 显示成功对话�?
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -591,10 +591,10 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
                 ),
               ),
               const SizedBox(height: AppTheme.spacing16),
-              const Text('报价已提交', style: AppTheme.heading2),
+              const Text('报价已提�?, style: AppTheme.heading2),
               const SizedBox(height: AppTheme.spacing8),
               const Text(
-                '卖家将在24小时内回复',
+                '卖家将在24小时内回�?,
                 style: AppTheme.body2,
                 textAlign: TextAlign.center,
               ),
@@ -604,7 +604,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             BBXPrimaryButton(
               text: '查看我的报价',
               onPressed: () {
-                Navigator.pop(context); // 关闭对话框
+                Navigator.pop(context); // 关闭对话�?
                 Navigator.pop(context); // 关闭报价页面
                 Navigator.pushNamed(context, '/my-offers');
               },
@@ -616,12 +616,12 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
       // 3秒后自动关闭
       Future.delayed(const Duration(seconds: 3), () {
         if (mounted) {
-          Navigator.pop(context); // 关闭对话框
+          Navigator.pop(context); // 关闭对话�?
           Navigator.pop(context); // 关闭报价页面
         }
       });
     } catch (e) {
-      BBXNotification.showError(context, '提交失败：$e');
+      BBXNotification.showError(context, '提交失败�?e');
     } finally {
       if (mounted) {
         setState(() {

@@ -95,7 +95,7 @@ class WalletService {
     }
   }
 
-  /// 初始化钱包
+  /// 初始化钱�?
   Future<void> _initializeWallet(String userId) async {
     await _firestore.collection('wallets').doc(userId).set({
       'balance': 0.0,
@@ -105,15 +105,15 @@ class WalletService {
     });
   }
 
-  /// 充值
+  /// 充�?
   Future<bool> deposit(double amount) async {
     if (amount <= 0) {
-      throw Exception('充值金额必须大于0');
+      throw Exception('充值金额必须大�?');
     }
 
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登录');
+      if (userId == null) throw Exception('用户未登�?);
 
       final doc = await _firestore.collection('wallets').doc(userId).get();
 
@@ -125,7 +125,7 @@ class WalletService {
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         type: WalletTransactionType.deposit,
         amount: amount,
-        description: '账户充值',
+        description: '账户充�?,
         timestamp: DateTime.now(),
       );
 
@@ -142,7 +142,7 @@ class WalletService {
 
       return true;
     } catch (e) {
-      print('充值失败: $e');
+      print('充值失�? $e');
       return false;
     }
   }
@@ -155,7 +155,7 @@ class WalletService {
 
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登录');
+      if (userId == null) throw Exception('用户未登�?);
 
       final balance = await getBalance();
 
@@ -201,7 +201,7 @@ class WalletService {
 
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登录');
+      if (userId == null) throw Exception('用户未登�?);
 
       final balance = await getBalance();
 
@@ -236,19 +236,19 @@ class WalletService {
     }
   }
 
-  /// 退款
+  /// 退�?
   Future<bool> refund(
     double amount,
     String description,
     String? transactionId,
   ) async {
     if (amount <= 0) {
-      throw Exception('退款金额必须大于0');
+      throw Exception('退款金额必须大�?');
     }
 
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登录');
+      if (userId == null) throw Exception('用户未登�?);
 
       final transaction = WalletTransaction(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -272,12 +272,12 @@ class WalletService {
 
       return true;
     } catch (e) {
-      print('退款失败: $e');
+      print('退款失�? $e');
       return false;
     }
   }
 
-  /// 奖励（积分兑换等）
+  /// 奖励（积分兑换等�?
   Future<bool> addReward(double amount, String description) async {
     if (amount <= 0) {
       throw Exception('奖励金额必须大于0');
@@ -285,7 +285,7 @@ class WalletService {
 
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登录');
+      if (userId == null) throw Exception('用户未登�?);
 
       final transaction = WalletTransaction(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -337,7 +337,7 @@ class WalletService {
     }
   }
 
-  /// 获取特定类型的交易记录
+  /// 获取特定类型的交易记�?
   Future<List<WalletTransaction>> getTransactionsByType(
     WalletTransactionType type, {
     int limit = 50,

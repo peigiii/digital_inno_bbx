@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/message_model.dart';
 
-/// 聊天服务类
+/// 聊天服务�?
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,17 +10,17 @@ class ChatService {
   /// 获取当前用户ID
   String? get _currentUserId => _auth.currentUser?.uid;
 
-  /// 获取或创建对话
+  /// 获取或创建对�?
   ///
   /// 如果对话已存在，返回对话ID
   /// 如果对话不存在，创建新对话并返回ID
   Future<String> getOrCreateConversation(String otherUserId) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     if (_currentUserId == otherUserId) {
-      throw Exception('不能与自己对话');
+      throw Exception('不能与自己对�?);
     }
 
     // 查找现有对话
@@ -38,7 +38,7 @@ class ChatService {
       }
     }
 
-    // 没找到，创建新对话
+    // 没找到，创建新对�?
     final newConversation = ConversationModel(
       id: '',
       participantIds: [_currentUserId!, otherUserId],
@@ -49,13 +49,13 @@ class ChatService {
     return docRef.id;
   }
 
-  /// 发送消息
+  /// 发送消�?
   ///
-  /// 参数：
+  /// 参数�?
   /// - conversationId: 对话ID
   /// - receiverId: 接收者ID
   /// - content: 消息内容
-  /// - type: 消息类型（text/image/file/location/listing）
+  /// - type: 消息类型（text/image/file/location/listing�?
   /// - imageUrl: 图片URL（可选）
   /// - fileUrl: 文件URL（可选）
   /// - fileName: 文件名（可选）
@@ -73,7 +73,7 @@ class ChatService {
     String? listingId,
   }) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     final now = DateTime.now();
@@ -102,18 +102,18 @@ class ChatService {
       'lastMessage': content,
       'lastMessageAt': FieldValue.serverTimestamp(),
       'lastMessageSenderId': _currentUserId,
-      // 增加接收者的未读数
+      // 增加接收者的未读�?
       'unreadCount.$receiverId': FieldValue.increment(1),
     });
 
-    // TODO: 发送推送通知给接收者
+    // TODO: 发送推送通知给接收�?
 
     return docRef.id;
   }
 
-  /// 获取对话的消息列表
+  /// 获取对话的消息列�?
   ///
-  /// 返回最近100条消息，按时间降序排序
+  /// 返回最�?00条消息，按时间降序排�?
   Stream<List<MessageModel>> getMessages(String conversationId) {
     return _firestore
         .collection('messages')
@@ -142,12 +142,12 @@ class ChatService {
     });
   }
 
-  /// 标记消息为已读
+  /// 标记消息为已�?
   ///
-  /// 将对话中所有未读消息标记为已读，并重置未读数
+  /// 将对话中所有未读消息标记为已读，并重置未读�?
   Future<void> markAsRead(String conversationId) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     final now = DateTime.now();
@@ -157,7 +157,7 @@ class ChatService {
       'unreadCount.$_currentUserId': 0,
     });
 
-    // 批量更新所有未读消息
+    // 批量更新所有未读消�?
     final unreadMessages = await _firestore
         .collection('messages')
         .where('conversationId', isEqualTo: conversationId)
@@ -165,7 +165,7 @@ class ChatService {
         .where('isRead', isEqualTo: false)
         .get();
 
-    // 使用批处理更新
+    // 使用批处理更�?
     final batch = _firestore.batch();
     for (var doc in unreadMessages.docs) {
       batch.update(doc.reference, {
@@ -177,12 +177,12 @@ class ChatService {
     await batch.commit();
   }
 
-  /// 更新输入状态
+  /// 更新输入状�?
   ///
   /// 显示"对方正在输入..."提示
   Future<void> updateTypingStatus(String conversationId, bool isTyping) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     await _firestore.collection('conversations').doc(conversationId).update({
@@ -193,20 +193,20 @@ class ChatService {
   /// 删除消息
   Future<void> deleteMessage(String messageId) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     // 获取消息信息
     final messageDoc = await _firestore.collection('messages').doc(messageId).get();
     if (!messageDoc.exists) {
-      throw Exception('消息不存在');
+      throw Exception('消息不存�?);
     }
 
     final message = MessageModel.fromDocument(messageDoc);
 
     // 只能删除自己发送的消息
     if (message.senderId != _currentUserId) {
-      throw Exception('无权删除此消息');
+      throw Exception('无权删除此消�?);
     }
 
     // 删除消息
@@ -242,7 +242,7 @@ class ChatService {
     return totalUnread;
   }
 
-  /// 发送图片消息
+  /// 发送图片消�?
   Future<String> sendImageMessage({
     required String conversationId,
     required String receiverId,
@@ -252,13 +252,13 @@ class ChatService {
     return await sendMessage(
       conversationId: conversationId,
       receiverId: receiverId,
-      content: caption.isNotEmpty ? caption : '发送了一张图片',
+      content: caption.isNotEmpty ? caption : '发送了一张图�?,
       type: 'image',
       imageUrl: imageUrl,
     );
   }
 
-  /// 发送文件消息
+  /// 发送文件消�?
   Future<String> sendFileMessage({
     required String conversationId,
     required String receiverId,
@@ -268,14 +268,14 @@ class ChatService {
     return await sendMessage(
       conversationId: conversationId,
       receiverId: receiverId,
-      content: '发送了文件：$fileName',
+      content: '发送了文件�?fileName',
       type: 'file',
       fileUrl: fileUrl,
       fileName: fileName,
     );
   }
 
-  /// 发送位置消息
+  /// 发送位置消�?
   Future<String> sendLocationMessage({
     required String conversationId,
     required String receiverId,
@@ -296,7 +296,7 @@ class ChatService {
     );
   }
 
-  /// 发送商品链接
+  /// 发送商品链�?
   Future<String> sendListingMessage({
     required String conversationId,
     required String receiverId,
@@ -306,7 +306,7 @@ class ChatService {
     return await sendMessage(
       conversationId: conversationId,
       receiverId: receiverId,
-      content: listingTitle ?? '分享了商品',
+      content: listingTitle ?? '分享了商�?,
       type: 'listing',
       listingId: listingId,
     );

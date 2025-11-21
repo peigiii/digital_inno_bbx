@@ -16,9 +16,9 @@ class CategoryChips extends StatelessWidget {
     {'id': 'all', 'label': '全部', 'emoji': '📦'},
     {'id': 'EFB (Empty Fruit Bunches)', 'label': '棕榈果串', 'emoji': '🌴'},
     {'id': 'POME (Palm Oil Mill Effluent)', 'label': '棕榈废液', 'emoji': '💧'},
-    {'id': 'Palm Shell', 'label': '棕榈壳', 'emoji': '🥥'},
+    {'id': 'Palm Shell', 'label': '棕榈�?, 'emoji': '🥥'},
     {'id': 'Palm Fiber', 'label': '棕榈纤维', 'emoji': '🌾'},
-    {'id': 'Other Biomass', 'label': '其他生物质', 'emoji': '🎋'},
+    {'id': 'Other Biomass', 'label': '其他生物�?, 'emoji': '🎋'},
   ];
 
   @override

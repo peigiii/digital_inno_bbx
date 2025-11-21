@@ -16,8 +16,8 @@ class OfferModel {
   final double? counterOfferPrice; // 还价金额
   final DateTime? collectionDate; // 预计收集日期
   final DateTime? scheduledPickupDate; // 预计收集日期（别名）
-  final String? deliveryMethod; // 收集方式：self_pickup/platform_logistics/seller_delivery 或 self_collect/delivery（新）
-  final String? deliveryNote; // 配送备注
+  final String? deliveryMethod; // 收集方式：self_pickup/platform_logistics/seller_delivery �?self_collect/delivery（新�?
+  final String? deliveryNote; // 配送备�?
   final String status; // pending, negotiating, accepted, rejected, expired, cancelled
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -50,13 +50,13 @@ class OfferModel {
     this.rejectionReason,
   });
 
-  /// 从 Firestore 文档创建
+  /// �?Firestore 文档创建
   factory OfferModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return OfferModel.fromMap(doc.id, data);
   }
 
-  /// 从 Map 创建
+  /// �?Map 创建
   factory OfferModel.fromMap(String id, Map<String, dynamic> data) {
     return OfferModel(
       id: id,
@@ -86,7 +86,7 @@ class OfferModel {
     );
   }
 
-  /// 转换为 Map（用于Firestore）
+  /// 转换�?Map（用于Firestore�?
   Map<String, dynamic> toMap() {
     return {
       'listingId': listingId,
@@ -115,7 +115,7 @@ class OfferModel {
     };
   }
 
-  /// 复制并修改部分字段
+  /// 复制并修改部分字�?
   OfferModel copyWith({
     double? offerPrice,
     double? originalPrice,
@@ -157,58 +157,58 @@ class OfferModel {
     );
   }
 
-  /// 计算折扣百分比
+  /// 计算折扣百分�?
   double get discountPercentage {
     if (originalPrice <= 0) return 0;
     return ((originalPrice - offerPrice) / originalPrice * 100);
   }
 
-  /// 检查是否过期
+  /// 检查是否过�?
   bool get isExpired {
     if (expiresAt == null) return false;
     return DateTime.now().isAfter(expiresAt!);
   }
 
-  /// 检查是否可以接受
+  /// 检查是否可以接�?
   bool get canAccept {
     return status == 'pending' || status == 'negotiating';
   }
 
-  /// 检查是否可以议价
+  /// 检查是否可以议�?
   bool get canNegotiate {
     return status == 'pending' && !isExpired;
   }
 
-  /// 是否待处理
+  /// 是否待处�?
   bool get isPending => status == 'pending';
 
-  /// 是否已接受
+  /// 是否已接�?
   bool get isAccepted => status == 'accepted';
 
-  /// 是否已拒绝
+  /// 是否已拒�?
   bool get isRejected => status == 'rejected';
 
-  /// 是否已取消
+  /// 是否已取�?
   bool get isCancelled => status == 'cancelled';
 
   /// 是否正在议价
   bool get isNegotiating => status == 'negotiating';
 
-  /// 获取状态显示文本
+  /// 获取状态显示文�?
   String get statusDisplay {
     switch (status) {
       case 'pending':
-        return '待处理';
+        return '待处�?;
       case 'negotiating':
-        return '议价中';
+        return '议价�?;
       case 'accepted':
-        return '已接受';
+        return '已接�?;
       case 'rejected':
-        return '已拒绝';
+        return '已拒�?;
       case 'expired':
-        return '已过期';
+        return '已过�?;
       case 'cancelled':
-        return '已取消';
+        return '已取�?;
       default:
         return status;
     }
@@ -228,7 +228,7 @@ class OfferModel {
       case 'delivery':
         return '邮寄';
       default:
-        return deliveryMethod ?? '未指定';
+        return deliveryMethod ?? '未指�?;
     }
   }
 

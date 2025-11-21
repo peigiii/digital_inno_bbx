@@ -59,8 +59,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认退出'),
-        content: const Text('确定要退出登录吗？'),
+        title: const Text('确认退�?),
+        content: const Text('确定要退出登录吗�?),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -72,7 +72,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('退出'),
+            child: const Text('退�?),
           ),
         ],
       ),
@@ -89,15 +89,15 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
   String _getUserTypeLabel(String? userType) {
     switch (userType) {
       case 'producer':
-        return '生产者';
+        return '生产�?;
       case 'processor':
-        return '处理者';
+        return '处理�?;
       case 'recycler':
-        return '回收商';
+        return '回收�?;
       case 'admin':
-        return '管理员';
+        return '管理�?;
       default:
-        return '普通用户';
+        return '普通用�?;
     }
   }
 
@@ -146,7 +146,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 用户名
+            // 用户�?
             Text(
               userData?['displayName'] ?? currentUser?.displayName ?? 'Unknown User',
               style: const TextStyle(
@@ -213,12 +213,12 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                     _buildInfoRow('联系电话', userData?['contact'] ?? '-'),
                     const Divider(),
                     _buildInfoRow(
-                      '认证状态',
-                      userData?['verified'] == true ? '✅ 已认证' : '⏳ 未认证',
+                      '认证状�?,
+                      userData?['verified'] == true ? '�?已认�? : '�?未认�?,
                     ),
                     if (userData?['isAdmin'] == true) ...[
                       const Divider(),
-                      _buildInfoRow('权限', '🔑 管理员'),
+                      _buildInfoRow('权限', '🔑 管理�?),
                     ],
                   ],
                 ),
@@ -283,13 +283,13 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
             ),
             const SizedBox(height: 16),
 
-            // 退出登录按钮
+            // 退出登录按�?
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: _logout,
                 icon: const Icon(Icons.logout),
-                label: const Text('退出登录'),
+                label: const Text('退出登�?),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,

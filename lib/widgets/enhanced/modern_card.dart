@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 现代化商品卡片组件 - 优化版
+/// 现代化商品卡片组�?- 优化�?
 /// 适配 Pixel 5 (393 x 851 dp)
 class ModernListingCard extends StatelessWidget {
   final String imageUrl;
@@ -16,6 +16,7 @@ class ModernListingCard extends StatelessWidget {
   final int? reviewCount;
   final bool isVerified;
   final bool isFavorited;
+  final String? heroTag; // 添加 Hero 动画标签
   final VoidCallback? onTap;
   final VoidCallback? onFavorite;
 
@@ -33,6 +34,7 @@ class ModernListingCard extends StatelessWidget {
     this.reviewCount,
     this.isVerified = false,
     this.isFavorited = false,
+    this.heroTag, // 可选参�?
     this.onTap,
     this.onFavorite,
   });
@@ -104,7 +106,7 @@ class ModernListingCard extends StatelessWidget {
 
                       const SizedBox(height: AppTheme.spacing8),
 
-                      // 价格和操作按钮
+                      // 价格和操作按�?
                       Row(
                         children: [
                           Expanded(
@@ -255,7 +257,7 @@ class ModernListingCard extends StatelessWidget {
   Widget _buildImageSection() {
     return Stack(
       children: [
-        // 主图片 (16:9 比例，最大高度 200dp)
+        // 主图�?(16:9 比例，最大高�?200dp)
         AspectRatio(
           aspectRatio: 16 / 9,
           child: ClipRRect(
@@ -263,44 +265,53 @@ class ModernListingCard extends StatelessWidget {
               topLeft: Radius.circular(AppTheme.radiusLarge),
               topRight: Radius.circular(AppTheme.radiusLarge),
             ),
-            child: Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: AppTheme.neutral100,
-                  child: const Center(
-                    child: Icon(
-                      Icons.image_not_supported_rounded,
-                      size: 48,
-                      color: AppTheme.neutral400,
-                    ),
-                  ),
-                );
-              },
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  color: AppTheme.neutral100,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded /
-                              loadingProgress.expectedTotalBytes!
-                          : null,
-                      strokeWidth: 2,
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                        AppTheme.primary500,
+            child: Builder(
+              builder: (context) {
+                Widget image = Image.network(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: AppTheme.neutral100,
+                      child: const Center(
+                        child: Icon(
+                          Icons.image_not_supported_rounded,
+                          size: 48,
+                          color: AppTheme.neutral400,
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: AppTheme.neutral100,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
+                          strokeWidth: 2,
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            AppTheme.primary500,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
                 );
+
+                if (heroTag != null) {
+                  return Hero(tag: heroTag!, child: image);
+                }
+                return image;
               },
             ),
           ),
         ),
 
-        // 分类标签（左上角）
+        // 分类标签（左上角�?
         Positioned(
           top: AppTheme.spacing8,
           left: AppTheme.spacing8,
@@ -324,7 +335,7 @@ class ModernListingCard extends StatelessWidget {
           ),
         ),
 
-        // 收藏按钮（右上角）
+        // 收藏按钮（右上角�?
         if (onFavorite != null)
           Positioned(
             top: AppTheme.spacing8,
@@ -362,7 +373,7 @@ class ModernListingCard extends StatelessWidget {
   }
 }
 
-/// 现代化报价卡片组件
+/// 现代化报价卡片组�?
 class ModernOfferCard extends StatelessWidget {
   final String status;
   final String statusLabel;

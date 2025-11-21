@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// 统一的加载组件
+/// 统一的加载组�?
 class LoadingWidget extends StatelessWidget {
   final String? message;
 
@@ -31,7 +31,7 @@ class LoadingWidget extends StatelessWidget {
   }
 }
 
-/// 统一的错误组件
+/// 统一的错误组�?
 class ErrorStateWidget extends StatelessWidget {
   final String message;
   final VoidCallback? onRetry;
@@ -89,7 +89,7 @@ class ErrorStateWidget extends StatelessWidget {
   }
 }
 
-/// 统一的空状态组件
+/// 统一的空状态组�?
 class EmptyStateWidget extends StatelessWidget {
   final String message;
   final String? subtitle;
@@ -152,7 +152,7 @@ class EmptyStateWidget extends StatelessWidget {
                     vertical: 12,
                   ),
                 ),
-                child: Text(actionLabel ?? '开始'),
+                child: Text(actionLabel ?? '开�?),
               ),
             ],
           ],

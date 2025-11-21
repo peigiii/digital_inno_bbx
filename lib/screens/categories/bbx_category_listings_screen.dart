@@ -7,7 +7,7 @@ import '../../widgets/bbx_empty_state.dart';
 import '../../widgets/bbx_loading.dart';
 import '../../models/listing_model.dart';
 
-/// BBX 分类商品列表页
+/// BBX 分类商品列表�?
 class BBXCategoryListingsScreen extends StatefulWidget {
   final String category;
   final String categoryLabel;
@@ -35,7 +35,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
       backgroundColor: AppTheme.background,
       body: CustomScrollView(
         slivers: [
-          // 顶部AppBar（渐变色）
+          // 顶部AppBar（渐变色�?
           SliverAppBar(
             pinned: true,
             expandedHeight: 120,
@@ -69,20 +69,20 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
             ],
           ),
 
-          // 统计信息栏
+          // 统计信息�?
           SliverToBoxAdapter(
             child: Container(
               color: Colors.white,
               padding: const EdgeInsets.all(AppTheme.spacing16),
               child: Row(
                 children: [
-                  const Text('共 0 个商品', style: AppTheme.body2),
+                  const Text('�?0 个商�?, style: AppTheme.body2),
                   const Spacer(),
                   DropdownButton<String>(
                     value: _sortBy,
                     underline: const SizedBox(),
                     items: const [
-                      DropdownMenuItem(value: 'latest', child: Text('最新发布')),
+                      DropdownMenuItem(value: 'latest', child: Text('最新发�?)),
                       DropdownMenuItem(value: 'price_asc', child: Text('价格从低到高')),
                       DropdownMenuItem(value: 'price_desc', child: Text('价格从高到低')),
                       DropdownMenuItem(value: 'quantity', child: Text('数量从多到少')),
@@ -98,7 +98,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
             ),
           ),
 
-          // 快捷筛选
+          // 快捷筛�?
           SliverToBoxAdapter(
             child: Container(
               color: Colors.white,
@@ -121,7 +121,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
                     ),
                     const SizedBox(width: AppTheme.spacing8),
                     BBXFilterChip(
-                      label: '已认证',
+                      label: '已认�?,
                       isSelected: _filters.contains('verified'),
                       onTap: () {
                         setState(() {
@@ -178,7 +178,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return SliverToBoxAdapter(
                   child: BBXEmptyState.noData(
-                    description: '暂无该分类商品',
+                    description: '暂无该分类商�?,
                   ),
                 );
               }

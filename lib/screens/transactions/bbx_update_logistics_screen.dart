@@ -57,7 +57,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
     }
   }
 
-  /// 获取下一个可用状态
+  /// 获取下一个可用状�?
   String? _getNextStatus(String currentStatus) {
     switch (currentStatus) {
       case 'pending':
@@ -71,7 +71,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
     }
   }
 
-  /// 获取可选状态列表
+  /// 获取可选状态列�?
   List<String> _getAvailableStatuses(String currentStatus) {
     switch (currentStatus) {
       case 'pending':
@@ -100,7 +100,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
       return Scaffold(
         appBar: AppBar(title: const Text('更新物流信息')),
         body: const Center(
-          child: Text('当前状态无法更新物流信息'),
+          child: Text('当前状态无法更新物流信�?),
         ),
       );
     }
@@ -114,7 +114,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 当前状态提示
+            // 当前状态提�?
             Card(
               color: Colors.blue[50],
               child: Padding(
@@ -128,7 +128,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            '当前物流状态',
+                            '当前物流状�?,
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
@@ -151,7 +151,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
 
             // 状态选择
             const Text(
-              '更新状态',
+              '更新状�?,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -163,7 +163,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
               value: _selectedStatus,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: '选择新的状态',
+                hintText: '选择新的状�?,
               ),
               items: availableStatuses.map((status) {
                 return DropdownMenuItem(
@@ -193,7 +193,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
             TextField(
               controller: _locationController,
               decoration: const InputDecoration(
-                hintText: '如：吉隆坡仓库',
+                hintText: '如：吉隆坡仓�?,
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.location_on),
               ),
@@ -210,7 +210,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
               ),
             ),
             const Text(
-              '请描述当前物流状态',
+              '请描述当前物流状�?,
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey,
@@ -223,7 +223,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
               maxLines: 4,
               maxLength: 200,
               decoration: const InputDecoration(
-                hintText: '请描述当前物流状态',
+                hintText: '请描述当前物流状�?,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -372,7 +372,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
       if (pickedFile != null) {
         final File imageFile = File(pickedFile.path);
 
-        // 验证文件大小（5MB）
+        // 验证文件大小�?MB�?
         final fileSize = await imageFile.length();
         if (fileSize > 5 * 1024 * 1024) {
           if (mounted) {
@@ -401,14 +401,14 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
     // 验证
     if (_selectedStatus == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请选择状态')),
+        const SnackBar(content: Text('请选择状�?)),
       );
       return;
     }
 
     if (_descriptionController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请输入描述信息')),
+        const SnackBar(content: Text('请输入描述信�?)),
       );
       return;
     }
@@ -428,7 +428,7 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('物流信息已更新')),
+          const SnackBar(content: Text('物流信息已更�?)),
         );
         Navigator.pop(context, true);
       }
@@ -447,19 +447,19 @@ class _BBXUpdateLogisticsScreenState extends State<BBXUpdateLogisticsScreen> {
     }
   }
 
-  /// 获取状态显示文本
+  /// 获取状态显示文�?
   String _getStatusDisplayText(String status) {
     switch (status) {
       case 'pending':
-        return '待发货';
+        return '待发�?;
       case 'picked_up':
-        return '已取货';
+        return '已取�?;
       case 'in_transit':
-        return '运输中';
+        return '运输�?;
       case 'delivered':
         return '已送达';
       case 'completed':
-        return '已完成';
+        return '已完�?;
       default:
         return status;
     }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// 页面转场动画工具类
+/// 页面转场动画工具�?
 class PageTransitions {
   /// 淡入淡出转场
   static Route<T> fadeTransition<T>(Widget page) {
@@ -81,7 +81,7 @@ class PageTransitions {
     );
   }
 
-  /// 导航到页面（默认从右到左）
+  /// 导航到页面（默认从右到左�?
   static Future<T?> navigateTo<T>(BuildContext context, Widget page) {
     return Navigator.push<T>(
       context,
@@ -89,7 +89,7 @@ class PageTransitions {
     );
   }
 
-  /// 导航到页面（从下到上）
+  /// 导航到页面（从下到上�?
   static Future<T?> navigateToSlideUp<T>(BuildContext context, Widget page) {
     return Navigator.push<T>(
       context,
@@ -97,7 +97,7 @@ class PageTransitions {
     );
   }
 
-  /// 导航到页面（淡入淡出）
+  /// 导航到页面（淡入淡出�?
   static Future<T?> navigateToFade<T>(BuildContext context, Widget page) {
     return Navigator.push<T>(
       context,
@@ -105,7 +105,7 @@ class PageTransitions {
     );
   }
 
-  /// 导航到页面（缩放）
+  /// 导航到页面（缩放�?
   static Future<T?> navigateToScale<T>(BuildContext context, Widget page) {
     return Navigator.push<T>(
       context,
@@ -121,7 +121,7 @@ class PageTransitions {
     );
   }
 
-  /// 清除所有历史并导航到页面
+  /// 清除所有历史并导航到页�?
   static Future<T?> navigateAndRemoveUntil<T>(
     BuildContext context,
     Widget page,

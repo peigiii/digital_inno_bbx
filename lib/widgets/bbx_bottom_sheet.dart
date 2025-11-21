@@ -76,7 +76,7 @@ class BBXBottomSheet extends StatelessWidget {
               ),
             ),
 
-          // 标题栏
+          // 标题�?
           if (title != null)
             Container(
               padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -108,7 +108,7 @@ class BBXBottomSheet extends StatelessWidget {
   }
 }
 
-/// 筛选底部弹窗
+/// 筛选底部弹�?
 class BBXFilterBottomSheet extends StatelessWidget {
   final List<Widget> filters;
   final VoidCallback onReset;
@@ -128,7 +128,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
   }) async {
     return BBXBottomSheet.show<Map<String, dynamic>>(
       context: context,
-      title: '筛选条件',
+      title: '筛选条�?,
       height: MediaQuery.of(context).size.height * 0.8,
       child: BBXFilterBottomSheet(
         filters: filters,
@@ -144,7 +144,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // 筛选内容
+        // 筛选内�?
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -180,7 +180,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
                 flex: 2,
                 child: ElevatedButton(
                   onPressed: onApply,
-                  child: const Text('应用筛选'),
+                  child: const Text('应用筛�?),
                 ),
               ),
             ],

@@ -4,12 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/enhanced/modern_search.dart';
 import '../../widgets/enhanced/modern_card.dart';
+import '../../widgets/enhanced/shimmer_loading.dart';
 import '../../models/listing_model.dart';
 import '../search/bbx_new_search_screen.dart';
 import '../categories/bbx_category_listings_screen.dart';
-import '../../utils/page_transitions.dart';
 
-/// BBX 首页 - 完全优化版
+/// BBX 首页 - 完全优化�?
 /// 适配 Pixel 5 (393 x 851 dp)
 /// Material Design 3 风格，现代化设计
 class BBXOptimizedHomeScreen extends StatefulWidget {
@@ -67,10 +67,10 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
           controller: _scrollController,
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            // 顶部栏
+            // 顶部�?
             _buildSliverAppBar(),
 
-            // 搜索栏区域
+            // 搜索栏区�?
             _buildSearchSection(),
 
             // 快捷分类（横向滚动）
@@ -112,7 +112,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
         ),
         child: Row(
           children: [
-            // Logo 和标题
+            // Logo 和标�?
             Container(
               width: 44,
               height: 44,
@@ -190,7 +190,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
           AppTheme.spacing16,
         ),
         child: ModernSearchBar(
-          hintText: '搜索废料类型、商品...',
+          hintText: '搜索废料类型、商�?..',
           showFilter: true,
           showVoiceSearch: false,
           onTap: () {
@@ -324,7 +324,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
       },
       {
         'title': '我的收藏',
-        'subtitle': '8 个商品',
+        'subtitle': '8 个商�?,
         'icon': Icons.favorite_rounded,
         'gradient': const LinearGradient(
           colors: [Color(0xFFEE5A6F), Color(0xFFF082A5)],
@@ -370,7 +370,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// Banner 推广位
+  /// Banner 推广�?
   Widget _buildPromotionBanner() {
     return SliverToBoxAdapter(
       child: Container(
@@ -576,6 +576,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
             try {
               final listing = ListingModel.fromDocument(doc);
               return ModernListingCard(
+                heroTag: listing.imageUrls.isNotEmpty ? listing.imageUrls.first : null, // 使用图片URL作为tag
                 imageUrl: listing.imageUrls.isNotEmpty
                     ? listing.imageUrls.first
                     : '',
@@ -784,27 +785,62 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 加载状态
+  /// 加载状�?
   Widget _buildLoadingState() {
-    return Column(
-      children: List.generate(
-        3,
-        (index) => Container(
-          margin: const EdgeInsets.symmetric(
-            horizontal: AppTheme.spacing16,
-            vertical: AppTheme.spacing8,
-          ),
-          height: 280,
-          decoration: BoxDecoration(
-            color: AppTheme.neutral100,
-            borderRadius: AppTheme.borderRadiusLarge,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
+      child: Column(
+        children: List.generate(
+          3,
+          (index) => Padding(
+            padding: const EdgeInsets.only(bottom: AppTheme.spacing16),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: AppTheme.borderRadiusLarge,
+                border: Border.all(color: AppTheme.neutral200),
+              ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ShimmerLoading.rounded(
+                      width: double.infinity,
+                      height: 180,
+                      shapeBorder: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
+                      ),
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ShimmerLoading.rectangular(height: 20, width: 200),
+                        const SizedBox(height: 8),
+                        ShimmerLoading.rectangular(height: 14, width: 150),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ShimmerLoading.rectangular(height: 24, width: 100),
+                            ShimmerLoading.rectangular(height: 36, width: 80),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
 
-  /// 错误状态
+  /// 错误状�?
   Widget _buildErrorState() {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing32),
@@ -834,7 +870,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
     );
   }
 
-  /// 空状态
+  /// 空状�?
   Widget _buildEmptyState() {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing32),
@@ -854,7 +890,7 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
           ),
           const SizedBox(height: AppTheme.spacing8),
           Text(
-            '稍后再来看看吧',
+            '稍后再来看看�?,
             style: AppTheme.body2.copyWith(
               color: AppTheme.neutral500,
             ),
@@ -868,11 +904,11 @@ class _BBXOptimizedHomeScreenState extends State<BBXOptimizedHomeScreen>
   String _getGreeting() {
     final hour = DateTime.now().hour;
     if (hour < 12) {
-      return '早上好 👋';
+      return '早上�?👋';
     } else if (hour < 18) {
-      return '下午好 ☀️';
+      return '下午�?☀�?;
     } else {
-      return '晚上好 🌙';
+      return '晚上�?🌙';
     }
   }
 }

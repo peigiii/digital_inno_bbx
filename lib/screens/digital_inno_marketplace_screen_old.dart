@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart'; // 已禁用
+// import 'package:google_maps_flutter/google_maps_flutter.dart'; // 已禁�?
 import 'package:geolocator/geolocator.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
 
-// 🗺️ 这是禁用Google Maps的版本
+// 🗺�?这是禁用Google Maps的版�?
 // 如果你有Google Maps API密钥，请使用 digital_inno_marketplace_screen.dart
 
 class BBXMarketplaceScreen extends StatefulWidget {
@@ -22,8 +22,8 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
   String _selectedFilter = 'all';
   String _searchQuery = '';
   Position? _currentPosition;
-  // GoogleMapController? _mapController; // 已禁用
-  // final Set<Marker> _markers = {}; // 已禁用
+  // GoogleMapController? _mapController; // 已禁�?
+  // final Set<Marker> _markers = {}; // 已禁�?
   final bool _isMapView = false;
 
   final List<String> filterOptions = [
@@ -115,10 +115,10 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入报价';
+                            return '请输入报�?;
                           }
                           if (double.tryParse(value) == null) {
-                            return '请输入有效数字';
+                            return '请输入有效数�?;
                           }
                           return null;
                         },
@@ -163,7 +163,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                         decoration: const InputDecoration(
                           labelText: '留言（可选）',
                           prefixIcon: Icon(Icons.message),
-                          hintText: '说明您的收集计划或其他信息',
+                          hintText: '说明您的收集计划或其他信�?,
                         ),
                         maxLines: 3,
                       ),
@@ -225,7 +225,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
           .get();
 
       if (!userDoc.exists) {
-        throw Exception('用户数据不存在');
+        throw Exception('用户数据不存�?);
       }
 
       final userData = userDoc.data() as Map<String, dynamic>;
@@ -252,14 +252,14 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('提交超时，请检查网络连接');
+              throw Exception('提交超时，请检查网络连�?);
             },
           );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('报价提交成功！'),
+            content: Text('报价提交成功�?),
             backgroundColor: Color(0xFF4CAF50),
           ),
         );
@@ -456,23 +456,23 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                     ),
                     pw.SizedBox(height: 10),
                     pw.Text(
-                      '✓ Waste source verified and documented',
+                      '�?Waste source verified and documented',
                       style: const pw.TextStyle(fontSize: 12),
                     ),
                     pw.Text(
-                      '✓ Transportation route optimized',
+                      '�?Transportation route optimized',
                       style: const pw.TextStyle(fontSize: 12),
                     ),
                     pw.Text(
-                      '✓ Environmental impact assessment completed',
+                      '�?Environmental impact assessment completed',
                       style: const pw.TextStyle(fontSize: 12),
                     ),
                     pw.Text(
-                      '✓ Sustainable disposal/processing method confirmed',
+                      '�?Sustainable disposal/processing method confirmed',
                       style: const pw.TextStyle(fontSize: 12),
                     ),
                     pw.Text(
-                      '✓ Carbon footprint calculation included',
+                      '�?Carbon footprint calculation included',
                       style: const pw.TextStyle(fontSize: 12),
                     ),
                   ],
@@ -528,7 +528,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 // Search Bar
                 TextField(
                   decoration: InputDecoration(
-                    hintText: '搜索废料类型或标题...',
+                    hintText: '搜索废料类型或标�?..',
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -548,7 +548,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 DropdownButtonFormField<String>(
                   initialValue: _selectedFilter,
                   decoration: InputDecoration(
-                    labelText: '筛选废料类型',
+                    labelText: '筛选废料类�?,
                     prefixIcon: const Icon(Icons.filter_list),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -575,7 +575,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
             ),
           ),
 
-          // Content Area - 只显示列表视图
+          // Content Area - 只显示列表视�?
           Expanded(
             child: _buildListView(isTablet),
           ),
@@ -600,12 +600,12 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
   Widget _buildListView(bool isTablet) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .where('status', isEqualTo: 'available')
           .limit(20)
           .snapshots(),
       builder: (context, snapshot) {
-        // 1. 加载状态
+        // 1. 加载状�?
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
             child: Column(
@@ -614,7 +614,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 const CircularProgressIndicator(),
                 const SizedBox(height: 16),
                 Text(
-                  '加载中...',
+                  '加载�?..',
                   style: TextStyle(
                     fontSize: isTablet ? 16 : 14,
                     color: Colors.grey[600],
@@ -740,7 +740,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '请尝试调整搜索条件',
+                  '请尝试调整搜索条�?,
                   style: TextStyle(
                     fontSize: isTablet ? 16 : 14,
                     color: Colors.grey[500],
@@ -819,7 +819,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
 
                     // Description
                     Text(
-                      data['description'] ?? '无描述',
+                      data['description'] ?? '无描�?,
                       style: TextStyle(
                         fontSize: isTablet ? 16 : 14,
                         color: Colors.grey[700],
@@ -875,7 +875,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            data['contactInfo'] ?? '无联系方式',
+                            data['contactInfo'] ?? '无联系方�?,
                             style: TextStyle(
                               fontSize: isTablet ? 14 : 12,
                               color: Colors.grey[600],
@@ -891,7 +891,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                             color: const Color(0xFF4CAF50),
                           ),
                           Text(
-                            '有位置',
+                            '有位�?,
                             style: TextStyle(
                               fontSize: isTablet ? 12 : 10,
                               color: const Color(0xFF4CAF50),

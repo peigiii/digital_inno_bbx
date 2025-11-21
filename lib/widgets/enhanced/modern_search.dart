@@ -13,7 +13,7 @@ class ModernSearchBar extends StatelessWidget {
 
   const ModernSearchBar({
     super.key,
-    this.hintText = '搜索废料类型、商品...',
+    this.hintText = '搜索废料类型、商�?..',
     this.onTap,
     this.onFilter,
     this.onVoiceSearch,
@@ -85,7 +85,7 @@ class ModernSearchBar extends StatelessWidget {
                   const SizedBox(width: AppTheme.spacing4),
                 ],
 
-                // 筛选按钮
+                // 筛选按�?
                 if (showFilter) ...[
                   IconButton(
                     onPressed: onFilter,
@@ -113,7 +113,7 @@ class ModernSearchBar extends StatelessWidget {
   }
 }
 
-/// 可编辑的搜索输入框
+/// 可编辑的搜索输入�?
 class EditableSearchBar extends StatefulWidget {
   final String? initialValue;
   final ValueChanged<String>? onChanged;
@@ -199,13 +199,13 @@ class _EditableSearchBarState extends State<EditableSearchBar> {
           
           const SizedBox(width: AppTheme.spacing12),
 
-          // 输入框
+          // 输入�?
           Expanded(
             child: TextField(
               controller: _controller,
               focusNode: _focusNode,
               decoration: InputDecoration(
-                hintText: '搜索废料类型、商品...',
+                hintText: '搜索废料类型、商�?..',
                 hintStyle: TextStyle(
                   color: AppTheme.neutral500,
                   fontSize: 16,

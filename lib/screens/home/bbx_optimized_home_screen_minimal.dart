@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// BBX 首页 - 极简版
-/// 用最基础的代码测试白屏问题
+/// BBX 首页 - 极简�?
+/// 用最基础的代码测试白屏问�?
 class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
   const BBXOptimizedHomeScreenMinimal({super.key});
 
@@ -13,7 +13,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // 顶部栏
+              // 顶部�?
               Container(
                 color: Colors.white,
                 padding: const EdgeInsets.all(16),
@@ -44,7 +44,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '早上好 👋',
+                            '早上�?👋',
                             style: TextStyle(
                               fontSize: 12,
                               color: Color(0xFF757575),
@@ -72,7 +72,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                 ),
               ),
 
-              // 搜索栏
+              // 搜索�?
               Container(
                 color: Colors.white,
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -108,7 +108,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                       const SizedBox(width: 12),
                       const Expanded(
                         child: Text(
-                          '搜索废料类型、商品...',
+                          '搜索废料类型、商�?..',
                           style: TextStyle(
                             fontSize: 16,
                             color: Color(0xFF9E9E9E),
@@ -229,13 +229,13 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                   children: [
                     _buildActionCard(
                       '我的报价',
-                      '待处理 5 个',
+                      '待处�?5 �?,
                       Icons.local_offer_outlined,
                       const Color(0xFFFF6B6B),
                     ),
                     _buildActionCard(
                       '我的交易',
-                      '进行中 2 笔',
+                      '进行�?2 �?,
                       Icons.receipt_long_outlined,
                       const Color(0xFF4ECDC4),
                     ),
@@ -247,7 +247,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                     ),
                     _buildActionCard(
                       '我的收藏',
-                      '已收藏 12 个',
+                      '已收�?12 �?,
                       Icons.favorite_outline,
                       const Color(0xFFEC6EAD),
                     ),
@@ -275,7 +275,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '升级专业版',
+                              '升级专业�?,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -284,7 +284,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              '享受更多特权和功能',
+                              '享受更多特权和功�?,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,

@@ -58,7 +58,7 @@ class ShimmerCircle extends StatelessWidget {
   }
 }
 
-/// 文本行骨架
+/// 文本行骨�?
 class ShimmerLine extends StatelessWidget {
   final double? width;
   final double height;
@@ -79,7 +79,7 @@ class ShimmerLine extends StatelessWidget {
   }
 }
 
-/// 列表项骨架
+/// 列表项骨�?
 class ListItemShimmer extends StatelessWidget {
   final bool showAvatar;
   final bool showTrailing;
@@ -240,7 +240,7 @@ class ProductCardShimmer extends StatelessWidget {
                   height: 14,
                 ),
                 const SizedBox(height: 12),
-                // 价格和按钮
+                // 价格和按�?
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -265,7 +265,7 @@ class ProductCardShimmer extends StatelessWidget {
   }
 }
 
-/// 表格行骨架
+/// 表格行骨�?
 class TableRowShimmer extends StatelessWidget {
   final int columns;
 

@@ -3,16 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 /// 交易保护系统（托管支付服务）
 ///
-/// 交易流程：
-/// 1. 买家下单 → 资金托管到平台
-/// 2. 卖家发货 → 上传物流凭证
-/// 3. 买家确认收货 → 资金释放给卖家
-/// 4. 争议期（7天）→ 可申请退款
+/// 交易流程�?
+/// 1. 买家下单 �?资金托管到平�?
+/// 2. 卖家发货 �?上传物流凭证
+/// 3. 买家确认收货 �?资金释放给卖�?
+/// 4. 争议期（7天）�?可申请退�?
 class EscrowService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// 创建交易并托管资金
+  /// 创建交易并托管资�?
   Future<String> createTransaction({
     required String sellerId,
     required String listingId,
@@ -21,7 +21,7 @@ class EscrowService {
     Map<String, dynamic>? metadata,
   }) async {
     final userId = _auth.currentUser?.uid;
-    if (userId == null) throw Exception('用户未登录');
+    if (userId == null) throw Exception('用户未登�?);
 
     final transaction = await _firestore.collection('transactions').add({
       'buyerId': userId,
@@ -56,19 +56,19 @@ class EscrowService {
     required List<String> proofUrls,
   }) async {
     final userId = _auth.currentUser?.uid;
-    if (userId == null) throw Exception('用户未登录');
+    if (userId == null) throw Exception('用户未登�?);
 
-    // 验证是否为卖家
+    // 验证是否为卖�?
     final doc = await _firestore
         .collection('transactions')
         .doc(transactionId)
         .get();
 
-    if (!doc.exists) throw Exception('交易不存在');
+    if (!doc.exists) throw Exception('交易不存�?);
 
     final data = doc.data()!;
     if (data['sellerId'] != userId) {
-      throw Exception('无权操作此交易');
+      throw Exception('无权操作此交�?);
     }
 
     await _firestore.collection('transactions').doc(transactionId).update({
@@ -82,19 +82,19 @@ class EscrowService {
   /// 买家确认收货（释放资金）
   Future<void> confirmReceived(String transactionId) async {
     final userId = _auth.currentUser?.uid;
-    if (userId == null) throw Exception('用户未登录');
+    if (userId == null) throw Exception('用户未登�?);
 
-    // 验证是否为买家
+    // 验证是否为买�?
     final doc = await _firestore
         .collection('transactions')
         .doc(transactionId)
         .get();
 
-    if (!doc.exists) throw Exception('交易不存在');
+    if (!doc.exists) throw Exception('交易不存�?);
 
     final data = doc.data()!;
     if (data['buyerId'] != userId) {
-      throw Exception('无权操作此交易');
+      throw Exception('无权操作此交�?);
     }
 
     await _firestore.collection('transactions').doc(transactionId).update({
@@ -107,25 +107,25 @@ class EscrowService {
     // 这里需要集成真实的支付网关
   }
 
-  /// 申请退款
+  /// 申请退�?
   Future<void> requestRefund({
     required String transactionId,
     required String reason,
   }) async {
     final userId = _auth.currentUser?.uid;
-    if (userId == null) throw Exception('用户未登录');
+    if (userId == null) throw Exception('用户未登�?);
 
-    // 验证是否为买家
+    // 验证是否为买�?
     final doc = await _firestore
         .collection('transactions')
         .doc(transactionId)
         .get();
 
-    if (!doc.exists) throw Exception('交易不存在');
+    if (!doc.exists) throw Exception('交易不存�?);
 
     final data = doc.data()!;
     if (data['buyerId'] != userId) {
-      throw Exception('无权操作此交易');
+      throw Exception('无权操作此交�?);
     }
 
     await _firestore.collection('transactions').doc(transactionId).update({
@@ -154,10 +154,10 @@ class EscrowService {
     // TODO: 实际退款逻辑
   }
 
-  /// 获取用户的购买交易
+  /// 获取用户的购买交�?
   Stream<QuerySnapshot> getUserPurchases() {
     final userId = _auth.currentUser?.uid;
-    if (userId == null) throw Exception('用户未登录');
+    if (userId == null) throw Exception('用户未登�?);
 
     return _firestore
         .collection('transactions')
@@ -166,10 +166,10 @@ class EscrowService {
         .snapshots();
   }
 
-  /// 获取用户的销售交易
+  /// 获取用户的销售交�?
   Stream<QuerySnapshot> getUserSales() {
     final userId = _auth.currentUser?.uid;
-    if (userId == null) throw Exception('用户未登录');
+    if (userId == null) throw Exception('用户未登�?);
 
     return _firestore
         .collection('transactions')
@@ -189,20 +189,20 @@ class EscrowService {
   /// 取消交易
   Future<void> cancelTransaction(String transactionId) async {
     final userId = _auth.currentUser?.uid;
-    if (userId == null) throw Exception('用户未登录');
+    if (userId == null) throw Exception('用户未登�?);
 
     final doc = await _firestore
         .collection('transactions')
         .doc(transactionId)
         .get();
 
-    if (!doc.exists) throw Exception('交易不存在');
+    if (!doc.exists) throw Exception('交易不存�?);
 
     final data = doc.data()!;
 
     // 只有买家可以取消未支付的订单
     if (data['buyerId'] != userId) {
-      throw Exception('无权操作此交易');
+      throw Exception('无权操作此交�?);
     }
 
     if (data['status'] != 'pending') {
@@ -215,7 +215,7 @@ class EscrowService {
     });
   }
 
-  /// 检查交易是否可以申请退款（7天争议期）
+  /// 检查交易是否可以申请退款（7天争议期�?
   bool canRequestRefund(Map<String, dynamic> transaction) {
     if (transaction['status'] != 'completed') return false;
 
@@ -273,17 +273,17 @@ class EscrowService {
   }
 }
 
-/// 交易状态枚举
+/// 交易状态枚�?
 enum TransactionStatus {
-  pending('pending', '待支付'),
-  paid('paid', '已支付'),
-  shipped('shipped', '已发货'),
-  completed('completed', '已完成'),
-  cancelled('cancelled', '已取消'),
-  refundRequested('refund_requested', '申请退款'),
-  refunded('refunded', '已退款'),
-  refundRejected('refund_rejected', '退款被拒'),
-  disputed('disputed', '有争议');
+  pending('pending', '待支�?),
+  paid('paid', '已支�?),
+  shipped('shipped', '已发�?),
+  completed('completed', '已完�?),
+  cancelled('cancelled', '已取�?),
+  refundRequested('refund_requested', '申请退�?),
+  refunded('refunded', '已退�?),
+  refundRejected('refund_rejected', '退款被�?),
+  disputed('disputed', '有争�?);
 
   final String value;
   final String label;
@@ -297,11 +297,11 @@ enum TransactionStatus {
   }
 }
 
-/// 托管状态枚举
+/// 托管状态枚�?
 enum EscrowStatus {
-  held('held', '资金托管中'),
-  released('released', '资金已释放'),
-  refunded('refunded', '已退款');
+  held('held', '资金托管�?),
+  released('released', '资金已释�?),
+  refunded('refunded', '已退�?);
 
   final String value;
   final String label;

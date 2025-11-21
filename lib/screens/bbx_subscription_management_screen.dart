@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../theme/app_theme.dart';
 
 /// 订阅管理页面
-/// 显示订阅详情、历史记录、升级/降级选项
+/// 显示订阅详情、历史记录、升�?降级选项
 class BBXSubscriptionManagementScreen extends StatefulWidget {
   const BBXSubscriptionManagementScreen({Key? key}) : super(key: key);
 
@@ -62,7 +62,7 @@ class _BBXSubscriptionManagementScreenState
         });
       }
     } catch (e) {
-      print('❌ [订阅管理] 加载失败: $e');
+      print('�?[订阅管理] 加载失败: $e');
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -127,7 +127,7 @@ class _BBXSubscriptionManagementScreenState
 
               const SizedBox(height: 24),
 
-              // 快速操作按钮
+              // 快速操作按�?
               _buildQuickActions(currentPlan),
 
               const SizedBox(height: 24),
@@ -193,7 +193,7 @@ class _BBXSubscriptionManagementScreenState
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  status == 'active' ? '有效' : status == 'expired' ? '已过期' : '待激活',
+                  status == 'active' ? '有效' : status == 'expired' ? '已过�? : '待激�?,
                   style: const TextStyle(
                     fontSize: 12,
                     color: Colors.white,
@@ -241,7 +241,7 @@ class _BBXSubscriptionManagementScreenState
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoItem('价格', 'RM ${planInfo['price']}/年'),
+                _buildInfoItem('价格', 'RM ${planInfo['price']}/�?),
                 _buildInfoItem('续费日期', _getNextBillingDate()),
               ],
             ),
@@ -280,7 +280,7 @@ class _BBXSubscriptionManagementScreenState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '快速操作',
+          '快速操�?,
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -567,11 +567,11 @@ class _BBXSubscriptionManagementScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('发票功能'),
-        content: const Text('发票生成功能即将推出！\n\n您可以在支付历史中查看所有交易记录。'),
+        content: const Text('发票生成功能即将推出！\n\n您可以在支付历史中查看所有交易记录�?),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('知道了'),
+            child: const Text('知道�?),
           ),
         ],
       ),
@@ -603,7 +603,7 @@ class _BBXSubscriptionManagementScreenState
           'icon': Icons.workspace_premium,
           'price': 199,
           'features': [
-            'Basic 所有功能',
+            'Basic 所有功�?,
             'ESG 合规报告',
             '高级数据分析',
             '物流优化',
@@ -619,12 +619,12 @@ class _BBXSubscriptionManagementScreenState
           'icon': Icons.diamond,
           'price': 499,
           'features': [
-            'Professional 所有功能',
-            '多用户账号',
-            '定制化报告',
+            'Professional 所有功�?,
+            '多用户账�?,
+            '定制化报�?,
             '白标解决方案',
             '专属客户经理',
-            '优先技术支持',
+            '优先技术支�?,
             'SLA 保证',
           ],
         };
@@ -636,9 +636,9 @@ class _BBXSubscriptionManagementScreenState
           'icon': Icons.person,
           'price': 0,
           'features': [
-            '3天试用（个人）',
-            '7天试用（公司）',
-            '最多 5 个列表',
+            '3天试用（个人�?,
+            '7天试用（公司�?,
+            '最�?5 个列�?,
             '基础功能',
             '社区支持',
           ],
@@ -665,7 +665,7 @@ class _BBXSubscriptionManagementScreenState
       case 'ewallet':
         return '电子钱包';
       case 'credit_card':
-        return '信用卡/借记卡';
+        return '信用�?借记�?;
       case 'cash':
         return '现金支付';
       default:

@@ -22,14 +22,14 @@ class ProductCard extends StatelessWidget {
     final title = data['title'] ?? '未知标题';
     final wasteType = data['wasteType'] ?? '未知类型';
     final quantity = data['quantity'] ?? 0;
-    final unit = data['unit'] ?? '吨';
+    final unit = data['unit'] ?? '�?;
     final pricePerUnit = data['pricePerUnit'] ?? 0;
     final city = data['city'] ?? data['contactInfo'] ?? '未知地区';
     final userEmail = data['userEmail'] ?? '';
     final imageUrl = data['imageUrl'];
 
     // Extract company name from email
-    String supplierName = '供应商';
+    String supplierName = '供应�?;
     if (userEmail.isNotEmpty) {
       supplierName = userEmail.split('@').first;
     }
@@ -96,7 +96,7 @@ class ProductCard extends StatelessWidget {
 
           const SizedBox(height: AppTheme.spacingSM),
 
-          // 价格和数量
+          // 价格和数�?
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -111,7 +111,7 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '每$unit',
+                    '�?unit',
                     style: AppTheme.caption,
                   ),
                 ],

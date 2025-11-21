@@ -40,13 +40,13 @@ class UserModel {
     this.updatedAt,
   });
 
-  /// 从 Firestore 文档创建
+  /// �?Firestore 文档创建
   factory UserModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return UserModel.fromMap(doc.id, data);
   }
 
-  /// 从 Map 创建
+  /// �?Map 创建
   factory UserModel.fromMap(String uid, Map<String, dynamic> data) {
     return UserModel(
       uid: uid,
@@ -69,7 +69,7 @@ class UserModel {
     );
   }
 
-  /// 转换为 Map（用于Firestore）
+  /// 转换�?Map（用于Firestore�?
   Map<String, dynamic> toMap() {
     return {
       'email': email,
@@ -91,7 +91,7 @@ class UserModel {
     };
   }
 
-  /// 复制并修改部分字段
+  /// 复制并修改部分字�?
   UserModel copyWith({
     String? email,
     String? displayName,
@@ -133,13 +133,13 @@ class UserModel {
   String get userTypeDisplay {
     switch (userType) {
       case 'producer':
-        return '生产者';
+        return '生产�?;
       case 'processor':
-        return '处理者';
+        return '处理�?;
       case 'recycler':
-        return '回收商';
+        return '回收�?;
       case 'public':
-        return '普通用户';
+        return '普通用�?;
       default:
         return userType;
     }
@@ -149,19 +149,19 @@ class UserModel {
   String get subscriptionPlanDisplay {
     switch (subscriptionPlan) {
       case 'free':
-        return '免费版';
+        return '免费�?;
       case 'basic':
-        return '基础版';
+        return '基础�?;
       case 'professional':
-        return '专业版';
+        return '专业�?;
       case 'enterprise':
-        return '企业版';
+        return '企业�?;
       default:
         return subscriptionPlan;
     }
   }
 
-  /// 是否是高级用户
+  /// 是否是高级用�?
   bool get isPremium => subscriptionPlan != 'free';
 
   /// 获取信用评分

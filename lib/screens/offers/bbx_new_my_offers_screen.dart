@@ -33,11 +33,11 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
   final Map<String, String> _filterLabels = {
     'all': '全部',
-    'pending': '待处理',
-    'negotiating': '议价中',
-    'accepted': '已接受',
-    'rejected': '已拒绝',
-    'expired': '已过期',
+    'pending': '待处�?,
+    'negotiating': '议价�?,
+    'accepted': '已接�?,
+    'rejected': '已拒�?,
+    'expired': '已过�?,
   };
 
   @override
@@ -222,7 +222,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
           return BBXEmptyState.noData(
             description: '暂无报价记录',
             action: BBXPrimaryButton(
-              text: '去逛逛',
+              text: '去逛�?,
               onPressed: () {
                 Navigator.pushNamed(context, '/home');
               },
@@ -262,7 +262,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return BBXEmptyState.noData(
-            description: '暂无收到的报价',
+            description: '暂无收到的报�?,
           );
         }
 
@@ -278,7 +278,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-  /// 获取报价流
+  /// 获取报价�?
   Stream<QuerySnapshot> _getOffersStream(String userId, {required bool isSent}) {
     var query = FirebaseFirestore.instance
         .collection('offers')
@@ -324,7 +324,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 商品信息（简化版）
+          // 商品信息（简化版�?
           Row(
             children: [
               Container(
@@ -605,7 +605,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
               Expanded(
                 flex: 2,
                 child: BBXPrimaryButton(
-                  text: '接受当前价',
+                  text: '接受当前�?,
                   onPressed: () {},
                   height: 40,
                 ),
@@ -631,9 +631,9 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     if (difference.inDays > 0) {
       return '${difference.inDays}天前';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时前';
+      return '${difference.inHours}小时�?;
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟前';
+      return '${difference.inMinutes}分钟�?;
     } else {
       return '刚刚';
     }

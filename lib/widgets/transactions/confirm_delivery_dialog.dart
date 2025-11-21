@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../services/transaction_service.dart';
 
-/// 确认收货对话框
+/// 确认收货对话�?
 class ConfirmDeliveryDialog extends StatefulWidget {
   final String transactionId;
-  final String deliveryMethod; // self_collect 或 delivery
+  final String deliveryMethod; // self_collect �?delivery
 
   const ConfirmDeliveryDialog({
     Key? key,
@@ -28,7 +28,7 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
     });
 
     try {
-      // 更新交易状态
+      // 更新交易状�?
       await _transactionService.updateTransaction(
         widget.transactionId,
         {
@@ -41,7 +41,7 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
         Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('已确认收货'),
+            content: Text('已确认收�?),
             backgroundColor: Colors.green,
           ),
         );
@@ -50,7 +50,7 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('操作失败：$e'),
+            content: Text('操作失败�?e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -79,12 +79,12 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '请确认您已经收到货物。',
+            '请确认您已经收到货物�?,
             style: TextStyle(fontSize: 15),
           ),
           SizedBox(height: 12),
           Text(
-            '确认后款项将支付给卖家。',
+            '确认后款项将支付给卖家�?,
             style: TextStyle(
               fontSize: 14,
               color: Colors.orange,

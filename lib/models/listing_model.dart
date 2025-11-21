@@ -40,13 +40,13 @@ class ListingModel {
     this.expiresAt,
   });
 
-  /// 从 Firestore 文档创建
+  /// �?Firestore 文档创建
   factory ListingModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return ListingModel.fromMap(doc.id, data);
   }
 
-  /// 从 Map 创建
+  /// �?Map 创建
   factory ListingModel.fromMap(String id, Map<String, dynamic> data) {
     return ListingModel(
       id: id,
@@ -69,7 +69,7 @@ class ListingModel {
     );
   }
 
-  /// 转换为 Map（用于Firestore）
+  /// 转换�?Map（用于Firestore�?
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
@@ -91,7 +91,7 @@ class ListingModel {
     };
   }
 
-  /// 复制并修改部分字段
+  /// 复制并修改部分字�?
   ListingModel copyWith({
     String? title,
     String? description,
@@ -133,7 +133,7 @@ class ListingModel {
   /// 是否可用
   bool get isAvailable => status == 'available';
 
-  /// 是否已过期
+  /// 是否已过�?
   bool get isExpired {
     if (expiresAt == null) return false;
     return DateTime.now().isAfter(expiresAt!);
@@ -150,11 +150,11 @@ class ListingModel {
   String get wasteTypeDisplay {
     switch (wasteType) {
       case 'EFB (Empty Fruit Bunches)':
-        return '棕榈空果串';
+        return '棕榈空果�?;
       case 'POME (Palm Oil Mill Effluent)':
         return '棕榈油厂废水';
       case 'Palm Shell':
-        return '棕榈壳';
+        return '棕榈�?;
       case 'Palm Fiber':
         return '棕榈纤维';
       case 'Palm Kernel Cake':
@@ -164,27 +164,27 @@ class ListingModel {
       case 'Rice Husk':
         return '稻壳';
       case 'Sugarcane Bagasse':
-        return '甘蔗渣';
+        return '甘蔗�?;
       case 'Wood Chips':
         return '木屑';
       case 'Other Biomass':
-        return '其他生物质';
+        return '其他生物�?;
       default:
         return wasteType;
     }
   }
 
-  /// 获取状态显示文本
+  /// 获取状态显示文�?
   String get statusDisplay {
     switch (status) {
       case 'available':
         return '可用';
       case 'pending':
-        return '待处理';
+        return '待处�?;
       case 'sold':
-        return '已售出';
+        return '已售�?;
       case 'expired':
-        return '已过期';
+        return '已过�?;
       default:
         return status;
     }

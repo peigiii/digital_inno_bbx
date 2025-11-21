@@ -19,7 +19,7 @@ class UserService {
     }
   }
 
-  /// 获取用户信息（Stream）
+  /// 获取用户信息（Stream�?
   Stream<UserModel?> getUserStream(String userId) {
     return _firestore.collection('users').doc(userId).snapshots().map((doc) {
       if (!doc.exists) {

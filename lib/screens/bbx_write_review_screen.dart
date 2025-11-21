@@ -33,8 +33,8 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
   double _deliveryScore = 5.0;
 
   // 标签
-  final List<String> _positiveTags = ['质量好', '服务好', '发货快', '包装好', '价格实惠'];
-  final List<String> _negativeTags = ['质量差', '服务差', '发货慢', '包装差', '描述不符'];
+  final List<String> _positiveTags = ['质量�?, '服务�?, '发货�?, '包装�?, '价格实惠'];
+  final List<String> _negativeTags = ['质量�?, '服务�?, '发货�?, '包装�?, '描述不符'];
   final Set<String> _selectedTags = {};
 
   // 评价内容
@@ -58,7 +58,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
   Future<void> _pickImages() async {
     if (_images.length >= 9) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('最多上传9张图片')),
+        const SnackBar(content: Text('最多上�?张图�?)),
       );
       return;
     }
@@ -133,7 +133,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('评价已提交')),
+          const SnackBar(content: Text('评价已提�?)),
         );
       }
     } catch (e) {
@@ -195,14 +195,14 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // 多维度评分
+                  // 多维度评�?
                   const Text(
                     '详细评分',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   _buildScoreSlider(
-                    '描述相符度',
+                    '描述相符�?,
                     _descriptionScore,
                     (value) => setState(() => _descriptionScore = value),
                   ),
@@ -218,9 +218,9 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // 快速标签
+                  // 快速标�?
                   const Text(
-                    '快速评价',
+                    '快速评�?,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -296,7 +296,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
 
                   // 图片上传
                   const Text(
-                    '上传图片 (最多9张)',
+                    '上传图片 (最�?�?',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -324,7 +324,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   // 匿名评价
                   SwitchListTile(
                     title: const Text('匿名评价'),
-                    subtitle: const Text('其他用户将无法看到您的身份信息'),
+                    subtitle: const Text('其他用户将无法看到您的身份信�?),
                     value: _isAnonymous,
                     onChanged: (value) {
                       setState(() => _isAnonymous = value);

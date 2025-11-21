@@ -8,8 +8,8 @@ class TransactionModel {
   final String sellerId;
   final String listingId;
   final double amount; // 交易金额
-  final double platformFee; // 平台费（3%）
-  final double totalAmount; // 总金额 = amount + platformFee
+  final double platformFee; // 平台费（3%�?
+  final double totalAmount; // 总金�?= amount + platformFee
   final String paymentMethod; // cash, bank_transfer, ewallet
   final String paymentStatus; // pending, paid, refunded
   final String? paymentProofUrl; // 支付凭证图片URL
@@ -19,19 +19,19 @@ class TransactionModel {
   final String shippingStatus; // pending, picked_up, in_transit, delivered, completed
   final String escrowStatus; // held, released, refunded
   final String? deliveryMethod; // 配送方式：self_collect(自提)/delivery(邮寄)
-  final Map<String, dynamic>? shippingInfo; // 快递信息(仅邮寄时使用): courierName, trackingNumber, shippedAt, notes
+  final Map<String, dynamic>? shippingInfo; // 快递信�?仅邮寄时使用): courierName, trackingNumber, shippedAt, notes
   final String? trackingNumber; // 快递单号（兼容旧字段）
   final String? logisticsProvider; // 物流供应商（兼容旧字段）
   final DateTime? pickupScheduledDate; // 预定取货日期
   final DateTime? actualPickupDate; // 实际取货日期
-  final DateTime? pickupDate; // 取货日期（兼容旧字段）
+  final DateTime? pickupDate; // 取货日期（兼容旧字段�?
   final DateTime? deliveryDate; // 送货日期
   final String? notes; // 交易备注
   final String? cancellationReason; // 取消原因
   final List<String> shippingProof;
   final String? complianceDocumentUrl; // 合规文档URL
-  final bool buyerReviewed; // 买家是否已评价
-  final bool sellerReviewed; // 卖家是否已评价
+  final bool buyerReviewed; // 买家是否已评�?
+  final bool sellerReviewed; // 卖家是否已评�?
   final DateTime? createdAt;
   final DateTime? paidAt;
   final DateTime? shippedAt;
@@ -86,13 +86,13 @@ class TransactionModel {
     this.metadata,
   });
 
-  /// 从 Firestore 文档创建
+  /// �?Firestore 文档创建
   factory TransactionModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return TransactionModel.fromMap(doc.id, data);
   }
 
-  /// 从 Map 创建
+  /// �?Map 创建
   factory TransactionModel.fromMap(String id, Map<String, dynamic> data) {
     return TransactionModel(
       id: id,
@@ -138,7 +138,7 @@ class TransactionModel {
     );
   }
 
-  /// 转换为 Map（用于Firestore）
+  /// 转换�?Map（用于Firestore�?
   Map<String, dynamic> toMap() {
     return {
       'offerId': offerId,
@@ -183,7 +183,7 @@ class TransactionModel {
     };
   }
 
-  /// 复制并修改部分字段
+  /// 复制并修改部分字�?
   TransactionModel copyWith({
     String? paymentMethod,
     String? paymentStatus,
@@ -261,7 +261,7 @@ class TransactionModel {
     );
   }
 
-  /// 状态判断
+  /// 状态判�?
   bool get isPending => status == 'pending';
   bool get isConfirmed => status == 'confirmed';
   bool get isScheduled => status == 'scheduled';
@@ -275,40 +275,40 @@ class TransactionModel {
   bool get isRefunded => status == 'refunded';
   bool get isDisputed => status == 'disputed';
 
-  /// 托管状态判断
+  /// 托管状态判�?
   bool get isEscrowHeld => escrowStatus == 'held';
   bool get isEscrowReleased => escrowStatus == 'released';
   bool get isEscrowRefunded => escrowStatus == 'refunded';
 
-  /// 获取状态显示文本
+  /// 获取状态显示文�?
   String get statusDisplay {
     switch (status) {
       case 'pending':
-        return '待支付';
+        return '待支�?;
       case 'confirmed':
-        return '已确认';
+        return '已确�?;
       case 'scheduled':
-        return '已安排';
+        return '已安�?;
       case 'inTransit':
-        return '运输中';
+        return '运输�?;
       case 'delivered':
         return '已送达';
       case 'paid':
-        return '已支付';
+        return '已支�?;
       case 'shipped':
-        return '已发货';
+        return '已发�?;
       case 'completed':
-        return '已完成';
+        return '已完�?;
       case 'cancelled':
-        return '已取消';
+        return '已取�?;
       case 'refund_requested':
         return '退款申请中';
       case 'refunded':
-        return '已退款';
+        return '已退�?;
       case 'refund_rejected':
-        return '退款被拒';
+        return '退款被�?;
       case 'disputed':
-        return '争议中';
+        return '争议�?;
       default:
         return status;
     }
@@ -326,50 +326,50 @@ class TransactionModel {
       case 'fpx':
         return 'FPX 网银转账';
       case 'credit_card':
-        return '信用卡/借记卡';
+        return '信用�?借记�?;
       default:
         return paymentMethod;
     }
   }
 
-  /// 获取物流状态显示文本
+  /// 获取物流状态显示文�?
   String get shippingStatusDisplay {
     switch (shippingStatus) {
       case 'pending':
-        return '待发货';
+        return '待发�?;
       case 'picked_up':
-        return '已取货';
+        return '已取�?;
       case 'in_transit':
-        return '运输中';
+        return '运输�?;
       case 'delivered':
         return '已送达';
       case 'completed':
-        return '已完成';
+        return '已完�?;
       default:
         return shippingStatus;
     }
   }
 
-  /// 获取支付状态显示文本
+  /// 获取支付状态显示文�?
   String get paymentStatusDisplay {
     switch (paymentStatus) {
       case 'pending':
-        return '待支付';
+        return '待支�?;
       case 'paid':
-        return '已支付';
+        return '已支�?;
       case 'refunded':
-        return '已退款';
+        return '已退�?;
       default:
         return paymentStatus;
     }
   }
 
-  /// 判断是否可以支付（状态为confirmed）
+  /// 判断是否可以支付（状态为confirmed�?
   bool canPayment() {
     return status == 'confirmed' && paymentStatus == 'pending';
   }
 
-  /// 判断是否可以取货（已支付）
+  /// 判断是否可以取货（已支付�?
   bool canPickup() {
     return paymentStatus == 'paid' && shippingStatus == 'pending';
   }
@@ -379,7 +379,7 @@ class TransactionModel {
     return shippingStatus == 'in_transit' || shippingStatus == 'picked_up';
   }
 
-  /// 判断是否可以完成交易（已送达）
+  /// 判断是否可以完成交易（已送达�?
   bool canComplete() {
     return shippingStatus == 'delivered' && status != 'completed';
   }
@@ -389,7 +389,7 @@ class TransactionModel {
     return status != 'completed' && status != 'cancelled' && shippingStatus != 'completed';
   }
 
-  /// 判断交易是否进行中
+  /// 判断交易是否进行�?
   bool isActive() {
     return status != 'completed' && status != 'cancelled' && status != 'refunded';
   }

@@ -25,7 +25,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
 
   Future<void> _refreshOffers() async {
     setState(() {
-      // 触发重建以刷新 StreamBuilder
+      // 触发重建以刷�?StreamBuilder
     });
   }
 
@@ -75,7 +75,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                     color: Color(0xFF4CAF50),
                   ),
                   SizedBox(height: 16),
-                  Text('处理中...'),
+                  Text('处理�?..'),
                 ],
               ),
             ),
@@ -97,19 +97,19 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
       if (newStatus == 'accepted') {
         // Get listing data
         final listingDoc = await FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .doc(offerData['listingId'])
             .get();
 
         if (!listingDoc.exists) {
-          throw Exception('废料信息不存在');
+          throw Exception('废料信息不存�?);
         }
 
         final listingData = listingDoc.data() as Map<String, dynamic>;
 
         // Update listing status to sold
         final listingRef = FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .doc(offerData['listingId']);
         batch.update(listingRef, {
           'status': 'sold',
@@ -141,7 +141,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
         await batch.commit().timeout(
           const Duration(seconds: 15),
           onTimeout: () {
-            throw Exception('操作超时，请检查网络连接');
+            throw Exception('操作超时，请检查网络连�?);
           },
         );
 
@@ -195,7 +195,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('报价已${newStatus == "accepted" ? "接受" : "拒绝"}'),
+            content: Text('报价�?{newStatus == "accepted" ? "接受" : "拒绝"}'),
             backgroundColor: newStatus == "accepted"
                 ? const Color(0xFF4CAF50)
                 : const Color(0xFFF44336),
@@ -348,7 +348,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                         if (_searchQuery.isEmpty && _selectedStatus == 'all') ...[
                           const SizedBox(height: 8),
                           Text(
-                            '还没有收到任何报价',
+                            '还没有收到任何报�?,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[500],

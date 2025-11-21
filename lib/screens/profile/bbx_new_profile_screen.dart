@@ -55,9 +55,9 @@ class BBXNewProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: AppTheme.spacing16),
 
-              // 用户名
+              // 用户�?
               Text(
-                user?.displayName ?? '未登录',
+                user?.displayName ?? '未登�?,
                 style: AppTheme.heading2.copyWith(color: Colors.white),
               ),
               const SizedBox(height: AppTheme.spacing8),
@@ -140,9 +140,9 @@ class BBXNewProfileScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
-              _buildStatItem('交易数', '128'),
-              _buildStatItem('报价数', '45'),
-              _buildStatItem('收藏数', '23'),
+              _buildStatItem('交易�?, '128'),
+              _buildStatItem('报价�?, '45'),
+              _buildStatItem('收藏�?, '23'),
             ],
           ),
         ),
@@ -210,7 +210,7 @@ class BBXNewProfileScreen extends StatelessWidget {
             _buildMenuGroup([
               _MenuItem(Icons.help_outline_rounded, '帮助中心', null, '/help'),
               _MenuItem(Icons.info_outline_rounded, '关于我们', null, '/about'),
-              _MenuItem(Icons.logout_rounded, '退出登录', AppTheme.error, null, isLogout: true),
+              _MenuItem(Icons.logout_rounded, '退出登�?, AppTheme.error, null, isLogout: true),
             ]),
           ],
         ),

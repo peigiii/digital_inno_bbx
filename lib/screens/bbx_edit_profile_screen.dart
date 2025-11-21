@@ -39,14 +39,14 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
   Future<void> _loadUserData() async {
     if (currentUser == null) {
       setState(() {
-        errorMessage = '未登录';
+        errorMessage = '未登�?;
         isLoading = false;
       });
       return;
     }
 
     try {
-      print('🔄 开始加载用户数据...');
+      print('🔄 开始加载用户数�?..');
 
       // 添加超时限制
       final doc = await FirebaseFirestore.instance
@@ -56,7 +56,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('加载超时，请检查网络连接');
+              throw Exception('加载超时，请检查网络连�?);
             },
           );
 
@@ -64,7 +64,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
       if (doc.exists) {
         final data = doc.data()!;
-        print('✅ 用户数据加载成功');
+        print('�?用户数据加载成功');
 
         setState(() {
           _nameController.text = data['displayName'] ?? '';
@@ -76,7 +76,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           errorMessage = null;
         });
       } else {
-        print('⚠️ 用户文档不存在，使用默认值');
+        print('⚠️ 用户文档不存在，使用默认�?);
         setState(() {
           _nameController.text = currentUser!.displayName ??
                                   currentUser!.email?.split('@')[0] ??
@@ -86,12 +86,12 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
         });
       }
     } catch (e) {
-      print('❌ 加载用户数据失败: $e');
+      print('�?加载用户数据失败: $e');
       if (mounted) {
         setState(() {
           errorMessage = '加载失败: $e';
           isLoading = false;
-          // 使用默认值
+          // 使用默认�?
           _nameController.text = currentUser!.email?.split('@')[0] ?? 'User';
         });
       }
@@ -111,7 +111,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
     });
 
     try {
-      print('🔄 开始保存用户资料...');
+      print('🔄 开始保存用户资�?..');
 
       final updates = {
         'displayName': _nameController.text.trim(),
@@ -121,7 +121,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
-      // 使用 set 而不是 update，避免文档不存在的问题
+      // 使用 set 而不�?update，避免文档不存在的问�?
       await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
@@ -129,19 +129,19 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('保存超时，请检查网络连接');
+              throw Exception('保存超时，请检查网络连�?);
             },
           );
 
       // 更新 Firebase Auth 显示名称
       await currentUser!.updateDisplayName(_nameController.text.trim());
 
-      print('✅ 用户资料保存成功');
+      print('�?用户资料保存成功');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('✅ 个人资料已更新'),
+            content: Text('�?个人资料已更�?),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 2),
           ),
@@ -151,11 +151,11 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
         await Future.delayed(const Duration(milliseconds: 500));
 
         if (mounted) {
-          Navigator.pop(context, true); // 返回 true 表示已更新
+          Navigator.pop(context, true); // 返回 true 表示已更�?
         }
       }
     } catch (e) {
-      print('❌ 保存失败: $e');
+      print('�?保存失败: $e');
       if (mounted) {
         setState(() {
           errorMessage = '保存失败: $e';
@@ -163,7 +163,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('❌ 保存失败: $e'),
+            content: Text('�?保存失败: $e'),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
           ),
@@ -201,14 +201,14 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('✅ 头像已更新'),
+            content: Text('�?头像已更�?),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 2),
           ),
         );
       }
     } catch (e) {
-      print('❌ 上传头像失败: $e');
+      print('�?上传头像失败: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -251,7 +251,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
       );
     }
 
-    // 显示错误但仍然允许编辑
+    // 显示错误但仍然允许编�?
     if (errorMessage != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -382,11 +382,11 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                 labelText: '姓名 *',
                 prefixIcon: Icon(Icons.person),
                 border: OutlineInputBorder(),
-                helperText: '必填项',
+                helperText: '必填�?,
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return '请输入姓名';
+                  return '请输入姓�?;
                 }
                 return null;
               },
@@ -478,7 +478,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                           ),
                         ),
                         SizedBox(width: 12),
-                        Text('保存中...'),
+                        Text('保存�?..'),
                       ],
                     )
                   : const Text(
@@ -506,7 +506,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '提示：$errorMessage',
+                        '提示�?errorMessage',
                         style: const TextStyle(fontSize: 12),
                       ),
                     ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 
-/// BBX 主按钮组件
+/// BBX 主按钮组�?
 class BBXPrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;

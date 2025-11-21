@@ -25,7 +25,7 @@ class BBXTestHomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                '✅ 页面加载成功！',
+                '�?页面加载成功�?,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -33,17 +33,17 @@ class BBXTestHomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Text(
-                '如果你看到这个页面',
+                '如果你看到这个页�?,
                 style: TextStyle(fontSize: 16),
               ),
               const Text(
-                '说明路由和基础框架都正常',
+                '说明路由和基础框架都正�?,
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
-                  print('按钮被点击');
+                  print('按钮被点�?);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('交互正常')),
                   );

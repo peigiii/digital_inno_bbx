@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
 /// 用户认证系统
-/// 支持多种认证类型：手机、邮箱、企业、身份、银行
+/// 支持多种认证类型：手机、邮箱、企业、身份、银�?
 class BBXVerificationScreen extends StatefulWidget {
   const BBXVerificationScreen({super.key});
 
@@ -22,7 +22,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
   String _selectedType = 'phone';
   bool _isLoading = false;
 
-  // 表单控制器
+  // 表单控制�?
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _companyNameController = TextEditingController();
@@ -86,7 +86,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
       if (image != null) {
         setState(() => _isLoading = true);
 
-        // 上传到 Firebase Storage
+        // 上传�?Firebase Storage
         final userId = _auth.currentUser!.uid;
         final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
         final ref = FirebaseStorage.instance
@@ -162,7 +162,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('提交成功，等待审核')),
+          const SnackBar(content: Text('提交成功，等待审�?)),
         );
         Navigator.pop(context);
       }
@@ -187,12 +187,12 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
       case 'pending':
         icon = Icons.pending;
         color = Colors.orange;
-        label = '待审核';
+        label = '待审�?;
         break;
       case 'approved':
         icon = Icons.verified;
         color = Colors.green;
-        label = '已认证';
+        label = '已认�?;
         break;
       case 'rejected':
         icon = Icons.cancel;
@@ -237,7 +237,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 当前认证状态
+                  // 当前认证状�?
                   if (_currentVerification != null) ...[
                     Card(
                       child: Padding(
@@ -249,7 +249,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
-                                  '当前认证状态',
+                                  '当前认证状�?,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -364,7 +364,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
                   child: TextField(
                     controller: _verificationCodeController,
                     decoration: const InputDecoration(
-                      labelText: '验证码',
+                      labelText: '验证�?,
                       border: OutlineInputBorder(),
                     ),
                   ),
@@ -374,7 +374,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
                   onPressed: () {
                     // TODO: 发送短信验证码
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('验证码已发送')),
+                      const SnackBar(content: Text('验证码已发�?)),
                     );
                   },
                   child: const Text('发送验证码'),
@@ -407,7 +407,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
             TextField(
               controller: _registrationNumberController,
               decoration: const InputDecoration(
-                labelText: '工商注册号',
+                labelText: '工商注册�?,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -426,7 +426,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
         return TextField(
           controller: _idNumberController,
           decoration: const InputDecoration(
-            labelText: '身份证号码',
+            labelText: '身份证号�?,
             border: OutlineInputBorder(),
             prefixIcon: Icon(Icons.badge),
           ),
@@ -526,7 +526,7 @@ class _BBXVerificationScreenState extends State<BBXVerificationScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          '请上传清晰的证件照片或相关证明文档',
+          '请上传清晰的证件照片或相关证明文�?,
           style: TextStyle(fontSize: 12, color: Colors.grey[600]),
         ),
       ],

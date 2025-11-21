@@ -147,7 +147,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
                           child: Icon(Icons.description,
                               size: 48, color: Colors.grey[400]),
                         ),
-                  // 状态标签
+                  // 状态标�?
                   Positioned(
                     top: 8,
                     right: 8,
@@ -198,7 +198,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
     switch (status) {
       case 'approved':
         color = Colors.green;
-        label = '已认证';
+        label = '已认�?;
         break;
       case 'rejected':
         color = Colors.red;
@@ -206,7 +206,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
         break;
       default:
         color = Colors.orange;
-        label = '待审核';
+        label = '待审�?;
     }
 
     return Container(
@@ -309,7 +309,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
       case 'quality_cert':
         return '质量认证';
       case 'safety_cert':
-        return '安全生产许可证';
+        return '安全生产许可�?;
       case 'other':
         return '其他证书';
       default:
@@ -387,7 +387,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
   Future<void> _submit() async {
     if (_imageUrl == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请上传证书图片')),
+        const SnackBar(content: Text('请上传证书图�?)),
       );
       return;
     }
@@ -457,7 +457,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
                   DropdownMenuItem(value: 'iso_cert', child: Text('ISO 认证')),
                   DropdownMenuItem(value: 'environmental_cert', child: Text('环保认证')),
                   DropdownMenuItem(value: 'quality_cert', child: Text('质量认证')),
-                  DropdownMenuItem(value: 'safety_cert', child: Text('安全生产许可证')),
+                  DropdownMenuItem(value: 'safety_cert', child: Text('安全生产许可�?)),
                   DropdownMenuItem(value: 'other', child: Text('其他证书')),
                 ],
                 onChanged: (value) {
@@ -492,8 +492,8 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
               ),
               const SizedBox(height: 16),
 
-              // 有效期
-              const Text('有效期至 (可选)', style: TextStyle(fontWeight: FontWeight.w500)),
+              // 有效�?
+              const Text('有效期至 (可�?', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               InkWell(
                 onTap: () async {

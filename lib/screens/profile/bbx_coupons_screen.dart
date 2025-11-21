@@ -6,7 +6,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/bbx_loading.dart';
 import '../../widgets/bbx_empty_state.dart';
 
-/// BBX 优惠券页面
+/// BBX 优惠券页�?
 class BBXCouponsScreen extends StatefulWidget {
   const BBXCouponsScreen({super.key});
 
@@ -75,7 +75,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
         isLoading = false;
       });
     } catch (e) {
-      debugPrint('加载优惠券失败: $e');
+      debugPrint('加载优惠券失�? $e');
       setState(() => isLoading = false);
     }
   }
@@ -85,7 +85,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('我的优惠券'),
+        title: const Text('我的优惠�?),
         backgroundColor: Colors.white,
         elevation: 0,
         bottom: TabBar(
@@ -95,8 +95,8 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
           indicatorColor: AppTheme.primary500,
           tabs: [
             Tab(text: '可用 (${availableCoupons.length})'),
-            Tab(text: '已使用 (${usedCoupons.length})'),
-            Tab(text: '已过期 (${expiredCoupons.length})'),
+            Tab(text: '已使�?(${usedCoupons.length})'),
+            Tab(text: '已过�?(${expiredCoupons.length})'),
           ],
         ),
       ),
@@ -118,11 +118,11 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
       return BBXEmptyState(
         icon: Icons.confirmation_number_outlined,
         title: type == 'available'
-            ? '暂无可用优惠券'
+            ? '暂无可用优惠�?
             : type == 'used'
                 ? '暂无已使用优惠券'
-                : '暂无过期优惠券',
-        description: type == 'available' ? '完成任务获取更多优惠券' : null,
+                : '暂无过期优惠�?,
+        description: type == 'available' ? '完成任务获取更多优惠�? : null,
       );
     }
 
@@ -141,7 +141,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
     final discountType = coupon['discountType'] as String; // 'fixed' or 'percentage'
     final minAmount = (coupon['minAmount'] as num?)?.toDouble() ?? 0;
     final expiryDate = (coupon['expiryDate'] as Timestamp).toDate();
-    final title = coupon['title'] as String? ?? '优惠券';
+    final title = coupon['title'] as String? ?? '优惠�?;
     final description = coupon['description'] as String? ?? '';
 
     final isAvailable = type == 'available';
@@ -168,7 +168,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
               ),
               child: Row(
                 children: [
-                  // 左侧：折扣金额
+                  // 左侧：折扣金�?
                   Container(
                     width: 120,
                     padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -227,7 +227,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
                             ),
                           const SizedBox(height: 8),
                           Text(
-                            '满 RM ${minAmount.toStringAsFixed(0)} 可用',
+                            '�?RM ${minAmount.toStringAsFixed(0)} 可用',
                             style: AppTheme.caption.copyWith(
                               color: AppTheme.neutral600,
                             ),
@@ -262,7 +262,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
               ),
             ),
 
-            // 使用状态标签
+            // 使用状态标�?
             if (!isAvailable)
               Positioned(
                 top: 8,
@@ -277,7 +277,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
-                    isExpired ? '已过期' : '已使用',
+                    isExpired ? '已过�? : '已使�?,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
@@ -321,7 +321,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('使用优惠券'),
+        title: const Text('使用优惠�?),
         content: const Text('确定要使用这张优惠券吗？'),
         actions: [
           TextButton(
@@ -347,7 +347,7 @@ class _BBXCouponsScreenState extends State<BBXCouponsScreen>
   }
 }
 
-/// 虚线绘制器
+/// 虚线绘制�?
 class _DashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {

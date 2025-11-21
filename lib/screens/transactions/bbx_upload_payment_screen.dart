@@ -55,7 +55,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                         Icon(Icons.info_outline, color: Colors.blue[700]),
                         const SizedBox(width: 8),
                         const Text(
-                          '请上传支付凭证',
+                          '请上传支付凭�?,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -65,7 +65,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '• 支持的格式：JPG, PNG\n• 文件大小不超过5MB\n• 请确保凭证清晰可见',
+                      '�?支持的格式：JPG, PNG\n�?文件大小不超�?MB\n�?请确保凭证清晰可�?,
                       style: TextStyle(
                         color: Colors.grey[700],
                         fontSize: 13,
@@ -90,7 +90,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
 
             RadioListTile<String>(
               title: const Text('现金支付'),
-              subtitle: const Text('面对面现金交易'),
+              subtitle: const Text('面对面现金交�?),
               value: 'cash',
               groupValue: _selectedPaymentMethod,
               onChanged: (value) {
@@ -141,7 +141,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
-                        '现金支付请在取货时当面交易',
+                        '现金支付请在取货时当面交�?,
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -164,8 +164,8 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
                     Expanded(
                       child: Text(
                         _selectedPaymentMethod == 'bank_transfer'
-                            ? '请上传银行转账截图作为凭证'
-                            : '请上传电子钱包支付截图作为凭证',
+                            ? '请上传银行转账截图作为凭�?
+                            : '请上传电子钱包支付截图作为凭�?,
                         style: const TextStyle(fontSize: 13),
                       ),
                     ),
@@ -263,7 +263,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
 
             const SizedBox(height: 24),
 
-            // 备注输入框
+            // 备注输入�?
             const Text(
               '备注（可选）',
               style: TextStyle(
@@ -340,7 +340,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
       if (pickedFile != null) {
         final File imageFile = File(pickedFile.path);
 
-        // 验证文件大小（5MB）
+        // 验证文件大小�?MB�?
         final fileSize = await imageFile.length();
         if (fileSize > 5 * 1024 * 1024) {
           if (mounted) {
@@ -369,7 +369,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
     // 验证
     if (_selectedImage == null && _selectedPaymentMethod != 'cash') {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请上传支付凭证图片')),
+        const SnackBar(content: Text('请上传支付凭证图�?)),
       );
       return;
     }
@@ -389,7 +389,7 @@ class _BBXUploadPaymentScreenState extends State<BBXUploadPaymentScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('支付凭证已提交')),
+          const SnackBar(content: Text('支付凭证已提�?)),
         );
         Navigator.pop(context, true);
       }

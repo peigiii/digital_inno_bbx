@@ -90,7 +90,7 @@ class _AppInputState extends State<AppInput> {
   Widget build(BuildContext context) {
     Widget? suffix = widget.suffixIcon;
 
-    // 如果没有自定义 suffix 且文本不为空，显示清除按钮
+    // 如果没有自定�?suffix 且文本不为空，显示清除按�?
     if (suffix == null && _showClearButton && widget.enabled && !widget.readOnly) {
       suffix = IconButton(
         icon: const Icon(Icons.clear, size: 20),
@@ -165,7 +165,7 @@ class _AppInputState extends State<AppInput> {
   }
 }
 
-/// 密码输入框（带显示/隐藏切换）
+/// 密码输入框（带显�?隐藏切换�?
 class PasswordInput extends StatefulWidget {
   final TextEditingController? controller;
   final String? label;
@@ -206,7 +206,7 @@ class _PasswordInputState extends State<PasswordInput> {
     return AppInput(
       controller: widget.controller,
       label: widget.label ?? '密码',
-      hint: widget.hint ?? '请输入密码',
+      hint: widget.hint ?? '请输入密�?,
       errorText: widget.errorText,
       prefixIcon: Icons.lock_outline,
       suffixIcon: IconButton(
@@ -226,7 +226,7 @@ class _PasswordInputState extends State<PasswordInput> {
   }
 }
 
-/// 搜索输入框
+/// 搜索输入�?
 class SearchInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? hint;
@@ -257,7 +257,7 @@ class SearchInput extends StatelessWidget {
   }
 }
 
-/// 多行文本输入框
+/// 多行文本输入�?
 class TextAreaInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? label;
@@ -302,7 +302,7 @@ class TextAreaInput extends StatelessWidget {
   }
 }
 
-/// 数字输入框
+/// 数字输入�?
 class NumberInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? label;
@@ -374,7 +374,7 @@ class NumberInput extends StatelessWidget {
   }
 }
 
-/// 下拉选择输入框
+/// 下拉选择输入�?
 class DropdownInput<T> extends StatelessWidget {
   final T? value;
   final String? label;

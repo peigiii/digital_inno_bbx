@@ -105,7 +105,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
                           _buildStars(averageRating),
                           const SizedBox(height: 8),
                           Text(
-                            '$totalReviews 条评价',
+                            '$totalReviews 条评�?,
                             style: TextStyle(color: Colors.grey[600]),
                           ),
                         ],
@@ -191,11 +191,11 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
           children: [
             _buildFilterChip('all', '全部'),
             const SizedBox(width: 8),
-            _buildFilterChip('5', '好评 (5星)'),
+            _buildFilterChip('5', '好评 (5�?'),
             const SizedBox(width: 8),
-            _buildFilterChip('3-4', '中评 (3-4星)'),
+            _buildFilterChip('3-4', '中评 (3-4�?'),
             const SizedBox(width: 8),
-            _buildFilterChip('1-2', '差评 (1-2星)'),
+            _buildFilterChip('1-2', '差评 (1-2�?'),
             const SizedBox(width: 8),
             _buildFilterChip('images', '有图'),
           ],
@@ -236,7 +236,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
 
         var reviews = snapshot.data!.docs;
 
-        // 应用筛选
+        // 应用筛�?
         reviews = reviews.where((doc) {
           final data = doc.data() as Map<String, dynamic>;
           final rating = (data['overallRating'] ?? 0.0).toDouble();
@@ -339,7 +339,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
             ),
             const SizedBox(height: 12),
 
-            // 多维度评分
+            // 多维度评�?
             if (data['descriptionScore'] != null ||
                 data['serviceScore'] != null ||
                 data['deliveryScore'] != null) ...[

@@ -60,7 +60,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
 
           final transaction = snapshot.data;
           if (transaction == null) {
-            return const Center(child: Text('交易不存在'));
+            return const Center(child: Text('交易不存�?));
           }
 
           final bool isBuyer = transaction.buyerId == _currentUserId;
@@ -107,9 +107,9 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                         const SizedBox(height: 16),
                       ],
 
-                      // 9. 物流时间线
+                      // 9. 物流时间�?
                       _buildLogisticsTimeline(transaction),
-                      const SizedBox(height: 80), // 底部按钮区域的空间
+                      const SizedBox(height: 80), // 底部按钮区域的空�?
                     ],
                   ),
                 ),
@@ -219,9 +219,9 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
             const Divider(),
             _buildInfoRow('交易编号', transaction.id, copyable: true),
             _buildInfoRow('创建时间', _formatDateTime(transaction.createdAt)),
-            _buildInfoRow('当前状态', transaction.shippingStatusDisplay),
+            _buildInfoRow('当前状�?, transaction.shippingStatusDisplay),
             _buildInfoRow('支付方式', transaction.paymentMethodDisplay),
-            _buildInfoRow('支付状态', transaction.paymentStatusDisplay),
+            _buildInfoRow('支付状�?, transaction.paymentStatusDisplay),
           ],
         ),
       ),
@@ -347,7 +347,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('平台费 (3%)'),
+                const Text('平台�?(3%)'),
                 Text('RM ${transaction.platformFee.toStringAsFixed(2)}'),
               ],
             ),
@@ -356,7 +356,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  '总金额',
+                  '总金�?,
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -519,7 +519,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               ),
             ],
 
-            // 邮寄信息 - 未发货
+            // 邮寄信息 - 未发�?
             if (isDelivery && shippingInfo == null) ...[
               DeliveryConfig.buildShippingFeeNote(),
               const SizedBox(height: 12),
@@ -545,7 +545,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               ),
             ],
 
-            // 邮寄信息 - 已发货
+            // 邮寄信息 - 已发�?
             if (isDelivery && shippingInfo != null) ...[
               // 快递公司和单号
               Container(
@@ -558,13 +558,13 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 快递公司
+                    // 快递公�?
                     Row(
                       children: [
                         const Icon(Icons.local_shipping, size: 16, color: Colors.blue),
                         const SizedBox(width: 8),
                         Text(
-                          shippingInfo['courierName'] ?? '未知快递',
+                          shippingInfo['courierName'] ?? '未知快�?,
                           style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
@@ -574,7 +574,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     ),
                     const SizedBox(height: 12),
 
-                    // 快递单号
+                    // 快递单�?
                     Row(
                       children: [
                         Expanded(
@@ -582,7 +582,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '快递单号',
+                                '快递单�?,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey[600],
@@ -608,7 +608,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                               ClipboardData(text: shippingInfo['trackingNumber'] ?? ''),
                             );
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('已复制快递单号')),
+                              const SnackBar(content: Text('已复制快递单�?)),
                             );
                           },
                           tooltip: '复制单号',
@@ -673,7 +673,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     const SizedBox(width: 8),
                     const Expanded(
                       child: Text(
-                        '💡 请自行到快递官网查询物流',
+                        '💡 请自行到快递官网查询物�?,
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -691,7 +691,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               if (transaction.deliveryDate != null)
                 _buildInfoRow('送达日期', _formatDateTime(transaction.deliveryDate)),
               if (transaction.trackingNumber != null)
-                _buildInfoRow('物流追踪号', transaction.trackingNumber!),
+                _buildInfoRow('物流追踪�?, transaction.trackingNumber!),
             ],
           ],
         ),
@@ -736,7 +736,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
     );
   }
 
-  /// 9. 物流时间线
+  /// 9. 物流时间�?
   Widget _buildLogisticsTimeline(TransactionModel transaction) {
     return Card(
       child: Padding(
@@ -745,7 +745,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '物流时间线',
+              '物流时间�?,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -853,7 +853,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
   Widget _buildActionButtons(TransactionModel transaction, bool isBuyer) {
     List<Widget> buttons = [];
 
-    // confirmed状态
+    // confirmed状�?
     if (transaction.canPayment() && isBuyer) {
       buttons.add(
         Expanded(
@@ -892,7 +892,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
       );
     }
 
-    // paid状态
+    // paid状�?
     if (transaction.canPickup() && !isBuyer) {
       buttons.add(
         Expanded(
@@ -903,13 +903,13 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 12),
             ),
-            child: const Text('标记已取货'),
+            child: const Text('标记已取�?),
           ),
         ),
       );
     }
 
-    // picked_up/in_transit状态
+    // picked_up/in_transit状�?
     if ((transaction.shippingStatus == 'picked_up' || transaction.shippingStatus == 'in_transit') && !isBuyer) {
       buttons.add(
         Expanded(
@@ -952,7 +952,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
       );
     }
 
-    // delivered状态
+    // delivered状�?
     if (transaction.canComplete()) {
       buttons.add(
         Expanded(
@@ -1023,7 +1023,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: value));
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('已复制到剪贴板')),
+                        const SnackBar(content: Text('已复制到剪贴�?)),
                       );
                     },
                     padding: EdgeInsets.zero,
@@ -1075,7 +1075,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
       await _transactionService.markAsPickedUp(transaction.id, null);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('已标记为已取货')),
+          const SnackBar(content: Text('已标记为已取�?)),
         );
       }
     } catch (e) {
@@ -1115,7 +1115,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
         await _transactionService.confirmDelivery(transaction.id);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('已确认收货')),
+            const SnackBar(content: Text('已确认收�?)),
           );
         }
       } catch (e) {
@@ -1133,7 +1133,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
       await _transactionService.completeTransaction(transaction.id);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('交易已完成')),
+          const SnackBar(content: Text('交易已完�?)),
         );
       }
     } catch (e) {
@@ -1161,7 +1161,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
               controller: reasonController,
               maxLines: 3,
               decoration: const InputDecoration(
-                hintText: '请输入取消原因',
+                hintText: '请输入取消原�?,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -1189,7 +1189,7 @@ class _BBXTransactionDetailScreenState extends State<BBXTransactionDetailScreen>
         await _transactionService.cancelTransaction(transaction.id, reasonController.text);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('交易已取消')),
+            const SnackBar(content: Text('交易已取�?)),
           );
         }
       } catch (e) {

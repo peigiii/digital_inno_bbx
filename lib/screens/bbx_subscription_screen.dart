@@ -21,10 +21,10 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
   }
 
   Future<void> _loadSubscriptionData() async {
-    print('🔍 [订阅页面] 开始加载订阅数据');
+    print('🔍 [订阅页面] 开始加载订阅数�?);
 
     if (currentUser == null) {
-      print('❌ [订阅页面] 用户未登录');
+      print('�?[订阅页面] 用户未登�?);
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -33,11 +33,11 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
       return;
     }
 
-    print('✅ [订阅页面] 用户已登录: ${currentUser!.email}');
+    print('�?[订阅页面] 用户已登�? ${currentUser!.email}');
     print('🔄 [订阅页面] 查询 Firestore 用户文档...');
 
     try {
-      // 添加 10 秒超时
+      // 添加 10 秒超�?
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser!.uid)
@@ -45,12 +45,12 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              print('⏱️ [订阅页面] Firestore 查询超时（10秒）');
-              throw Exception('查询超时，请检查网络连接');
+              print('⏱️ [订阅页面] Firestore 查询超时�?0秒）');
+              throw Exception('查询超时，请检查网络连�?);
             },
           );
 
-      print('📄 [订阅页面] 文档查询完成，存在: ${userDoc.exists}');
+      print('📄 [订阅页面] 文档查询完成，存�? ${userDoc.exists}');
 
       if (!mounted) {
         print('⚠️ [订阅页面] Widget 已销毁，停止更新');
@@ -59,7 +59,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
 
       if (userDoc.exists) {
         final plan = userDoc.data()?['subscriptionPlan'] ?? 'free';
-        print('✅ [订阅页面] 当前计划: $plan');
+        print('�?[订阅页面] 当前计划: $plan');
         setState(() {
           currentPlan = plan;
           isLoading = false;
@@ -72,7 +72,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
         });
       }
     } catch (e) {
-      print('❌ [订阅页面] 加载失败: $e');
+      print('�?[订阅页面] 加载失败: $e');
       if (mounted) {
         setState(() {
           isLoading = false;
@@ -93,7 +93,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
     print('🎯 [订阅页面] 用户选择计划: $planName (RM $price)');
 
     if (currentUser == null) {
-      print('❌ [订阅页面] 用户未登录');
+      print('�?[订阅页面] 用户未登�?);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -111,7 +111,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('确认选择免费计划'),
-          content: const Text('您将使用免费计划，可随时升级到付费计划。'),
+          content: const Text('您将使用免费计划，可随时升级到付费计划�?),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -130,7 +130,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
       );
 
       if (confirm != true) {
-        print('❌ [订阅页面] 用户取消选择');
+        print('�?[订阅页面] 用户取消选择');
         return;
       }
 
@@ -144,7 +144,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
           'subscriptionStatus': 'active',
         }).timeout(const Duration(seconds: 10));
 
-        print('✅ [订阅页面] 免费计划已激活');
+        print('�?[订阅页面] 免费计划已激�?);
 
         if (mounted) {
           setState(() {
@@ -159,7 +159,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
           );
         }
       } catch (e) {
-        print('❌ [订阅页面] 更新失败: $e');
+        print('�?[订阅页面] 更新失败: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -173,7 +173,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
     }
 
     // 付费计划：导航到支付页面
-    print('💳 [订阅页面] 导航到支付页面...');
+    print('💳 [订阅页面] 导航到支付页�?..');
 
     if (mounted) {
       Navigator.pushNamed(
@@ -182,7 +182,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
         arguments: {
           'planName': planName,
           'planPrice': price,
-          'planPeriod': '1年',
+          'planPeriod': '1�?,
         },
       );
     }
@@ -235,11 +235,11 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             _buildPlanCard(
               'Free',
               'RM 0',
-              '/月',
+              '/�?,
               [
-                '3天试用（个人）',
-                '7天试用（公司）',
-                '最多 5 个列表',
+                '3天试用（个人�?,
+                '7天试用（公司�?,
+                '最�?5 个列�?,
                 '基础功能',
                 '社区支持',
               ],
@@ -252,7 +252,7 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             _buildPlanCard(
               'Basic',
               'RM 99',
-              '/年',
+              '/�?,
               [
                 '无限列表',
                 '优先匹配',
@@ -269,9 +269,9 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             _buildPlanCard(
               'Professional',
               'RM 199',
-              '/年',
+              '/�?,
               [
-                'Basic 所有功能',
+                'Basic 所有功�?,
                 'ESG 合规报告',
                 '高级数据分析',
                 '物流优化',
@@ -287,14 +287,14 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
             _buildPlanCard(
               'Enterprise',
               'RM 499',
-              '/年',
+              '/�?,
               [
-                'Professional 所有功能',
-                '多用户账号',
-                '定制化报告',
+                'Professional 所有功�?,
+                '多用户账�?,
+                '定制化报�?,
                 '白标解决方案',
                 '专属客户经理',
-                '优先技术支持',
+                '优先技术支�?,
                 'SLA 保证',
               ],
               currentPlan == 'enterprise',
@@ -327,10 +327,10 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '• 选择计划后，请联系管理员完成支付\n'
-                    '• 支持银行转账、支付宝等方式\n'
-                    '• 付款后 24 小时内激活\n'
-                    '• 可随时升级或降级计划',
+                    '�?选择计划后，请联系管理员完成支付\n'
+                    '�?支持银行转账、支付宝等方式\n'
+                    '�?付款�?24 小时内激活\n'
+                    '�?可随时升级或降级计划',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                 ],
@@ -347,11 +347,11 @@ class _BBXSubscriptionScreenState extends State<BBXSubscriptionScreen> {
       case 'free':
         return 'Free';
       case 'basic':
-        return 'Basic (RM 99/年)';
+        return 'Basic (RM 99/�?';
       case 'professional':
-        return 'Professional (RM 199/年)';
+        return 'Professional (RM 199/�?';
       case 'enterprise':
-        return 'Enterprise (RM 499/年)';
+        return 'Enterprise (RM 499/�?';
       default:
         return 'Free';
     }

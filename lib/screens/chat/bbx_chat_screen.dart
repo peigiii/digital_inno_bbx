@@ -46,7 +46,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
     super.dispose();
   }
 
-  /// 发送消息
+  /// 发送消�?
   Future<void> _sendMessage() async {
     final content = _messageController.text.trim();
     if (content.isEmpty || _isSending) return;
@@ -64,7 +64,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
 
       _messageController.clear();
 
-      // 滚动到底部
+      // 滚动到底�?
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0,
@@ -126,7 +126,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
             child: _buildMessageList(),
           ),
 
-          // 输入栏
+          // 输入�?
           _buildInputBar(),
         ],
       ),
@@ -143,7 +143,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('加载失败：${snapshot.error}'));
+          return Center(child: Text('加载失败�?{snapshot.error}'));
         }
 
         final messages = snapshot.data ?? [];
@@ -249,7 +249,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
     );
   }
 
-  /// 输入栏
+  /// 输入�?
   Widget _buildInputBar() {
     return Container(
       decoration: BoxDecoration(
@@ -280,7 +280,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
           ),
           const SizedBox(width: 8),
 
-          // 文本输入框
+          // 文本输入�?
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -298,14 +298,14 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                 ),
                 onSubmitted: (_) => _sendMessage(),
                 onChanged: (value) {
-                  // TODO: 更新输入状态
+                  // TODO: 更新输入状�?
                 },
               ),
             ),
           ),
           const SizedBox(width: 8),
 
-          // 发送按钮
+          // 发送按�?
           IconButton(
             icon: Icon(
               Icons.send,
@@ -318,7 +318,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
     );
   }
 
-  /// 格式化时间
+  /// 格式化时�?
   String _formatTime(DateTime? dateTime) {
     if (dateTime == null) return '';
     return DateFormat('HH:mm').format(dateTime);

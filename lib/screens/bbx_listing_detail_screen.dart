@@ -182,7 +182,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     return Scaffold(
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .doc(widget.listingId)
             .snapshots(),
         builder: (context, snapshot) {
@@ -441,8 +441,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          // 配送方式说明
-          Container(
+          // 配送方式说�?          Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.blue[50],
@@ -457,7 +456,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     const Icon(Icons.local_shipping, size: 16, color: Colors.blue),
                     const SizedBox(width: 8),
                     Text(
-                      '🚚 配送方式',
+                      '🚚 配送方�?,
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -484,7 +483,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     const SizedBox(width: 6),
                     const Expanded(
                       child: Text(
-                        '支持邮寄(邮费与卖家协商)',
+                        '支持邮寄(邮费与卖家协�?',
                         style: TextStyle(fontSize: 13),
                       ),
                     ),
@@ -836,7 +835,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             height: 240,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('waste_listings')
+                  .collection('listings')
                   .where('wasteType', isEqualTo: data['wasteType'])
                   .where('status', isEqualTo: 'available')
                   .limit(5)
@@ -913,7 +912,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       child: SafeArea(
         child: StreamBuilder<DocumentSnapshot>(
           stream: FirebaseFirestore.instance
-              .collection('waste_listings')
+              .collection('listings')
               .doc(widget.listingId)
               .snapshots(),
           builder: (context, snapshot) {
@@ -979,11 +978,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   String _getLocationDisplay(dynamic location) {
     if (location == null) return 'Location not specified';
 
-    // 如果是字符串，直接返回
-    if (location is String) return location;
+    // 如果是字符串，直接返�?    if (location is String) return location;
 
-    // 如果是Map（包含latitude和longitude）
-    if (location is Map<String, dynamic>) {
+    // 如果是Map（包含latitude和longitude�?    if (location is Map<String, dynamic>) {
       final lat = location['latitude'];
       final lng = location['longitude'];
       if (lat != null && lng != null) {

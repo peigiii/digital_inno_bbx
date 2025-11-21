@@ -6,7 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
 /// 争议解决中心
-/// 处理交易纠纷和争议
+/// 处理交易纠纷和争�?
 class BBXDisputeCenterScreen extends StatefulWidget {
   const BBXDisputeCenterScreen({super.key});
 
@@ -43,9 +43,9 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
           isScrollable: true,
           tabs: const [
             Tab(text: '全部'),
-            Tab(text: '处理中'),
-            Tab(text: '已解决'),
-            Tab(text: '已关闭'),
+            Tab(text: '处理�?),
+            Tab(text: '已解�?),
+            Tab(text: '已关�?),
           ],
         ),
       ),
@@ -131,19 +131,19 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
     switch (status) {
       case 'open':
         statusColor = Colors.orange;
-        statusLabel = '待处理';
+        statusLabel = '待处�?;
         break;
       case 'investigating':
         statusColor = Colors.blue;
-        statusLabel = '调查中';
+        statusLabel = '调查�?;
         break;
       case 'resolved':
         statusColor = Colors.green;
-        statusLabel = '已解决';
+        statusLabel = '已解�?;
         break;
       case 'closed':
         statusColor = Colors.grey;
-        statusLabel = '已关闭';
+        statusLabel = '已关�?;
         break;
       default:
         statusColor = Colors.grey;
@@ -253,7 +253,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
                             size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Text(
-                          '${(data['evidence'] as List).length} 个证据',
+                          '${(data['evidence'] as List).length} 个证�?,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -332,7 +332,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
 
       setState(() => _isLoading = true);
 
-      // 上传到 Firebase Storage
+      // 上传�?Firebase Storage
       final userId = _auth.currentUser!.uid;
       final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = FirebaseStorage.instance
@@ -366,7 +366,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
 
     if (_descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请填写问题描述')),
+        const SnackBar(content: Text('请填写问题描�?)),
       );
       return;
     }
@@ -388,7 +388,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
         'resolvedAt': null,
       });
 
-      // 更新交易状态
+      // 更新交易状�?
       await _firestore
           .collection('transactions')
           .doc(_selectedTransactionId)
@@ -401,7 +401,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('争议已提交')),
+          const SnackBar(content: Text('争议已提�?)),
         );
       }
     } catch (e) {
@@ -664,7 +664,7 @@ class DisputeDetailSheet extends StatelessWidget {
 
               // 争议信息
               _buildInfoSection('争议类型', _getTypeLabel(disputeData['type'])),
-              _buildInfoSection('状态', _getStatusLabel(disputeData['status'])),
+              _buildInfoSection('状�?, _getStatusLabel(disputeData['status'])),
               _buildInfoSection('描述', disputeData['description'] ?? '-'),
 
               // 证据
@@ -763,13 +763,13 @@ class DisputeDetailSheet extends StatelessWidget {
   String _getStatusLabel(String? status) {
     switch (status) {
       case 'open':
-        return '待处理';
+        return '待处�?;
       case 'investigating':
-        return '调查中';
+        return '调查�?;
       case 'resolved':
-        return '已解决';
+        return '已解�?;
       case 'closed':
-        return '已关闭';
+        return '已关�?;
       default:
         return '未知';
     }

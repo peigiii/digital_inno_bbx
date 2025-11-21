@@ -42,7 +42,7 @@ class _BBXAdminScreenState extends State<BBXAdminScreen> {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('无权限访问管理面板'),
+              content: Text('无权限访问管理面�?),
               backgroundColor: Colors.red,
             ),
           );

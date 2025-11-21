@@ -102,7 +102,7 @@ class TitledCard extends StatelessWidget {
   }
 }
 
-/// 信息卡片（用于提示、警告等）
+/// 信息卡片（用于提示、警告等�?
 class InfoCard extends StatelessWidget {
   final String message;
   final InfoCardType type;
@@ -335,7 +335,7 @@ class ListItemCard extends StatelessWidget {
   }
 }
 
-/// 空状态卡片
+/// 空状态卡�?
 class EmptyStateCard extends StatelessWidget {
   final IconData icon;
   final String title;

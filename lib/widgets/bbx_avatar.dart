@@ -162,7 +162,7 @@ class BBXAvatarWithBadge extends StatelessWidget {
   }
 }
 
-/// BBX 在线状态头像组件
+/// BBX 在线状态头像组�?
 class BBXAvatarOnline extends StatelessWidget {
   final String? imageUrl;
   final String? name;

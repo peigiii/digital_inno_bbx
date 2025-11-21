@@ -8,7 +8,7 @@ import 'screens/bbx_new_marketplace_screen.dart';
 import 'screens/bbx_listing_detail_screen.dart';
 import 'screens/bbx_new_profile_screen.dart';
 import 'screens/bbx_splash_screen.dart';
-import 'screens/bbx_main_screen.dart'; // ← 新增：主页面（带新底部导航）
+import 'screens/bbx_main_screen.dart'; // �?新增：主页面（带新底部导航）
 import 'screens/bbx_modern_home_screen.dart';
 import 'screens/bbx_market_browse_screen.dart';
 import 'screens/bbx_profile_cards_screen.dart';
@@ -18,6 +18,7 @@ import 'screens/bbx_rewards_screen.dart';
 import 'screens/bbx_payment_screen.dart';
 import 'screens/bbx_payment_confirmation_screen.dart';
 import 'screens/bbx_invoice_screen.dart';
+import 'screens/transactions/bbx_optimized_transaction_detail_screen.dart';
 import 'screens/offers/bbx_my_offers_screen.dart';
 import 'screens/chat/bbx_conversations_screen.dart';
 import 'screens/search/bbx_advanced_search_screen.dart';
@@ -64,7 +65,7 @@ void main() async {
     if (currentUser != null) {
       await UserInitializer.ensureUserDocumentExists();
       await UserInitializer.fixUserDocument(currentUser.uid);
-      debugPrint('✅ 用户文档初始化完成');
+      debugPrint('�?用户文档初始化完�?);
     }
   } catch (e) {
     debugPrint('User initialization error: $e');
@@ -104,7 +105,7 @@ class BBXApp extends StatelessWidget {
       home: const BBXSplashScreen(),
       routes: {
         '/login': (context) => const BBXLoginScreen(),
-        '/home': (context) => const BBXMainScreen(), // ← 修改：使用新的主页面
+        '/home': (context) => const BBXMainScreen(), // �?修改：使用新的主页面
         '/waste-list': (context) => const BBXListWasteScreen(),
         '/marketplace': (context) => const BBXNewMarketplaceScreen(),
         '/profile': (context) => const BBXProfileScreen(),
@@ -161,7 +162,7 @@ class BBXApp extends StatelessWidget {
         if (settings.name == '/transaction-detail') {
           final args = settings.arguments as Map<String, dynamic>;
           return MaterialPageRoute(
-            builder: (context) => BBXTransactionDetailScreen(
+            builder: (context) => BBXOptimizedTransactionDetailScreen(
               transactionId: args['transactionId'] as String,
             ),
           );

@@ -7,7 +7,7 @@ class RewardService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// 获取当前用户的奖励信息
+  /// 获取当前用户的奖励信�?
   Future<RewardModel?> getRewards() async {
     try {
       final userId = _auth.currentUser?.uid;
@@ -27,7 +27,7 @@ class RewardService {
     }
   }
 
-  /// 初始化奖励记录
+  /// 初始化奖励记�?
   Future<RewardModel> _initializeRewards(String userId) async {
     final now = DateTime.now();
     final reward = RewardModel(
@@ -64,7 +64,7 @@ class RewardService {
   Future<bool> completeTask(String taskId) async {
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登录');
+      if (userId == null) throw Exception('用户未登�?);
 
       final doc = await _firestore.collection('rewards').doc(userId).get();
       if (!doc.exists) {
@@ -77,12 +77,12 @@ class RewardService {
       // 查找任务
       final taskIndex =
           reward.dailyTasks.indexWhere((task) => task.id == taskId);
-      if (taskIndex == -1) throw Exception('任务不存在');
+      if (taskIndex == -1) throw Exception('任务不存�?);
 
       final task = reward.dailyTasks[taskIndex];
-      if (task.isCompleted) throw Exception('任务已完成');
+      if (task.isCompleted) throw Exception('任务已完�?);
 
-      // 更新任务状态
+      // 更新任务状�?
       final updatedTasks = List<DailyTask>.from(reward.dailyTasks);
       updatedTasks[taskIndex] = task.copyWith(
         isCompleted: true,
@@ -92,7 +92,7 @@ class RewardService {
       // 添加积分
       final updatedReward = reward.addPoints(task.points, task.title);
 
-      // 更新数据库
+      // 更新数据�?
       await _firestore.collection('rewards').doc(userId).update({
         'points': updatedReward.points,
         'tier': updatedReward.tier.toString().split('.').last,
@@ -113,14 +113,14 @@ class RewardService {
   Future<bool> redeemReward(String rewardId, int pointsCost) async {
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登录');
+      if (userId == null) throw Exception('用户未登�?);
 
       final doc = await _firestore.collection('rewards').doc(userId).get();
-      if (!doc.exists) throw Exception('奖励记录不存在');
+      if (!doc.exists) throw Exception('奖励记录不存�?);
 
       final reward = RewardModel.fromFirestore(doc);
 
-      // 检查积分是否足够
+      // 检查积分是否足�?
       if (reward.points < pointsCost) {
         throw Exception('积分不足');
       }
@@ -128,7 +128,7 @@ class RewardService {
       // 扣除积分
       final updatedReward = reward.redeemPoints(pointsCost, rewardId);
 
-      // 更新数据库
+      // 更新数据�?
       await _firestore.collection('rewards').doc(userId).update({
         'points': updatedReward.points,
         'transactions':
@@ -143,11 +143,11 @@ class RewardService {
     }
   }
 
-  /// 添加积分（通用方法）
+  /// 添加积分（通用方法�?
   Future<bool> addPoints(int points, String reason) async {
     try {
       final userId = _auth.currentUser?.uid;
-      if (userId == null) throw Exception('用户未登录');
+      if (userId == null) throw Exception('用户未登�?);
 
       final doc = await _firestore.collection('rewards').doc(userId).get();
       if (!doc.exists) {
@@ -192,22 +192,22 @@ class RewardService {
       ),
       DailyTask(
         id: 'send_message',
-        title: '发送消息',
-        description: '与其他用户交流',
+        title: '发送消�?,
+        description: '与其他用户交�?,
         points: 3,
         icon: 'message',
       ),
       DailyTask(
         id: 'rate_transaction',
         title: '评价交易',
-        description: '对已完成的交易进行评价',
+        description: '对已完成的交易进行评�?,
         points: 15,
         icon: 'star',
       ),
       DailyTask(
         id: 'publish_listing',
         title: '发布商品',
-        description: '发布一个新的商品',
+        description: '发布一个新的商�?,
         points: 20,
         icon: 'add',
       ),

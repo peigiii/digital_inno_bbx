@@ -91,11 +91,11 @@ class _BBXListingImmersiveDetailScreenState
       backgroundColor: Colors.white,
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .doc(widget.listingId)
             .snapshots(),
         builder: (context, snapshot) {
-          // 处理加载状态
+          // 处理加载状�?
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -119,9 +119,9 @@ class _BBXListingImmersiveDetailScreenState
             );
           }
 
-          // 检查数据是否存在
+          // 检查数据是否存�?
           if (!snapshot.hasData || snapshot.data == null) {
-            return const Center(child: Text('数据不存在'));
+            return const Center(child: Text('数据不存�?));
           }
 
           final data = snapshot.data!.data() as Map<String, dynamic>?;
@@ -752,7 +752,7 @@ class _BBXListingImmersiveDetailScreenState
             height: 180,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('waste_listings')
+                  .collection('listings')
                   .where('wasteType', isEqualTo: data['wasteType'])
                   .where('status', isEqualTo: 'available')
                   .limit(5)
@@ -937,10 +937,10 @@ class _BBXListingImmersiveDetailScreenState
   String _getLocationDisplay(dynamic location) {
     if (location == null) return 'Location not specified';
 
-    // 如果是字符串，直接返回
+    // 如果是字符串，直接返�?
     if (location is String) return location;
 
-    // 如果是Map（包含latitude和longitude）
+    // 如果是Map（包含latitude和longitude�?
     if (location is Map<String, dynamic>) {
       final lat = location['latitude'];
       final lng = location['longitude'];

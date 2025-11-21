@@ -52,7 +52,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
 
   Future<void> _refreshConversations() async {
     setState(() {
-      // 触发重建以刷新 StreamBuilder
+      // 触发重建以刷�?StreamBuilder
     });
   }
 
@@ -101,7 +101,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
               ),
               SizedBox(height: 16),
               Text(
-                '请先登录以查看消息',
+                '请先登录以查看消�?,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.grey,
@@ -220,7 +220,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          _searchQuery.isEmpty ? '还没有任何对话' : '',
+                          _searchQuery.isEmpty ? '还没有任何对�? : '',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[500],

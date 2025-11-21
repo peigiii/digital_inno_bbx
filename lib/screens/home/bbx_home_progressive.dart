@@ -15,11 +15,9 @@ class BBXHomeProgressive extends StatelessWidget {
             // 顶部安全区域
             SizedBox(height: MediaQuery.of(context).padding.top),
             
-            // 顶部栏
-            _buildTopBar(context),
+            // 顶部�?            _buildTopBar(context),
 
-            // 搜索栏
-            _buildSearchBar(context),
+            // 搜索�?            _buildSearchBar(context),
 
             // 分类标题
             _buildSectionTitle(context, '废料分类'),
@@ -80,7 +78,7 @@ class BBXHomeProgressive extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '早上好 👋',
+                  '早上�?👋',
                   style: TextStyle(
                     fontSize: 12,
                     color: Color(0xFF757575),
@@ -163,7 +161,7 @@ class BBXHomeProgressive extends StatelessWidget {
               const SizedBox(width: 12),
               const Expanded(
                 child: Text(
-                  '搜索废料类型、商品...',
+                  '搜索废料类型、商�?..',
                   style: TextStyle(
                     fontSize: 16,
                     color: Color(0xFF9E9E9E),
@@ -322,7 +320,7 @@ class BBXHomeProgressive extends StatelessWidget {
                 child: _buildActionCard(
                   context,
                   '我的报价',
-                  '待处理 5 个',
+                  '待处�?5 �?,
                   Icons.local_offer_outlined,
                   const Color(0xFFFF6B6B),
                 ),
@@ -332,7 +330,7 @@ class BBXHomeProgressive extends StatelessWidget {
                 child: _buildActionCard(
                   context,
                   '我的交易',
-                  '进行中 2 笔',
+                  '进行�?2 �?,
                   Icons.receipt_long_outlined,
                   const Color(0xFF4ECDC4),
                 ),
@@ -356,7 +354,7 @@ class BBXHomeProgressive extends StatelessWidget {
                 child: _buildActionCard(
                   context,
                   '我的收藏',
-                  '已收藏 12 个',
+                  '已收�?12 �?,
                   Icons.favorite_outline,
                   const Color(0xFFEC6EAD),
                 ),
@@ -377,8 +375,7 @@ class BBXHomeProgressive extends StatelessWidget {
   ) {
     return GestureDetector(
       onTap: () {
-        // 根据标题导航到不同页面
-        if (title == '我的报价') {
+        // 根据标题导航到不同页�?        if (title == '我的报价') {
           Navigator.pushNamed(context, '/my-offers');
         } else if (title == '我的交易') {
           Navigator.pushNamed(context, '/transactions'); // 修复：使用正确的路由名称
@@ -461,7 +458,7 @@ class BBXHomeProgressive extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '升级专业版',
+                      '升级专业�?,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -470,7 +467,7 @@ class BBXHomeProgressive extends StatelessWidget {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      '享受更多特权和功能',
+                      '享受更多特权和功�?,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 14,

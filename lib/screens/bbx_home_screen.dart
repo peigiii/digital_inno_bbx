@@ -79,7 +79,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
     if (_isAdmin) {
       return _allScreens;
     } else {
-      // 非管理员不包含 Admin 页面
+      // 非管理员不包�?Admin 页面
       return const [
         BBXUsersScreen(),
         BBXNewMarketplaceScreen(),
@@ -135,8 +135,8 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
     final shouldLogout = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认退出'),
-        content: const Text('您确定要退出登录吗？'),
+        title: const Text('确认退�?),
+        content: const Text('您确定要退出登录吗�?),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -148,7 +148,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
               backgroundColor: const Color(0xFFF44336),
               foregroundColor: Colors.white,
             ),
-            child: const Text('退出'),
+            child: const Text('退�?),
           ),
         ],
       ),
@@ -164,7 +164,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('退出失败: $e'),
+              content: Text('退出失�? $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -390,7 +390,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.science, color: Colors.orange),
-                  title: const Text('初始化测试数据'),
+                  title: const Text('初始化测试数�?),
                   subtitle: const Text('创建演示数据'),
                   onTap: () {
                     Navigator.pop(context);

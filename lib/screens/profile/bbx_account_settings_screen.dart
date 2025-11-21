@@ -174,7 +174,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '请输入姓名';
+                        return '请输入姓�?;
                       }
                       return null;
                     },
@@ -253,12 +253,12 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                   ListTile(
                     leading: const Icon(Icons.email_outlined),
                     title: const Text('邮箱'),
-                    subtitle: Text(email ?? '未设置'),
+                    subtitle: Text(email ?? '未设�?),
                     trailing: isVerified
                         ? const Icon(Icons.verified, color: AppTheme.success)
                         : TextButton(
                             onPressed: () {
-                              // TODO: 发送验证邮件
+                              // TODO: 发送验证邮�?
                             },
                             child: const Text('验证'),
                           ),
@@ -274,7 +274,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                   ListTile(
                     leading: const Icon(Icons.verified_user_outlined),
                     title: const Text('实名认证'),
-                    subtitle: Text(isVerified ? '已认证' : '未认证'),
+                    subtitle: Text(isVerified ? '已认�? : '未认�?),
                     trailing: Icon(
                       isVerified ? Icons.check_circle : Icons.chevron_right,
                       color: isVerified ? AppTheme.success : null,
@@ -282,7 +282,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
                     onTap: isVerified
                         ? null
                         : () {
-                            // TODO: 跳转到实名认证页面
+                            // TODO: 跳转到实名认证页�?
                           },
                   ),
                 ],
@@ -341,7 +341,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
               controller: newPasswordController,
               obscureText: true,
               decoration: const InputDecoration(
-                labelText: '新密码',
+                labelText: '新密�?,
                 prefixIcon: Icon(Icons.lock_outline),
               ),
             ),
@@ -350,7 +350,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
               controller: confirmPasswordController,
               obscureText: true,
               decoration: const InputDecoration(
-                labelText: '确认新密码',
+                labelText: '确认新密�?,
                 prefixIcon: Icon(Icons.lock_outline),
               ),
             ),
@@ -367,7 +367,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
               if (newPasswordController.text !=
                   confirmPasswordController.text) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('两次输入的密码不一致')),
+                  const SnackBar(content: Text('两次输入的密码不一�?)),
                 );
                 return;
               }
@@ -388,7 +388,7 @@ class _BBXAccountSettingsScreenState extends State<BBXAccountSettingsScreen> {
       builder: (context) => AlertDialog(
         title: const Text('删除账户'),
         content: const Text(
-          '删除账户后，所有数据将被永久删除且无法恢复。\n\n确定要删除账户吗？',
+          '删除账户后，所有数据将被永久删除且无法恢复。\n\n确定要删除账户吗�?,
         ),
         actions: [
           TextButton(

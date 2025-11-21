@@ -8,7 +8,7 @@ enum SubscriptionPlanType {
   enterprise,
 }
 
-/// 订阅状态
+/// 订阅状�?
 enum SubscriptionStatus {
   active,
   inactive,
@@ -25,7 +25,7 @@ class SubscriptionModel {
   final DateTime startDate;
   final DateTime? endDate;
   final double price;
-  final String period; // '1个月', '1年' 等
+  final String period; // '1个月', '1�? �?
   final List<String> features;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -44,7 +44,7 @@ class SubscriptionModel {
     required this.updatedAt,
   });
 
-  /// 从 Firestore 文档创建
+  /// �?Firestore 文档创建
   factory SubscriptionModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
 
@@ -64,7 +64,7 @@ class SubscriptionModel {
     );
   }
 
-  /// 从 Map 创建
+  /// �?Map 创建
   factory SubscriptionModel.fromMap(Map<String, dynamic> data) {
     return SubscriptionModel(
       id: data['id'] ?? '',
@@ -91,7 +91,7 @@ class SubscriptionModel {
     );
   }
 
-  /// 转换为 Map
+  /// 转换�?Map
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
@@ -107,7 +107,7 @@ class SubscriptionModel {
     };
   }
 
-  /// 是否激活
+  /// 是否激�?
   bool get isActive => status == SubscriptionStatus.active;
 
   /// 是否过期
@@ -137,17 +137,17 @@ class SubscriptionModel {
     }
   }
 
-  /// 获取状态显示名称
+  /// 获取状态显示名�?
   String get statusDisplayName {
     switch (status) {
       case SubscriptionStatus.active:
-        return '激活';
+        return '激�?;
       case SubscriptionStatus.inactive:
-        return '未激活';
+        return '未激�?;
       case SubscriptionStatus.expired:
-        return '已过期';
+        return '已过�?;
       case SubscriptionStatus.cancelled:
-        return '已取消';
+        return '已取�?;
     }
   }
 

@@ -26,7 +26,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     if (user == null) return;
 
     try {
-      print('🔧 [个人中心] 开始创建用户文档: ${user!.uid}');
+      print('🔧 [个人中心] 开始创建用户文�? ${user!.uid}');
 
       await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
         'uid': user!.uid,
@@ -40,12 +40,12 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
         'userType': 'producer',
       }, SetOptions(merge: true));
 
-      print('✅ [个人中心] 用户文档创建成功');
+      print('�?[个人中心] 用户文档创建成功');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('用户数据初始化成功'),
+            content: Text('用户数据初始化成�?),
             backgroundColor: Colors.green,
           ),
         );
@@ -54,11 +54,11 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
         });
       }
     } catch (e) {
-      print('❌ [个人中心] 创建用户文档失败: $e');
+      print('�?[个人中心] 创建用户文档失败: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('初始化失败: $e'),
+            content: Text('初始化失�? $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -133,15 +133,15 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
             .doc(user!.uid)
             .snapshots(),
         builder: (context, snapshot) {
-          // 处理加载状态
+          // 处理加载状�?
           if (snapshot.connectionState == ConnectionState.waiting) {
-            print('🔄 [个人中心] 加载中...');
+            print('🔄 [个人中心] 加载�?..');
             return const Center(child: CircularProgressIndicator());
           }
 
-          // 处理错误状态
+          // 处理错误状�?
           if (snapshot.hasError) {
-            print('❌ [个人中心] StreamBuilder 错误: ${snapshot.error}');
+            print('�?[个人中心] StreamBuilder 错误: ${snapshot.error}');
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -170,9 +170,9 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
             );
           }
 
-          // 处理无数据状态
+          // 处理无数据状�?
           if (!snapshot.hasData || snapshot.data == null) {
-            print('⚠️ [个人中心] 无数据: hasData=${snapshot.hasData}');
+            print('⚠️ [个人中心] 无数�? hasData=${snapshot.hasData}');
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -180,7 +180,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                   const Icon(Icons.person_off, size: 64, color: Colors.grey),
                   const SizedBox(height: 16),
                   const Text(
-                    '用户数据不存在',
+                    '用户数据不存�?,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 24),
@@ -189,16 +189,16 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                       // 尝试创建用户文档
                       await _createUserDocument();
                     },
-                    child: const Text('初始化用户数据'),
+                    child: const Text('初始化用户数�?),
                   ),
                 ],
               ),
             );
           }
 
-          // 检查文档是否存在
+          // 检查文档是否存�?
           if (!snapshot.data!.exists) {
-            print('⚠️ [个人中心] 用户文档不存在');
+            print('⚠️ [个人中心] 用户文档不存�?);
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -206,7 +206,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                   const Icon(Icons.person_off, size: 64, color: Colors.grey),
                   const SizedBox(height: 16),
                   const Text(
-                    '用户文档不存在',
+                    '用户文档不存�?,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
@@ -228,11 +228,11 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
 
           final userData = snapshot.data!.data() as Map<String, dynamic>?;
 
-          // 安全的日志输出
+          // 安全的日志输�?
           if (userData != null) {
-            print('✅ [个人中心] 数据加载成功: ${userData.keys.join(", ")}');
+            print('�?[个人中心] 数据加载成功: ${userData.keys.join(", ")}');
           } else {
-            print('⚠️ [个人中心] 用户数据为空，使用默认值');
+            print('⚠️ [个人中心] 用户数据为空，使用默认�?);
           }
 
           return CustomScrollView(
@@ -412,7 +412,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
               FutureBuilder<Map<String, dynamic>>(
                 future: _statisticsFuture,
                 builder: (context, snapshot) {
-                  // 显示加载状态
+                  // 显示加载状�?
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Row(
                       children: [
@@ -443,7 +443,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
                     );
                   }
 
-                  // 获取数据并确保所有值都有默认值
+                  // 获取数据并确保所有值都有默认�?
                   final stats = snapshot.data ?? {};
                   final listings = stats['listings'] ?? 0;
                   final transactions = stats['transactions'] ?? 0;
@@ -871,13 +871,13 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
     }
 
     try {
-      // 使用并行查询而不是 whereIn（避免索引问题）
+      // 使用并行查询而不�?whereIn（避免索引问题）
       final futures = await Future.wait([
         // 查询所有用户的列表（不过滤状态，客户端过滤）
         FirebaseFirestore.instance
-            .collection('waste_listings')
+            .collection('listings')
             .where('userId', isEqualTo: user!.uid)
-            .limit(100) // 限制最多100条，避免超时
+            .limit(100) // 限制最�?00条，避免超时
             .get()
             .timeout(
               const Duration(seconds: 5),
@@ -888,7 +888,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
             .collection('transactions')
             .where('sellerId', isEqualTo: user!.uid)
             .where('status', isEqualTo: 'completed')
-            .limit(100) // 限制最多100条
+            .limit(100) // 限制最�?00�?
             .get()
             .timeout(
               const Duration(seconds: 5),
@@ -906,7 +906,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
         return status != null && validStatuses.contains(status);
       }).length;
 
-      // 计算总收入
+      // 计算总收�?
       double totalRevenue = 0.0;
       for (var doc in transactionsSnapshot.docs) {
         final data = doc.data();
@@ -914,7 +914,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
         totalRevenue += (sellerAmount is num) ? sellerAmount.toDouble() : 0.0;
       }
 
-      print('✅ [个人中心] 统计数据加载成功: $validListings 个列表, ${transactionsSnapshot.docs.length} 笔交易');
+      print('�?[个人中心] 统计数据加载成功: $validListings 个列�? ${transactionsSnapshot.docs.length} 笔交�?);
 
       return {
         'listings': validListings,
@@ -929,7 +929,7 @@ class _BBXNewProfileScreenState extends State<BBXNewProfileScreen> {
         'revenue': 0.0,
       };
     } catch (e) {
-      print('❌ [个人中心] 加载统计数据失败: $e');
+      print('�?[个人中心] 加载统计数据失败: $e');
       return {
         'listings': 0,
         'transactions': 0,

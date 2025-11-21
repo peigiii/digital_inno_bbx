@@ -4,7 +4,7 @@ import '../models/models.dart';
 import '../utils/app_constants.dart';
 
 /// 废料列表服务
-/// 提供列表的CRUD操作和搜索功能
+/// 提供列表的CRUD操作和搜索功�?
 class ListingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -13,9 +13,9 @@ class ListingService {
   Future<String> createListing(ListingModel listing) async {
     try {
       final user = _auth.currentUser;
-      if (user == null) throw Exception('用户未登录');
+      if (user == null) throw Exception('用户未登�?);
 
-      // 确保设置了必要字段
+      // 确保设置了必要字�?
       final listingData = listing.copyWith(
         status: ListingStatusConstants.available,
         complianceStatus: 'pending',
@@ -36,7 +36,7 @@ class ListingService {
   Future<void> updateListing(String listingId, Map<String, dynamic> updates) async {
     try {
       final user = _auth.currentUser;
-      if (user == null) throw Exception('用户未登录');
+      if (user == null) throw Exception('用户未登�?);
 
       // 获取现有列表
       final doc = await _firestore
@@ -44,13 +44,13 @@ class ListingService {
           .doc(listingId)
           .get();
 
-      if (!doc.exists) throw Exception('列表不存在');
+      if (!doc.exists) throw Exception('列表不存�?);
 
       final listing = ListingModel.fromDocument(doc);
 
       // 验证权限
       if (listing.userId != user.uid) {
-        // 检查是否是管理员
+        // 检查是否是管理�?
         final userDoc = await _firestore.collection(CollectionConstants.users).doc(user.uid).get();
         final isAdmin = userDoc.data()?['isAdmin'] ?? false;
         if (!isAdmin) throw Exception('无权限修改此列表');
@@ -76,7 +76,7 @@ class ListingService {
   Future<void> deleteListing(String listingId) async {
     try {
       final user = _auth.currentUser;
-      if (user == null) throw Exception('用户未登录');
+      if (user == null) throw Exception('用户未登�?);
 
       // 获取现有列表
       final doc = await _firestore
@@ -84,7 +84,7 @@ class ListingService {
           .doc(listingId)
           .get();
 
-      if (!doc.exists) throw Exception('列表不存在');
+      if (!doc.exists) throw Exception('列表不存�?);
 
       final listing = ListingModel.fromDocument(doc);
 
@@ -103,10 +103,10 @@ class ListingService {
           .get();
 
       if (offers.docs.isNotEmpty) {
-        throw Exception('该列表有待处理的报价，无法删除');
+        throw Exception('该列表有待处理的报价，无法删�?);
       }
 
-      // 软删除：更新状态而不是实际删除
+      // 软删除：更新状态而不是实际删�?
       await _firestore
           .collection(CollectionConstants.listings)
           .doc(listingId)
@@ -136,7 +136,7 @@ class ListingService {
     }
   }
 
-  /// 获取用户的列表（Stream）
+  /// 获取用户的列表（Stream�?
   Stream<List<ListingModel>> getUserListings({String? userId}) {
     final uid = userId ?? _auth.currentUser?.uid;
     if (uid == null) return const Stream.empty();
@@ -160,7 +160,7 @@ class ListingService {
     try {
       Query query = _firestore.collection(CollectionConstants.listings);
 
-      // 筛选条件
+      // 筛选条�?
       if (status != null) {
         query = query.where('status', isEqualTo: status);
       } else {
@@ -220,7 +220,7 @@ class ListingService {
     }
   }
 
-  /// 批量更新状态
+  /// 批量更新状�?
   Future<void> bulkUpdateStatus(List<String> listingIds, String status) async {
     try {
       final batch = _firestore.batch();

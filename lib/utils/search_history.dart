@@ -17,10 +17,10 @@ class SearchHistory {
     final prefs = await SharedPreferences.getInstance();
     final history = await getHistory(screenName);
 
-    // 移除重复项
+    // 移除重复�?
     history.remove(query);
 
-    // 添加到开头
+    // 添加到开�?
     history.insert(0, query);
 
     // 限制历史记录数量
@@ -31,7 +31,7 @@ class SearchHistory {
     await prefs.setStringList('$_keyPrefix$screenName', history);
   }
 
-  /// 删除特定的搜索记录
+  /// 删除特定的搜索记�?
   static Future<void> removeFromHistory(String screenName, String query) async {
     final prefs = await SharedPreferences.getInstance();
     final history = await getHistory(screenName);
@@ -40,7 +40,7 @@ class SearchHistory {
     await prefs.setStringList('$_keyPrefix$screenName', history);
   }
 
-  /// 清除所有搜索历史
+  /// 清除所有搜索历�?
   static Future<void> clearHistory(String screenName) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('$_keyPrefix$screenName');

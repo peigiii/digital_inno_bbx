@@ -9,7 +9,7 @@ import '../../widgets/bbx_loading.dart';
 import 'bbx_new_chat_screen.dart';
 import '../../utils/page_transitions.dart';
 
-/// BBX 对话列表页（完全重构）
+/// BBX 对话列表页（完全重构�?
 class BBXNewConversationsScreen extends StatefulWidget {
   const BBXNewConversationsScreen({super.key});
 
@@ -47,7 +47,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
       ),
       body: Column(
         children: [
-          // 快捷筛选
+          // 快捷筛�?
           _buildFilterBar(),
 
           // 对话列表
@@ -215,7 +215,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
                     ),
                     const SizedBox(height: 4),
 
-                    // 底部行：最后消息 + 未读角标
+                    // 底部行：最后消�?+ 未读角标
                     Row(
                       children: [
                         Expanded(
@@ -276,11 +276,11 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
     final difference = now.difference(time);
 
     if (difference.inDays > 0) {
-      return '${time.month}月${time.day}日';
+      return '${time.month}�?{time.day}�?;
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时前';
+      return '${difference.inHours}小时�?;
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟前';
+      return '${difference.inMinutes}分钟�?;
     } else {
       return '刚刚';
     }

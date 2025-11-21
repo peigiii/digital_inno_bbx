@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../theme/app_theme.dart';
 
 /// 发票查看页面
-/// 显示订阅支付的详细发票信息
+/// 显示订阅支付的详细发票信�?
 class BBXInvoiceScreen extends StatelessWidget {
   final String paymentId;
 
@@ -66,7 +66,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.receipt_long, size: 64, color: Colors.grey),
                   SizedBox(height: 16),
-                  Text('发票不存在'),
+                  Text('发票不存�?),
                 ],
               ),
             );
@@ -169,7 +169,7 @@ class BBXInvoiceScreen extends StatelessWidget {
             _buildInfoRow('发票编号', paymentId),
             const SizedBox(height: 12),
             _buildInfoRow(
-              '开票日期',
+              '开票日�?,
               createdAt != null ? _formatDate(createdAt.toDate()) : 'N/A',
             ),
             const SizedBox(height: 12),
@@ -234,7 +234,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '订阅周期：1年',
+                              '订阅周期�?�?,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[600],
@@ -261,9 +261,9 @@ class BBXInvoiceScreen extends StatelessWidget {
             // Calculation
             _buildCalculationRow('小计', subtotal, false),
             const SizedBox(height: 8),
-            _buildCalculationRow('平台服务费 (3%)', platformFee, false),
+            _buildCalculationRow('平台服务�?(3%)', platformFee, false),
             const SizedBox(height: 8),
-            _buildCalculationRow('支付网关费 (1.5%)', paymentGatewayFee, false),
+            _buildCalculationRow('支付网关�?(1.5%)', paymentGatewayFee, false),
             const SizedBox(height: 12),
             const Divider(),
             const SizedBox(height: 12),
@@ -328,7 +328,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '此发票为订阅服务支付凭证。如有任何疑问，请联系客服。',
+                    '此发票为订阅服务支付凭证。如有任何疑问，请联系客服�?,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],
@@ -337,7 +337,7 @@ class BBXInvoiceScreen extends StatelessWidget {
                   if (isSimulated) ...[
                     const SizedBox(height: 8),
                     Text(
-                      '注意：此为测试环境生成的发票，仅供开发测试使用。',
+                      '注意：此为测试环境生成的发票，仅供开发测试使用�?,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.orange[700],
@@ -425,7 +425,7 @@ class BBXInvoiceScreen extends StatelessWidget {
       case 'ewallet':
         return '电子钱包';
       case 'credit_card':
-        return '信用卡/借记卡';
+        return '信用�?借记�?;
       case 'cash':
         return '现金支付';
       default:

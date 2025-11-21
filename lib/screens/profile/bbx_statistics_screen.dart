@@ -32,7 +32,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
   }
 
   Future<void> _loadStatistics() async {
-    // TODO: 从 Firestore 加载实际数据
+    // TODO: �?Firestore 加载实际数据
     await Future.delayed(const Duration(seconds: 1));
 
     setState(() {
@@ -88,7 +88,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
                     children: [
                       Expanded(
                         child: _buildFinancialItem(
-                          '总收入',
+                          '总收�?,
                           totalRevenue,
                           Icons.trending_up,
                           AppTheme.success,
@@ -101,7 +101,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
                       ),
                       Expanded(
                         child: _buildFinancialItem(
-                          '总支出',
+                          '总支�?,
                           totalExpense,
                           Icons.trending_down,
                           AppTheme.error,
@@ -193,7 +193,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '$totalReviews 条评价',
+                            '$totalReviews 条评�?,
                             style: AppTheme.caption,
                           ),
                         ],
@@ -221,7 +221,7 @@ class _BBXStatisticsScreenState extends State<BBXStatisticsScreen> {
 
             const SizedBox(height: AppTheme.spacing24),
 
-            // 月度趋势（简化版）
+            // 月度趋势（简化版�?
             const Text('月度趋势', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(

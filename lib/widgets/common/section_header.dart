@@ -268,7 +268,7 @@ class BadgeSectionHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // 标题和徽章
+          // 标题和徽�?
           Row(
             children: [
               Text(
@@ -334,7 +334,7 @@ class BadgeSectionHeader extends StatelessWidget {
   }
 }
 
-/// 可展开的区块标题
+/// 可展开的区块标�?
 class ExpandableSectionHeader extends StatelessWidget {
   final String title;
   final String? subtitle;

@@ -1,10 +1,10 @@
 /// BBX 应用全局常量配置
 library;
 
-/// API 和网络配置
+/// API 和网络配�?
 class ApiConstants {
   static const String baseUrl = 'https://api.bbx.com'; // 生产环境
-  static const String devBaseUrl = 'https://dev-api.bbx.com'; // 开发环境
+  static const String devBaseUrl = 'https://dev-api.bbx.com'; // 开发环�?
   static const String verificationUrl = 'https://bbx.com/verify'; // 合规验证URL
 
   static const Duration defaultTimeout = Duration(seconds: 30);
@@ -17,7 +17,7 @@ class PaginationConstants {
   static const int defaultPageSize = 20;
   static const int smallPageSize = 10;
   static const int largePageSize = 50;
-  static const double loadMoreThreshold = 0.9; // 滚动到90%时加载更多
+  static const double loadMoreThreshold = 0.9; // 滚动�?0%时加载更�?
 }
 
 /// 文件上传配置
@@ -41,7 +41,7 @@ class FileConstants {
   static const int imageMaxHeight = 1080;
   static const int imageQuality = 85;
 
-  // 支持的文件格式
+  // 支持的文件格�?
   static const List<String> supportedImageFormats = ['jpg', 'jpeg', 'png', 'webp'];
   static const List<String> supportedDocumentFormats = ['pdf', 'doc', 'docx'];
 }
@@ -105,10 +105,10 @@ class UserTypeConstants {
   ];
 
   static Map<String, String> get displayNames => {
-    producer: '生产者 (Producer)',
-    processor: '处理者 (Processor)',
-    recycler: '回收商 (Recycler)',
-    publicUser: '普通用户',
+    producer: '生产�?(Producer)',
+    processor: '处理�?(Processor)',
+    recycler: '回收�?(Recycler)',
+    publicUser: '普通用�?,
   };
 }
 
@@ -134,14 +134,14 @@ class SubscriptionConstants {
   };
 
   static Map<String, String> get displayNames => {
-    free: '免费版',
-    basic: '基础版 (RM 49.90/月)',
-    professional: '专业版 (RM 149.90/月)',
-    enterprise: '企业版 (RM 499.90/月)',
+    free: '免费�?,
+    basic: '基础�?(RM 49.90/�?',
+    professional: '专业�?(RM 149.90/�?',
+    enterprise: '企业�?(RM 499.90/�?',
   };
 }
 
-/// 列表状态常量
+/// 列表状态常�?
 class ListingStatusConstants {
   static const String available = 'available';
   static const String pending = 'pending';
@@ -156,7 +156,7 @@ class ListingStatusConstants {
   ];
 }
 
-/// 报价状态常量
+/// 报价状态常�?
 class OfferStatusConstants {
   static const String pending = 'pending';
   static const String accepted = 'accepted';
@@ -171,7 +171,7 @@ class OfferStatusConstants {
   ];
 }
 
-/// 交易状态常量
+/// 交易状态常�?
 class TransactionStatusConstants {
   static const String pending = 'pending';
   static const String paid = 'paid';
@@ -196,7 +196,7 @@ class TransactionStatusConstants {
   ];
 }
 
-/// 托管状态常量
+/// 托管状态常�?
 class EscrowStatusConstants {
   static const String held = 'held';
   static const String released = 'released';
@@ -220,7 +220,7 @@ class PaymentMethodConstants {
   static Map<String, String> get displayNames => {
     fpx: 'FPX 网银转账',
     ewallet: '电子钱包 (Touch \'n Go / GrabPay)',
-    creditCard: '信用卡/借记卡',
+    creditCard: '信用�?借记�?,
     cash: '现金支付',
   };
 }
@@ -242,7 +242,7 @@ class VerificationTypeConstants {
   ];
 }
 
-/// 认证状态常量
+/// 认证状态常�?
 class VerificationStatusConstants {
   static const String pending = 'pending';
   static const String approved = 'approved';
@@ -270,7 +270,7 @@ class DisputeTypeConstants {
   ];
 
   static Map<String, String> get displayNames => {
-    notReceived: '未收到货物',
+    notReceived: '未收到货�?,
     wrongItem: '货不对板',
     qualityIssue: '质量问题',
     other: '其他',
@@ -308,12 +308,12 @@ class CreditLevelConstants {
     excellent: '卓越',
     good: '优秀',
     fair: '良好',
-    average: '一般',
+    average: '一�?,
     poor: '较差',
   };
 }
 
-/// 管理员邮箱列表（应该从Firestore config读取，这里作为fallback）
+/// 管理员邮箱列表（应该从Firestore config读取，这里作为fallback�?
 class AdminConstants {
   static const List<String> adminEmails = [
     'admin@bbx.com',
@@ -324,24 +324,24 @@ class AdminConstants {
 
 /// 平台费用常量
 class FeeConstants {
-  static const double platformFeePercent = 3.0; // 平台交易费 3%
+  static const double platformFeePercent = 3.0; // 平台交易�?3%
   static const double minPlatformFee = 5.0; // 最低平台费 RM 5.00
   static const double maxPlatformFee = 500.0; // 最高平台费 RM 500.00
 
-  static const double paymentGatewayFeePercent = 1.5; // 支付网关费 1.5%
+  static const double paymentGatewayFeePercent = 1.5; // 支付网关�?1.5%
   static const double minPaymentGatewayFee = 1.0; // 最低支付网关费 RM 1.00
 }
 
-/// 退款配置
+/// 退款配�?
 class RefundConstants {
-  static const int disputePeriodDays = 7; // 争议期7天
-  static const int refundProcessingDays = 3; // 退款处理3天
+  static const int disputePeriodDays = 7; // 争议�?�?
+  static const int refundProcessingDays = 3; // 退款处�?�?
 }
 
 /// 评价配置
 class ReviewConstants {
-  static const int minReviewLength = 10; // 最少10个字符
-  static const int maxReviewLength = 500; // 最多500个字符
+  static const int minReviewLength = 10; // 最�?0个字�?
+  static const int maxReviewLength = 500; // 最�?00个字�?
   static const int minRating = 1;
   static const int maxRating = 5;
 }
@@ -359,7 +359,7 @@ class RewardsConstants {
 /// Firestore Collection 名称
 class CollectionConstants {
   static const String users = 'users';
-  static const String listings = 'waste_listings';
+  static const String listings = 'listings';
   static const String offers = 'offers';
   static const String transactions = 'transactions';
   static const String conversations = 'conversations';

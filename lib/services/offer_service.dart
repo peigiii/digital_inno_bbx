@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import '../models/offer_model.dart';
 import '../models/transaction_model.dart';
 
-/// 报价服务类
+/// 报价服务�?
 class OfferService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -14,15 +14,15 @@ class OfferService {
 
   /// 创建报价
   ///
-  /// 参数：
+  /// 参数�?
   /// - listingId: 商品ID
   /// - sellerId: 卖家ID
   /// - offerPrice: 报价金额
   /// - originalPrice: 原价
   /// - message: 留言
   /// - scheduledPickupDate: 预计收集日期
-  /// - deliveryMethod: 收集方式（self_pickup/platform_logistics/seller_delivery 或 self_collect/delivery）
-  /// - deliveryNote: 配送备注
+  /// - deliveryMethod: 收集方式（self_pickup/platform_logistics/seller_delivery �?self_collect/delivery�?
+  /// - deliveryNote: 配送备�?
   ///
   /// 返回：报价ID
   Future<String> createOffer({
@@ -36,7 +36,7 @@ class OfferService {
     String? deliveryNote,
   }) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     // 获取当前用户信息
@@ -48,7 +48,7 @@ class OfferService {
     final expiresAt = now.add(const Duration(hours: 48));
 
     final offer = OfferModel(
-      id: '', // Firestore会自动生成
+      id: '', // Firestore会自动生�?
       listingId: listingId,
       recyclerId: _currentUserId!,
       recyclerName: userData['displayName'] ?? '未知用户',
@@ -69,7 +69,7 @@ class OfferService {
     // 保存到Firestore
     final docRef = await _firestore.collection('offers').add(offer.toMap());
 
-    // TODO: 发送通知给卖家
+    // TODO: 发送通知给卖�?
 
     return docRef.id;
   }
@@ -77,12 +77,12 @@ class OfferService {
   /// 卖家接受报价
   Future<void> acceptOffer(String offerId) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     final offerDoc = await _firestore.collection('offers').doc(offerId).get();
     if (!offerDoc.exists) {
-      throw Exception('报价不存在');
+      throw Exception('报价不存�?);
     }
 
     final offer = OfferModel.fromDocument(offerDoc);
@@ -97,12 +97,12 @@ class OfferService {
       throw Exception('报价状态不允许接受');
     }
 
-    // 检查是否过期
+    // 检查是否过�?
     if (offer.isExpired) {
-      throw Exception('报价已过期');
+      throw Exception('报价已过�?);
     }
 
-    // 更新报价状态
+    // 更新报价状�?
     await _firestore.collection('offers').doc(offerId).update({
       'status': 'accepted',
       'respondedAt': FieldValue.serverTimestamp(),
@@ -111,56 +111,56 @@ class OfferService {
     // 创建交易
     await _createTransaction(offerId);
 
-    // TODO: 发送通知给买家
+    // TODO: 发送通知给买�?
   }
 
   /// 卖家拒绝报价
   Future<void> rejectOffer(String offerId, String reason) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     final offerDoc = await _firestore.collection('offers').doc(offerId).get();
     if (!offerDoc.exists) {
-      throw Exception('报价不存在');
+      throw Exception('报价不存�?);
     }
 
     final offer = OfferModel.fromDocument(offerDoc);
 
-    // 检查权限
+    // 检查权�?
     if (offer.sellerId != _currentUserId) {
       throw Exception('无权操作');
     }
 
-    // 更新报价状态
+    // 更新报价状�?
     await _firestore.collection('offers').doc(offerId).update({
       'status': 'rejected',
       'rejectionReason': reason,
       'respondedAt': FieldValue.serverTimestamp(),
     });
 
-    // TODO: 发送通知给买家
+    // TODO: 发送通知给买�?
   }
 
   /// 卖家还价
   Future<void> counterOffer(String offerId, double counterPrice, String message) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     final offerDoc = await _firestore.collection('offers').doc(offerId).get();
     if (!offerDoc.exists) {
-      throw Exception('报价不存在');
+      throw Exception('报价不存�?);
     }
 
     final offer = OfferModel.fromDocument(offerDoc);
 
-    // 检查权限
+    // 检查权�?
     if (offer.sellerId != _currentUserId) {
       throw Exception('无权操作');
     }
 
-    // 检查是否可以议价
+    // 检查是否可以议�?
     if (!offer.canNegotiate) {
       throw Exception('报价状态不允许议价');
     }
@@ -173,18 +173,18 @@ class OfferService {
       'respondedAt': FieldValue.serverTimestamp(),
     });
 
-    // TODO: 发送通知给买家
+    // TODO: 发送通知给买�?
   }
 
   /// 买家接受还价
   Future<void> acceptCounterOffer(String offerId) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     final offerDoc = await _firestore.collection('offers').doc(offerId).get();
     if (!offerDoc.exists) {
-      throw Exception('报价不存在');
+      throw Exception('报价不存�?);
     }
 
     final offer = OfferModel.fromDocument(offerDoc);
@@ -194,7 +194,7 @@ class OfferService {
       throw Exception('无权操作');
     }
 
-    // 检查状态
+    // 检查状�?
     if (offer.status != 'negotiating') {
       throw Exception('报价状态不正确');
     }
@@ -213,23 +213,23 @@ class OfferService {
     // 创建交易
     await _createTransaction(offerId);
 
-    // TODO: 发送通知给卖家
+    // TODO: 发送通知给卖�?
   }
 
   /// 买家取消报价
   Future<void> cancelOffer(String offerId) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     final offerDoc = await _firestore.collection('offers').doc(offerId).get();
     if (!offerDoc.exists) {
-      throw Exception('报价不存在');
+      throw Exception('报价不存�?);
     }
 
     final offer = OfferModel.fromDocument(offerDoc);
 
-    // 检查权限
+    // 检查权�?
     if (offer.buyerId != _currentUserId) {
       throw Exception('无权操作');
     }
@@ -239,13 +239,13 @@ class OfferService {
       throw Exception('报价状态不允许取消');
     }
 
-    // 更新报价状态
+    // 更新报价状�?
     await _firestore.collection('offers').doc(offerId).update({
       'status': 'cancelled',
       'updatedAt': FieldValue.serverTimestamp(),
     });
 
-    // TODO: 发送通知给卖家
+    // TODO: 发送通知给卖�?
   }
 
   /// 获取我发出的报价（买家视角）
@@ -296,7 +296,7 @@ class OfferService {
         });
   }
 
-  /// 获取某商品的所有报价
+  /// 获取某商品的所有报�?
   Stream<List<OfferModel>> getOffersForListing(String listingId) {
     if (_currentUserId == null) {
       return Stream.value([]);
@@ -316,17 +316,17 @@ class OfferService {
   Future<void> _createTransaction(String offerId) async {
     final offerDoc = await _firestore.collection('offers').doc(offerId).get();
     if (!offerDoc.exists) {
-      throw Exception('报价不存在');
+      throw Exception('报价不存�?);
     }
 
     final offer = OfferModel.fromDocument(offerDoc);
 
-    // 计算平台费（3%）
+    // 计算平台费（3%�?
     final platformFee = offer.offerPrice * 0.03;
     final totalAmount = offer.offerPrice + platformFee;
 
     final transaction = TransactionModel(
-      id: '', // Firestore会自动生成
+      id: '', // Firestore会自动生�?
       offerId: offerId,
       buyerId: offer.buyerId,
       sellerId: offer.sellerId,
@@ -342,13 +342,13 @@ class OfferService {
     // 保存到Firestore
     await _firestore.collection('transactions').add(transaction.toMap());
 
-    // TODO: 发送通知给双方
+    // TODO: 发送通知给双�?
   }
 
-  /// 更新交易状态
+  /// 更新交易状�?
   Future<void> updateTransactionStatus(String transactionId, String status) async {
     if (_currentUserId == null) {
-      throw Exception('用户未登录');
+      throw Exception('用户未登�?);
     }
 
     await _firestore.collection('transactions').doc(transactionId).update({

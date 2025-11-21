@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-/// 通用的用户头像组件
+/// 通用的用户头像组�?
 ///
-/// 支持：
-/// - 网络图片加载（使用 cached_network_image）
-/// - 首字母后备显示
-/// - 加载占位符
+/// 支持�?
+/// - 网络图片加载（使�?cached_network_image�?
+/// - 首字母后备显�?
+/// - 加载占位�?
 /// - 错误处理
 /// - 可自定义大小和背景色
 class UserAvatarWidget extends StatelessWidget {
@@ -25,7 +25,7 @@ class UserAvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 如果有头像 URL，显示网络图片
+    // 如果有头�?URL，显示网络图�?
     if (photoURL != null && photoURL!.isNotEmpty) {
       return CircleAvatar(
         radius: radius,
@@ -51,7 +51,7 @@ class UserAvatarWidget extends StatelessWidget {
       );
     }
 
-    // 否则显示首字母
+    // 否则显示首字�?
     return _buildInitialsAvatar();
   }
 

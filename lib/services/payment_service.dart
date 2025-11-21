@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/app_constants.dart';
 
 /// 支付服务
-/// 集成 Stripe、PayPal 等支付网关
+/// 集成 Stripe、PayPal 等支付网�?
 ///
-/// TODO: 需要配置以下环境变量:
+/// TODO: 需要配置以下环境变�?
 /// - STRIPE_PUBLISHABLE_KEY
 /// - STRIPE_SECRET_KEY
 /// - STRIPE_WEBHOOK_SECRET
@@ -13,16 +13,16 @@ class PaymentService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Stripe 配置（需要从环境变量或 Firebase Remote Config 读取）
+  // Stripe 配置（需要从环境变量�?Firebase Remote Config 读取�?
   static const String stripePublishableKey = 'pk_test_YOUR_KEY_HERE';
   static const String stripeSecretKey = 'sk_test_YOUR_KEY_HERE';
 
-  /// 创建支付意图（Stripe Payment Intent）
+  /// 创建支付意图（Stripe Payment Intent�?
   ///
-  /// 流程：
-  /// 1. 在后端创建 Payment Intent
+  /// 流程�?
+  /// 1. 在后端创�?Payment Intent
   /// 2. 返回 client_secret 给客户端
-  /// 3. 客户端使用 client_secret 完成支付
+  /// 3. 客户端使�?client_secret 完成支付
   Future<Map<String, dynamic>> createPaymentIntent({
     required double amount,
     required String currency,
@@ -32,9 +32,9 @@ class PaymentService {
   }) async {
     try {
       // TODO: 调用 Firebase Cloud Function 创建 Payment Intent
-      // 因为 Stripe Secret Key 不应该暴露在客户端
+      // 因为 Stripe Secret Key 不应该暴露在客户�?
 
-      // 示例结构（实际需要 Cloud Function）:
+      // 示例结构（实际需�?Cloud Function�?
       /*
       final response = await http.post(
         Uri.parse('${ApiConstants.baseUrl}/create-payment-intent'),
@@ -68,7 +68,7 @@ class PaymentService {
 
   /// 确认支付
   ///
-  /// 参数：
+  /// 参数�?
   /// - transactionId: 交易ID
   /// - paymentIntentId: Stripe Payment Intent ID
   /// - paymentMethod: 支付方式
@@ -79,9 +79,9 @@ class PaymentService {
   }) async {
     try {
       final user = _auth.currentUser;
-      if (user == null) throw Exception('用户未登录');
+      if (user == null) throw Exception('用户未登�?);
 
-      // 更新交易状态
+      // 更新交易状�?
       await _firestore
           .collection(CollectionConstants.transactions)
           .doc(transactionId)
@@ -100,12 +100,12 @@ class PaymentService {
     }
   }
 
-  /// 处理退款
+  /// 处理退�?
   ///
-  /// 参数：
+  /// 参数�?
   /// - transactionId: 交易ID
   /// - amount: 退款金额（可选，默认全额退款）
-  /// - reason: 退款原因
+  /// - reason: 退款原�?
   Future<void> processRefund({
     required String transactionId,
     double? amount,
@@ -113,7 +113,7 @@ class PaymentService {
   }) async {
     try {
       final user = _auth.currentUser;
-      if (user == null) throw Exception('用户未登录');
+      if (user == null) throw Exception('用户未登�?);
 
       // 获取交易信息
       final transactionDoc = await _firestore
@@ -121,14 +121,14 @@ class PaymentService {
           .doc(transactionId)
           .get();
 
-      if (!transactionDoc.exists) throw Exception('交易不存在');
+      if (!transactionDoc.exists) throw Exception('交易不存�?);
 
       final transactionData = transactionDoc.data()!;
       final paymentIntentId = transactionData['paymentIntentId'];
 
-      if (paymentIntentId == null) throw Exception('未找到支付记录');
+      if (paymentIntentId == null) throw Exception('未找到支付记�?);
 
-      // TODO: 调用 Stripe API 或 Cloud Function 处理退款
+      // TODO: 调用 Stripe API �?Cloud Function 处理退�?
       /*
       final response = await http.post(
         Uri.parse('${ApiConstants.baseUrl}/create-refund'),
@@ -141,11 +141,11 @@ class PaymentService {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('退款失败');
+        throw Exception('退款失�?);
       }
       */
 
-      // 更新交易状态
+      // 更新交易状�?
       await _firestore
           .collection(CollectionConstants.transactions)
           .doc(transactionId)
@@ -156,17 +156,17 @@ class PaymentService {
         'refundNote': reason,
       }).timeout(ApiConstants.defaultTimeout);
     } catch (e) {
-      throw Exception('处理退款失败: $e');
+      throw Exception('处理退款失�? $e');
     }
   }
 
-  /// 释放托管资金给卖家
+  /// 释放托管资金给卖�?
   ///
   /// 在买家确认收货后调用
   Future<void> releaseEscrow(String transactionId) async {
     try {
       final user = _auth.currentUser;
-      if (user == null) throw Exception('用户未登录');
+      if (user == null) throw Exception('用户未登�?);
 
       // 获取交易信息
       final transactionDoc = await _firestore
@@ -174,7 +174,7 @@ class PaymentService {
           .doc(transactionId)
           .get();
 
-      if (!transactionDoc.exists) throw Exception('交易不存在');
+      if (!transactionDoc.exists) throw Exception('交易不存�?);
 
       final transactionData = transactionDoc.data()!;
       final amount = transactionData['amount'];
@@ -184,7 +184,7 @@ class PaymentService {
       final platformFee = _calculatePlatformFee(amount);
       final sellerAmount = amount - platformFee;
 
-      // TODO: 调用支付网关转账给卖家
+      // TODO: 调用支付网关转账给卖�?
       /*
       final response = await http.post(
         Uri.parse('${ApiConstants.baseUrl}/transfer-to-seller'),
@@ -198,7 +198,7 @@ class PaymentService {
       );
       */
 
-      // 更新交易状态
+      // 更新交易状�?
       await _firestore
           .collection(CollectionConstants.transactions)
           .doc(transactionId)
@@ -217,7 +217,7 @@ class PaymentService {
   double _calculatePlatformFee(double amount) {
     double fee = amount * (FeeConstants.platformFeePercent / 100);
 
-    // 应用最小和最大费用限制
+    // 应用最小和最大费用限�?
     if (fee < FeeConstants.minPlatformFee) {
       fee = FeeConstants.minPlatformFee;
     } else if (fee > FeeConstants.maxPlatformFee) {
@@ -238,7 +238,7 @@ class PaymentService {
     return double.parse(fee.toStringAsFixed(2));
   }
 
-  /// 计算总费用
+  /// 计算总费�?
   Map<String, double> calculateFees(double amount) {
     final platformFee = _calculatePlatformFee(amount);
     final paymentFee = calculatePaymentGatewayFee(amount);
@@ -275,7 +275,7 @@ class PaymentService {
       },
       {
         'id': PaymentMethodConstants.creditCard,
-        'name': '信用卡/借记卡',
+        'name': '信用�?借记�?,
         'icon': 'credit_card',
         'enabled': true,
         'description': 'Visa / Mastercard / Amex',
@@ -292,13 +292,13 @@ class PaymentService {
 
   /// 模拟支付处理（用于开发测试）
   ///
-  /// 参数：
+  /// 参数�?
   /// - userId: 用户ID
   /// - planName: 订阅计划名称
   /// - amount: 支付金额
   /// - paymentMethod: 支付方式
   ///
-  /// 返回：支付是否成功
+  /// 返回：支付是否成�?
   Future<bool> simulatePayment({
     required String userId,
     required String planName,
@@ -306,7 +306,7 @@ class PaymentService {
     required String paymentMethod,
   }) async {
     try {
-      print('🔄 [支付服务] 开始模拟支付...');
+      print('🔄 [支付服务] 开始模拟支�?..');
       print('👤 用户: $userId');
       print('📋 计划: $planName');
       print('💰 金额: RM $amount');
@@ -332,22 +332,22 @@ class PaymentService {
         'status': TransactionStatusConstants.paid,
         'paidAt': FieldValue.serverTimestamp(),
         'createdAt': FieldValue.serverTimestamp(),
-        'simulatedPayment': true, // 标记为模拟支付
+        'simulatedPayment': true, // 标记为模拟支�?
       }).timeout(ApiConstants.defaultTimeout);
 
-      print('✅ [支付服务] 模拟支付成功');
+      print('�?[支付服务] 模拟支付成功');
       return true;
     } catch (e) {
-      print('❌ [支付服务] 模拟支付失败: $e');
+      print('�?[支付服务] 模拟支付失败: $e');
       return false;
     }
   }
 
   /// Webhook 处理（应该在 Cloud Function 中实现）
   ///
-  /// 用于处理 Stripe 的支付状态更新
+  /// 用于处理 Stripe 的支付状态更�?
   ///
-  /// 事件类型：
+  /// 事件类型�?
   /// - payment_intent.succeeded
   /// - payment_intent.payment_failed
   /// - charge.refunded
@@ -366,7 +366,7 @@ class PaymentService {
         await _handlePaymentFailed(data);
         break;
       case 'charge.refunded':
-        // 退款成功
+        // 退款成�?
         await _handleRefundSuccess(data);
         break;
       default:
@@ -375,7 +375,7 @@ class PaymentService {
   }
 
   Future<void> _handlePaymentSuccess(Map<String, dynamic> paymentIntent) async {
-    // 根据 metadata 中的 transactionId 更新交易状态
+    // 根据 metadata 中的 transactionId 更新交易状�?
     final transactionId = paymentIntent['metadata']['transactionId'];
     if (transactionId != null) {
       await _firestore
@@ -404,6 +404,6 @@ class PaymentService {
 
   Future<void> _handleRefundSuccess(Map<String, dynamic> charge) async {
     // 处理退款成功通知
-    print('退款成功: ${charge['id']}');
+    print('退款成�? ${charge['id']}');
   }
 }

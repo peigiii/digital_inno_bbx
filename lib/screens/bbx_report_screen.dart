@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 
-/// 举报和投诉功能页面
+/// 举报和投诉功能页�?
 class BBXReportScreen extends StatefulWidget {
   final String targetType; // 'user', 'listing', 'review'
   final String targetId;
@@ -75,7 +75,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
   Future<void> _submitReport() async {
     if (_descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请填写举报原因')),
+        const SnackBar(content: Text('请填写举报原�?)),
       );
       return;
     }
@@ -103,7 +103,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('举报已提交，我们会尽快处理')),
+          const SnackBar(content: Text('举报已提交，我们会尽快处�?)),
         );
       }
     } catch (e) {
@@ -196,7 +196,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
                     controller: _descriptionController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: '请详细描述问题...',
+                      hintText: '请详细描述问�?..',
                     ),
                     maxLines: 5,
                     maxLength: 500,
@@ -205,7 +205,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
 
                   // 上传证据
                   const Text(
-                    '上传证据 (可选)',
+                    '上传证据 (可�?',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -288,7 +288,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            '我们会在24小时内审核您的举报，并采取相应措施。',
+                            '我们会在24小时内审核您的举报，并采取相应措施�?,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.blue[700],
@@ -435,19 +435,19 @@ class BBXMyReportsScreen extends StatelessWidget {
     switch (status) {
       case 'pending':
         statusColor = Colors.orange;
-        statusLabel = '待处理';
+        statusLabel = '待处�?;
         break;
       case 'processing':
         statusColor = Colors.blue;
-        statusLabel = '处理中';
+        statusLabel = '处理�?;
         break;
       case 'resolved':
         statusColor = Colors.green;
-        statusLabel = '已处理';
+        statusLabel = '已处�?;
         break;
       case 'rejected':
         statusColor = Colors.red;
-        statusLabel = '已驳回';
+        statusLabel = '已驳�?;
         break;
       default:
         statusColor = Colors.grey;

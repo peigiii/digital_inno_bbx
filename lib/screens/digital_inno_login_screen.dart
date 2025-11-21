@@ -155,7 +155,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            '登录到 BBX 平台',
+                            '登录�?BBX 平台',
                             style: TextStyle(
                               fontSize: isTablet ? 24 : 20,
                               fontWeight: FontWeight.bold,
@@ -171,7 +171,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                             decoration: const InputDecoration(
                               labelText: '邮箱地址',
                               prefixIcon: Icon(Icons.email),
-                              hintText: '请输入您的邮箱',
+                              hintText: '请输入您的邮�?,
                             ),
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
@@ -204,15 +204,15 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                                   });
                                 },
                               ),
-                              hintText: '请输入密码',
+                              hintText: '请输入密�?,
                             ),
                             obscureText: _obscurePassword,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return '请输入密码';
+                                return '请输入密�?;
                               }
                               if (value.length < 6) {
-                                return '密码长度至少6位';
+                                return '密码长度至少6�?;
                               }
                               return null;
                             },
@@ -245,7 +245,7 @@ class _BBXLoginScreenState extends State<BBXLoginScreen> {
                                 side: const BorderSide(color: Color(0xFF2E7D32)),
                               ),
                               child: const Text(
-                                '注册新账户',
+                                '注册新账�?,
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Color(0xFF2E7D32),

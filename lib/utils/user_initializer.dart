@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserInitializer {
-  /// 确保用户文档存在，不存在则创建默认文档
+  /// 确保用户文档存在，不存在则创建默认文�?
   static Future<void> ensureUserDocumentExists() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
@@ -17,7 +17,7 @@ class UserInitializer {
       if (!docSnapshot.exists) {
         print('⚠️ 用户文档不存在，正在创建...');
 
-        // 创建完整的用户文档
+        // 创建完整的用户文�?
         await docRef.set({
           'email': user.email ?? '',
           'displayName': user.displayName ?? user.email?.split('@')[0] ?? 'User',
@@ -35,16 +35,16 @@ class UserInitializer {
           'subscriptionPlan': 'free',
         });
 
-        print('✅ 用户文档创建成功');
+        print('�?用户文档创建成功');
       } else {
-        print('✅ 用户文档已存在');
+        print('�?用户文档已存�?);
       }
     } catch (e) {
-      print('❌ 初始化用户文档失败: $e');
+      print('�?初始化用户文档失�? $e');
     }
   }
 
-  /// 修复现有用户的缺失字段
+  /// 修复现有用户的缺失字�?
   static Future<void> fixUserDocument(String userId) async {
     try {
       final docRef = FirebaseFirestore.instance
@@ -56,7 +56,7 @@ class UserInitializer {
       if (docSnapshot.exists) {
         final data = docSnapshot.data() ?? {};
 
-        // 补充缺失的字段
+        // 补充缺失的字�?
         Map<String, dynamic> updates = {};
 
         if (!data.containsKey('averageRating')) {
@@ -80,11 +80,11 @@ class UserInitializer {
 
         if (updates.isNotEmpty) {
           await docRef.update(updates);
-          print('✅ 用户文档字段已修复');
+          print('�?用户文档字段已修�?);
         }
       }
     } catch (e) {
-      print('❌ 修复用户文档失败: $e');
+      print('�?修复用户文档失败: $e');
     }
   }
 }

@@ -4,7 +4,7 @@ import '../../theme/app_theme.dart';
 import '../../models/listing_model.dart';
 import '../../services/offer_service.dart';
 
-/// BBX 报价底部弹窗 - 现代化设计
+/// BBX 报价底部弹窗 - 现代化设�?
 /// 适配 Pixel 5, Material Design 3
 class BBXOptimizedMakeOfferBottomSheet extends StatefulWidget {
   final ListingModel listing;
@@ -180,7 +180,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('提交失败：$e'),
+            content: Text('提交失败�?e'),
             backgroundColor: AppTheme.error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
@@ -220,10 +220,10 @@ class _BBXOptimizedMakeOfferBottomSheetState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 顶部手柄和标题
+            // 顶部手柄和标�?
             _buildHeader(),
 
-            // 内容区域（可滚动）
+            // 内容区域（可滚动�?
             Flexible(
               child: SingleChildScrollView(
                 padding: EdgeInsets.only(
@@ -241,7 +241,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                         // 报价输入区域
                         _buildOfferPriceSection(),
 
-                        // 其他选项（可展开）
+                        // 其他选项（可展开�?
                         _buildOptionalSection(),
 
                         // 提交按钮
@@ -260,7 +260,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
     );
   }
 
-  /// 顶部手柄和标题
+  /// 顶部手柄和标�?
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: AppTheme.spacing12),
@@ -434,7 +434,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
 
           const SizedBox(height: AppTheme.spacing20),
 
-          // 报价输入框
+          // 报价输入�?
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -473,7 +473,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '请输入报价金额';
+                      return '请输入报价金�?;
                     }
                     final price = double.tryParse(value);
                     if (price == null || price <= 0) {
@@ -677,7 +677,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                                 const SizedBox(height: 2),
                                 Text(
                                   _scheduledPickupDate != null
-                                      ? DateFormat('yyyy年MM月dd日')
+                                      ? DateFormat('yyyy年MM月dd�?)
                                           .format(_scheduledPickupDate!)
                                       : '选择日期',
                                   style: AppTheme.body2.copyWith(
@@ -705,7 +705,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                     maxLength: 200,
                     decoration: InputDecoration(
                       labelText: '附加消息',
-                      hintText: '向卖家说明您的需求...',
+                      hintText: '向卖家说明您的需�?..',
                       border: OutlineInputBorder(
                         borderRadius: AppTheme.borderRadiusMedium,
                       ),

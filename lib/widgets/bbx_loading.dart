@@ -37,7 +37,7 @@ class BBXFullScreenLoading extends StatelessWidget {
   }
 }
 
-/// BBX 列表加载组件（骨架屏）
+/// BBX 列表加载组件（骨架屏�?
 class BBXListLoading extends StatelessWidget {
   final int itemCount;
   final double itemHeight;

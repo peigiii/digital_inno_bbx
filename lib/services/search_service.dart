@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/listing_model.dart';
 
-/// 搜索服务类
+/// 搜索服务�?
 class SearchService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -13,21 +13,21 @@ class SearchService {
 
   /// 高级搜索
   ///
-  /// 参数：
-  /// - keyword: 关键词
+  /// 参数�?
+  /// - keyword: 关键�?
   /// - wasteTypes: 废料类型列表
-  /// - minPrice: 最低价格
-  /// - maxPrice: 最高价格
-  /// - minQuantity: 最低数量
-  /// - maxQuantity: 最高数量
+  /// - minPrice: 最低价�?
+  /// - maxPrice: 最高价�?
+  /// - minQuantity: 最低数�?
+  /// - maxQuantity: 最高数�?
   /// - location: 地点
-  /// - maxDistance: 最大距离（km）
-  /// - minRating: 最低评分
-  /// - verifiedOnly: 只显示认证卖家
-  /// - sortBy: 排序字段（price/quantity/date/distance）
+  /// - maxDistance: 最大距离（km�?
+  /// - minRating: 最低评�?
+  /// - verifiedOnly: 只显示认证卖�?
+  /// - sortBy: 排序字段（price/quantity/date/distance�?
   /// - ascending: 升序/降序
   ///
-  /// 返回：商品列表
+  /// 返回：商品列�?
   Future<List<ListingModel>> advancedSearch({
     String? keyword,
     List<String>? wasteTypes,
@@ -43,17 +43,17 @@ class SearchService {
     bool ascending = false,
   }) async {
     // 构建基础查询
-    Query query = _firestore.collection('waste_listings');
+    Query query = _firestore.collection('listings');
 
-    // 基础条件：只查询可用的商品
+    // 基础条件：只查询可用的商�?
     query = query.where('status', isEqualTo: 'available');
 
-    // 废料类型筛选
+    // 废料类型筛�?
     if (wasteTypes != null && wasteTypes.isNotEmpty) {
       query = query.where('wasteType', whereIn: wasteTypes);
     }
 
-    // 价格范围筛选
+    // 价格范围筛�?
     if (minPrice != null && minPrice > 0) {
       query = query.where('pricePerUnit', isGreaterThanOrEqualTo: minPrice);
     }
@@ -61,8 +61,8 @@ class SearchService {
       query = query.where('pricePerUnit', isLessThanOrEqualTo: maxPrice);
     }
 
-    // 认证卖家筛选
-    // 注意：这需要在 Firestore 中添加 sellerVerified 字段
+    // 认证卖家筛�?
+    // 注意：这需要在 Firestore 中添�?sellerVerified 字段
     // if (verifiedOnly) {
     //   query = query.where('sellerVerified', isEqualTo: true);
     // }
@@ -94,7 +94,7 @@ class SearchService {
 
     // 客户端筛选（Firestore无法实现的条件）
     results = results.where((listing) {
-      // 关键词筛选
+      // 关键词筛�?
       if (keyword != null && keyword.isNotEmpty) {
         final keywordLower = keyword.toLowerCase();
         final titleMatch = listing.title.toLowerCase().contains(keywordLower);
@@ -105,7 +105,7 @@ class SearchService {
         }
       }
 
-      // 数量范围筛选
+      // 数量范围筛�?
       if (minQuantity != null && listing.quantity < minQuantity) {
         return false;
       }
@@ -118,7 +118,7 @@ class SearchService {
       //   return false;
       // }
 
-      // TODO: 地理位置距离筛选
+      // TODO: 地理位置距离筛�?
       // if (maxDistance != null && location != null) {
       //   final distance = calculateDistance(...);
       //   if (distance > maxDistance) {
@@ -149,12 +149,12 @@ class SearchService {
     final preferences = await _getUserPreferences(_currentUserId!);
 
     // 构建查询
-    Query query = _firestore.collection('waste_listings');
+    Query query = _firestore.collection('listings');
 
     // 基础条件
     query = query.where('status', isEqualTo: 'available');
 
-    // 排除自己发布的商品
+    // 排除自己发布的商�?
     query = query.where('userId', isNotEqualTo: _currentUserId);
 
     // 如果有偏好，优先推荐用户感兴趣的废料类型
@@ -162,7 +162,7 @@ class SearchService {
       query = query.where('wasteType', whereIn: preferences.take(10).toList());
     }
 
-    // 按创建时间降序
+    // 按创建时间降�?
     query = query.orderBy('createdAt', descending: true);
 
     // 限制结果
@@ -175,7 +175,7 @@ class SearchService {
     // 智能排序
     results = _rankByRelevance(results);
 
-    // 返回前10个
+    // 返回�?0�?
     return results.take(10).toList();
   }
 
@@ -184,7 +184,7 @@ class SearchService {
   /// 基于用户的报价记录，分析用户感兴趣的废料类型
   Future<List<String>> _getUserPreferences(String userId) async {
     try {
-      // 获取用户的报价记录
+      // 获取用户的报价记�?
       final offersSnapshot = await _firestore
           .collection('offers')
           .where('buyerId', isEqualTo: userId)
@@ -203,10 +203,10 @@ class SearchService {
         return [];
       }
 
-      // 获取商品的废料类型
+      // 获取商品的废料类�?
       final wasteTypes = <String>[];
       for (var listingId in listingIds.take(10)) {
-        final listingDoc = await _firestore.collection('waste_listings').doc(listingId).get();
+        final listingDoc = await _firestore.collection('listings').doc(listingId).get();
         if (listingDoc.exists) {
           final listing = ListingModel.fromDocument(listingDoc);
           wasteTypes.add(listing.wasteType);
@@ -223,20 +223,20 @@ class SearchService {
 
   /// 智能排序
   ///
-  /// 基于多个因素对商品进行排序
+  /// 基于多个因素对商品进行排�?
   List<ListingModel> _rankByRelevance(List<ListingModel> listings) {
     final random = math.Random();
 
-    // 计算每个商品的评分
+    // 计算每个商品的评�?
     final scoredListings = listings.map((listing) {
       // 计算综合评分
       double score = 0;
 
-      // 因素1：卖家评分（权重2）
+      // 因素1：卖家评分（权重2�?
       // TODO: 添加卖家评分字段
       // score += (listing.sellerRating ?? 3.0) * 2;
 
-      // 因素2：价格合理性（价格越低越好）
+      // 因素2：价格合理性（价格越低越好�?
       final priceScore = math.max(0, 100 - listing.pricePerUnit) / 100;
       score += priceScore * 1.5;
 
@@ -253,7 +253,7 @@ class SearchService {
       return MapEntry(listing, score);
     }).toList();
 
-    // 按评分降序排序
+    // 按评分降序排�?
     scoredListings.sort((a, b) => b.value.compareTo(a.value));
 
     // 返回排序后的商品列表
@@ -306,7 +306,7 @@ class SearchService {
 
   /// 获取热门搜索
   List<String> getTrendingSearches() {
-    // 返回固定的热门类型列表
+    // 返回固定的热门类型列�?
     return [
       'Palm Oil EFB',
       'Wood',
@@ -319,17 +319,17 @@ class SearchService {
     ];
   }
 
-  /// 计算两点之间的距离（Haversine公式）
+  /// 计算两点之间的距离（Haversine公式�?
   ///
-  /// 参数：
+  /// 参数�?
   /// - lat1, lon1: 第一个点的纬度和经度
   /// - lat2, lon2: 第二个点的纬度和经度
   ///
-  /// 返回：距离（km）
+  /// 返回：距离（km�?
   double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-    const double earthRadius = 6371; // 地球半径（km）
+    const double earthRadius = 6371; // 地球半径（km�?
 
-    // 转换为弧度
+    // 转换为弧�?
     final dLat = _toRadians(lat2 - lat1);
     final dLon = _toRadians(lon2 - lon1);
 
@@ -344,12 +344,12 @@ class SearchService {
     return earthRadius * c;
   }
 
-  /// 角度转弧度
+  /// 角度转弧�?
   double _toRadians(double degree) {
     return degree * math.pi / 180;
   }
 
-  /// 快速搜索（简化版）
+  /// 快速搜索（简化版�?
   Future<List<ListingModel>> quickSearch(String keyword) async {
     return await advancedSearch(
       keyword: keyword,
@@ -358,7 +358,7 @@ class SearchService {
     );
   }
 
-  /// 按废料类型搜索
+  /// 按废料类型搜�?
   Future<List<ListingModel>> searchByWasteType(String wasteType) async {
     return await advancedSearch(
       wasteTypes: [wasteType],
@@ -367,17 +367,17 @@ class SearchService {
     );
   }
 
-  /// 附近的商品
+  /// 附近的商�?
   ///
-  /// TODO: 需要实现地理位置查询（使用 geoflutterfire 或类似库）
+  /// TODO: 需要实现地理位置查询（使用 geoflutterfire 或类似库�?
   Future<List<ListingModel>> getNearbyListings({
     required double latitude,
     required double longitude,
     double radiusInKm = 50,
   }) async {
-    // 临时实现：返回所有可用商品
+    // 临时实现：返回所有可用商�?
     final snapshot = await _firestore
-        .collection('waste_listings')
+        .collection('listings')
         .where('status', isEqualTo: 'available')
         .orderBy('createdAt', descending: true)
         .limit(20)

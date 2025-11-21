@@ -112,7 +112,7 @@ class _BBXNotificationSettingsScreenState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('设置已保存'),
+            content: Text('设置已保�?),
             backgroundColor: AppTheme.success,
           ),
         );
@@ -167,7 +167,7 @@ class _BBXNotificationSettingsScreenState
                 _buildSwitchTile(
                   icon: Icons.notifications_active_outlined,
                   title: '推送通知',
-                  subtitle: '接收应用内推送消息',
+                  subtitle: '接收应用内推送消�?,
                   value: pushNotifications,
                   onChanged: (value) {
                     setState(() => pushNotifications = value);
@@ -212,8 +212,8 @@ class _BBXNotificationSettingsScreenState
               children: [
                 _buildSwitchTile(
                   icon: Icons.local_offer_outlined,
-                  title: '新报价',
-                  subtitle: '收到新报价时通知我',
+                  title: '新报�?,
+                  subtitle: '收到新报价时通知�?,
                   value: newOffers,
                   onChanged: (value) {
                     setState(() => newOffers = value);
@@ -222,8 +222,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.check_circle_outlined,
-                  title: '报价被接受',
-                  subtitle: '报价被接受时通知我',
+                  title: '报价被接�?,
+                  subtitle: '报价被接受时通知�?,
                   value: offerAccepted,
                   onChanged: (value) {
                     setState(() => offerAccepted = value);
@@ -232,8 +232,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.cancel_outlined,
-                  title: '报价被拒绝',
-                  subtitle: '报价被拒绝时通知我',
+                  title: '报价被拒�?,
+                  subtitle: '报价被拒绝时通知�?,
                   value: offerRejected,
                   onChanged: (value) {
                     setState(() => offerRejected = value);
@@ -242,8 +242,8 @@ class _BBXNotificationSettingsScreenState
                 const Divider(height: 1, indent: 56),
                 _buildSwitchTile(
                   icon: Icons.chat_bubble_outlined,
-                  title: '新消息',
-                  subtitle: '收到新消息时通知我',
+                  title: '新消�?,
+                  subtitle: '收到新消息时通知�?,
                   value: newMessages,
                   onChanged: (value) {
                     setState(() => newMessages = value);
@@ -253,7 +253,7 @@ class _BBXNotificationSettingsScreenState
                 _buildSwitchTile(
                   icon: Icons.receipt_long_outlined,
                   title: '交易更新',
-                  subtitle: '交易状态变更时通知我',
+                  subtitle: '交易状态变更时通知�?,
                   value: transactionUpdates,
                   onChanged: (value) {
                     setState(() => transactionUpdates = value);

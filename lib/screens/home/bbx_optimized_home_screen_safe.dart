@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// BBX 首页 - 安全测试版
+/// BBX 首页 - 安全测试�?
 /// 逐步排查白屏问题
 class BBXOptimizedHomeScreenSafe extends StatefulWidget {
   const BBXOptimizedHomeScreenSafe({super.key});

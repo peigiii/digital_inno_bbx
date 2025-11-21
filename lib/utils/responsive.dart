@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// 响应式布局工具类
+/// 响应式布局工具�?
 class Responsive {
   /// 屏幕断点
   static const double mobileBreakpoint = 600;
@@ -11,7 +11,7 @@ class Responsive {
     return MediaQuery.of(context).size.width < mobileBreakpoint;
   }
 
-  /// 判断是否为平板
+  /// 判断是否为平�?
   static bool isTablet(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return width >= mobileBreakpoint && width < tabletBreakpoint;
@@ -22,7 +22,7 @@ class Responsive {
     return MediaQuery.of(context).size.width >= tabletBreakpoint;
   }
 
-  /// 根据屏幕尺寸返回不同的值
+  /// 根据屏幕尺寸返回不同的�?
   static T responsive<T>(
     BuildContext context, {
     required T mobile,
@@ -48,7 +48,7 @@ class Responsive {
     );
   }
 
-  /// 获取响应式间距
+  /// 获取响应式间�?
   static double getSpacing(BuildContext context) {
     return responsive(
       context,
@@ -58,7 +58,7 @@ class Responsive {
     );
   }
 
-  /// 获取响应式字体缩放
+  /// 获取响应式字体缩�?
   static double getFontScale(BuildContext context) {
     return responsive(
       context,
@@ -68,7 +68,7 @@ class Responsive {
     );
   }
 
-  /// 获取对话框最大宽度
+  /// 获取对话框最大宽�?
   static double getDialogMaxWidth(BuildContext context) {
     return responsive(
       context,
@@ -78,7 +78,7 @@ class Responsive {
     );
   }
 
-  /// 获取内容最大宽度
+  /// 获取内容最大宽�?
   static double getContentMaxWidth(BuildContext context) {
     return responsive(
       context,

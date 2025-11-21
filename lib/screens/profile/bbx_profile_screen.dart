@@ -66,7 +66,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
         });
       }
 
-      // TODO: 加载交易、报价、收藏数量
+      // TODO: 加载交易、报价、收藏数�?
       setState(() {
         transactionCount = 12;
         offerCount = 5;
@@ -111,10 +111,10 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
           // 设置区域
           _buildSettingsSection(),
 
-          // 帮助与支持
+          // 帮助与支�?
           _buildHelpSection(),
 
-          // 退出登录
+          // 退出登�?
           _buildLogoutButton(),
 
           // 底部间距
@@ -156,9 +156,9 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               ),
               const SizedBox(height: AppTheme.spacing12),
 
-              // 用户名
+              // 用户�?
               Text(
-                user?.displayName ?? '未登录',
+                user?.displayName ?? '未登�?,
                 style: AppTheme.heading2.copyWith(color: Colors.white),
               ),
               const SizedBox(height: AppTheme.spacing4),
@@ -249,7 +249,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
           ),
           child: Row(
             children: [
-              _buildStatItem('交易数', transactionCount.toString(), () {
+              _buildStatItem('交易�?, transactionCount.toString(), () {
                 Navigator.pushNamed(context, '/transactions');
               }),
               Container(
@@ -257,7 +257,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 height: 40,
                 color: AppTheme.neutral300,
               ),
-              _buildStatItem('报价数', offerCount.toString(), () {
+              _buildStatItem('报价�?, offerCount.toString(), () {
                 Navigator.pushNamed(context, '/my-offers');
               }),
               Container(
@@ -265,7 +265,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 height: 40,
                 color: AppTheme.neutral300,
               ),
-              _buildStatItem('收藏数', favoriteCount.toString(), () {
+              _buildStatItem('收藏�?, favoriteCount.toString(), () {
                 Navigator.pushNamed(context, '/favorites');
               }),
             ],
@@ -343,7 +343,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                     icon: Icons.card_giftcard_rounded,
                     iconColor: AppTheme.error,
                     title: '积分奖励',
-                    trailing: '$rewardPoints 分',
+                    trailing: '$rewardPoints �?,
                     onTap: () => Navigator.pushNamed(context, '/rewards'),
                   ),
                 ],
@@ -376,14 +376,14 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   _buildMenuItem(
                     icon: Icons.inventory_2_rounded,
                     title: '我的商品',
-                    subtitle: '已发布 12 个',
+                    subtitle: '已发�?12 �?,
                     onTap: () => Navigator.pushNamed(context, '/my-listings'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.local_offer_rounded,
                     title: '我的报价',
-                    subtitle: '待处理 5 个',
+                    subtitle: '待处�?5 �?,
                     badge: 5,
                     onTap: () => Navigator.pushNamed(context, '/my-offers'),
                   ),
@@ -391,21 +391,21 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   _buildMenuItem(
                     icon: Icons.receipt_long_rounded,
                     title: '我的交易',
-                    subtitle: '进行中 2 笔',
+                    subtitle: '进行�?2 �?,
                     onTap: () => Navigator.pushNamed(context, '/transactions'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.favorite_rounded,
                     title: '我的收藏',
-                    subtitle: '已收藏 8 个',
+                    subtitle: '已收�?8 �?,
                     onTap: () => Navigator.pushNamed(context, '/favorites'),
                   ),
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.location_on_rounded,
                     title: '附近商品',
-                    subtitle: '基于位置筛选',
+                    subtitle: '基于位置筛�?,
                     onTap: () => Navigator.pushNamed(context, '/nearby'),
                   ),
                 ],
@@ -440,7 +440,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 _buildMembershipCard(
                   icon: Icons.workspace_premium_rounded,
                   title: '订阅计划',
-                  subtitle: '升级享更多权益',
+                  subtitle: '升级享更多权�?,
                   gradient: const LinearGradient(
                     colors: [Color(0xFFFFD700), Color(0xFFFFA500)],
                   ),
@@ -457,8 +457,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 ),
                 _buildMembershipCard(
                   icon: Icons.confirmation_number_rounded,
-                  title: '优惠券',
-                  subtitle: '$availableCoupons 张可用',
+                  title: '优惠�?,
+                  subtitle: '$availableCoupons 张可�?,
                   gradient: const LinearGradient(
                     colors: [AppTheme.accent, Color(0xFF64B5F6)],
                   ),
@@ -549,7 +549,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 帮助与支持
+  /// 帮助与支�?
   Widget _buildHelpSection() {
     return SliverToBoxAdapter(
       child: Padding(
@@ -557,7 +557,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('帮助与支持', style: AppTheme.heading3),
+            const Text('帮助与支�?, style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Container(
               decoration: BoxDecoration(
@@ -581,7 +581,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   const Divider(height: 1, indent: 56),
                   _buildMenuItem(
                     icon: Icons.star_border_rounded,
-                    title: '给我们评分',
+                    title: '给我们评�?,
                     onTap: () {
                       // TODO: 打开应用商店评分
                     },
@@ -607,7 +607,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 退出登录按钮
+  /// 退出登录按�?
   Widget _buildLogoutButton() {
     return SliverToBoxAdapter(
       child: Padding(
@@ -624,7 +624,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               color: AppTheme.error,
             ),
             title: const Text(
-              '退出登录',
+              '退出登�?,
               style: TextStyle(
                 color: AppTheme.error,
                 fontWeight: AppTheme.semibold,
@@ -637,7 +637,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 账户项
+  /// 账户�?
   Widget _buildAccountItem({
     required IconData icon,
     required Color iconColor,
@@ -675,7 +675,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     );
   }
 
-  /// 菜单项
+  /// 菜单�?
   Widget _buildMenuItem({
     required IconData icon,
     required String title,
@@ -819,8 +819,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('退出登录'),
-        content: const Text('确定要退出登录吗？'),
+        title: const Text('退出登�?),
+        content: const Text('确定要退出登录吗�?),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -51,7 +51,7 @@ class _BBXTransactionDetailScreenState
 
       setState(() => _isLoading = true);
 
-      // 上传到 Firebase Storage
+      // 上传�?Firebase Storage
       final userId = _auth.currentUser!.uid;
       final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = FirebaseStorage.instance
@@ -61,7 +61,7 @@ class _BBXTransactionDetailScreenState
       await ref.putFile(File(image.path));
       final url = await ref.getDownloadURL();
 
-      // 显示对话框输入物流单号
+      // 显示对话框输入物流单�?
       if (!mounted) return;
 
       final trackingNumber = await showDialog<String>(
@@ -123,7 +123,7 @@ class _BBXTransactionDetailScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('确认收货'),
-        content: const Text('确认收到商品并满意吗？确认后资金将释放给卖家。'),
+        content: const Text('确认收到商品并满意吗？确认后资金将释放给卖家�?),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -146,7 +146,7 @@ class _BBXTransactionDetailScreenState
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('已确认收货')),
+          const SnackBar(content: Text('已确认收�?)),
         );
       }
     } catch (e) {
@@ -163,11 +163,11 @@ class _BBXTransactionDetailScreenState
     final reason = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('申请退款'),
+        title: const Text('申请退�?),
         content: TextField(
           controller: _refundReasonController,
           decoration: const InputDecoration(
-            labelText: '退款原因',
+            labelText: '退款原�?,
             border: OutlineInputBorder(),
           ),
           maxLines: 3,
@@ -240,11 +240,11 @@ class _BBXTransactionDetailScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // 交易状态卡片
+                // 交易状态卡�?
                 _buildStatusCard(data),
                 const SizedBox(height: 16),
 
-                // 交易进度时间轴
+                // 交易进度时间�?
                 _buildTimeline(data),
                 const SizedBox(height: 16),
 
@@ -321,7 +321,7 @@ class _BBXTransactionDetailScreenState
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '订单号: ${widget.transactionId.substring(0, 8)}',
+                    '订单�? ${widget.transactionId.substring(0, 8)}',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 ],
@@ -467,9 +467,9 @@ class _BBXTransactionDetailScreenState
             ),
             const SizedBox(height: 12),
             _buildInfoRow('支付方式', data['paymentMethod'] ?? 'Online Banking'),
-            _buildInfoRow('托管状态', EscrowStatus.fromString(data['escrowStatus']).label),
+            _buildInfoRow('托管状�?, EscrowStatus.fromString(data['escrowStatus']).label),
             if (data['refundReason'] != null)
-              _buildInfoRow('退款原因', data['refundReason']),
+              _buildInfoRow('退款原�?, data['refundReason']),
           ],
         ),
       ),
@@ -567,7 +567,7 @@ class _BBXTransactionDetailScreenState
       child: OutlinedButton.icon(
         onPressed: _requestRefund,
         icon: const Icon(Icons.money_off),
-        label: const Text('申请退款'),
+        label: const Text('申请退�?),
         style: OutlinedButton.styleFrom(
           foregroundColor: Colors.red,
         ),

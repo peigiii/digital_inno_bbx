@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class LogisticsUpdateModel {
   final String id;
   final String transactionId; // 所属交易ID
-  final String status; // 状态更新
+  final String status; // 状态更�?
   final String? location; // 当前位置
   final String description; // 描述信息
-  final String? imageUrl; // 图片证明（如取货照片）
+  final String? imageUrl; // 图片证明（如取货照片�?
   final String createdBy; // 创建人ID
   final DateTime createdAt; // 创建时间
 
@@ -22,13 +22,13 @@ class LogisticsUpdateModel {
     required this.createdAt,
   });
 
-  /// 从 Firestore 文档创建
+  /// �?Firestore 文档创建
   factory LogisticsUpdateModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return LogisticsUpdateModel.fromMap(doc.id, data);
   }
 
-  /// 从 Map 创建
+  /// �?Map 创建
   factory LogisticsUpdateModel.fromMap(String id, Map<String, dynamic> data) {
     return LogisticsUpdateModel(
       id: id,
@@ -42,7 +42,7 @@ class LogisticsUpdateModel {
     );
   }
 
-  /// 转换为 Map（用于Firestore）
+  /// 转换�?Map（用于Firestore�?
   Map<String, dynamic> toMap() {
     return {
       'transactionId': transactionId,
@@ -55,7 +55,7 @@ class LogisticsUpdateModel {
     };
   }
 
-  /// 复制并修改部分字段
+  /// 复制并修改部分字�?
   LogisticsUpdateModel copyWith({
     String? status,
     String? location,
@@ -74,19 +74,19 @@ class LogisticsUpdateModel {
     );
   }
 
-  /// 获取状态显示文本
+  /// 获取状态显示文�?
   String get statusDisplay {
     switch (status) {
       case 'pending':
-        return '待发货';
+        return '待发�?;
       case 'picked_up':
-        return '已取货';
+        return '已取�?;
       case 'in_transit':
-        return '运输中';
+        return '运输�?;
       case 'delivered':
         return '已送达';
       case 'completed':
-        return '已完成';
+        return '已完�?;
       default:
         return status;
     }

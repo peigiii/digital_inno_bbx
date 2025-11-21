@@ -14,7 +14,7 @@ class BBXBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 根据是否是管理员决定显示哪些导航项
+    // 根据是否是管理员决定显示哪些导航�?
     final items = [
       const BottomNavigationBarItem(
         icon: Icon(Icons.people),

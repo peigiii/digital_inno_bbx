@@ -221,7 +221,7 @@ class BBXListingCard extends StatelessWidget {
 
                 const SizedBox(height: AppTheme.spacing4),
 
-                // 价格和按钮
+                // 价格和按�?
                 Row(
                   children: [
                     Expanded(
@@ -531,7 +531,7 @@ class BBXTransactionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 顶部：交易编号和状态
+          // 顶部：交易编号和状�?
           Row(
             children: [
               Text(
@@ -610,14 +610,14 @@ class BBXTransactionCard extends StatelessWidget {
           // 时间信息
           const SizedBox(height: AppTheme.spacing8),
           Text(
-            '创建时间：$createdAt',
+            '创建时间�?createdAt',
             style: AppTheme.caption.copyWith(
               color: AppTheme.neutral500,
             ),
           ),
           if (estimatedPickupDate != null)
             Text(
-              '预计取货：$estimatedPickupDate',
+              '预计取货�?estimatedPickupDate',
               style: AppTheme.caption.copyWith(
                 color: AppTheme.neutral700,
                 fontWeight: AppTheme.semibold,

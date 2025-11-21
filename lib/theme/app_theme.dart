@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// 定义了所有颜色、字体、间距、圆角、阴影等设计规范
 class AppTheme {
   // ============================================================================
-  // 主色调（Primary）- 环保主题深绿色系
+  // 主色调（Primary�? 环保主题深绿色系
   // ============================================================================
 
   static const Color primary500 = Color(0xFF2E7D32);
@@ -23,7 +23,7 @@ class AppTheme {
   static const Color primary800 = Color(0xFF1B5E20); // 新增
 
   // ============================================================================
-  // 次要色调（Secondary）- 橙色系，用于废料回收强调
+  // 次要色调（Secondary�? 橙色系，用于废料回收强调
   // ============================================================================
 
   static const Color secondary500 = Color(0xFFF57C00);
@@ -32,12 +32,12 @@ class AppTheme {
   static const Color secondary200 = Color(0xFFFFCC80);
   static const Color secondary100 = Color(0xFFFFE0B2);
 
-  // 次要色别名
+  // 次要色别�?
   static const Color secondary = secondary500;
   static const Color accent = Color(0xFF2196F3); // 蓝色链接
 
   // ============================================================================
-  // 中性色（Neutral）- 灰度系统
+  // 中性色（Neutral�? 灰度系统
   // ============================================================================
 
   static const Color neutral900 = Color(0xFF212121); // 标题
@@ -46,12 +46,12 @@ class AppTheme {
   static const Color neutral600 = Color(0xFF757575);
   static const Color neutral500 = Color(0xFF9E9E9E); // 辅助文字
   static const Color neutral400 = Color(0xFFBDBDBD);
-  static const Color neutral300 = Color(0xFFE0E0E0); // 分割线
+  static const Color neutral300 = Color(0xFFE0E0E0); // 分割�?
   static const Color neutral200 = Color(0xFFEEEEEE); // 背景
   static const Color neutral100 = Color(0xFFF5F5F5);
   static const Color neutral50 = Color(0xFFFAFAFA);
 
-  // 中性色别名（兼容旧代码）
+  // 中性色别名（兼容旧代码�?
   static const Color textPrimary = neutral900;
   static const Color textSecondary = neutral600;
   static const Color textLight = neutral500;
@@ -64,7 +64,7 @@ class AppTheme {
   static const Color surface = Colors.white;
 
   // ============================================================================
-  // 语义色（Semantic）- 状态提示色
+  // 语义色（Semantic�? 状态提示色
   // ============================================================================
 
   static const Color success = Color(0xFF4CAF50);   // 成功、已完成
@@ -110,7 +110,7 @@ class AppTheme {
     }
   }
 
-  // 根据状态获取颜色
+  // 根据状态获取颜�?
   static Color getStatusColor(String status) {
     switch (status.toLowerCase().trim()) {
       case 'active':
@@ -139,7 +139,7 @@ class AppTheme {
 
   static const double heading1Size = 32.0;  // 页面标题
   static const double heading2Size = 24.0;  // 卡片标题
-  static const double heading3Size = 20.0;  // 子标题
+  static const double heading3Size = 20.0;  // 子标�?
   static const double heading4Size = 18.0;
   static const double body1Size = 16.0;     // 正文
   static const double body2Size = 14.0;     // 次要文本
@@ -224,7 +224,7 @@ class AppTheme {
     height: 1.2,
   );
 
-  // 旧样式别名（兼容）
+  // 旧样式别名（兼容�?
   static const TextStyle h1 = heading1;
   static const TextStyle h2 = heading2;
   static const TextStyle h3 = heading3;
@@ -244,7 +244,7 @@ class AppTheme {
   static const double spacing40 = 40.0;
   static const double spacing48 = 48.0;
 
-  // 间距别名（兼容旧代码）
+  // 间距别名（兼容旧代码�?
   static const double spacingXS = spacing4;
   static const double spacingSM = spacing8;
   static const double spacingMD = spacing16;
@@ -258,7 +258,7 @@ class AppTheme {
   static const double radiusSmall = 4.0;    // 标签
   static const double radiusMedium = 8.0;   // 卡片
   static const double radiusLarge = 12.0;   // 按钮、输入框
-  static const double radiusXLarge = 16.0;  // 大卡片
+  static const double radiusXLarge = 16.0;  // 大卡�?
   static const double radiusFull = 999.0;   // 圆形
 
   // 圆角别名
@@ -341,7 +341,7 @@ class AppTheme {
   static const double appBarHeight = 80.0;
 
   // ============================================================================
-  // 渐变色
+  // 渐变�?
   // ============================================================================
 
   static const LinearGradient primaryGradient = LinearGradient(
@@ -356,7 +356,7 @@ class AppTheme {
     end: Alignment.bottomRight,
   );
 
-  // 分类渐变色
+  // 分类渐变�?
   static LinearGradient getCategoryGradient(String category) {
     final color = getCategoryColor(category);
     return LinearGradient(
@@ -449,7 +449,7 @@ class AppTheme {
         ),
       ),
 
-      // 输入框主题
+      // 输入框主�?
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: surface,
@@ -482,7 +482,7 @@ class AppTheme {
         errorStyle: caption.copyWith(color: error),
       ),
 
-      // 底部导航栏主题
+      // 底部导航栏主�?
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: surface,
         selectedItemColor: primary500,
@@ -499,7 +499,7 @@ class AppTheme {
         elevation: 8,
       ),
 
-      // 分割线主题
+      // 分割线主�?
       dividerTheme: const DividerThemeData(
         color: neutral300,
         thickness: 1,

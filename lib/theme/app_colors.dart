@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-/// BBX 应用颜色系统（Material Design 3 标准）
-/// 为 Pixel 5 优化的现代化配色方案
+/// BBX 应用颜色系统（Material Design 3 标准�?
+/// �?Pixel 5 优化的现代化配色方案
 class AppColors {
   AppColors._();
 
   // ============================================================================
-  // 主色系 - 环保绿色（Primary）
+  // 主色�?- 环保绿色（Primary�?
   // ============================================================================
   
   static const Color primary = Color(0xFF2E7D32);
@@ -25,7 +25,7 @@ class AppColors {
   static const Color primary900 = Color(0xFF1B5E20);
 
   // ============================================================================
-  // 次要色系 - 橙色（Secondary）
+  // 次要色系 - 橙色（Secondary�?
   // ============================================================================
   
   static const Color secondary = Color(0xFFF57C00);
@@ -44,7 +44,7 @@ class AppColors {
   static const Color secondary900 = Color(0xFFE65100);
 
   // ============================================================================
-  // 语义色系 - 状态颜色
+  // 语义色系 - 状态颜�?
   // ============================================================================
   
   /// 成功 - 绿色
@@ -52,7 +52,7 @@ class AppColors {
   static const Color successLight = Color(0xFFC8E6C9);
   static const Color successDark = Color(0xFF2E7D32);
   
-  /// 警告 - 橙黄色
+  /// 警告 - 橙黄�?
   static const Color warning = Color(0xFFFF9800);
   static const Color warningLight = Color(0xFFFFE0B2);
   static const Color warningDark = Color(0xFFF57C00);
@@ -68,7 +68,7 @@ class AppColors {
   static const Color infoDark = Color(0xFF1976D2);
 
   // ============================================================================
-  // 中性色系 - 文字和背景
+  // 中性色�?- 文字和背�?
   // ============================================================================
   
   /// 文字颜色
@@ -91,7 +91,7 @@ class AppColors {
   static const Color borderLight = Color(0xFFEEEEEE);
 
   // ============================================================================
-  // 废料分类颜色 - 用于图标和标签
+  // 废料分类颜色 - 用于图标和标�?
   // ============================================================================
   
   static const Color plastic = Color(0xFF2196F3);       // 塑料 - 蓝色
@@ -149,7 +149,7 @@ class AppColors {
     return getCategoryColor(category).withOpacity(0.1);
   }
 
-  /// 根据状态获取颜色
+  /// 根据状态获取颜�?
   static Color getStatusColor(String status) {
     switch (status.toLowerCase().trim()) {
       case 'active':
@@ -172,7 +172,7 @@ class AppColors {
     }
   }
 
-  /// 获取状态浅色背景
+  /// 获取状态浅色背�?
   static Color getStatusLightColor(String status) {
     return getStatusColor(status).withOpacity(0.1);
   }
@@ -240,7 +240,7 @@ class AppColors {
   static Color shadowColorLight = Colors.black.withOpacity(0.04);
 
   // ============================================================================
-  // 覆盖层颜色
+  // 覆盖层颜�?
   // ============================================================================
   
   static Color overlayLight = Colors.black.withOpacity(0.3);

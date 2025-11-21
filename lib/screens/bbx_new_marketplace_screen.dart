@@ -11,7 +11,7 @@ import '../widgets/marketplace/supplier_card.dart';
 import 'bbx_listing_detail_screen.dart';
 
 /// BBX 新版市场首页
-/// 现代化设计，参考 Alibaba B2B 和 IndiaMART
+/// 现代化设计，参�?Alibaba B2B �?IndiaMART
 class BBXNewMarketplaceScreen extends StatefulWidget {
   const BBXNewMarketplaceScreen({super.key});
 
@@ -50,7 +50,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
   Future<void> _loadInitialProducts() async {
     try {
       Query query = FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .where('status', isEqualTo: 'available')
           .orderBy('createdAt', descending: true)
           .limit(_productsPerPage);
@@ -82,7 +82,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
 
     try {
       Query query = FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .where('status', isEqualTo: 'available')
           .orderBy('createdAt', descending: true)
           .startAfterDocument(_lastDocument!)
@@ -171,10 +171,10 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入报价';
+                            return '请输入报�?;
                           }
                           if (double.tryParse(value) == null) {
-                            return '请输入有效数字';
+                            return '请输入有效数�?;
                           }
                           return null;
                         },
@@ -220,7 +220,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
                       TextAreaInput(
                         controller: messageController,
                         label: '留言（可选）',
-                        hint: '说明您的收集计划或其他信息',
+                        hint: '说明您的收集计划或其他信�?,
                         minLines: 3,
                         maxLines: 5,
                       ),
@@ -283,7 +283,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
           .get();
 
       if (!userDoc.exists) {
-        throw Exception('用户数据不存在');
+        throw Exception('用户数据不存�?);
       }
 
       final userData = userDoc.data() as Map<String, dynamic>;
@@ -310,14 +310,14 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('提交超时，请检查网络连接');
+              throw Exception('提交超时，请检查网络连�?);
             },
           );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('报价提交成功！'),
+            content: Text('报价提交成功�?),
             backgroundColor: AppTheme.success,
           ),
         );
@@ -441,7 +441,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
               ),
               child: TextField(
                 decoration: InputDecoration(
-                  hintText: '搜索生物质废料、公司、城市...',
+                  hintText: '搜索生物质废料、公司、城�?..',
                   hintStyle: AppTheme.body2.copyWith(color: AppTheme.textHint),
                   prefixIcon: const Icon(Icons.search, color: AppTheme.textSecondary),
                   suffixIcon: IconButton(
@@ -470,7 +470,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
             onPressed: () {
               // Show filter dialog
             },
-            tooltip: '筛选',
+            tooltip: '筛�?,
           ),
         ],
       ),
@@ -499,7 +499,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
                 ),
                 const SizedBox(height: AppTheme.spacingMD),
                 Text(
-                  'BBX 生物质交易平台',
+                  'BBX 生物质交易平�?,
                   style: AppTheme.h3.copyWith(color: AppTheme.primaryDark),
                 ),
                 const SizedBox(height: AppTheme.spacingSM),
@@ -552,7 +552,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
     try {
       // Fetch real stats from Firestore
       final listingsSnapshot = await FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .where('status', isEqualTo: 'available')
           .get();
 
@@ -603,7 +603,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
     return Column(
       children: [
         SectionHeader(
-          title: '⭐ 优质供应商',
+          title: '�?优质供应�?,
           actionText: '查看全部',
           onActionTap: () {
             // Navigate to all suppliers
@@ -635,7 +635,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return Center(
                   child: Text(
-                    '暂无供应商',
+                    '暂无供应�?,
                     style: AppTheme.body2.copyWith(color: AppTheme.textSecondary),
                   ),
                 );
@@ -699,7 +699,7 @@ class _BBXNewMarketplaceScreenState extends State<BBXNewMarketplaceScreen> {
         child: EmptyStateCard(
           icon: Icons.search_off,
           title: '未找到匹配的商品',
-          message: '请尝试调整搜索条件',
+          message: '请尝试调整搜索条�?,
         ),
       );
     }

@@ -125,7 +125,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        throw Exception('用户未登录');
+        throw Exception('用户未登�?);
       }
 
       final wasteListing = {
@@ -149,19 +149,19 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
       };
 
       await FirebaseFirestore.instance
-          .collection('waste_listings')
+          .collection('listings')
           .add(wasteListing)
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('提交超时，请检查网络连接');
+              throw Exception('提交超时，请检查网络连�?);
             },
           );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('废料信息发布成功！'),
+            content: Text('废料信息发布成功�?),
             backgroundColor: Colors.green,
           ),
         );
@@ -252,7 +252,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       ),
                     ),
                     Text(
-                      '将您的生物质废料转化为收益',
+                      '将您的生物质废料转化为收�?,
                       style: TextStyle(
                         fontSize: isTablet ? 16 : 14,
                         color: Colors.grey[600],
@@ -290,11 +290,11 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                         decoration: const InputDecoration(
                           labelText: '废料标题',
                           prefixIcon: Icon(Icons.title),
-                          hintText: '例如：高质量棕榈空果串',
+                          hintText: '例如：高质量棕榈空果�?,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入废料标题';
+                            return '请输入废料标�?;
                           }
                           return null;
                         },
@@ -347,10 +347,10 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                               keyboardType: TextInputType.number,
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return '请输入数量';
+                                  return '请输入数�?;
                                 }
                                 if (double.tryParse(value) == null) {
-                                  return '请输入有效数字';
+                                  return '请输入有效数�?;
                                 }
                                 return null;
                               },
@@ -393,15 +393,15 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                         decoration: const InputDecoration(
                           labelText: '单价 (RM)',
                           prefixIcon: Icon(Icons.monetization_on),
-                          hintText: '每单位价格',
+                          hintText: '每单位价�?,
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入单价';
+                            return '请输入单�?;
                           }
                           if (double.tryParse(value) == null) {
-                            return '请输入有效价格';
+                            return '请输入有效价�?;
                           }
                           return null;
                         },
@@ -419,7 +419,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                         maxLines: 3,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入详细描述';
+                            return '请输入详细描�?;
                           }
                           return null;
                         },
@@ -432,11 +432,11 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                         decoration: const InputDecoration(
                           labelText: '联系方式',
                           prefixIcon: Icon(Icons.contact_phone),
-                          hintText: '电话号码或邮箱',
+                          hintText: '电话号码或邮�?,
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入联系方式';
+                            return '请输入联系方�?;
                           }
                           return null;
                         },
@@ -528,8 +528,8 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                                           ? const Text('正在获取位置信息...')
                                           : Text(
                                               _currentPosition != null
-                                                  ? '位置已获取'
-                                                  : '位置信息未获取',
+                                                  ? '位置已获�?
+                                                  : '位置信息未获�?,
                                               style: TextStyle(
                                                 color: _currentPosition != null 
                                                     ? const Color(0xFF2E7D32) 
@@ -602,7 +602,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '所有发布的废料信息将经过PCDS 2030合规性审核,确保符合可持续发展标准',
+                      '所有发布的废料信息将经过PCDS 2030合规性审�?确保符合可持续发展标�?,
                       style: TextStyle(
                         fontSize: isTablet ? 14 : 12,
                         color: Colors.grey[700],

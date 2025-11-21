@@ -11,11 +11,11 @@ class MessageModel {
   final DateTime? createdAt;
   final bool isRead; // 是否已读
   final DateTime? readAt; // 已读时间
-  final String? imageUrl; // 图片URL（当type=image）
-  final String? fileUrl; // 文件URL（当type=file）
-  final String? fileName; // 文件名（当type=file）
-  final Map<String, dynamic>? location; // 位置信息（当type=location）
-  final String? listingId; // 商品ID（当type=listing）
+  final String? imageUrl; // 图片URL（当type=image�?
+  final String? fileUrl; // 文件URL（当type=file�?
+  final String? fileName; // 文件名（当type=file�?
+  final Map<String, dynamic>? location; // 位置信息（当type=location�?
+  final String? listingId; // 商品ID（当type=listing�?
 
   MessageModel({
     required this.id,
@@ -34,13 +34,13 @@ class MessageModel {
     this.listingId,
   });
 
-  /// 从 Firestore 文档创建
+  /// �?Firestore 文档创建
   factory MessageModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return MessageModel.fromMap(doc.id, data);
   }
 
-  /// 从 Map 创建
+  /// �?Map 创建
   factory MessageModel.fromMap(String id, Map<String, dynamic> data) {
     return MessageModel(
       id: id,
@@ -60,7 +60,7 @@ class MessageModel {
     );
   }
 
-  /// 转换为 Map（用于Firestore）
+  /// 转换�?Map（用于Firestore�?
   Map<String, dynamic> toMap() {
     return {
       'conversationId': conversationId,
@@ -79,7 +79,7 @@ class MessageModel {
     };
   }
 
-  /// 复制并修改部分字段
+  /// 复制并修改部分字�?
   MessageModel copyWith({
     String? content,
     String? type,
@@ -109,19 +109,19 @@ class MessageModel {
     );
   }
 
-  /// 是否为文本消息
+  /// 是否为文本消�?
   bool get isText => type == 'text';
 
-  /// 是否为图片消息
+  /// 是否为图片消�?
   bool get isImage => type == 'image';
 
-  /// 是否为文件消息
+  /// 是否为文件消�?
   bool get isFile => type == 'file';
 
-  /// 是否为位置消息
+  /// 是否为位置消�?
   bool get isLocation => type == 'location';
 
-  /// 是否为商品链接
+  /// 是否为商品链�?
   bool get isListing => type == 'listing';
 
   @override
@@ -134,8 +134,8 @@ class MessageModel {
 class ConversationModel {
   final String id;
   final List<String> participantIds; // 两个用户的ID
-  final String? lastMessage; // 最后一条消息内容
-  final DateTime? lastMessageAt; // 最后消息时间
+  final String? lastMessage; // 最后一条消息内�?
+  final DateTime? lastMessageAt; // 最后消息时�?
   final String? lastMessageSenderId; // 最后消息发送者ID
   final Map<String, int> unreadCount; // 未读数：userId -> count
   final Map<String, bool> isTyping; // 正在输入：userId -> isTyping
@@ -152,13 +152,13 @@ class ConversationModel {
     this.createdAt,
   });
 
-  /// 从 Firestore 文档创建
+  /// �?Firestore 文档创建
   factory ConversationModel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return ConversationModel.fromMap(doc.id, data);
   }
 
-  /// 从 Map 创建
+  /// �?Map 创建
   factory ConversationModel.fromMap(String id, Map<String, dynamic> data) {
     return ConversationModel(
       id: id,
@@ -178,7 +178,7 @@ class ConversationModel {
     );
   }
 
-  /// 转换为 Map（用于Firestore）
+  /// 转换�?Map（用于Firestore�?
   Map<String, dynamic> toMap() {
     return {
       'participantIds': participantIds,
@@ -191,7 +191,7 @@ class ConversationModel {
     };
   }
 
-  /// 复制并修改部分字段
+  /// 复制并修改部分字�?
   ConversationModel copyWith({
     List<String>? participantIds,
     String? lastMessage,
@@ -212,7 +212,7 @@ class ConversationModel {
     );
   }
 
-  /// 获取某用户的未读数
+  /// 获取某用户的未读�?
   int getUnreadCount(String userId) {
     return unreadCount[userId] ?? 0;
   }

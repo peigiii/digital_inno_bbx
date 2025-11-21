@@ -27,7 +27,7 @@ class StatCards extends StatelessWidget {
           _buildStatCard(
             icon: Icons.inventory_2,
             value: '${_formatNumber(totalTonnage)}',
-            label: '总交易量（吨）',
+            label: '总交易量（吨�?,
             color: AppTheme.primary,
           ),
           _buildStatCard(

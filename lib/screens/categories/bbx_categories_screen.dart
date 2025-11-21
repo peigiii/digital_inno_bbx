@@ -85,7 +85,7 @@ class BBXCategoriesScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: AppTheme.spacing4),
                   Text(
-                    '${category['count']} 个商品',
+                    '${category['count']} 个商�?,
                     style: AppTheme.caption.copyWith(
                       color: Colors.white.withOpacity(0.9),
                     ),

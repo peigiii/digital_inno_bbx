@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 
 /// 配送方式配置类
 class DeliveryConfig {
-  /// 配送方式配置
+  /// 配送方式配�?
   static const Map<String, Map<String, dynamic>> methods = {
     'self_collect': {
       'label': '自提',
       'icon': Icons.store,
       'color': Color(0xFF4CAF50), // 绿色
-      'description': '到卖家指定地点取货',
+      'description': '到卖家指定地点取�?,
     },
     'delivery': {
       'label': '邮寄',
       'icon': Icons.local_shipping,
       'color': Color(0xFF2196F3), // 蓝色
-      'description': '卖家安排快递配送',
+      'description': '卖家安排快递配�?,
     },
   };
 
-  /// 快递公司列表
+  /// 快递公司列�?
   static const List<String> courierCompanies = [
     'Pos Laju',
     'J&T Express',
@@ -31,37 +31,37 @@ class DeliveryConfig {
     '其他',
   ];
 
-  /// 获取配送方式标签
+  /// 获取配送方式标�?
   static String getLabel(String method) {
     return methods[method]?['label'] ?? method;
   }
 
-  /// 获取配送方式图标
+  /// 获取配送方式图�?
   static IconData getIcon(String method) {
     return methods[method]?['icon'] ?? Icons.local_shipping;
   }
 
-  /// 获取配送方式颜色
+  /// 获取配送方式颜�?
   static Color getColor(String method) {
     return methods[method]?['color'] ?? Colors.grey;
   }
 
-  /// 获取配送方式描述
+  /// 获取配送方式描�?
   static String getDescription(String method) {
     return methods[method]?['description'] ?? '';
   }
 
-  /// 是否是自提
+  /// 是否是自�?
   static bool isSelfCollect(String? method) {
     return method == 'self_collect';
   }
 
-  /// 是否是邮寄
+  /// 是否是邮�?
   static bool isDelivery(String? method) {
     return method == 'delivery';
   }
 
-  /// 构建配送方式标签组件
+  /// 构建配送方式标签组�?
   static Widget buildMethodChip(String method, {bool small = false}) {
     final config = methods[method];
     if (config == null) return const SizedBox.shrink();
@@ -116,7 +116,7 @@ class DeliveryConfig {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '邮费需与卖家协商(额外支付)',
+              '邮费需与卖家协�?额外支付)',
               style: TextStyle(
                 color: Colors.orange[700],
                 fontSize: 13,

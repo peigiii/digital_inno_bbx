@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// 优惠券状态
+/// 优惠券状�?
 enum CouponStatus {
   available,
   used,
   expired,
 }
 
-/// 优惠券类型
+/// 优惠券类�?
 enum CouponType {
   fixed, // 固定金额
-  percentage, // 百分比折扣
+  percentage, // 百分比折�?
 }
 
-/// 优惠券模型
+/// 优惠券模�?
 class CouponModel {
   final String id;
   final String userId;
@@ -22,7 +22,7 @@ class CouponModel {
   final String description;
   final CouponType discountType;
   final int discount; // 折扣值（如果是fixed则是金额，如果是percentage则是百分比）
-  final double minAmount; // 最小使用金额
+  final double minAmount; // 最小使用金�?
   final CouponStatus status;
   final DateTime expiryDate;
   final DateTime? usedAt;
@@ -126,10 +126,10 @@ class CouponModel {
   bool get isAvailable =>
       status == CouponStatus.available && !isExpired;
 
-  /// 是否已过期
+  /// 是否已过�?
   bool get isExpired => DateTime.now().isAfter(expiryDate);
 
-  /// 是否已使用
+  /// 是否已使�?
   bool get isUsed => status == CouponStatus.used;
 
   /// 计算折扣金额
@@ -146,7 +146,7 @@ class CouponModel {
     }
   }
 
-  /// 计算最终金额
+  /// 计算最终金�?
   double calculateFinalAmount(double amount) {
     final discountAmount = calculateDiscount(amount);
     final finalAmount = amount - discountAmount;
@@ -162,15 +162,15 @@ class CouponModel {
     }
   }
 
-  /// 获取状态显示名称
+  /// 获取状态显示名�?
   String get statusDisplayName {
     switch (status) {
       case CouponStatus.available:
         return '可用';
       case CouponStatus.used:
-        return '已使用';
+        return '已使�?;
       case CouponStatus.expired:
-        return '已过期';
+        return '已过�?;
     }
   }
 

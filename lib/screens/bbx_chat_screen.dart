@@ -110,7 +110,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('发送失败: $e'),
+            content: Text('发送失�? $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -187,7 +187,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '还没有消息',
+                          '还没有消�?,
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -195,7 +195,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '发送第一条消息开始对话',
+                          '发送第一条消息开始对�?,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[500],

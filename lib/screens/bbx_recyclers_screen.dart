@@ -21,7 +21,7 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
 
   Future<void> _refreshRecyclers() async {
     setState(() {
-      // 触发重建以刷新 StreamBuilder
+      // 触发重建以刷�?StreamBuilder
     });
   }
 
@@ -187,8 +187,8 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty && _selectedWasteType == 'all'
-                              ? '暂无回收商'
-                              : '未找到匹配的处理者',
+                              ? '暂无回收�?
+                              : '未找到匹配的处理�?,
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -197,7 +197,7 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
                         if (_searchQuery.isEmpty && _selectedWasteType == 'all') ...[
                           const SizedBox(height: 8),
                           Text(
-                            '还没有注册的废料处理者',
+                            '还没有注册的废料处理�?,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[500],
@@ -471,11 +471,11 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
               if (recyclerData['contact'] != null)
                 _buildDetailRow('联系方式', recyclerData['contact']),
               if (recyclerData['rating'] != null && recyclerData['rating'] > 0)
-                _buildDetailRow('评分', '${recyclerData['rating'].toStringAsFixed(1)} ⭐'),
+                _buildDetailRow('评分', '${recyclerData['rating'].toStringAsFixed(1)} �?),
               if (accepts.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Text(
-                  '接受的废料类型',
+                  '接受的废料类�?,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],

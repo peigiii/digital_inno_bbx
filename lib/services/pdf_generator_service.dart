@@ -262,7 +262,7 @@ class PDFGeneratorService {
             ),
             child: pw.Center(
               child: pw.Text(
-                'âœ“',
+                'âœ?,
                 style: const pw.TextStyle(
                   fontSize: 8,
                   color: PdfColors.white,

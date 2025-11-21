@@ -103,12 +103,12 @@ class _BBXWalletScreenState extends State<BBXWalletScreen> {
                 ),
                 const SizedBox(height: AppTheme.spacing24),
 
-                // 充值/提现按钮
+                // 充�?提现按钮
                 Row(
                   children: [
                     Expanded(
                       child: BBXSecondaryButton(
-                        text: '充值',
+                        text: '充�?,
                         icon: Icons.add_circle_outline,
                         onPressed: () => _showDepositDialog(),
                         height: 44,
@@ -246,7 +246,7 @@ class _BBXWalletScreenState extends State<BBXWalletScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('充值'),
+        title: const Text('充�?),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -254,7 +254,7 @@ class _BBXWalletScreenState extends State<BBXWalletScreen> {
               controller: amountController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: '充值金额',
+                labelText: '充值金�?,
                 prefixText: 'RM ',
                 border: OutlineInputBorder(),
               ),
@@ -275,7 +275,7 @@ class _BBXWalletScreenState extends State<BBXWalletScreen> {
             child: const Text('取消'),
           ),
           BBXPrimaryButton(
-            text: '确认充值',
+            text: '确认充�?,
             onPressed: () {
               final amount = double.tryParse(amountController.text) ?? 0;
               if (amount > 0) {
@@ -312,7 +312,7 @@ class _BBXWalletScreenState extends State<BBXWalletScreen> {
             ),
             const SizedBox(height: AppTheme.spacing16),
             const Text(
-              '提现将在1-3个工作日内到账',
+              '提现将在1-3个工作日内到�?,
               style: TextStyle(
                 fontSize: 12,
                 color: AppTheme.neutral600,
@@ -352,14 +352,14 @@ class _BBXWalletScreenState extends State<BBXWalletScreen> {
       transactions.insert(0, {
         'type': 'deposit',
         'amount': amount,
-        'description': '账户充值',
+        'description': '账户充�?,
         'timestamp': DateTime.now().toIso8601String(),
       });
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('充值成功'),
+        content: Text('充值成�?),
         backgroundColor: AppTheme.success,
       ),
     );
@@ -379,7 +379,7 @@ class _BBXWalletScreenState extends State<BBXWalletScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('提现申请已提交'),
+        content: Text('提现申请已提�?),
         backgroundColor: AppTheme.success,
       ),
     );

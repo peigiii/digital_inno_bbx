@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 主按钮 - 绿色填充
+/// 主按�?- 绿色填充
 class PrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -65,7 +65,7 @@ class PrimaryButton extends StatelessWidget {
   }
 }
 
-/// 次按钮 - 白色带边框
+/// 次按�?- 白色带边�?
 class SecondaryButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -244,7 +244,7 @@ class AppIconButton extends StatelessWidget {
   }
 }
 
-/// 危险按钮（删除等操作）
+/// 危险按钮（删除等操作�?
 class DangerButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
@@ -305,7 +305,7 @@ class DangerButton extends StatelessWidget {
   }
 }
 
-/// 小按钮（适用于表格等紧凑场景）
+/// 小按钮（适用于表格等紧凑场景�?
 class SmallButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;

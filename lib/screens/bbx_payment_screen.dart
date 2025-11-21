@@ -85,13 +85,13 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
                   ),
                   const SizedBox(height: 8),
                   _buildSummaryRow(
-                    '平台费 (${fees['platformFee']! / widget.planPrice * 100}%)',
+                    '平台�?(${fees['platformFee']! / widget.planPrice * 100}%)',
                     'RM ${fees['platformFee']!.toStringAsFixed(2)}',
                     isSmall: true,
                   ),
                   const SizedBox(height: 8),
                   _buildSummaryRow(
-                    '支付网关费',
+                    '支付网关�?,
                     'RM ${fees['paymentGatewayFee']!.toStringAsFixed(2)}',
                     isSmall: true,
                   ),
@@ -364,7 +364,7 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
     }
 
     if (!agreedToTerms) {
-      _showError('请同意服务条款');
+      _showError('请同意服务条�?);
       return;
     }
 
@@ -373,12 +373,12 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
     });
 
     try {
-      print('🔄 [支付页面] 开始处理支付...');
+      print('🔄 [支付页面] 开始处理支�?..');
       print('📋 计划: ${widget.planName}');
       print('💰 金额: RM ${widget.planPrice}');
       print('💳 支付方式: $selectedPaymentMethod');
 
-      // 模拟支付处理（实际应调用 PaymentService）
+      // 模拟支付处理（实际应调用 PaymentService�?
       await Future.delayed(const Duration(seconds: 2));
 
       // TODO: 实际支付集成
@@ -388,10 +388,10 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
       //   transactionId: 'subscription_${DateTime.now().millisecondsSinceEpoch}',
       // );
 
-      print('✅ [支付页面] 支付成功');
+      print('�?[支付页面] 支付成功');
 
       if (mounted) {
-        // 导航到确认页面
+        // 导航到确认页�?
         Navigator.pushReplacementNamed(
           context,
           '/payment-confirmation',
@@ -404,7 +404,7 @@ class _BBXPaymentScreenState extends State<BBXPaymentScreen> {
         );
       }
     } catch (e) {
-      print('❌ [支付页面] 支付失败: $e');
+      print('�?[支付页面] 支付失败: $e');
       _showError('支付失败: $e');
     } finally {
       if (mounted) {
