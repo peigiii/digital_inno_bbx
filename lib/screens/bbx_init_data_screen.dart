@@ -380,7 +380,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
       final firestore = FirebaseFirestore.instance;
       final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-      // 清除 waste_listings
+      // 清除 listings
       setState(() => _statusMessage = '清除废料列表...');
       final listings = await firestore.collection('listings').get();
       for (final doc in listings.docs) {
