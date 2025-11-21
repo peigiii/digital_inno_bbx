@@ -106,96 +106,348 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     );
   }
 
-  void _showQuoteDialog(Map<String, dynamic> data) {
-    debugPrint('💰 [ListingDetail] Opening quote dialog...');
+  void _showPurchaseDialog(Map<String, dynamic> data) {
+    debugPrint('🛒 [ListingDetail] Opening purchase dialog...');
 
     final TextEditingController quantityController = TextEditingController();
-    final TextEditingController messageController = TextEditingController();
+    final price = _getPrice(data);
+    final unit = _getUnitLabel(data);
+    final availableQty = _getQuantity(data);
+
+    double calculatedTotal = 0.0;
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Submit Quote Request'),
-        content: SingleChildScrollView(
-          child: Column(
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) {
+          // Calculate total whenever quantity changes
+          final quantity = double.tryParse(quantityController.text) ?? 0;
+          calculatedTotal = quantity * price;
+          final platformFee = calculatedTotal * 0.03; // 3% platform fee
+          final grandTotal = calculatedTotal + platformFee;
+
+          return AlertDialog(
+            title: const Row(
+              children: [
+                Icon(Icons.shopping_cart, color: AppTheme.primary),
+                SizedBox(width: 8),
+                Text('Purchase Product'),
+              ],
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Product info
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppTheme.backgroundGrey,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data['wasteType'] ?? 'Product',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Price: RM ${price.toStringAsFixed(2)} per $unit',
+                          style: const TextStyle(color: AppTheme.textSecondary),
+                        ),
+                        Text(
+                          'Available: $availableQty $unit',
+                          style: const TextStyle(color: AppTheme.textSecondary),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Quantity input
+                  TextField(
+                    controller: quantityController,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      labelText: 'Quantity ($unit)',
+                      border: const OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.production_quantity_limits),
+                      hintText: 'Enter quantity to purchase',
+                    ),
+                    onChanged: (value) {
+                      setState(() {}); // Rebuild to update total
+                    },
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Price breakdown
+                  if (quantity > 0) ...[
+                    const Divider(),
+                    _buildPriceRow('Subtotal', calculatedTotal),
+                    _buildPriceRow('Platform Fee (3%)', platformFee),
+                    const Divider(),
+                    _buildPriceRow(
+                      'Total',
+                      grandTotal,
+                      isTotal: true,
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+
+                  // Important note
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.blue.shade200),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.info_outline, color: Colors.blue, size: 20),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Seller will be notified and will contact you to arrange payment and delivery.',
+                            style: TextStyle(fontSize: 12, color: Colors.blue),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  debugPrint('❌ [ListingDetail] Purchase cancelled');
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton.icon(
+                onPressed: quantity > 0 && quantity <= availableQty
+                    ? () => _submitPurchaseRequest(data, quantity, grandTotal)
+                    : null,
+                icon: const Icon(Icons.check_circle),
+                label: const Text('Submit Request'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primary,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPriceRow(String label, double amount, {bool isTotal = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: isTotal ? 16 : 14,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+              color: isTotal ? Colors.black : AppTheme.textSecondary,
+            ),
+          ),
+          Text(
+            'RM ${amount.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: isTotal ? 16 : 14,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.w600,
+              color: isTotal ? AppTheme.primary : Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submitPurchaseRequest(
+    Map<String, dynamic> data,
+    double quantity,
+    double totalAmount,
+  ) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      debugPrint('⚠️ [ListingDetail] User not logged in for purchase');
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please login to make a purchase')),
+      );
+      Navigator.pushNamed(context, '/login');
+      return;
+    }
+
+    debugPrint('💳 [ListingDetail] Submitting purchase request...');
+    debugPrint('   - Quantity: $quantity');
+    debugPrint('   - Total Amount: RM ${totalAmount.toStringAsFixed(2)}');
+
+    try {
+      // Show loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      // Create transaction in Firestore
+      final transactionRef = await FirebaseFirestore.instance.collection('transactions').add({
+        'listingId': widget.listingId,
+        'buyerId': user.uid,
+        'sellerId': data['userId'],
+        'quantity': quantity,
+        'pricePerUnit': _getPrice(data),
+        'amount': totalAmount - (totalAmount * 0.03), // Subtotal
+        'platformFee': totalAmount * 0.03,
+        'totalAmount': totalAmount,
+        'unit': _getUnitLabel(data),
+        'status': 'pending',
+        'paymentStatus': 'pending',
+        'shippingStatus': 'pending',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      debugPrint('✅ [ListingDetail] Purchase request created: ${transactionRef.id}');
+
+      // Close loading dialog
+      Navigator.pop(context);
+      // Close purchase dialog
+      Navigator.pop(context);
+
+      // Show success message
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Row(
+            children: [
+              Icon(Icons.check_circle, color: AppTheme.success, size: 32),
+              SizedBox(width: 12),
+              Text('Order Placed!'),
+            ],
+          ),
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Product: ${data['wasteType']}',
-                style: AppTheme.bodyMedium.copyWith(fontWeight: FontWeight.bold),
+              const Text(
+                'Your purchase request has been submitted successfully!',
+                style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 16),
-              TextField(
-                controller: quantityController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Quantity (tons)',
-                  border: OutlineInputBorder(),
+              const Text(
+                'What happens next:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              _buildStepItem('1', 'Seller will review your request'),
+              _buildStepItem('2', 'You will be contacted for payment details'),
+              _buildStepItem('3', 'After payment, seller will arrange delivery'),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(8),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: messageController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                  labelText: 'Additional Message',
-                  border: OutlineInputBorder(),
+                child: Row(
+                  children: [
+                    const Icon(Icons.receipt, color: AppTheme.success),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Transaction ID: ${transactionRef.id.substring(0, 8)}',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/transactions');
+              },
+              icon: const Icon(Icons.list_alt),
+              label: const Text('View Orders'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              debugPrint('❌ [ListingDetail] Quote dialog cancelled');
-              Navigator.pop(context);
-            },
-            child: const Text('Cancel'),
+      );
+    } catch (e) {
+      // Close loading dialog
+      Navigator.pop(context);
+
+      debugPrint('❌ [ListingDetail] Error submitting purchase: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to submit purchase: $e'),
+          backgroundColor: AppTheme.error,
+        ),
+      );
+    }
+  }
+
+  Widget _buildStepItem(String number, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Container(
+            width: 24,
+            height: 24,
+            decoration: const BoxDecoration(
+              color: AppTheme.primary,
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Text(
+                number,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              final user = FirebaseAuth.instance.currentUser;
-              if (user == null) {
-                debugPrint('⚠️ [ListingDetail] User not logged in for quote');
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Please login to submit quote')),
-                );
-                return;
-              }
-
-              final quantity = double.tryParse(quantityController.text) ?? 0;
-              debugPrint('📝 [ListingDetail] Submitting quote request...');
-              debugPrint('   - Quantity: $quantity');
-              debugPrint('   - Message: ${messageController.text}');
-
-              try {
-                await FirebaseFirestore.instance.collection('quote_requests').add({
-                  'listingId': widget.listingId,
-                  'buyerId': user.uid,
-                  'sellerId': data['userId'],
-                  'quantity': quantity,
-                  'message': messageController.text,
-                  'status': 'pending',
-                  'createdAt': FieldValue.serverTimestamp(),
-                });
-
-                debugPrint('✅ [ListingDetail] Quote request submitted successfully');
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Quote request submitted successfully')),
-                );
-              } catch (e) {
-                debugPrint('❌ [ListingDetail] Error submitting quote: $e');
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to submit quote: $e')),
-                );
-              }
-            },
-            child: const Text('Submit'),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 14),
+            ),
           ),
         ],
       ),
@@ -938,6 +1190,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   Widget _buildLocation(Map<String, dynamic> data) {
     final latLng = _getLatLng(data);
 
+    // Debug: Log location rendering
+    debugPrint('📍 [ListingDetail] Rendering location map');
+
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
@@ -1087,6 +1342,12 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   Widget _buildBottomActionBar(Map<String, dynamic> data) {
     final sellerId = data['userId'] as String?;
     final isOwnListing = sellerId != null && sellerId == FirebaseAuth.instance.currentUser?.uid;
+    final isAvailable = data['status'] == 'available';
+
+    debugPrint('🎨 [ListingDetail] Building bottom action bar');
+    debugPrint('   - Is own listing: $isOwnListing');
+    debugPrint('   - Is available: $isAvailable');
+    debugPrint('   - Seller ID: $sellerId');
 
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacingMD),
@@ -1104,8 +1365,12 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         top: false,
         child: Row(
           children: [
+            // Favorite button
             IconButton(
-              onPressed: _toggleFavorite,
+              onPressed: () {
+                debugPrint('❤️ [ListingDetail] Favorite button pressed');
+                _toggleFavorite();
+              },
               icon: Icon(
                 _isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: _isFavorite ? Colors.red : AppTheme.textSecondary,
@@ -1116,11 +1381,15 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               ),
             ),
             const SizedBox(width: 12),
+            // Contact button
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: _isStartingChat || isOwnListing
                     ? null
-                    : () => _startChatWithSeller(data),
+                    : () {
+                        debugPrint('💬 [ListingDetail] Contact button pressed');
+                        _startChatWithSeller(data);
+                      },
                 icon: const Icon(Icons.chat_bubble_outline, size: 20),
                 label: const Text('Contact'),
                 style: OutlinedButton.styleFrom(
@@ -1131,10 +1400,14 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               ),
             ),
             const SizedBox(width: 12),
+            // Buy Now button
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: data['status'] == 'available' && !isOwnListing
-                    ? () => _showQuoteDialog(data)
+                onPressed: isAvailable && !isOwnListing
+                    ? () {
+                        debugPrint('🛒 [ListingDetail] Buy Now button pressed');
+                        _showPurchaseDialog(data);
+                      }
                     : null,
                 icon: const Icon(Icons.request_quote, size: 20),
                 label: const Text('Get Quote'),
