@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common/shimmer_loading.dart';
 import '../widgets/marketplace/product_card.dart';
+import '../widgets/state/error_state_widget.dart';
 import '../services/chat_service.dart';
 import 'chat/bbx_chat_screen.dart';
 
@@ -106,6 +107,8 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   }
 
   void _showQuoteDialog(Map<String, dynamic> data) {
+    debugPrint('💰 [ListingDetail] Opening quote dialog...');
+
     final TextEditingController quantityController = TextEditingController();
     final TextEditingController messageController = TextEditingController();
 
@@ -145,13 +148,17 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              debugPrint('❌ [ListingDetail] Quote dialog cancelled');
+              Navigator.pop(context);
+            },
             child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () async {
               final user = FirebaseAuth.instance.currentUser;
               if (user == null) {
+                debugPrint('⚠️ [ListingDetail] User not logged in for quote');
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Please login to submit quote')),
@@ -159,20 +166,34 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                 return;
               }
 
-              await FirebaseFirestore.instance.collection('quote_requests').add({
-                'listingId': widget.listingId,
-                'buyerId': user.uid,
-                'sellerId': data['userId'],
-                'quantity': double.tryParse(quantityController.text) ?? 0,
-                'message': messageController.text,
-                'status': 'pending',
-                'createdAt': FieldValue.serverTimestamp(),
-              });
+              final quantity = double.tryParse(quantityController.text) ?? 0;
+              debugPrint('📝 [ListingDetail] Submitting quote request...');
+              debugPrint('   - Quantity: $quantity');
+              debugPrint('   - Message: ${messageController.text}');
 
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Quote request submitted successfully')),
-              );
+              try {
+                await FirebaseFirestore.instance.collection('quote_requests').add({
+                  'listingId': widget.listingId,
+                  'buyerId': user.uid,
+                  'sellerId': data['userId'],
+                  'quantity': quantity,
+                  'message': messageController.text,
+                  'status': 'pending',
+                  'createdAt': FieldValue.serverTimestamp(),
+                });
+
+                debugPrint('✅ [ListingDetail] Quote request submitted successfully');
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Quote request submitted successfully')),
+                );
+              } catch (e) {
+                debugPrint('❌ [ListingDetail] Error submitting quote: $e');
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to submit quote: $e')),
+                );
+              }
             },
             child: const Text('Submit'),
           ),
@@ -189,6 +210,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Debug: Log when building the widget
+    debugPrint('🔍 [ListingDetail] Building with listingId: ${widget.listingId}');
+
     return Scaffold(
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
@@ -196,26 +220,50 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             .doc(widget.listingId)
             .snapshots(),
         builder: (context, snapshot) {
+          // Debug: Log connection state
+          debugPrint('📊 [ListingDetail] Connection state: ${snapshot.connectionState}');
+
           if (snapshot.hasError) {
+            // Debug: Log error details
+            debugPrint('❌ [ListingDetail] Error loading data: ${snapshot.error}');
             return Scaffold(
-              appBar: AppBar(title: const Text('商品详情')),
+              appBar: AppBar(
+                title: const Text('Product Details'),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
               body: ErrorStateWidget.network(
-                onRetry: () => setState(() {}),
-                onBack: () => Navigator.pop(context),
+                onRetry: () {
+                  debugPrint('🔄 [ListingDetail] Retry button pressed');
+                  setState(() {});
+                },
+                onBack: () {
+                  debugPrint('⬅️ [ListingDetail] Back button pressed from error');
+                  Navigator.pop(context);
+                },
               ),
             );
           }
 
-          if (!snapshot.hasData) {
+          if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
+            debugPrint('⏳ [ListingDetail] Loading data...');
             return Scaffold(
-              appBar: AppBar(title: const Text('商品详情')),
+              appBar: AppBar(
+                title: const Text('Product Details'),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
               body: const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(),
                     SizedBox(height: 16),
-                    Text('正在加载商品详情...'),
+                    Text('Loading product details...'),
                   ],
                 ),
               ),
@@ -223,25 +271,54 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           }
 
           final data = snapshot.data!.data() as Map<String, dynamic>?;
+
+          // Debug: Log data availability
           if (data == null) {
+            debugPrint('⚠️ [ListingDetail] Document exists but data is null');
             return Scaffold(
-              appBar: AppBar(title: const Text('商品详情')),
+              appBar: AppBar(
+                title: const Text('Product Details'),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
               body: ErrorStateWidget.notFound(
-                title: '商品不存在',
-                message: '该商品可能已被删除或下架',
-                onBack: () => Navigator.pop(context),
+                title: 'Product Not Found',
+                message: 'This product may have been deleted or is no longer available',
+                onBack: () {
+                  debugPrint('⬅️ [ListingDetail] Back button pressed from not found');
+                  Navigator.pop(context);
+                },
               ),
             );
           }
 
+          // Debug: Log successful data load with key fields
+          debugPrint('✅ [ListingDetail] Data loaded successfully');
+          debugPrint('   - Title: ${data['wasteType'] ?? 'N/A'}');
+          debugPrint('   - Price: ${data['pricePerUnit'] ?? data['pricePerTon'] ?? data['price'] ?? 'N/A'}');
+          debugPrint('   - Images: ${(data['imageUrls'] as List?)?.length ?? 0} images');
+          debugPrint('   - Status: ${data['status'] ?? 'N/A'}');
+
+          // Debug: Log image data structure
+          debugPrint('🖼️ [ListingDetail] Processing images...');
+
           List<String> images =
               (data['imageUrls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [];
+
           // Fix for single image url field
           final singleImage = data['imageUrl'];
           if (images.isEmpty && singleImage is String && singleImage.isNotEmpty) {
+            debugPrint('   - Found single imageUrl field: $singleImage');
             images = [singleImage];
           }
+
           final hasImages = images.isNotEmpty;
+          debugPrint('   - Total images: ${images.length}');
+          if (images.isEmpty) {
+            debugPrint('   ⚠️ No images available for this listing');
+          }
 
           return Stack(
             children: [
@@ -303,13 +380,32 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                                   },
                                   itemCount: images.length,
                                   itemBuilder: (context, index) {
+                                    // Debug: Log image URL being loaded
+                                    debugPrint('🖼️ [ListingDetail] Loading image $index: ${images[index]}');
+
                                     return CachedNetworkImage(
                                       imageUrl: images[index],
                                       fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          const ShimmerBox(width: double.infinity, height: 400),
-                                      errorWidget: (context, url, error) =>
-                                          const Icon(Icons.error, size: 80),
+                                      placeholder: (context, url) {
+                                        debugPrint('⏳ [ListingDetail] Image $index loading...');
+                                        return const ShimmerBox(width: double.infinity, height: 400);
+                                      },
+                                      errorWidget: (context, url, error) {
+                                        debugPrint('❌ [ListingDetail] Failed to load image $index: $error');
+                                        return Container(
+                                          color: AppTheme.backgroundGrey,
+                                          child: const Center(
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Icon(Icons.broken_image, size: 80, color: AppTheme.textLight),
+                                                SizedBox(height: 8),
+                                                Text('Failed to load image', style: TextStyle(color: AppTheme.textLight)),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     );
                                   },
                                 ),
@@ -556,11 +652,27 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     // Add null check for userId
     final userId = data['userId'];
     if (userId == null) {
-      return const Padding(
-        padding: EdgeInsets.all(AppTheme.spacingLG),
-        child: Text('Supplier information unavailable'),
+      debugPrint('⚠️ [ListingDetail] No userId found in listing data');
+      return Padding(
+        padding: const EdgeInsets.all(AppTheme.spacingLG),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppTheme.backgroundGrey,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Row(
+            children: [
+              Icon(Icons.info_outline, color: AppTheme.textLight),
+              SizedBox(width: 12),
+              Text('Supplier information unavailable', style: TextStyle(color: AppTheme.textSecondary)),
+            ],
+          ),
+        ),
       );
     }
+
+    debugPrint('👤 [ListingDetail] Loading supplier info for userId: $userId');
 
     return FutureBuilder<DocumentSnapshot>(
       future: FirebaseFirestore.instance
@@ -569,16 +681,23 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           .get(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
+          debugPrint('⏳ [ListingDetail] Loading supplier data...');
           return const Padding(
             padding: EdgeInsets.all(AppTheme.spacingLG),
             child: ShimmerBox(width: double.infinity, height: 100),
           );
         }
 
+        if (snapshot.hasError) {
+          debugPrint('❌ [ListingDetail] Error loading supplier: ${snapshot.error}');
+        }
+
         final userData = snapshot.data!.data() as Map<String, dynamic>?;
         // Fallback for deleted users
         final displayName = userData?['displayName'] ?? 'Unknown User';
         final isVerified = userData?['isVerified'] == true;
+
+        debugPrint('✅ [ListingDetail] Supplier loaded: $displayName (verified: $isVerified)');
 
         return Container(
           padding: const EdgeInsets.all(AppTheme.spacingLG),
@@ -1034,10 +1153,13 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   }
 
   Future<void> _startChatWithSeller(Map<String, dynamic> data) async {
+    debugPrint('💬 [ListingDetail] Starting chat with seller...');
+
     final sellerId = data['userId'] as String?;
     final currentUser = FirebaseAuth.instance.currentUser;
 
     if (sellerId == null || sellerId.isEmpty) {
+      debugPrint('⚠️ [ListingDetail] No seller ID available');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Seller information not available')),
       );
@@ -1045,6 +1167,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     }
 
     if (currentUser == null) {
+      debugPrint('⚠️ [ListingDetail] User not logged in');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please login to start a chat')),
       );
@@ -1053,20 +1176,27 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     }
 
     if (sellerId == currentUser.uid) {
+      debugPrint('⚠️ [ListingDetail] Cannot chat with own listing');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('This is your own listing')),
       );
       return;
     }
 
-    if (_isStartingChat) return;
+    if (_isStartingChat) {
+      debugPrint('⚠️ [ListingDetail] Chat already starting...');
+      return;
+    }
 
     setState(() {
       _isStartingChat = true;
     });
 
     try {
+      debugPrint('📱 [ListingDetail] Creating/getting conversation...');
       final conversationId = await _chatService.getOrCreateConversation(sellerId);
+      debugPrint('✅ [ListingDetail] Conversation ID: $conversationId');
+
       final sellerDoc =
           await FirebaseFirestore.instance.collection('users').doc(sellerId).get();
       final sellerData = sellerDoc.data() ?? {};
@@ -1077,8 +1207,11 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           .toString();
       final sellerAvatar = sellerData['photoURL'] as String?;
 
+      debugPrint('👤 [ListingDetail] Seller name: $sellerName');
+
       if (!mounted) return;
 
+      debugPrint('🚀 [ListingDetail] Navigating to chat screen...');
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -1091,6 +1224,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         ),
       );
     } catch (e) {
+      debugPrint('❌ [ListingDetail] Error starting chat: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Unable to start chat: $e')),
