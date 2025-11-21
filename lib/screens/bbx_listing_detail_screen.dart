@@ -769,6 +769,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -957,6 +958,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             padding: const EdgeInsets.all(AppTheme.spacingLG),
             color: Colors.white,
             child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
@@ -999,6 +1001,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           padding: const EdgeInsets.all(AppTheme.spacingLG),
           color: Colors.white,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
@@ -1130,6 +1133,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -1180,6 +1184,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -1241,6 +1246,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
@@ -1297,6 +1303,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
