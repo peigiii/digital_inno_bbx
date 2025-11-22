@@ -992,7 +992,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             decoration: BoxDecoration(
               color: Colors.blue[50],
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.blue[100]!),
+              border: Border.all(color: Colors.blue[100] ?? Colors.blue),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1168,11 +1168,14 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                       children: [
                         Row(
                           children: [
-                            Text(
-                              displayName,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                            Flexible(
+                              child: Text(
+                                displayName,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             const SizedBox(width: 8),
