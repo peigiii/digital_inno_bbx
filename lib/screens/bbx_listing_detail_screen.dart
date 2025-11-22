@@ -457,13 +457,25 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   @override
   void initState() {
     super.initState();
+    print('');
+    print('═══════════════════════════════════════════════════');
+    print('🚀 [ListingDetail] initState - 商品详情页初始化');
+    print('📦 接收到的商品ID: ${widget.listingId}');
+    print('📝 商品ID类型: ${widget.listingId.runtimeType}');
+    print('📏 商品ID长度: ${widget.listingId.length}');
+    print('═══════════════════════════════════════════════════');
+    print('');
     _checkIfFavorite();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Debug: Log when building the widget
-    debugPrint('🔍 [ListingDetail] Building with listingId: ${widget.listingId}');
+    print('');
+    print('─────────────────────────────────────────────────');
+    print('🔍 [ListingDetail] build() 方法被调用');
+    print('📦 商品ID: ${widget.listingId}');
+    print('─────────────────────────────────────────────────');
+    print('');
 
     return Scaffold(
       body: StreamBuilder<DocumentSnapshot>(
@@ -472,12 +484,35 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             .doc(widget.listingId)
             .snapshots(),
         builder: (context, snapshot) {
-          // Debug: Log connection state
-          debugPrint('📊 [ListingDetail] Connection state: ${snapshot.connectionState}');
+          print('');
+          print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+          print('📡 [StreamBuilder] 状态回调');
+          print('🔗 connectionState: ${snapshot.connectionState}');
+          print('✅ hasData: ${snapshot.hasData}');
+          print('❌ hasError: ${snapshot.hasError}');
+          if (snapshot.hasError) {
+            print('💥 错误详情: ${snapshot.error}');
+            print('📚 错误堆栈: ${snapshot.stackTrace}');
+          }
+          if (snapshot.hasData) {
+            print('📦 snapshot.data 类型: ${snapshot.data.runtimeType}');
+            print('📄 snapshot.data 是否为null: ${snapshot.data == null}');
+            if (snapshot.data != null) {
+              print('📋 document exists: ${snapshot.data!.exists}');
+              print('📝 document id: ${snapshot.data!.id}');
+              final rawData = snapshot.data!.data();
+              print('🗂️ data() 返回类型: ${rawData.runtimeType}');
+              print('🗂️ data() 是否为null: ${rawData == null}');
+              if (rawData != null) {
+                print('🔑 数据字段: ${(rawData as Map).keys.toList()}');
+              }
+            }
+          }
+          print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+          print('');
 
           if (snapshot.hasError) {
-            // Debug: Log error details
-            debugPrint('❌ [ListingDetail] Error loading data: ${snapshot.error}');
+            print('❌ [ListingDetail] 进入错误处理分支');
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Product Details'),
@@ -500,7 +535,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           }
 
           if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
-            debugPrint('⏳ [ListingDetail] Loading data...');
+            print('⏳ [ListingDetail] 数据加载中...');
+            print('   - hasData: ${snapshot.hasData}');
+            print('   - connectionState: ${snapshot.connectionState}');
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Product Details'),
@@ -522,11 +559,44 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             );
           }
 
+          print('');
+          print('🔍 准备提取数据...');
+          print('   snapshot.data 是否为 null: ${snapshot.data == null}');
+
+          if (snapshot.data == null) {
+            print('💥 CRITICAL: snapshot.data 是 null!');
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Product Details'),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              body: ErrorStateWidget.notFound(
+                title: 'Data Error',
+                message: 'snapshot.data is null',
+                onBack: () => Navigator.pop(context),
+              ),
+            );
+          }
+
           final data = snapshot.data!.data() as Map<String, dynamic>?;
 
-          // Debug: Log data availability
+          print('📊 数据提取结果:');
+          print('   - data 是否为 null: ${data == null}');
+          if (data != null) {
+            print('   - data 类型: ${data.runtimeType}');
+            print('   - data 字段数量: ${data.length}');
+            print('   - data 所有字段: ${data.keys.toList()}');
+            print('   - wasteType: ${data['wasteType']}');
+            print('   - status: ${data['status']}');
+            print('   - userId: ${data['userId']}');
+          }
+          print('');
+
           if (data == null) {
-            debugPrint('⚠️ [ListingDetail] Document exists but data is null');
+            print('⚠️ [ListingDetail] Document exists but data is null');
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Product Details'),
@@ -546,15 +616,24 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             );
           }
 
-          // Debug: Log successful data load with key fields
-          debugPrint('✅ [ListingDetail] Data loaded successfully');
-          debugPrint('   - Title: ${data['wasteType'] ?? 'N/A'}');
-          debugPrint('   - Price: ${data['pricePerUnit'] ?? data['pricePerTon'] ?? data['price'] ?? 'N/A'}');
-          debugPrint('   - Images: ${(data['imageUrls'] as List?)?.length ?? 0} images');
-          debugPrint('   - Status: ${data['status'] ?? 'N/A'}');
+          print('');
+          print('✅✅✅ [成功] 数据加载成功! ✅✅✅');
+          print('📋 商品信息:');
+          print('   - 标题(wasteType): ${data['wasteType'] ?? 'N/A'}');
+          print('   - 价格(pricePerUnit): ${data['pricePerUnit']}');
+          print('   - 价格(pricePerTon): ${data['pricePerTon']}');
+          print('   - 价格(price): ${data['price']}');
+          print('   - 状态(status): ${data['status'] ?? 'N/A'}');
+          print('   - 卖家ID(userId): ${data['userId']}');
+          print('   - 数量(quantity): ${data['quantity']}');
+          print('   - 单位(unit): ${data['unit']}');
+          print('   - 描述(description): ${data['description']?.toString().substring(0, data['description']?.toString().length > 50 ? 50 : data['description']?.toString().length ?? 0) ?? 'N/A'}...');
+          print('');
 
-          // Debug: Log image data structure
-          debugPrint('🖼️ [ListingDetail] Processing images...');
+          print('🖼️ 处理图片数据...');
+          print('   - imageUrls 字段类型: ${data['imageUrls'].runtimeType}');
+          print('   - imageUrls 内容: ${data['imageUrls']}');
+          print('   - imageUrl (单数) 字段: ${data['imageUrl']}');
 
           List<String> images =
               (data['imageUrls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [];
@@ -562,22 +641,32 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           // Fix for single image url field
           final singleImage = data['imageUrl'];
           if (images.isEmpty && singleImage is String && singleImage.isNotEmpty) {
-            debugPrint('   - Found single imageUrl field: $singleImage');
+            print('   ✅ 找到单个 imageUrl 字段: $singleImage');
             images = [singleImage];
           }
 
           final hasImages = images.isNotEmpty;
-          debugPrint('   - Total images: ${images.length}');
+          print('   📸 图片总数: ${images.length}');
           if (images.isEmpty) {
-            debugPrint('   ⚠️ No images available for this listing');
+            print('   ⚠️ 该商品没有图片');
+          } else {
+            print('   📸 图片URL列表: $images');
           }
+          print('');
 
-          return Stack(
-            children: [
-              CustomScrollView(
-                slivers: [
-                  // Image carousel AppBar
-                  SliverAppBar(
+          print('');
+          print('🎨🎨🎨 开始构建UI界面 🎨🎨🎨');
+          print('   - hasImages: $hasImages');
+          print('   - images.length: ${images.length}');
+          print('');
+
+          try {
+            return Stack(
+              children: [
+                CustomScrollView(
+                  slivers: [
+                    // Image carousel AppBar
+                    SliverAppBar(
                     expandedHeight: 400,
                     pinned: true,
                     backgroundColor: AppTheme.primary,
@@ -754,6 +843,49 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               ),
             ],
           );
+          } catch (e, stackTrace) {
+            print('');
+            print('💥💥💥 UI构建过程中发生异常! 💥💥💥');
+            print('❌ 异常类型: ${e.runtimeType}');
+            print('💥 异常信息: $e');
+            print('📚 堆栈跟踪:');
+            print(stackTrace);
+            print('💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥');
+            print('');
+
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Product Details'),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'UI构建错误',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text('$e', textAlign: TextAlign.center),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('返回'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
         },
       ),
     );
