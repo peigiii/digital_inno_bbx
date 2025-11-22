@@ -801,6 +801,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                   // Content
                   SliverToBoxAdapter(
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Price and title section
