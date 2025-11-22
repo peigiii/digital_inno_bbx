@@ -627,7 +627,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           print('   - 卖家ID(userId): ${data['userId']}');
           print('   - 数量(quantity): ${data['quantity']}');
           print('   - 单位(unit): ${data['unit']}');
-          print('   - 描述(description): ${data['description']?.toString().substring(0, data['description']?.toString().length > 50 ? 50 : data['description']?.toString().length ?? 0) ?? 'N/A'}...');
+          final description = data['description']?.toString() ?? '';
+          final descPreview = description.length > 50 ? '${description.substring(0, 50)}...' : description;
+          print('   - 描述(description): ${descPreview.isEmpty ? 'N/A' : descPreview}');
           print('');
 
           print('🖼️ 处理图片数据...');
