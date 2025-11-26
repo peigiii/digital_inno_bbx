@@ -967,21 +967,27 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             children: [
               const Icon(Icons.inventory_2_outlined, size: 16, color: AppTheme.textLight),
               const SizedBox(width: 4),
-              Text(
-                'Available: $quantity $unit',
-                style: const TextStyle(
-                  color: AppTheme.textLight,
-                  fontSize: 14,
+              Flexible(
+                child: Text(
+                  'Available: $quantity $unit',
+                  style: const TextStyle(
+                    color: AppTheme.textLight,
+                    fontSize: 14,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               const SizedBox(width: 16),
               const Icon(Icons.access_time, size: 16, color: AppTheme.textLight),
               const SizedBox(width: 4),
-              Text(
-                _formatDate(data['createdAt']),
-                style: const TextStyle(
-                  color: AppTheme.textLight,
-                  fontSize: 14,
+              Flexible(
+                child: Text(
+                  _formatDate(data['createdAt']),
+                  style: const TextStyle(
+                    color: AppTheme.textLight,
+                    fontSize: 14,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -1006,7 +1012,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: Colors.blue[900],
+                        color: Colors.blue[900] ?? Colors.blue,
                       ),
                     ),
                   ],
@@ -1014,7 +1020,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.check_circle, size: 14, color: Colors.green[700]),
+                    Icon(Icons.check_circle, size: 14, color: Colors.green[700] ?? Colors.green),
                     const SizedBox(width: 6),
                     const Text(
                       'Pickup Available',
@@ -1025,7 +1031,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.check_circle, size: 14, color: Colors.green[700]),
+                    Icon(Icons.check_circle, size: 14, color: Colors.green[700] ?? Colors.green),
                     const SizedBox(width: 6),
                     const Expanded(
                       child: Text(
