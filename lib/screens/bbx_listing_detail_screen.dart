@@ -410,7 +410,6 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     print('📏 商品ID长度: ${widget.listingId.length}');
     print('═══════════════════════════════════════════════════');
     print('');
-    _checkIfFavorite();
   }
 
   @override
@@ -1513,19 +1512,25 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         child: Row(
           children: [
             // Favorite button
-            IconButton(
-              onPressed: () {
-                debugPrint('❤️ [ListingDetail] Favorite button pressed');
-                _toggleFavorite();
+            StreamBuilder<bool>(
+              stream: _favoriteService.isFavoriteStream(widget.listingId),
+              builder: (context, snapshot) {
+                final isFavorite = snapshot.data ?? false;
+                return IconButton(
+                  onPressed: () {
+                    debugPrint('❤️ [ListingDetail] Favorite button pressed');
+                    _favoriteService.toggleFavorite(widget.listingId, context);
+                  },
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorite ? Colors.red : AppTheme.textSecondary,
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppTheme.backgroundGrey,
+                    padding: const EdgeInsets.all(12),
+                  ),
+                );
               },
-              icon: Icon(
-                _isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: _isFavorite ? Colors.red : AppTheme.textSecondary,
-              ),
-              style: IconButton.styleFrom(
-                backgroundColor: AppTheme.backgroundGrey,
-                padding: const EdgeInsets.all(12),
-              ),
             ),
             const SizedBox(width: 12),
             // Contact button
