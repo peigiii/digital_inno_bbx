@@ -61,6 +61,10 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
           companyName = data['companyName'] ?? '';
           city = data['city'] ?? '';
           contact = data['contact'] ?? '';
+          // 也从用户文档读取这些数据（如果存在）
+          walletBalance = (data['walletBalance'] ?? 0).toDouble();
+          rewardPoints = data['rewardPoints'] ?? 0;
+          membershipTier = data['membershipTier'] ?? 'Free';
         });
       } else {
         setState(() {
@@ -70,7 +74,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
         });
       }
 
-      // Load statistics in parallel
+      // Load statistics in parallel with error handling
       await Future.wait([
         _loadTransactionCount(),
         _loadOfferCount(),
@@ -142,6 +146,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     }
   }
 
+  // ✅ 修复：添加错误处理，避免权限问题导致崩溃
   Future<void> _loadWalletBalance() async {
     try {
       final doc = await FirebaseFirestore.instance
@@ -152,10 +157,12 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
         setState(() => walletBalance = (doc.data()?['balance'] ?? 0).toDouble());
       }
     } catch (e) {
-      debugPrint('[Profile] Error loading wallet balance: $e');
+      // 如果权限被拒绝，尝试从用户文档读取
+      debugPrint('[Profile] Wallet access denied, using default: $e');
     }
   }
 
+  // ✅ 修复：添加错误处理
   Future<void> _loadRewardPoints() async {
     try {
       final doc = await FirebaseFirestore.instance
@@ -166,7 +173,7 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
         setState(() => rewardPoints = doc.data()?['points'] ?? 0);
       }
     } catch (e) {
-      debugPrint('[Profile] Error loading reward points: $e');
+      debugPrint('[Profile] Rewards access denied, using default: $e');
     }
   }
 
@@ -552,182 +559,271 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
     );
   }
 
+  // ============================================
+  // ✅ 修复：重写 Edit Profile 对话框，解决 infinite width 问题
+  // ============================================
   void _showEditProfileDialog() {
     final nameController = TextEditingController(text: displayName);
     final companyController = TextEditingController(text: companyName);
     final cityController = TextEditingController(text: city);
     final contactController = TextEditingController(text: contact);
     final formKey = GlobalKey<FormState>();
-    bool isSaving = false;
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (dialogContext) => StatefulBuilder(
-        builder: (dialogContext, setDialogState) => Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(dialogContext).viewInsets.bottom,
-          ),
-          child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Handle bar
-                    Center(
-                      child: Container(
-                        width: 40,
-                        height: 4,
-                        margin: const EdgeInsets.only(bottom: 20),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
-                    ),
-                    // Header row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: Colors.transparent,
+      builder: (dialogContext) {
+        bool isSaving = false;
+        
+        return StatefulBuilder(
+          builder: (dialogContext, setDialogState) {
+            return Container(
+              // ✅ 修复：设置最大高度
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(dialogContext).size.height * 0.85,
+              ),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // ✅ 固定的头部
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+                    child: Column(
                       children: [
-                        const Text(
-                          'Edit Profile',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                        // Handle bar
+                        Container(
+                          width: 40,
+                          height: 4,
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(2),
                           ),
                         ),
-                        TextButton(
-                          onPressed: isSaving
-                              ? null
-                              : () async {
-                                  if (!formKey.currentState!.validate()) return;
-
-                                  setDialogState(() => isSaving = true);
-
-                                  try {
-                                    await FirebaseFirestore.instance
-                                        .collection('users')
-                                        .doc(user!.uid)
-                                        .set({
-                                      'displayName': nameController.text.trim(),
-                                      'companyName': companyController.text.trim(),
-                                      'city': cityController.text.trim(),
-                                      'contact': contactController.text.trim(),
-                                      'updatedAt': FieldValue.serverTimestamp(),
-                                    }, SetOptions(merge: true));
-
-                                    await user!.updateDisplayName(nameController.text.trim());
-
-                                    if (mounted) {
-                                      setState(() {
-                                        displayName = nameController.text.trim();
-                                        companyName = companyController.text.trim();
-                                        city = cityController.text.trim();
-                                        contact = contactController.text.trim();
-                                      });
-
-                                      Navigator.pop(dialogContext);
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                          content: Text('Profile updated successfully!'),
-                                          backgroundColor: Colors.green,
+                        // Header row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Edit Profile',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            // ✅ 修复：Save 按钮使用 SizedBox 约束宽度
+                            SizedBox(
+                              width: 80,
+                              child: TextButton(
+                                onPressed: isSaving
+                                    ? null
+                                    : () => _saveProfile(
+                                          dialogContext,
+                                          formKey,
+                                          nameController,
+                                          companyController,
+                                          cityController,
+                                          contactController,
+                                          setDialogState,
+                                          (value) => isSaving = value,
                                         ),
-                                      );
-                                    }
-                                  } catch (e) {
-                                    setDialogState(() => isSaving = false);
-                                    ScaffoldMessenger.of(dialogContext).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Failed to save: $e'),
-                                        backgroundColor: Colors.red,
+                                child: isSaving
+                                    ? const SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          color: Color(0xFF2E7D32),
+                                        ),
+                                      )
+                                    : const Text(
+                                        'Save',
+                                        style: TextStyle(
+                                          color: Color(0xFF2E7D32),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    );
-                                  }
-                                },
-                          child: isSaving
-                              ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(strokeWidth: 2),
-                                )
-                              : const Text(
-                                  'Save',
-                                  style: TextStyle(
-                                    color: Color(0xFF2E7D32),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    // Name field
-                    TextFormField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Name *',
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(),
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  // ✅ 可滚动的表单内容
+                  Flexible(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.fromLTRB(
+                        20,
+                        0,
+                        20,
+                        MediaQuery.of(dialogContext).viewInsets.bottom + 20,
                       ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                      enabled: !isSaving,
-                    ),
-                    const SizedBox(height: 12),
-                    // Company field
-                    TextFormField(
-                      controller: companyController,
-                      decoration: const InputDecoration(
-                        labelText: 'Company Name',
-                        prefixIcon: Icon(Icons.business),
-                        border: OutlineInputBorder(),
+                      child: Form(
+                        key: formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // Name field
+                            _buildTextField(
+                              controller: nameController,
+                              label: 'Name *',
+                              icon: Icons.person,
+                              enabled: !isSaving,
+                              validator: (value) {
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Please enter your name';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 16),
+                            
+                            // Company field
+                            _buildTextField(
+                              controller: companyController,
+                              label: 'Company Name',
+                              icon: Icons.business,
+                              enabled: !isSaving,
+                            ),
+                            const SizedBox(height: 16),
+                            
+                            // City field
+                            _buildTextField(
+                              controller: cityController,
+                              label: 'City',
+                              icon: Icons.location_city,
+                              enabled: !isSaving,
+                            ),
+                            const SizedBox(height: 16),
+                            
+                            // Contact field
+                            _buildTextField(
+                              controller: contactController,
+                              label: 'Contact Phone',
+                              icon: Icons.phone,
+                              hint: '+60 12-345-6789',
+                              keyboardType: TextInputType.phone,
+                              enabled: !isSaving,
+                            ),
+                            const SizedBox(height: 24),
+                          ],
+                        ),
                       ),
-                      enabled: !isSaving,
                     ),
-                    const SizedBox(height: 12),
-                    // City field
-                    TextFormField(
-                      controller: cityController,
-                      decoration: const InputDecoration(
-                        labelText: 'City',
-                        prefixIcon: Icon(Icons.location_city),
-                        border: OutlineInputBorder(),
-                      ),
-                      enabled: !isSaving,
-                    ),
-                    const SizedBox(height: 12),
-                    // Contact field
-                    TextFormField(
-                      controller: contactController,
-                      decoration: const InputDecoration(
-                        labelText: 'Contact Phone',
-                        prefixIcon: Icon(Icons.phone),
-                        border: OutlineInputBorder(),
-                        hintText: '+60 12-345-6789',
-                      ),
-                      keyboardType: TextInputType.phone,
-                      enabled: !isSaving,
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-          ),
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
+  }
+
+  // ✅ 抽取 TextField 组件
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    String? hint,
+    TextInputType? keyboardType,
+    bool enabled = true,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        prefixIcon: Icon(icon, color: const Color(0xFF2E7D32)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFFE0E0E0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0xFF2E7D32), width: 2),
+        ),
+        filled: true,
+        fillColor: enabled ? Colors.white : Colors.grey[100],
+      ),
+      keyboardType: keyboardType,
+      enabled: enabled,
+      validator: validator,
+    );
+  }
+
+  // ✅ 抽取保存逻辑
+  Future<void> _saveProfile(
+    BuildContext dialogContext,
+    GlobalKey<FormState> formKey,
+    TextEditingController nameController,
+    TextEditingController companyController,
+    TextEditingController cityController,
+    TextEditingController contactController,
+    StateSetter setDialogState,
+    Function(bool) setIsSaving,
+  ) async {
+    if (!formKey.currentState!.validate()) return;
+
+    setDialogState(() => setIsSaving(true));
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user!.uid)
+          .set({
+        'displayName': nameController.text.trim(),
+        'companyName': companyController.text.trim(),
+        'city': cityController.text.trim(),
+        'contact': contactController.text.trim(),
+        'email': email,
+        'updatedAt': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+
+      await user!.updateDisplayName(nameController.text.trim());
+
+      if (mounted) {
+        setState(() {
+          displayName = nameController.text.trim();
+          companyName = companyController.text.trim();
+          city = cityController.text.trim();
+          contact = contactController.text.trim();
+        });
+
+        Navigator.pop(dialogContext);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile updated successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      setDialogState(() => setIsSaving(false));
+      if (dialogContext.mounted) {
+        ScaffoldMessenger.of(dialogContext).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   Widget _buildAccountCards() {
