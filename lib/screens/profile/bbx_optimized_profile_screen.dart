@@ -570,14 +570,16 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
         builder: (context, setDialogState) => Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 20,
+            right: 20,
+            top: 20,
           ),
-          child: Container(
-            padding: const EdgeInsets.all(20),
+          child: SingleChildScrollView(
             child: Form(
               key: formKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Handle bar
                   Center(
@@ -641,12 +643,14 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
                                   }
                                 } catch (e) {
                                   setDialogState(() => isSaving = false);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Failed to save: $e'),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Failed to save: $e'),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
                                 }
                               },
                         child: isSaving
