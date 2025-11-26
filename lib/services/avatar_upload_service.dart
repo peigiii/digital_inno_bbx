@@ -29,7 +29,7 @@ class AvatarUploadService {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Image too large，Select less than 5MB  of Img?),
+              content: Text('Image too large, please select an image less than 5MB'),
               backgroundColor: Colors.red,
             ),
           );
@@ -191,12 +191,12 @@ class AvatarUploadService {
           .child('$userId.jpg');
 
       await storageRef.delete();
-      print('🗑?OldAvatarDeleted');
+      print('🗑️ Old avatar deleted');
     } catch (e) {
-            if (e.toString().contains('object-not-found')) {
-        print('ℹ️ NoneFound old avatar?);
+      if (e.toString().contains('object-not-found')) {
+        print('ℹ️ No old avatar found');
       } else {
-        print('⚠️ DeleteOldAvatarLost? $e');
+        print('⚠️ Failed to delete old avatar: $e');
       }
     }
   }
