@@ -38,7 +38,7 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
         Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Confirmed收?),
+            content: Text('ConfirmedCollect?),
             backgroundColor: Colors.green,
           ),
         );
@@ -47,7 +47,7 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('操作失败?e'),
+            content: Text('Failed?e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -68,7 +68,7 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
         children: [
           Icon(Icons.check_circle, color: Colors.green),
           SizedBox(width: 8),
-          Text('确认收货'),
+          Text('ConfirmReceive Goods'),
         ],
       ),
       content: const Column(
@@ -76,12 +76,12 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '请确认您已经收到货物?,
+            'PleaseConfirmYouAlreadySutraReceivedGoodsThing?,
             style: TextStyle(fontSize: 15),
           ),
           SizedBox(height: 12),
           Text(
-            '确认后款项将支付给卖家?,
+            'ConfirmAfterFundItemWillPayGiveSeller?,
             style: TextStyle(
               fontSize: 14,
               color: Colors.orange,
@@ -93,7 +93,7 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(false),
-          child: const Text('暂不确认'),
+          child: const Text('TempNoConfirm'),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _confirmDelivery,
@@ -110,7 +110,7 @@ class _ConfirmDeliveryDialogState extends State<ConfirmDeliveryDialog> {
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 )
-              : const Text('确认收货'),
+              : const Text('ConfirmReceive Goods'),
         ),
       ],
     );

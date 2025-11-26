@@ -166,7 +166,7 @@ class ListingModel {
     String get statusDisplay {
     switch (status) {
       case 'available':
-        return '可用';
+        return 'CanUse';
       case 'pending':
         return 'Pending';
       case 'sold':

@@ -152,11 +152,11 @@ class CouponModel {
     String get statusDisplayName {
     switch (status) {
       case CouponStatus.available:
-        return '可用';
+        return 'CanUse';
       case CouponStatus.used:
-        return '已使?';
+        return 'AlreadyMake?';
       case CouponStatus.expired:
-        return '已过?';
+        return 'AlreadyPass?';
     }
   }
 

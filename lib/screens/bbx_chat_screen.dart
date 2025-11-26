@@ -110,7 +110,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('发送失�? $e'),
+            content: Text('SendLost? $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -127,7 +127,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
           children: [
             Text(widget.otherUserName),
             const Text(
-              '在线',
+              'Online',
               style: TextStyle(fontSize: 12),
             ),
           ],
@@ -156,7 +156,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                         const Icon(Icons.error_outline, size: 60, color: Colors.red),
                         const SizedBox(height: 16),
                         Text(
-                          '加载失败: ${snapshot.error}',
+                          'Load Failed: ${snapshot.error}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(color: Colors.red),
                         ),
@@ -187,7 +187,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '还没有消�?,
+                          'ReturnNoneConsume?,
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -195,7 +195,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '发送第一条消息开始对�?,
+                          'SendNo.OneStripMessageStartPair?,
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[500],
@@ -243,7 +243,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                     child: TextField(
                       controller: _messageController,
                       decoration: InputDecoration(
-                        hintText: '输入消息...',
+                        hintText: 'InputMessage...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,

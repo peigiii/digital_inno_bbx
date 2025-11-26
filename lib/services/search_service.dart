@@ -166,7 +166,7 @@ class SearchService {
 
             return wasteTypes.toSet().toList();
     } catch (e) {
-      print('获取用户偏好失败: $e');
+      print('Get User PrefsFailure: $e');
       return [];
     }
   }
@@ -210,7 +210,7 @@ class SearchService {
         'timestamp': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('保存搜索历史失败: $e');
+      print('SaveSearchHistoryFailure: $e');
     }
   }
 
@@ -236,7 +236,7 @@ class SearchService {
         };
       }).toList();
     } catch (e) {
-      print('获取搜索历史失败: $e');
+      print('GetSearchHistoryFailure: $e');
       return [];
     }
   }
@@ -323,7 +323,7 @@ class SearchService {
       }
       await batch.commit();
     } catch (e) {
-      print('清除搜索历史失败: $e');
+      print('ClearSearchHistoryFailure: $e');
     }
   }
 }

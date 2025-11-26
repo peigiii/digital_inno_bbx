@@ -34,16 +34,16 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('争议解决中心'),
+        title: const Text('DisputeSolveDecideMidHeart'),
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
           tabs: const [
-            Tab(text: '全部'),
-            Tab(text: '处理?),
-            Tab(text: '已解?),
-            Tab(text: '已关?),
+            Tab(text: 'All'),
+            Tab(text: 'Process?),
+            Tab(text: 'AlreadySolve?),
+            Tab(text: 'AlreadyOff?),
           ],
         ),
       ),
@@ -59,7 +59,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showCreateDisputeDialog(),
         icon: const Icon(Icons.add),
-        label: const Text('提交争议'),
+        label: const Text('SubmitDispute'),
       ),
     );
   }
@@ -67,7 +67,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
   Widget _buildDisputeList(String? statusFilter) {
     final userId = _auth.currentUser?.uid;
     if (userId == null) {
-      return const Center(child: Text('请先登录'));
+      return const Center(child: Text('PleaseFirstLogin'));
     }
 
     Query query = _firestore
@@ -83,7 +83,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
       stream: query.snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('错误: ${snapshot.error}'));
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
 
         if (!snapshot.hasData) {
@@ -100,7 +100,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
                 Icon(Icons.gavel_outlined, size: 64, color: Colors.grey[400]),
                 const SizedBox(height: 16),
                 Text(
-                  '暂无争议记录',
+                  'No dispute records',
                   style: TextStyle(color: Colors.grey[600]),
                 ),
               ],
@@ -129,23 +129,23 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
     switch (status) {
       case 'open':
         statusColor = Colors.orange;
-        statusLabel = '待处?;
+        statusLabel = 'WaitPlace?;
         break;
       case 'investigating':
         statusColor = Colors.blue;
-        statusLabel = '调查?;
+        statusLabel = 'TuneCheck?;
         break;
       case 'resolved':
         statusColor = Colors.green;
-        statusLabel = '已解?;
+        statusLabel = 'AlreadySolve?;
         break;
       case 'closed':
         statusColor = Colors.grey;
-        statusLabel = '已关?;
+        statusLabel = 'AlreadyOff?;
         break;
       default:
         statusColor = Colors.grey;
-        statusLabel = '未知';
+        statusLabel = 'Unknown';
     }
 
     final type = data['type'] ?? '';
@@ -154,19 +154,19 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
 
     switch (type) {
       case 'not_received':
-        typeLabel = '未收到货';
+        typeLabel = 'Item not received';
         typeIcon = Icons.local_shipping_outlined;
         break;
       case 'wrong_item':
-        typeLabel = '货不对板';
+        typeLabel = 'GoodsNoPairBoard';
         typeIcon = Icons.warning_outlined;
         break;
       case 'quality_issue':
-        typeLabel = '质量问题';
+        typeLabel = 'QualityQuestion';
         typeIcon = Icons.broken_image_outlined;
         break;
       default:
-        typeLabel = '其他';
+        typeLabel = 'Other';
         typeIcon = Icons.help_outline;
     }
 
@@ -248,7 +248,7 @@ class _BBXDisputeCenterScreenState extends State<BBXDisputeCenterScreen>
                             size: 14, color: Colors.grey[600]),
                         const SizedBox(width: 4),
                         Text(
-                          '${(data['evidence'] as List).length} 个证?,
+                          '${(data['evidence'] as List).length} Certs?,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[600],
@@ -343,7 +343,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('上传失败: $e')),
+          SnackBar(content: Text('Upload Failed: $e')),
         );
       }
     }
@@ -352,14 +352,14 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
   Future<void> _submitDispute() async {
     if (_selectedTransactionId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请选择相关交易')),
+        const SnackBar(content: Text('Select relevantOffTransaction')),
       );
       return;
     }
 
     if (_descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请填写问题描?)),
+        const SnackBar(content: Text('Please describe issue?)),
       );
       return;
     }
@@ -393,14 +393,14 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('争议已提?)),
+          const SnackBar(content: Text('DisputeAlreadyLift?)),
         );
       }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('提交失败: $e')),
+          SnackBar(content: Text('Submission Failed: $e')),
         );
       }
     }
@@ -420,13 +420,13 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
             controller: scrollController,
             children: [
               const Text(
-                '提交争议',
+                'SubmitDispute',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
 
                             const Text(
-                '选择相关交易',
+                'SelectMutualOffTransaction',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
@@ -434,7 +434,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
               const SizedBox(height: 24),
 
                             const Text(
-                '争议类型',
+                'Dispute Type',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
@@ -442,21 +442,21 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
                 spacing: 8,
                 children: [
                   ChoiceChip(
-                    label: const Text('未收到货'),
+                    label: const Text('Item not received'),
                     selected: _selectedType == 'not_received',
                     onSelected: (selected) {
                       setState(() => _selectedType = 'not_received');
                     },
                   ),
                   ChoiceChip(
-                    label: const Text('货不对板'),
+                    label: const Text('GoodsNoPairBoard'),
                     selected: _selectedType == 'wrong_item',
                     onSelected: (selected) {
                       setState(() => _selectedType = 'wrong_item');
                     },
                   ),
                   ChoiceChip(
-                    label: const Text('质量问题'),
+                    label: const Text('QualityQuestion'),
                     selected: _selectedType == 'quality_issue',
                     onSelected: (selected) {
                       setState(() => _selectedType = 'quality_issue');
@@ -467,7 +467,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
               const SizedBox(height: 24),
 
                             const Text(
-                '问题描述',
+                'Problem Description',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
@@ -475,14 +475,14 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
                 controller: _descriptionController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: '请详细描述遇到的问题...',
+                  hintText: 'Please describe the problem in detail...',
                 ),
                 maxLines: 5,
               ),
               const SizedBox(height: 24),
 
                             const Text(
-                '上传证据',
+                'Upload Evidence',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 8),
@@ -544,7 +544,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
               OutlinedButton.icon(
                 onPressed: _isLoading ? null : _pickEvidence,
                 icon: const Icon(Icons.add_photo_alternate),
-                label: const Text('添加证据图片'),
+                label: const Text('AddProofAccordingImage'),
               ),
               const SizedBox(height: 24),
 
@@ -555,7 +555,7 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
                   onPressed: _isLoading ? null : _submitDispute,
                   child: _isLoading
                       ? const CircularProgressIndicator()
-                      : const Text('提交争议'),
+                      : const Text('SubmitDispute'),
                 ),
               ),
             ],
@@ -585,20 +585,20 @@ class _CreateDisputeSheetState extends State<CreateDisputeSheet> {
         final transactions = snapshot.data!.docs;
 
         if (transactions.isEmpty) {
-          return const Text('暂无可申请争议的交易');
+          return const Text('No transactions eligible for dispute');
         }
 
         return DropdownButtonFormField<String>(
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
           ),
-          hint: const Text('选择交易'),
+          hint: const Text('Select Transaction'),
           value: _selectedTransactionId,
           items: transactions.map((doc) {
             final data = doc.data() as Map<String, dynamic>;
             return DropdownMenuItem(
               value: doc.id,
-              child: Text('订单 ${doc.id.substring(0, 8)} - RM ${data['amount']}'),
+              child: Text('OrderSingle ${doc.id.substring(0, 8)} - RM ${data['amount']}'),
             );
           }).toList(),
           onChanged: (value) {
@@ -637,7 +637,7 @@ class DisputeDetailSheet extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    '争议详情',
+                    'DisputeDetail',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   IconButton(
@@ -648,15 +648,15 @@ class DisputeDetailSheet extends StatelessWidget {
               ),
               const SizedBox(height: 24),
 
-                            _buildInfoSection('争议类型', _getTypeLabel(disputeData['type'])),
-              _buildInfoSection('状?, _getStatusLabel(disputeData['status'])),
-              _buildInfoSection('描述', disputeData['description'] ?? '-'),
+                            _buildInfoSection('Dispute Type', _getTypeLabel(disputeData['type'])),
+              _buildInfoSection('State?, _getStatusLabel(disputeData['status'])),
+              _buildInfoSection('Desc', disputeData['description'] ?? '-'),
 
                             if (disputeData['evidence'] != null &&
                   (disputeData['evidence'] as List).isNotEmpty) ...[
                 const SizedBox(height: 24),
                 const Text(
-                  '证据',
+                  'ProofAccording',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 12),
@@ -687,7 +687,7 @@ class DisputeDetailSheet extends StatelessWidget {
                             if (disputeData['resolution'] != null) ...[
                 const SizedBox(height: 24),
                 const Text(
-                  '解决方案',
+                  'SolveDecideSquareCase',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 12),
@@ -733,28 +733,28 @@ class DisputeDetailSheet extends StatelessWidget {
   String _getTypeLabel(String? type) {
     switch (type) {
       case 'not_received':
-        return '未收到货';
+        return 'Item not received';
       case 'wrong_item':
-        return '货不对板';
+        return 'GoodsNoPairBoard';
       case 'quality_issue':
-        return '质量问题';
+        return 'QualityQuestion';
       default:
-        return '其他';
+        return 'Other';
     }
   }
 
   String _getStatusLabel(String? status) {
     switch (status) {
       case 'open':
-        return '待处?';
+        return 'WaitPlace?';
       case 'investigating':
-        return '调查?';
+        return 'TuneCheck?';
       case 'resolved':
-        return '已解?';
+        return 'AlreadySolve?';
       case 'closed':
-        return '已关?';
+        return 'AlreadyOff?';
       default:
-        return '未知';
+        return 'Unknown';
     }
   }
 }

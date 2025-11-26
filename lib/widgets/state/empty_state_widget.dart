@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 空状态显示组件
-/// 用于显示友好的空数据提示和引导用户操作
+/// EmptyStatusShowComponents
+/// UseAtShowFriendGood of EmptyDataInfoandGuide user operation
 class EmptyStateWidget extends StatelessWidget {
-  /// 显示图标
+  /// ShowIcon
   final IconData icon;
 
-  /// 标题
+  /// Title
   final String title;
 
-  /// 说明文字
+  /// DescriptionTextWord
   final String message;
 
-  /// 操作按钮文字
+  /// Action Button Text
   final String? actionLabel;
 
-  /// 操作按钮回调
+  /// Action Button Callback
   final VoidCallback? onAction;
 
-  /// 次要操作文字
+  /// Secondary Action Text
   final String? secondaryActionLabel;
 
-  /// 次要操作回调
+  /// Secondary Action Callback
   final VoidCallback? onSecondaryAction;
 
-  /// 图标颜色
+  /// IconColor
   final Color? iconColor;
 
   const EmptyStateWidget({
@@ -40,84 +40,84 @@ class EmptyStateWidget extends StatelessWidget {
     this.iconColor,
   });
 
-  /// 空商品列表预设
+  /// EmptyListing List Preset
   factory EmptyStateWidget.noListings({
     VoidCallback? onCreateListing,
     VoidCallback? onBrowseAll,
   }) {
     return EmptyStateWidget(
       icon: Icons.inventory_2_outlined,
-      title: '还没有商品',
-      message: '发布您的第一个商品，开始交易吧',
-      actionLabel: '发布商品',
+      title: 'No items yet',
+      message: 'Post your first item，StartTransactionBar',
+      actionLabel: 'ReleaseItem',
       onAction: onCreateListing,
-      secondaryActionLabel: '浏览全部',
+      secondaryActionLabel: 'BrowseAll',
       onSecondaryAction: onBrowseAll,
     );
   }
 
-  /// 空收藏列表预设
+  /// EmptyFavoriteColTablePreSet
   factory EmptyStateWidget.noFavorites({
     VoidCallback? onBrowse,
   }) {
     return EmptyStateWidget(
       icon: Icons.favorite_border_rounded,
-      title: '还没有收藏',
-      message: '收藏您喜欢的商品，方便下次查看',
+      title: 'No favorites yet',
+      message: 'Favorite items you like，For easier access next time',
       iconColor: AppTheme.error,
-      actionLabel: '去逛逛',
+      actionLabel: 'Browse',
       onAction: onBrowse,
     );
   }
 
-  /// 空交易列表预设
+  /// EmptyTransactionColTablePreSet
   factory EmptyStateWidget.noTransactions({
     VoidCallback? onBrowse,
   }) {
     return EmptyStateWidget(
       icon: Icons.receipt_long_outlined,
-      title: '还没有交易',
-      message: '您的交易记录会显示在这里',
-      actionLabel: '去购物',
+      title: 'No transactions yet',
+      message: 'Your transaction records will appear here',
+      actionLabel: 'Go Shopping',
       onAction: onBrowse,
     );
   }
 
-  /// 空报价列表预设
+  /// EmptyQuoteColTablePreSet
   factory EmptyStateWidget.noOffers({
     VoidCallback? onBrowse,
   }) {
     return EmptyStateWidget(
       icon: Icons.local_offer_outlined,
-      title: '还没有报价',
-      message: '浏览商品并提交您的报价',
-      actionLabel: '浏览商品',
+      title: 'ReturnNoneQuote',
+      message: 'Browse items and submit yourQuote',
+      actionLabel: 'Browse Items',
       onAction: onBrowse,
     );
   }
 
-  /// 空消息列表预设
+  /// EmptyMessageColTablePreSet
   factory EmptyStateWidget.noMessages() {
     return EmptyStateWidget(
       icon: Icons.chat_bubble_outline_rounded,
-      title: '还没有对话',
-      message: '与卖家沟通的消息会显示在这里',
+      title: 'No conversations yet',
+      message: 'Messages with the seller will appear here',
       iconColor: AppTheme.primary500,
     );
   }
 
-  /// 搜索无结果预设
+  /// SearchNoneResultPreSet
   factory EmptyStateWidget.noSearchResults({
     String? searchTerm,
     VoidCallback? onClearSearch,
   }) {
     return EmptyStateWidget(
       icon: Icons.search_off_rounded,
-      title: '未找到相关商品',
+      title: 'No items found',
       message: searchTerm != null
-          ? '没有找到"$searchTerm"的相关结果'
-          : '尝试使用其他关键词搜索',
-      actionLabel: '清除搜索',
+          ? 'NoneFindTo"$searchTerm" of MutualOffResult'
+          : 'Try searching with other keywords',
+      actionLabel: 'ClearSearch',
       onAction: onClearSearch,
     );
   }
@@ -131,7 +131,7 @@ class EmptyStateWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 空状态图标
+            // EmptyStatusIcon
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
@@ -147,7 +147,7 @@ class EmptyStateWidget extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // 标题
+            // Title
             Text(
               title,
               style: AppTheme.heading2.copyWith(
@@ -158,7 +158,7 @@ class EmptyStateWidget extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // 说明
+            // Description
             Text(
               message,
               style: AppTheme.body2.copyWith(
@@ -169,7 +169,7 @@ class EmptyStateWidget extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
 
-            // 操作按钮
+            // ActionPressButton
             if (actionLabel != null && onAction != null) ...[
               const SizedBox(height: 32),
               ElevatedButton.icon(
@@ -191,7 +191,7 @@ class EmptyStateWidget extends StatelessWidget {
               ),
             ],
 
-            // 次要操作按钮
+            // Secondary Action Button
             if (secondaryActionLabel != null && onSecondaryAction != null) ...[
               const SizedBox(height: 12),
               TextButton(

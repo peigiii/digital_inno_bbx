@@ -34,13 +34,13 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('我的交易'),
+        title: const Text('My Transactions'),
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(text: '我的购买'),
-            Tab(text: '我的销?),
+            Tab(text: 'MineBuy'),
+            Tab(text: 'MineSell?),
           ],
         ),
       ),
@@ -69,17 +69,17 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            _buildFilterChip('all', '全部'),
+            _buildFilterChip('all', 'All'),
             const SizedBox(width: 8),
-            _buildFilterChip('pending', '待支?),
+            _buildFilterChip('pending', 'WaitBranch?),
             const SizedBox(width: 8),
-            _buildFilterChip('paid', '已支?),
+            _buildFilterChip('paid', 'AlreadyBranch?),
             const SizedBox(width: 8),
-            _buildFilterChip('shipped', '已发?),
+            _buildFilterChip('shipped', 'AlreadySend?),
             const SizedBox(width: 8),
-            _buildFilterChip('completed', '已完?),
+            _buildFilterChip('completed', 'AlreadyDone?),
             const SizedBox(width: 8),
-            _buildFilterChip('cancelled', '已取?),
+            _buildFilterChip('cancelled', 'AlreadyTake?),
           ],
         ),
       ),
@@ -104,7 +104,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
       stream: _escrowService.getUserPurchases(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('错误: ${snapshot.error}'));
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
 
         if (!snapshot.hasData) {
@@ -129,7 +129,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                     size: 64, color: Colors.grey[400]),
                 const SizedBox(height: 16),
                 Text(
-                  '暂无购买记录',
+                  'No purchase records',
                   style: TextStyle(color: Colors.grey[600]),
                 ),
               ],
@@ -155,7 +155,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
       stream: _escrowService.getUserSales(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('错误: ${snapshot.error}'));
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
 
         if (!snapshot.hasData) {
@@ -179,7 +179,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                 Icon(Icons.sell_outlined, size: 64, color: Colors.grey[400]),
                 const SizedBox(height: 16),
                 Text(
-                  '暂无销售记?,
+                  'No sales records?,
                   style: TextStyle(color: Colors.grey[600]),
                 ),
               ],
@@ -245,7 +245,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '订单? ${transactionId.substring(0, 8)}',
+                    'OrderSingle? ${transactionId.substring(0, 8)}',
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Container(
@@ -276,7 +276,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                     .get(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || !snapshot.data!.exists) {
-                    return const Text('商品信息加载?..');
+                    return const Text('Item InfoLoad?..');
                   }
 
                   final listingData =
@@ -300,7 +300,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              listingData['title'] ?? '未知商品',
+                              listingData['title'] ?? 'UnknownItem',
                               style:
                                   const TextStyle(fontWeight: FontWeight.w500),
                               maxLines: 2,
@@ -335,7 +335,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        isPurchase ? '购买' : '销?,
+                        isPurchase ? 'Buy' : 'Sell?,
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[600],
@@ -374,7 +374,7 @@ class _BBXMyTransactionsScreenState extends State<BBXMyTransactionsScreen>
                     const Icon(Icons.local_shipping, size: 16),
                     const SizedBox(width: 8),
                     Text(
-                      '物流单号: ${data['trackingNumber']}',
+                      'Tracking Number: ${data['trackingNumber']}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[700],

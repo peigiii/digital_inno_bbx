@@ -123,7 +123,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
   }) async {
     return BBXBottomSheet.show<Map<String, dynamic>>(
       context: context,
-      title: '筛选条?,
+      title: 'FilterStrip?,
       height: MediaQuery.of(context).size.height * 0.8,
       child: BBXFilterBottomSheet(
         filters: filters,
@@ -165,7 +165,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
               Expanded(
                 child: OutlinedButton(
                   onPressed: onReset,
-                  child: const Text('重置'),
+                  child: const Text('Reset'),
                 ),
               ),
               const SizedBox(width: AppTheme.spacing12),
@@ -173,7 +173,7 @@ class BBXFilterBottomSheet extends StatelessWidget {
                 flex: 2,
                 child: ElevatedButton(
                   onPressed: onApply,
-                  child: const Text('应用筛?),
+                  child: const Text('AppFilter?),
                 ),
               ),
             ],

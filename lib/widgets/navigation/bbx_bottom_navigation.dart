@@ -28,13 +28,13 @@ class BBXBottomNavigation extends StatelessWidget {
               children: [
                                 _buildNavItem(
                   icon: Icons.home_rounded,
-                  label: '首页',
+                  label: 'Home',
                   index: 0,
                   isSelected: currentIndex == 0,
                 ),
                 _buildNavItem(
                   icon: Icons.inventory_2_rounded,
-                  label: '商品',
+                  label: 'Item',
                   index: 1,
                   isSelected: currentIndex == 1,
                 ),
@@ -43,14 +43,14 @@ class BBXBottomNavigation extends StatelessWidget {
 
                                 _buildNavItem(
                   icon: Icons.chat_bubble_rounded,
-                  label: '消息',
+                  label: 'Message',
                   index: 3,
                   isSelected: currentIndex == 3,
                   badge: unreadMessageCount,
                 ),
                 _buildNavItem(
                   icon: Icons.person_rounded,
-                  label: '我的',
+                  label: 'Mine',
                   index: 4,
                   isSelected: currentIndex == 4,
                 ),
@@ -159,7 +159,7 @@ class BBXBottomNavigation extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            '发布',
+            'Release',
             style: TextStyle(
               fontSize: 11,
               color: isSelected ? AppTheme.primary500 : AppTheme.neutral600,

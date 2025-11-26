@@ -128,10 +128,13 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
 
           return AlertDialog(
             title: const Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.shopping_cart, color: AppTheme.primary),
                 SizedBox(width: 8),
-                Text('Purchase Product'),
+                Flexible(
+                  child: Text('Purchase Product'),
+                ),
               ],
             ),
             content: SingleChildScrollView(
@@ -171,18 +174,21 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                   const SizedBox(height: 16),
 
                   // Quantity input
-                  TextField(
-                    controller: quantityController,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      labelText: 'Quantity ($unit)',
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(Icons.production_quantity_limits),
-                      hintText: 'Enter quantity to purchase',
+                  SizedBox(
+                    width: double.infinity,
+                    child: TextField(
+                      controller: quantityController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                        labelText: 'Quantity ($unit)',
+                        border: const OutlineInputBorder(),
+                        prefixIcon: const Icon(Icons.production_quantity_limits),
+                        hintText: 'Enter quantity to purchase',
+                      ),
+                      onChanged: (value) {
+                        setState(() {}); // Rebuild to update total
+                      },
                     ),
-                    onChanged: (value) {
-                      setState(() {}); // Rebuild to update total
-                    },
                   ),
                   const SizedBox(height: 16),
 
@@ -337,10 +343,13 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.check_circle, color: AppTheme.success, size: 32),
               SizedBox(width: 12),
-              Text('Order Placed!'),
+              Flexible(
+                child: Text('Order Placed!'),
+              ),
             ],
           ),
           content: Column(
@@ -459,10 +468,10 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     super.initState();
     print('');
     print('═══════════════════════════════════════════════════');
-    print('🚀 [ListingDetail] initState - 商品详情页初始化');
-    print('📦 接收到的商品ID: ${widget.listingId}');
-    print('📝 商品ID类型: ${widget.listingId.runtimeType}');
-    print('📏 商品ID长度: ${widget.listingId.length}');
+    print('🚀 [ListingDetail] initState - Listing detail init');
+    print('📦 Received itemID: ${widget.listingId}');
+    print('📝 Item IDType: ${widget.listingId.runtimeType}');
+    print('📏 Item IDLength: ${widget.listingId.length}');
     print('═══════════════════════════════════════════════════');
     print('');
     _checkIfFavorite();
@@ -472,8 +481,8 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   Widget build(BuildContext context) {
     print('');
     print('─────────────────────────────────────────────────');
-    print('🔍 [ListingDetail] build() 方法被调用');
-    print('📦 商品ID: ${widget.listingId}');
+    print('🔍 [ListingDetail] build() Method called');
+    print('📦 Item ID: ${widget.listingId}');
     print('─────────────────────────────────────────────────');
     print('');
 
@@ -486,25 +495,25 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         builder: (context, snapshot) {
           print('');
           print('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-          print('📡 [StreamBuilder] 状态回调');
+          print('📡 [StreamBuilder] Status callback');
           print('🔗 connectionState: ${snapshot.connectionState}');
           print('✅ hasData: ${snapshot.hasData}');
           print('❌ hasError: ${snapshot.hasError}');
           if (snapshot.hasError) {
-            print('💥 错误详情: ${snapshot.error}');
-            print('📚 错误堆栈: ${snapshot.stackTrace}');
+            print('💥 Error details: ${snapshot.error}');
+            print('📚 Error stack: ${snapshot.stackTrace}');
           }
           if (snapshot.hasData) {
-            print('📦 snapshot.data 类型: ${snapshot.data.runtimeType}');
-            print('📄 snapshot.data 是否为null: ${snapshot.data == null}');
+            print('📦 snapshot.data Type: ${snapshot.data.runtimeType}');
+            print('📄 snapshot.data YesNoFornull: ${snapshot.data == null}');
             if (snapshot.data != null) {
               print('📋 document exists: ${snapshot.data!.exists}');
               print('📝 document id: ${snapshot.data!.id}');
               final rawData = snapshot.data!.data();
-              print('🗂️ data() 返回类型: ${rawData.runtimeType}');
-              print('🗂️ data() 是否为null: ${rawData == null}');
+              print('🗂️ data() BackType: ${rawData.runtimeType}');
+              print('🗂️ data() YesNoFornull: ${rawData == null}');
               if (rawData != null) {
-                print('🔑 数据字段: ${(rawData as Map).keys.toList()}');
+                print('🔑 Data fields: ${(rawData as Map).keys.toList()}');
               }
             }
           }
@@ -512,7 +521,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           print('');
 
           if (snapshot.hasError) {
-            print('❌ [ListingDetail] 进入错误处理分支');
+            print('❌ [ListingDetail] Entering error handling');
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Product Details'),
@@ -535,7 +544,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           }
 
           if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
-            print('⏳ [ListingDetail] 数据加载中...');
+            print('⏳ [ListingDetail] DataLoading...');
             print('   - hasData: ${snapshot.hasData}');
             print('   - connectionState: ${snapshot.connectionState}');
             return Scaffold(
@@ -560,11 +569,11 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           }
 
           print('');
-          print('🔍 准备提取数据...');
-          print('   snapshot.data 是否为 null: ${snapshot.data == null}');
+          print('🔍 Preparing ExtractionData...');
+          print('   snapshot.data YesNoFor null: ${snapshot.data == null}');
 
           if (snapshot.data == null) {
-            print('💥 CRITICAL: snapshot.data 是 null!');
+            print('💥 CRITICAL: snapshot.data Yes null!');
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Product Details'),
@@ -583,12 +592,12 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
 
           final data = snapshot.data!.data() as Map<String, dynamic>?;
 
-          print('📊 数据提取结果:');
-          print('   - data 是否为 null: ${data == null}');
+          print('📊 Data extraction result:');
+          print('   - data YesNoFor null: ${data == null}');
           if (data != null) {
-            print('   - data 类型: ${data.runtimeType}');
-            print('   - data 字段数量: ${data.length}');
-            print('   - data 所有字段: ${data.keys.toList()}');
+            print('   - data Type: ${data.runtimeType}');
+            print('   - data FieldCount: ${data.length}');
+            print('   - data AllField: ${data.keys.toList()}');
             print('   - wasteType: ${data['wasteType']}');
             print('   - status: ${data['status']}');
             print('   - userId: ${data['userId']}');
@@ -617,25 +626,25 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           }
 
           print('');
-          print('✅✅✅ [成功] 数据加载成功! ✅✅✅');
-          print('📋 商品信息:');
-          print('   - 标题(wasteType): ${data['wasteType'] ?? 'N/A'}');
-          print('   - 价格(pricePerUnit): ${data['pricePerUnit']}');
-          print('   - 价格(pricePerTon): ${data['pricePerTon']}');
-          print('   - 价格(price): ${data['price']}');
-          print('   - 状态(status): ${data['status'] ?? 'N/A'}');
-          print('   - 卖家ID(userId): ${data['userId']}');
-          print('   - 数量(quantity): ${data['quantity']}');
-          print('   - 单位(unit): ${data['unit']}');
+          print('✅✅✅ [Success] DataLoadSuccess! ✅✅✅');
+          print('📋 Item Info:');
+          print('   - Title(wasteType): ${data['wasteType'] ?? 'N/A'}');
+          print('   - Price(pricePerUnit): ${data['pricePerUnit']}');
+          print('   - Price(pricePerTon): ${data['pricePerTon']}');
+          print('   - Price(price): ${data['price']}');
+          print('   - Status(status): ${data['status'] ?? 'N/A'}');
+          print('   - SellerID(userId): ${data['userId']}');
+          print('   - Count(quantity): ${data['quantity']}');
+          print('   - Unit(unit): ${data['unit']}');
           final description = data['description']?.toString() ?? '';
           final descPreview = description.length > 50 ? '${description.substring(0, 50)}...' : description;
-          print('   - 描述(description): ${descPreview.isEmpty ? 'N/A' : descPreview}');
+          print('   - Desc(description): ${descPreview.isEmpty ? 'N/A' : descPreview}');
           print('');
 
-          print('🖼️ 处理图片数据...');
-          print('   - imageUrls 字段类型: ${data['imageUrls'].runtimeType}');
-          print('   - imageUrls 内容: ${data['imageUrls']}');
-          print('   - imageUrl (单数) 字段: ${data['imageUrl']}');
+          print('🖼️ Processing image data...');
+          print('   - imageUrls FieldType: ${data['imageUrls'].runtimeType}');
+          print('   - imageUrls Content: ${data['imageUrls']}');
+          print('   - imageUrl (Singular) Field: ${data['imageUrl']}');
 
           List<String> images =
               (data['imageUrls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [];
@@ -643,21 +652,21 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           // Fix for single image url field
           final singleImage = data['imageUrl'];
           if (images.isEmpty && singleImage is String && singleImage.isNotEmpty) {
-            print('   ✅ 找到单个 imageUrl 字段: $singleImage');
+            print('   ✅ Found single imageUrl Field: $singleImage');
             images = [singleImage];
           }
 
           final hasImages = images.isNotEmpty;
-          print('   📸 图片总数: ${images.length}');
+          print('   📸 Total images: ${images.length}');
           if (images.isEmpty) {
-            print('   ⚠️ 该商品没有图片');
+            print('   ⚠️ No image for this item');
           } else {
-            print('   📸 图片URL列表: $images');
+            print('   📸 ImageURLColTable: $images');
           }
           print('');
 
           print('');
-          print('🎨🎨🎨 开始构建UI界面 🎨🎨🎨');
+          print('🎨🎨🎨 Start building UI 🎨🎨🎨');
           print('   - hasImages: $hasImages');
           print('   - images.length: ${images.length}');
           print('');
@@ -848,10 +857,10 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           );
           } catch (e, stackTrace) {
             print('');
-            print('💥💥💥 UI构建过程中发生异常! 💥💥💥');
-            print('❌ 异常类型: ${e.runtimeType}');
-            print('💥 异常信息: $e');
-            print('📚 堆栈跟踪:');
+            print('💥💥💥 UIException during build! 💥💥💥');
+            print('❌ ExceptionType: ${e.runtimeType}');
+            print('💥 Exception info: $e');
+            print('📚 Stack trace:');
             print(stackTrace);
             print('💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥💥');
             print('');
@@ -871,7 +880,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     const Icon(Icons.error_outline, size: 64, color: Colors.red),
                     const SizedBox(height: 16),
                     const Text(
-                      'UI构建错误',
+                      'UIBuildError',
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
@@ -882,7 +891,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('返回'),
+                      child: const Text('Back'),
                     ),
                   ],
                 ),
@@ -903,6 +912,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacingLG),
       color: Colors.white,
+      width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1080,9 +1090,10 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           return Container(
             padding: const EdgeInsets.all(AppTheme.spacingLG),
             color: Colors.white,
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
+            width: double.infinity,
+            height: 100,
+            alignment: Alignment.center,
+            child: const CircularProgressIndicator(),
           );
         }
 
@@ -1126,8 +1137,11 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         }
 
         final userData = snapshot.data!.data() as Map<String, dynamic>?;
-        // Fallback for deleted users
-        final displayName = userData?['displayName'] ?? 'Unknown User';
+        // Fallback for deleted users - ensure displayName is never empty
+        final displayNameRaw = userData?['displayName']?.toString().trim();
+        final displayName = (displayNameRaw != null && displayNameRaw.isNotEmpty) 
+            ? displayNameRaw 
+            : 'Unknown User';
         final isVerified = userData?['isVerified'] == true;
 
         debugPrint('✅ [ListingDetail] Supplier loaded: $displayName (verified: $isVerified)');
@@ -1135,6 +1149,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         return Container(
           padding: const EdgeInsets.all(AppTheme.spacingLG),
           color: Colors.white,
+          width: double.infinity,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1153,7 +1168,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     radius: 30,
                     backgroundColor: AppTheme.primary.withOpacity(0.1),
                     child: Text(
-                      displayName[0].toUpperCase(),
+                      displayName.isNotEmpty ? displayName[0].toUpperCase() : '?',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -1168,7 +1183,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                       children: [
                         Row(
                           children: [
-                            Flexible(
+                            Expanded(
                               child: Text(
                                 displayName,
                                 style: const TextStyle(

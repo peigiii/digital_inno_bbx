@@ -14,7 +14,7 @@ class UserInitializer {
       final docSnapshot = await docRef.get();
 
       if (!docSnapshot.exists) {
-        print('⚠️ 用户文档不存在，正在创建...');
+        print('⚠️ UserDocumentNoSaveAt，Creating...');
 
                 await docRef.set({
           'email': user.email ?? '',
@@ -79,7 +79,7 @@ class UserInitializer {
         }
       }
     } catch (e) {
-      print('�?修复用户文档失败: $e');
+      print('�?Fix UserDocumentFailure: $e');
     }
   }
 }

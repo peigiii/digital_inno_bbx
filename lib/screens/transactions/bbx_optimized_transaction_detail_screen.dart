@@ -17,8 +17,8 @@ import '../../widgets/state/error_state_widget.dart';
 import 'bbx_upload_payment_screen.dart';
 import 'bbx_update_logistics_screen.dart';
 
-/// BBX 交易详情�?- 完全优化�?
-/// Material Design 3 风格，适配 Pixel 5
+/// BBX TransactionDetail�?- CompleteOptimize�?
+/// Material Design 3 Style，FitMatch Pixel 5
 class BBXOptimizedTransactionDetailScreen extends StatefulWidget {
   final String transactionId;
 
@@ -130,57 +130,57 @@ class _BBXOptimizedTransactionDetailScreenState
               CustomScrollView(
                 controller: _scrollController,
                 slivers: [
-                  // 1. 顶部状态区域（渐变背景�?
+                  // 1. TopStatusArea（Gradient Background�?
                   _buildStatusHeader(transaction),
 
-                  // 内容列表
+                  // ContentColTable
                   SliverPadding(
                     padding: const EdgeInsets.all(16),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                        // 2. 进度指示�?
+                        // 2. ProgressPointShow�?
                         _buildModernProgressIndicator(transaction),
                         const SizedBox(height: 16),
 
-                        // 3. 交易信息
+                        // 3. Transaction Info
                         _buildSectionTitle('Transaction Information'),
                         _buildTransactionInfoCard(transaction),
                         const SizedBox(height: 24),
 
-                        // 4. 商品信息
+                        // 4. Item Info
                         _buildSectionTitle('Product Details'),
                         _buildProductInfoCard(transaction),
                         const SizedBox(height: 24),
 
-                        // 5. 金额明细
+                        // 5. AmountDetail
                         _buildSectionTitle('Amount Breakdown'),
                         _buildAmountCard(transaction),
                         const SizedBox(height: 24),
 
-                        // 6. 交易方信�?
+                        // 6. TransactionSquareTrust�?
                         _buildSectionTitle(isBuyer ? 'Seller Information' : 'Buyer Information'),
                         _buildUserInfoCard(
                           isBuyer ? transaction.sellerId : transaction.buyerId,
                         ),
                         const SizedBox(height: 24),
 
-                        // 7. 物流信息
+                        // 7. Logistics Info
                         _buildSectionTitle('Logistics Information'),
                         _buildLogisticsInfoCard(transaction),
                         const SizedBox(height: 24),
 
-                        // 8. 支付凭证
+                        // 8. PayProofProof
                         if (transaction.paymentProofUrl != null) ...[
                           _buildSectionTitle('Payment Proof'),
                           _buildPaymentProofCard(transaction),
                           const SizedBox(height: 24),
                         ],
 
-                        // 9. 物流时间�?
+                        // 9. LogisticsTime�?
                         _buildSectionTitle('Logistics Timeline'),
                         _buildLogisticsTimeline(transaction),
                         
-                        // 底部留白
+                        // BottomPartStayWhite
                         const SizedBox(height: 100),
                       ]),
                     ),
@@ -188,10 +188,10 @@ class _BBXOptimizedTransactionDetailScreenState
                 ],
               ),
 
-              // 自定�?AppBar
+              // SelfSet�?AppBar
               _buildCustomAppBar(),
 
-              // 10. 底部操作�?
+              // 10. BottomPartAction�?
               Positioned(
                 left: 0,
                 right: 0,
@@ -236,7 +236,7 @@ class _BBXOptimizedTransactionDetailScreenState
                     textAlign: TextAlign.center,
                   ),
                 ),
-                const SizedBox(width: 48), // 占位，保持标题居�?
+                const SizedBox(width: 48), // OccupyBit，ProtectHoldTitleLive�?
               ],
             ),
           ),
@@ -625,7 +625,7 @@ class _BBXOptimizedTransactionDetailScreenState
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '实付金额',
+                'Amount Paid',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -677,7 +677,7 @@ class _BBXOptimizedTransactionDetailScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      user.displayName ?? '用户',
+                      user.displayName ?? 'User',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -689,7 +689,7 @@ class _BBXOptimizedTransactionDetailScreenState
                         const Icon(Icons.star, size: 14, color: Colors.amber),
                         const SizedBox(width: 4),
                         Text(
-                          '4.8 (信用极好)',
+                          '4.8 (TrustUseExtremeGood)',
                           style: TextStyle(
                             fontSize: 12,
                             color: AppTheme.neutral600,
@@ -718,7 +718,7 @@ class _BBXOptimizedTransactionDetailScreenState
                 onPressed: () {
                   // TODO: Navigate to chat
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('聊天功能即将上线')),
+                    const SnackBar(content: Text('Chat feature coming soon')),
                   );
                 },
                 icon: Container(
@@ -785,7 +785,7 @@ class _BBXOptimizedTransactionDetailScreenState
               ),
             ),
           ] else ...[
-            // 快递信息逻辑同上，这里简化显�?
+            // ExpressInfoLogic same as above，ThisInSimpleizeShow�?
             if (transaction.shippingInfo != null)
                _buildInfoRow('Tracking Number', transaction.shippingInfo!['trackingNumber'] ?? '--', copyable: true),
             const SizedBox(height: 8),
@@ -944,10 +944,10 @@ class _BBXOptimizedTransactionDetailScreenState
   Widget _buildBottomActionBar(TransactionModel transaction, bool isBuyer) {
     List<Widget> buttons = [];
 
-    // 逻辑同原版，但样式优�?
+    // Logic same as original，ButStyleGood�?
     if (transaction.canPayment() && isBuyer) {
       buttons.add(_buildActionButton(
-        '上传凭证',
+        'Upload Proof',
         Colors.green,
         () => Navigator.push(
           context,
@@ -958,7 +958,7 @@ class _BBXOptimizedTransactionDetailScreenState
       ));
       buttons.add(const SizedBox(width: 12));
       buttons.add(_buildActionButton(
-        '取消交易',
+        'CancelTransaction',
         Colors.red,
         () => _cancelTransaction(transaction),
         isOutlined: true,
@@ -971,7 +971,7 @@ class _BBXOptimizedTransactionDetailScreenState
       ));
     } else if ((transaction.shippingStatus == 'picked_up' || transaction.shippingStatus == 'in_transit') && !isBuyer) {
       buttons.add(_buildActionButton(
-        '更新物流',
+        'UpdateLogistics',
         Colors.blue,
         () => Navigator.push(
           context,
@@ -982,13 +982,13 @@ class _BBXOptimizedTransactionDetailScreenState
       ));
     } else if (transaction.canConfirmDelivery() && isBuyer) {
       buttons.add(_buildActionButton(
-        '确认收货',
+        'ConfirmReceive Goods',
         Colors.green,
         () => _confirmDelivery(transaction),
       ));
     } else if (transaction.canComplete()) {
       buttons.add(_buildActionButton(
-        '完成交易',
+        'DoneTransaction',
         Colors.green,
         () => _completeTransaction(transaction),
       ));

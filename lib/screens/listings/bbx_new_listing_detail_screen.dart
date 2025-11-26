@@ -46,15 +46,15 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('加载失败?{snapshot.error}'));
+            return Center(child: Text('Load Failed?{snapshot.error}'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const BBXFullScreenLoading(message: '加载?..');
+            return const BBXFullScreenLoading(message: 'Load?..');
           }
 
           if (!snapshot.hasData || !snapshot.data!.exists) {
-            return const Center(child: Text('商品不存?));
+            return const Center(child: Text('ItemNoSave?));
           }
 
           final listing = ListingModel.fromDocument(snapshot.data!);
@@ -143,7 +143,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                 });
                 BBXNotification.showSuccess(
                   context,
-                  _isFavorited ? '已添加到收藏' : 'Cancelled收?,
+                  _isFavorited ? 'AlreadyAddToFavorite' : 'CancelledCollect?,
                 );
               },
             ),
@@ -272,7 +272,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               const SizedBox(height: AppTheme.spacing8),
 
                             Text(
-                '发布?${listing.createdAt != null ? _formatDate(listing.createdAt!) : '未知时间'}',
+                'Release?${listing.createdAt != null ? _formatDate(listing.createdAt!) : 'UnknownTime'}',
                 style: AppTheme.caption.copyWith(
                   color: AppTheme.neutral500,
                 ),
@@ -300,13 +300,13 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               children: [
                 _buildInfoItem(
                   Icons.inventory_2_outlined,
-                  '总数?,
+                  'TotalNumber?,
                   '${listing.quantity} ${listing.unit}',
                 ),
                 const SizedBox(width: AppTheme.spacing8),
                 _buildInfoItem(
                   Icons.shopping_cart_outlined,
-                  '数量',
+                  'Count',
                   '${listing.quantity} ${listing.unit}',
                 ),
               ],
@@ -316,13 +316,13 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               children: [
                 _buildInfoItem(
                   Icons.check_circle_outline,
-                  '可用数量',
+                  'CanUseCount',
                   '${listing.quantity} ${listing.unit}',
                 ),
                 const SizedBox(width: AppTheme.spacing8),
                 _buildInfoItem(
                   Icons.location_on_outlined,
-                  '所在地',
+                  'PlaceAtLand',
                   listing.location != null && listing.location!['address'] != null
                       ? listing.location!['address'].toString().split(',').first
                       : listing.contactInfo,
@@ -413,7 +413,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                         const SizedBox(width: 4),
                         const Flexible(
                           child: Text(
-                            '128笔交?,
+                            '128PenHand over?,
                             style: TextStyle(fontSize: 11),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -463,7 +463,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('商品描述', style: AppTheme.heading3),
+            const Text('Item Description', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             Text(
               listing.description,
@@ -478,7 +478,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                     _showFullDescription = !_showFullDescription;
                   });
                 },
-                child: Text(_showFullDescription ? '收起' : '展开'),
+                child: Text(_showFullDescription ? 'Collapse' : 'Expand'),
               ),
           ],
         ),
@@ -499,7 +499,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('取货地址', style: AppTheme.heading3),
+            const Text('TakeGoodsAddress', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
                         Container(
               height: 200,
@@ -524,7 +524,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
             ),
             const SizedBox(height: AppTheme.spacing12),
             BBXSecondaryButton(
-              text: '查看地图',
+              text: 'View Map',
               onPressed: () {},
               icon: Icons.directions_rounded,
             ),
@@ -541,7 +541,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('相似商品', style: AppTheme.heading3),
+            const Text('MutualLikeItem', style: AppTheme.heading3),
             const SizedBox(height: AppTheme.spacing12),
             SizedBox(
               height: 240,
@@ -554,7 +554,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                    return const Center(child: Text('暂无相似商品'));
+                    return const Center(child: Text('No similar items'));
                   }
 
                   return ListView.builder(
@@ -658,7 +658,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               const SizedBox(width: AppTheme.spacing8),
               Expanded(
                 child: BBXSecondaryButton(
-                  text: '联系',
+                  text: 'Contact',
                   onPressed: () {},
                   icon: Icons.message_rounded,
                 ),
@@ -667,7 +667,7 @@ class _BBXNewListingDetailScreenState extends State<BBXNewListingDetailScreen> {
               Expanded(
                 flex: 2,
                 child: BBXPrimaryButton(
-                  text: '提交Quote',
+                  text: 'SubmitQuote',
                   onPressed: () {
                     PageTransitions.navigateToSlideUp(
                       context,

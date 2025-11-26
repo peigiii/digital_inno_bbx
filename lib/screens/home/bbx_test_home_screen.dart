@@ -9,7 +9,7 @@ class BBXTestHomeScreen extends StatelessWidget {
     try {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('测试首页'),
+          title: const Text('TestHome'),
           backgroundColor: const Color(0xFF2E7D32),
         ),
         body: Center(
@@ -23,7 +23,7 @@ class BBXTestHomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               const Text(
-                '?页面加载成功?,
+                '?PageLoadSuccess?,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -31,19 +31,19 @@ class BBXTestHomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               const Text(
-                '如果你看到这个页?,
+                'If you see this page?,
                 style: TextStyle(fontSize: 16),
               ),
               const Text(
-                '说明路由和基础框架都正?,
+                'DescriptionRoadByandBasicFrameworksAllRight?,
                 style: TextStyle(fontSize: 16),
               ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: () {
-                  print('按钮被点?);
+                  print('PressButtonByClick?);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('交互正常')),
+                    const SnackBar(content: Text('InteractionNormal')),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -54,7 +54,7 @@ class BBXTestHomeScreen extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  '测试按钮',
+                  'TestPressButton',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -74,12 +74,12 @@ class BBXTestHomeScreen extends StatelessWidget {
               const Icon(Icons.error, size: 100, color: Colors.red),
               const SizedBox(height: 24),
               const Text(
-                '页面出错',
+                'PageOutWrong',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               Text(
-                '错误信息: $e',
+                'ErrorInfo: $e',
                 textAlign: TextAlign.center,
                 style: const TextStyle(fontSize: 14),
               ),

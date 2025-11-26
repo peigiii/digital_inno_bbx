@@ -1,55 +1,55 @@
 import 'package:flutter/material.dart';
 import '../../theme/app_theme.dart';
 
-/// 错误状态显示组件
-/// 用于显示友好的错误信息和提供重试选项
+/// ErrorStatusShowComponents
+/// UseAtShowFriendGood of ErrorInfoandLiftSupplyRetryOptions
 class ErrorStateWidget extends StatelessWidget {
-  /// 错误标题
+  /// ErrorTitle
   final String title;
 
-  /// 错误详细说明
+  /// ErrorDetailedDescription
   final String message;
 
-  /// 重试回调
+  /// RetryReturnTune
   final VoidCallback? onRetry;
 
-  /// 返回回调
+  /// BackReturnTune
   final VoidCallback? onBack;
 
-  /// 自定义图标
+  /// CustomIcon
   final IconData? icon;
 
-  /// 图标颜色
+  /// IconColor
   final Color? iconColor;
 
   const ErrorStateWidget({
     super.key,
-    this.title = '加载失败',
-    this.message = '请检查网络连接后重试',
+    this.title = 'Load Failed',
+    this.message = 'Please check network and try again',
     this.onRetry,
     this.onBack,
     this.icon,
     this.iconColor,
   });
 
-  /// 网络错误预设
+  /// NetworkErrorPreSet
   factory ErrorStateWidget.network({
     VoidCallback? onRetry,
     VoidCallback? onBack,
   }) {
     return ErrorStateWidget(
-      title: '网络连接失败',
-      message: '请检查您的网络连接',
+      title: 'Network Connection Failed',
+      message: 'Please check your network connection',
       icon: Icons.wifi_off_rounded,
       onRetry: onRetry,
       onBack: onBack,
     );
   }
 
-  /// 数据不存在预设
+  /// Data not foundPreSet
   factory ErrorStateWidget.notFound({
-    String title = '内容不存在',
-    String message = '该内容可能已被删除',
+    String title = 'Content Not Found',
+    String message = 'Content may have been deleted',
     VoidCallback? onBack,
   }) {
     return ErrorStateWidget(
@@ -61,27 +61,27 @@ class ErrorStateWidget extends StatelessWidget {
     );
   }
 
-  /// 服务器错误预设
+  /// Server ErrorPreSet
   factory ErrorStateWidget.serverError({
     VoidCallback? onRetry,
     VoidCallback? onBack,
   }) {
     return ErrorStateWidget(
-      title: '服务器错误',
-      message: '服务器暂时无法响应，请稍后重试',
+      title: 'Server Error',
+      message: 'Server temporarily unavailable, please try again later',
       icon: Icons.error_outline_rounded,
       onRetry: onRetry,
       onBack: onBack,
     );
   }
 
-  /// 权限错误预设
+  /// PermissionErrorPreSet
   factory ErrorStateWidget.permissionDenied({
-    String message = '您没有访问此内容的权限',
+    String message = 'You do not have permission to access this content',
     VoidCallback? onBack,
   }) {
     return ErrorStateWidget(
-      title: '无访问权限',
+      title: 'No Access Permission',
       message: message,
       icon: Icons.lock_outline_rounded,
       iconColor: AppTheme.warning,
@@ -98,7 +98,7 @@ class ErrorStateWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 错误图标
+            // ErrorIcon
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -114,7 +114,7 @@ class ErrorStateWidget extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // 错误标题
+            // ErrorTitle
             Text(
               title,
               style: AppTheme.heading2.copyWith(
@@ -125,7 +125,7 @@ class ErrorStateWidget extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // 错误说明
+            // ErrorDescription
             Text(
               message,
               style: AppTheme.body2.copyWith(
@@ -138,16 +138,16 @@ class ErrorStateWidget extends StatelessWidget {
 
             const SizedBox(height: 32),
 
-            // 操作按钮
+            // ActionPressButton
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // 返回按钮
+                // BackPressButton
                 if (onBack != null) ...[
                   OutlinedButton.icon(
                     onPressed: onBack,
                     icon: const Icon(Icons.arrow_back_rounded, size: 18),
-                    label: const Text('返回'),
+                    label: const Text('Back'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppTheme.neutral700,
                       side: BorderSide(color: AppTheme.neutral300),
@@ -160,12 +160,12 @@ class ErrorStateWidget extends StatelessWidget {
                   if (onRetry != null) const SizedBox(width: 12),
                 ],
 
-                // 重试按钮
+                // RetryPressButton
                 if (onRetry != null)
                   ElevatedButton.icon(
                     onPressed: onRetry,
                     icon: const Icon(Icons.refresh_rounded, size: 18),
-                    label: const Text('重试'),
+                    label: const Text('Retry'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primary500,
                       foregroundColor: Colors.white,

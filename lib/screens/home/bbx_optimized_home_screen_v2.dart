@@ -36,9 +36,9 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
-    if (hour < 12) return '早上?👋';
-    if (hour < 18) return '下午?☀?';
-    return '晚上?🌙';
+    if (hour < 12) return 'Morning?👋';
+    if (hour < 18) return 'Afternoon?☀?';
+    return 'Evening?🌙';
   }
 
   @override
@@ -69,13 +69,13 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
               ),
               child: Row(
                 children: [
-                  const Text('为你推荐', style: AppTheme.heading3),
+                  const Text('ForYouRecommended', style: AppTheme.heading3),
                   const Spacer(),
                   TextButton(
                     onPressed: () {},
                     child: Row(
                       children: const [
-                        Text('查看全部', style: TextStyle(color: AppTheme.primary500)),
+                        Text('View All', style: TextStyle(color: AppTheme.primary500)),
                         Icon(Icons.chevron_right, size: 18, color: AppTheme.primary500),
                       ],
                     ),
@@ -101,9 +101,9 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                     children: [
                       Icon(Icons.inventory_2_outlined, size: 48, color: AppTheme.neutral500),
                       SizedBox(height: 12),
-                      Text('商品列表加载区域', style: TextStyle(color: AppTheme.neutral600)),
+                      Text('Listing loading area', style: TextStyle(color: AppTheme.neutral600)),
                       SizedBox(height: 4),
-                      Text('(暂时占位)', style: TextStyle(fontSize: 12, color: AppTheme.neutral500)),
+                      Text('(TempTimeOccupyBit)', style: TextStyle(fontSize: 12, color: AppTheme.neutral500)),
                     ],
                   ),
                 ),
@@ -119,7 +119,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
 
     Widget _buildSliverAppBar() {
     final user = FirebaseAuth.instance.currentUser;
-    final userName = user?.displayName ?? '用户';
+    final userName = user?.displayName ?? 'User';
     final greeting = _getGreeting();
 
     return SliverToBoxAdapter(
@@ -230,7 +230,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
         child: GestureDetector(
           onTap: () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('搜索功能')),
+              const SnackBar(content: Text('SearchFunction')),
             );
           },
           child: Container(
@@ -265,7 +265,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                 const SizedBox(width: AppTheme.spacing12),
                 const Expanded(
                   child: Text(
-                    '搜索废料类型、商?..',
+                    'SearchWaste Type、Business?..',
                     style: TextStyle(
                       fontSize: 16,
                       color: AppTheme.neutral500,
@@ -297,12 +297,12 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
 
     Widget _buildQuickCategories() {
     final categories = [
-      {'label': '塑料', 'icon': '♻️', 'color': AppTheme.plastic},
-      {'label': '金属', 'icon': '🔩', 'color': AppTheme.metal},
-      {'label': '纸类', 'icon': '📄', 'color': AppTheme.paper},
-      {'label': '玻璃', 'icon': '🍾', 'color': AppTheme.glass},
-      {'label': '电子', 'icon': '💻', 'color': AppTheme.electronic},
-      {'label': '有机', 'icon': '🌿', 'color': AppTheme.organic},
+      {'label': 'Plastic', 'icon': '♻️', 'color': AppTheme.plastic},
+      {'label': 'Metal', 'icon': '🔩', 'color': AppTheme.metal},
+      {'label': 'Paper', 'icon': '📄', 'color': AppTheme.paper},
+      {'label': 'Glass', 'icon': '🍾', 'color': AppTheme.glass},
+      {'label': 'Electronic', 'icon': '💻', 'color': AppTheme.electronic},
+      {'label': 'HaveMachine', 'icon': '🌿', 'color': AppTheme.organic},
     ];
 
     return SliverToBoxAdapter(
@@ -314,13 +314,13 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
             padding: const EdgeInsets.symmetric(horizontal: AppTheme.spacing16),
             child: Row(
               children: [
-                const Text('废料分类', style: AppTheme.heading4),
+                const Text('WasteCategory', style: AppTheme.heading4),
                 const Spacer(),
                 TextButton(
                   onPressed: () {},
                   child: const Row(
                     children: [
-                      Text('全部', style: TextStyle(color: AppTheme.primary500)),
+                      Text('All', style: TextStyle(color: AppTheme.primary500)),
                       Icon(Icons.chevron_right_rounded, size: 18, color: AppTheme.primary500),
                     ],
                   ),
@@ -407,7 +407,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('快捷功能', style: AppTheme.heading4),
+            const Text('Quick Functions', style: AppTheme.heading4),
             const SizedBox(height: AppTheme.spacing12),
             GridView.count(
               shrinkWrap: true,
@@ -418,8 +418,8 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
               childAspectRatio: 1.5,
               children: [
                 _buildActionCard(
-                  title: '我的Quote',
-                  subtitle: '待处?5 ?,
+                  title: 'MineQuote',
+                  subtitle: 'WaitPlace?5 ?,
                   icon: Icons.local_offer_outlined,
                   gradient: const LinearGradient(
                     colors: [Color(0xFFFF6B6B), Color(0xFFEE5A6F)],
@@ -427,8 +427,8 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                   onTap: () {},
                 ),
                 _buildActionCard(
-                  title: '我的交易',
-                  subtitle: '进行?2 ?,
+                  title: 'My Transactions',
+                  subtitle: 'EnterRow?2 ?,
                   icon: Icons.receipt_long_outlined,
                   gradient: const LinearGradient(
                     colors: [Color(0xFF4ECDC4), Color(0xFF44A08D)],
@@ -436,8 +436,8 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                   onTap: () {},
                 ),
                 _buildActionCard(
-                  title: '附近商品',
-                  subtitle: '查看周边',
+                  title: 'Nearby Items',
+                  subtitle: 'ViewNearby',
                   icon: Icons.location_on_outlined,
                   gradient: const LinearGradient(
                     colors: [Color(0xFFFFC371), Color(0xFFFF5F6D)],
@@ -445,8 +445,8 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                   onTap: () {},
                 ),
                 _buildActionCard(
-                  title: '我的收藏',
-                  subtitle: '已收?12 ?,
+                  title: 'My Favorites',
+                  subtitle: 'AlreadyCollect?12 ?,
                   icon: Icons.favorite_outline,
                   gradient: const LinearGradient(
                     colors: [Color(0xFFEC6EAD), Color(0xFF3494E6)],
@@ -540,7 +540,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text(
-                          '升级专业?,
+                          'UpgradeProfessional?,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -549,7 +549,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '享受更多特权和功?,
+                          'EnjoyReceiveMoreSpecialRightandMerit?,
                           style: TextStyle(
                             color: Colors.white.withOpacity(0.9),
                             fontSize: 14,
@@ -566,7 +566,7 @@ class _BBXOptimizedHomeScreenV2State extends State<BBXOptimizedHomeScreenV2> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: const Text(
-                            '立即升级',
+                            'NowUpgrade',
                             style: TextStyle(
                               color: Color(0xFF667EEA),
                               fontSize: 14,

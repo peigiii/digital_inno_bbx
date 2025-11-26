@@ -35,7 +35,7 @@ class OfferService {
     final offer = OfferModel(
       id: '',       listingId: listingId,
       recyclerId: _currentUserId!,
-      recyclerName: userData['displayName'] ?? '未知用户',
+      recyclerName: userData['displayName'] ?? 'UnknownUser',
       recyclerCompany: userData['company'],
       recyclerContact: userData['phone'],
       producerId: sellerId,
@@ -69,11 +69,11 @@ class OfferService {
     final offer = OfferModel.fromDocument(offerDoc);
 
         if (offer.sellerId != _currentUserId) {
-      throw Exception('无权操作');
+      throw Exception('Permission denied');
     }
 
         if (!offer.canAccept) {
-      throw Exception('Quote状态不允许接受');
+      throw Exception('QuoteStatusNoAllowAccept');
     }
 
         if (offer.isExpired) {
@@ -102,7 +102,7 @@ class OfferService {
     final offer = OfferModel.fromDocument(offerDoc);
 
         if (offer.sellerId != _currentUserId) {
-      throw Exception('无权操作');
+      throw Exception('Permission denied');
     }
 
         await _firestore.collection('offers').doc(offerId).update({
@@ -126,11 +126,11 @@ class OfferService {
     final offer = OfferModel.fromDocument(offerDoc);
 
         if (offer.sellerId != _currentUserId) {
-      throw Exception('无权操作');
+      throw Exception('Permission denied');
     }
 
         if (!offer.canNegotiate) {
-      throw Exception('Quote状态不允许议价');
+      throw Exception('QuoteStatusNoAllowDiscussPrice');
     }
 
         await _firestore.collection('offers').doc(offerId).update({
@@ -155,15 +155,15 @@ class OfferService {
     final offer = OfferModel.fromDocument(offerDoc);
 
         if (offer.buyerId != _currentUserId) {
-      throw Exception('无权操作');
+      throw Exception('Permission denied');
     }
 
         if (offer.status != 'negotiating') {
-      throw Exception('Quote状态不正确');
+      throw Exception('QuoteStatusNoRightSure');
     }
 
     if (offer.counterOfferPrice == null) {
-      throw Exception('没有还价信息');
+      throw Exception('NoneReturnPriceInfo');
     }
 
         await _firestore.collection('offers').doc(offerId).update({
@@ -189,11 +189,11 @@ class OfferService {
     final offer = OfferModel.fromDocument(offerDoc);
 
         if (offer.buyerId != _currentUserId) {
-      throw Exception('无权操作');
+      throw Exception('Permission denied');
     }
 
         if (offer.status != 'pending' && offer.status != 'negotiating') {
-      throw Exception('Quote状态不允许取消');
+      throw Exception('QuoteStatusNoAllowCancel');
     }
 
         await _firestore.collection('offers').doc(offerId).update({
@@ -222,7 +222,7 @@ class OfferService {
             try {
               return OfferModel.fromDocument(doc);
             } catch (e) {
-              print('解析Quote失败 ${doc.id}: $e');
+              print('ParseQuoteFailure ${doc.id}: $e');
               return null;
             }
           }).whereType<OfferModel>().toList();
@@ -248,7 +248,7 @@ class OfferService {
             try {
               return OfferModel.fromDocument(doc);
             } catch (e) {
-              print('解析Quote失败 ${doc.id}: $e');
+              print('ParseQuoteFailure ${doc.id}: $e');
               return null;
             }
           }).whereType<OfferModel>().toList();
@@ -273,7 +273,7 @@ class OfferService {
             try {
               return OfferModel.fromDocument(doc);
             } catch (e) {
-              print('解析报价失败 ${doc.id}: $e');
+              print('ParseQuoteFailure ${doc.id}: $e');
               return null;
             }
           }).whereType<OfferModel>().toList();

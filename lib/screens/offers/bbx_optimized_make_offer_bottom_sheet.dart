@@ -162,7 +162,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                 ),
                 const SizedBox(width: 12),
                 const Expanded(
-                  child: Text('Quote已提交，等待卖家回复'),
+                  child: Text('QuoteAlreadySubmit，WaitSellerReply'),
                 ),
               ],
             ),
@@ -286,7 +286,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
               ),
               const Expanded(
                 child: Text(
-                  '提交Quote',
+                  'SubmitQuote',
                   style: AppTheme.heading3,
                   textAlign: TextAlign.center,
                 ),
@@ -366,7 +366,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                 ),
                 const SizedBox(height: AppTheme.spacing8),
                 Text(
-                  '原价：RM ${widget.listing.pricePerUnit.toStringAsFixed(2)}/${widget.listing.unit}',
+                  'Original Price：RM ${widget.listing.pricePerUnit.toStringAsFixed(2)}/${widget.listing.unit}',
                   style: AppTheme.body2.copyWith(
                     color: AppTheme.neutral600,
                   ),
@@ -410,7 +410,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
               ),
               const SizedBox(width: AppTheme.spacing12),
               const Text(
-                '您的Quote',
+                'Your Quote',
                 style: AppTheme.heading4,
               ),
             ],
@@ -456,11 +456,11 @@ class _BBXOptimizedMakeOfferBottomSheetState
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return '请输入Quote金?';
+                      return 'PleaseInputQuoteGold?';
                     }
                     final price = double.tryParse(value);
                     if (price == null || price <= 0) {
-                      return '请输入有效的金额';
+                      return 'PleaseInputValid of Amount';
                     }
                     return null;
                   },
@@ -507,8 +507,8 @@ class _BBXOptimizedMakeOfferBottomSheetState
                   const SizedBox(width: 6),
                   Text(
                     _discountPercentage! > 0
-                        ? '折扣 ${_discountPercentage!.toStringAsFixed(1)}%'
-                        : '高于原价 ${(-_discountPercentage!).toStringAsFixed(1)}%',
+                        ? 'Discount ${_discountPercentage!.toStringAsFixed(1)}%'
+                        : 'HighAtOriginal Price ${(-_discountPercentage!).toStringAsFixed(1)}%',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
@@ -525,7 +525,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
             spacing: 8,
             runSpacing: 8,
             children: [
-              _buildQuickOptionChip('原价', widget.listing.pricePerUnit),
+              _buildQuickOptionChip('Original Price', widget.listing.pricePerUnit),
               _buildQuickOptionChip(
                   '-5%', widget.listing.pricePerUnit * 0.95),
               _buildQuickOptionChip(
@@ -602,7 +602,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Text(
-                      '更多选项（可选）',
+                      'MoreOptions（Optional）',
                       style: AppTheme.body1,
                     ),
                   ),
@@ -645,7 +645,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '预计收集日期',
+                                  'Est CollectionDate',
                                   style: AppTheme.caption.copyWith(
                                     color: AppTheme.neutral600,
                                   ),
@@ -653,9 +653,9 @@ class _BBXOptimizedMakeOfferBottomSheetState
                                 const SizedBox(height: 2),
                                 Text(
                                   _scheduledPickupDate != null
-                                      ? DateFormat('yyyy年MM月dd?)
+                                      ? DateFormat('yyyyYearMMMonthdd?)
                                           .format(_scheduledPickupDate!)
-                                      : '选择日期',
+                                      : 'SelectDate',
                                   style: AppTheme.body2.copyWith(
                                     fontWeight: AppTheme.medium,
                                   ),
@@ -679,8 +679,8 @@ class _BBXOptimizedMakeOfferBottomSheetState
                     maxLines: 3,
                     maxLength: 200,
                     decoration: InputDecoration(
-                      labelText: '附加消息',
-                      hintText: '向卖家说明您的需?..',
+                      labelText: 'AttachAddMessage',
+                      hintText: 'Explain your needs to the seller?..',
                       border: OutlineInputBorder(
                         borderRadius: AppTheme.borderRadiusMedium,
                       ),
@@ -744,7 +744,7 @@ class _BBXOptimizedMakeOfferBottomSheetState
                       ),
                       SizedBox(width: 8),
                       Text(
-                        '提交Quote',
+                        'SubmitQuote',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

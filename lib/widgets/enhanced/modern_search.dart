@@ -11,7 +11,7 @@ class ModernSearchBar extends StatelessWidget {
 
   const ModernSearchBar({
     super.key,
-    this.hintText = '搜索废料类型、商?..',
+    this.hintText = 'SearchWaste Type、Business?..',
     this.onTap,
     this.onFilter,
     this.onVoiceSearch,
@@ -195,7 +195,7 @@ class _EditableSearchBarState extends State<EditableSearchBar> {
               controller: _controller,
               focusNode: _focusNode,
               decoration: InputDecoration(
-                hintText: '搜索废料类型、商?..',
+                hintText: 'SearchWaste Type、Business?..',
                 hintStyle: TextStyle(
                   color: AppTheme.neutral500,
                   fontSize: 16,

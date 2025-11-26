@@ -79,7 +79,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  _isTyping ? '正在输入...' : '在线',
+                  _isTyping ? 'Typing......' : 'Online',
                   style: AppTheme.caption.copyWith(
                     color: AppTheme.neutral500,
                   ),
@@ -111,7 +111,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('加载失败?{snapshot.error}'));
+          return Center(child: Text('Load Failed?{snapshot.error}'));
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -130,7 +130,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                 ),
                 const SizedBox(height: AppTheme.spacing16),
                 const Text(
-                  '开始聊天吧',
+                  'StartChat',
                   style: AppTheme.body1,
                 ),
               ],
@@ -287,7 +287,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '商品标题',
+                      'Item Title',
                       style: AppTheme.body2.copyWith(
                         color: isMine ? Colors.white : AppTheme.neutral900,
                       ),
@@ -349,7 +349,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                   maxLines: null,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
-                    hintText: '输入消息...',
+                    hintText: 'InputMessage...',
                     isDense: true,
                   ),
                   onChanged: (text) {
@@ -428,14 +428,14 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
         );
       }
     } catch (e) {
-      BBXNotification.showError(context, '发送失败：$e');
+      BBXNotification.showError(context, 'Send Failed：$e');
     }
   }
 
     void _showAttachmentOptions() {
     BBXBottomSheet.show(
       context: context,
-      title: '发?,
+      title: 'Send?,
       child: Padding(
         padding: const EdgeInsets.all(AppTheme.spacing16),
         child: GridView.count(
@@ -446,22 +446,22 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
           children: [
             _buildAttachmentOption(
               Icons.photo_library_rounded,
-              '相册',
+              'Gallery',
               () {},
             ),
             _buildAttachmentOption(
               Icons.camera_alt_rounded,
-              '拍照',
+              'Photo',
               () {},
             ),
             _buildAttachmentOption(
               Icons.location_on_rounded,
-              '位置',
+              'Location',
               () {},
             ),
             _buildAttachmentOption(
               Icons.shopping_bag_rounded,
-              '商品链接',
+              'ItemLink',
               () {},
             ),
           ],
@@ -513,14 +513,14 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
           children: [
             ListTile(
               leading: const Icon(Icons.report_outlined),
-              title: const Text('举报'),
+              title: const Text('Report'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.delete_outline_rounded),
-              title: const Text('清空聊天记录'),
+              title: const Text('ClearChatRecord'),
               onTap: () {
                 Navigator.pop(context);
               },

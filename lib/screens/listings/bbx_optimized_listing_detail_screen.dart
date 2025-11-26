@@ -71,7 +71,7 @@ class _BBXOptimizedListingDetailScreenState
   Future<void> _toggleFavorite() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      _showMessage('请先登录');
+      _showMessage('PleaseFirstLogin');
       return;
     }
 
@@ -84,20 +84,20 @@ class _BBXOptimizedListingDetailScreenState
     try {
       if (_isFavorited) {
         await favRef.delete();
-        _showMessage('Cancelled收?);
+        _showMessage('CancelledCollect?);
       } else {
         await favRef.set({
           'listingId': widget.listingId,
           'createdAt': FieldValue.serverTimestamp(),
         });
-        _showMessage('已添加到收藏');
+        _showMessage('AlreadyAddToFavorite');
       }
 
       setState(() {
         _isFavorited = !_isFavorited;
       });
     } catch (e) {
-      _showMessage('操作失败，请重试');
+      _showMessage('Failed，PleaseRetry');
     }
   }
 
@@ -185,7 +185,7 @@ class _BBXOptimizedListingDetailScreenState
           ),
           child: IconButton(
             onPressed: () {
-                            Share.share('查看这个商品');
+                            Share.share('View This Item');
             },
             icon: Icon(
               Icons.share_rounded,
@@ -371,7 +371,7 @@ class _BBXOptimizedListingDetailScreenState
     Widget _buildPriceCard(Map<String, dynamic> data) {
     final price = (data['pricePerUnit'] ?? 0).toDouble();
     final unit = data['unit'] ?? 'kg';
-    final title = data['title'] ?? '未知商品';
+    final title = data['title'] ?? 'UnknownItem';
     final category = data['wasteType'] ?? 'Other';
     final quantity = data['quantity'] ?? 0;
     final status = data['status'] ?? 'available';
@@ -437,7 +437,7 @@ class _BBXOptimizedListingDetailScreenState
               ),
               const SizedBox(width: 8),
               Text(
-                '可用?quantity $unit',
+                'CanUse?quantity $unit',
                 style: AppTheme.body1.copyWith(
                   fontWeight: AppTheme.medium,
                 ),
@@ -468,7 +468,7 @@ class _BBXOptimizedListingDetailScreenState
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      status == 'available' ? '可购? : '已售?,
+                      status == 'available' ? 'CanBuy? : 'AlreadySell?,
                       style: TextStyle(
                         color: status == 'available'
                             ? AppTheme.success
@@ -494,7 +494,7 @@ class _BBXOptimizedListingDetailScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '价格',
+                    'Price',
                     style: AppTheme.caption.copyWith(
                       color: AppTheme.neutral600,
                     ),
@@ -533,7 +533,7 @@ class _BBXOptimizedListingDetailScreenState
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      '全部购买',
+                      'AllBuy',
                       style: AppTheme.caption.copyWith(
                         color: AppTheme.primary700,
                       ),
@@ -575,7 +575,7 @@ class _BBXOptimizedListingDetailScreenState
         final userData = snapshot.data!.data() as Map<String, dynamic>?;
         if (userData == null) return const SizedBox.shrink();
 
-        final displayName = userData['displayName'] ?? '未知卖家';
+        final displayName = userData['displayName'] ?? 'UnknownSeller';
         final isVerified = userData['isVerified'] ?? false;
 
         return Container(
@@ -589,7 +589,7 @@ class _BBXOptimizedListingDetailScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '卖家信息',
+                'Seller Info',
                 style: AppTheme.heading4.copyWith(
                   color: AppTheme.neutral700,
                 ),
@@ -694,22 +694,22 @@ class _BBXOptimizedListingDetailScreenState
     final specs = [
       {
         'icon': Icons.category_rounded,
-        'label': '废料类型',
+        'label': 'Waste Type',
         'value': data['wasteType'] ?? '-'
       },
       {
         'icon': Icons.scale_rounded,
-        'label': '重量',
+        'label': 'Weight',
         'value': '${data['quantity']} ${data['unit'] ?? 'kg'}'
       },
       {
         'icon': Icons.water_drop_rounded,
-        'label': '含水?,
+        'label': 'ContainWater?,
         'value': data['moistureContent'] ?? '-'
       },
       {
         'icon': Icons.calendar_today_rounded,
-        'label': '收集日期',
+        'label': 'CollectGatherDate',
         'value': _formatDate(data['collectionDate'])
       },
     ];
@@ -725,7 +725,7 @@ class _BBXOptimizedListingDetailScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '商品规格',
+            'Item Specs',
             style: AppTheme.heading4.copyWith(
               color: AppTheme.neutral700,
             ),
@@ -777,7 +777,7 @@ class _BBXOptimizedListingDetailScreenState
   }
 
     Widget _buildDescriptionCard(Map<String, dynamic> data) {
-    final description = data['description'] ?? '暂无描述';
+    final description = data['description'] ?? 'No description';
 
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -790,7 +790,7 @@ class _BBXOptimizedListingDetailScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '商品描述',
+            'Item Description',
             style: AppTheme.heading4.copyWith(
               color: AppTheme.neutral700,
             ),
@@ -809,7 +809,7 @@ class _BBXOptimizedListingDetailScreenState
   }
 
     Widget _buildLocationCard(Map<String, dynamic> data) {
-    final location = data['location'] ?? '未知位置';
+    final location = data['location'] ?? 'UnknownLocation';
 
     return Container(
       padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -822,7 +822,7 @@ class _BBXOptimizedListingDetailScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '位置信息',
+            'LocationInfo',
             style: AppTheme.heading4.copyWith(
               color: AppTheme.neutral700,
             ),
@@ -873,12 +873,12 @@ class _BBXOptimizedListingDetailScreenState
       children: [
         Row(
           children: [
-            const Text('相似商品', style: AppTheme.heading4),
+            const Text('MutualLikeItem', style: AppTheme.heading4),
             const Spacer(),
             TextButton(
               onPressed: () {},
               child: Text(
-                '查看全部',
+                'View All',
                 style: AppTheme.body2.copyWith(
                   color: AppTheme.primary500,
                 ),
@@ -920,7 +920,7 @@ class _BBXOptimizedListingDetailScreenState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '商品标题',
+                            'Item Title',
                             style: AppTheme.body2.copyWith(
                               fontWeight: AppTheme.semibold,
                             ),
@@ -996,7 +996,7 @@ class _BBXOptimizedListingDetailScreenState
                   child: InkWell(
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('聊天功能即将上线')),
+                        const SnackBar(content: Text('Chat feature coming soon')),
                       );
                     },
                     borderRadius: BorderRadius.circular(12),
@@ -1011,7 +1011,7 @@ class _BBXOptimizedListingDetailScreenState
                           ),
                           SizedBox(width: 6),
                           Text(
-                            '联系卖家',
+                            'ContactSeller',
                             style: TextStyle(
                               color: AppTheme.primary500,
                               fontSize: 16,
@@ -1052,14 +1052,14 @@ class _BBXOptimizedListingDetailScreenState
                       } catch (e) {
                         debugPrint('Error creating ListingModel: $e');
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('无法打开Quote页面，数据格式错?)),
+                          const SnackBar(content: Text('Cannot openQuotePage，DataFormatWrong?)),
                         );
                       }
                     },
                     borderRadius: BorderRadius.circular(12),
                     child: const Center(
                       child: Text(
-                        '立即Quote',
+                        'NowQuote',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -1095,7 +1095,7 @@ class _BBXOptimizedListingDetailScreenState
           ),
           const SizedBox(height: AppTheme.spacing16),
           Text(
-            '加载失败',
+            'Load Failed',
             style: AppTheme.heading4.copyWith(
               color: AppTheme.neutral600,
             ),
@@ -1117,7 +1117,7 @@ class _BBXOptimizedListingDetailScreenState
           ),
           const SizedBox(height: AppTheme.spacing16),
           Text(
-            '商品不存?,
+            'ItemNoSave?,
             style: AppTheme.heading4.copyWith(
               color: AppTheme.neutral600,
             ),

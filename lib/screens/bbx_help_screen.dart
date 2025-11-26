@@ -7,7 +7,7 @@ class BBXHelpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('帮助与支?),
+        title: const Text('HelpWithBranch?),
         backgroundColor: const Color(0xFF4CAF50),
         foregroundColor: Colors.white,
       ),
@@ -15,7 +15,7 @@ class BBXHelpScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           const Text(
-            '常见问题 (FAQ)',
+            'FAQ (FAQ)',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -23,28 +23,28 @@ class BBXHelpScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _buildFAQItem(
-            '如何发布废料列表?,
-            '点击主页?"+" 按钮，填写废料信息后提交即可?,
+            'IfWhatReleaseWasteColTable?,
+            'Click Home?"+" PressButton，Fill in waste info and submit?,
           ),
           _buildFAQItem(
-            '如何提交Quote?,
-            '在废料列表页面，点击废料卡片进入详情，然后点?提交Quote"按钮?,
+            'IfWhatSubmitQuote?,
+            'AtWasteColTablePage，Tap waste card for details，ThenAfterClick?SubmitQuote"PressButton?,
           ),
           _buildFAQItem(
-            '如何查看我的积分?,
-            '打开侧边菜单，点?奖励积分"查看?,
+            'IfWhatView MyPoints?,
+            'OpenSideMenu，Click?RewardPoints"View?,
           ),
           _buildFAQItem(
-            '如何升级订阅计划?,
-            '打开侧边菜单，点?订阅计划"，选择合适的计划?,
+            'IfWhatUpgradeSubscriptionPlan?,
+            'OpenSideMenu，Click?SubscriptionPlan"，Select Suitable of Plan?,
           ),
           _buildFAQItem(
-            '如何联系客服?,
-            '发送邮件至 support@bbx.com 或拨?+60 12-345-6789?,
+            'IfWhatContact Support?,
+            'SendMail to support@bbx.com OrDial?+60 12-345-6789?,
           ),
           const SizedBox(height: 32),
           const Text(
-            '使用教程',
+            'UseTutorial',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -52,20 +52,20 @@ class BBXHelpScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _buildTutorialCard(
-            'Producer指?,
-            '学习如何发布和管理废料列?,
+            'ProducerPoint?,
+            'Learn how to post and manage waste listings?,
             Icons.business,
             Colors.blue,
           ),
           _buildTutorialCard(
-            '处理者指?,
-            '学习如何寻找和Quote废?,
+            'ProcessPersonPoint?,
+            'LearnPracticeIfWhatSearchFindandQuoteWaste?,
             Icons.recycling,
             Colors.green,
           ),
           _buildTutorialCard(
-            '交易流程',
-            '了解完整的交易和付款流程',
+            'TransactionFlowProcess',
+            'edSolveDoneWhole of TransactionandPayment Process',
             Icons.swap_horiz,
             Colors.orange,
           ),

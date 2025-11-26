@@ -12,7 +12,7 @@ class UserService {
       }
       return UserModel.fromDocument(doc);
     } catch (e) {
-      print('获取用户信息失败: $e');
+      print('GetUser InfoFailure: $e');
       return null;
     }
   }

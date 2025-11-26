@@ -99,7 +99,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: '搜索用户、公司或城市...',
+                    hintText: 'SearchUser、CompanyOrCity...',
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
@@ -152,7 +152,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '搜索历史',
+                                'SearchHistory',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey[600],
@@ -168,7 +168,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                                   });
                                 },
                                 child: Text(
-                                  '清除',
+                                  'Clear',
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.grey[600],
@@ -242,7 +242,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '加载失败: ${snapshot.error}',
+                          'Load Failed: ${snapshot.error}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(color: Colors.red),
                         ),
@@ -252,7 +252,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                             setState(() {});
                           },
                           icon: const Icon(Icons.refresh),
-                          label: const Text('重试'),
+                          label: const Text('Retry'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4CAF50),
                             foregroundColor: Colors.white,
@@ -286,7 +286,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _searchQuery.isEmpty ? '暂无用户' : '未找到匹配的用户',
+                          _searchQuery.isEmpty ? 'TempNoneUser' : 'No match found of User',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -295,7 +295,7 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
                         if (_searchQuery.isEmpty) ...[
                           const SizedBox(height: 8),
                           Text(
-                            '还没有注册用?,
+                            'ReturnNoneRegisterUse?,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[500],
@@ -557,21 +557,21 @@ class _BBXUsersScreenState extends State<BBXUsersScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (userData['companyName'] != null && userData['companyName'].toString().isNotEmpty)
-                _buildDetailRow('公司', userData['companyName']),
-              _buildDetailRow('邮箱', userData['email'] ?? 'N/A'),
-              _buildDetailRow('用户类型', _getUserTypeLabel(userData['userType'] ?? 'public')),
-              _buildDetailRow('城市', userData['city'] ?? 'N/A'),
+                _buildDetailRow('Company', userData['companyName']),
+              _buildDetailRow('Email', userData['email'] ?? 'N/A'),
+              _buildDetailRow('User Type', _getUserTypeLabel(userData['userType'] ?? 'public')),
+              _buildDetailRow('City', userData['city'] ?? 'N/A'),
               if (userData['contact'] != null)
-                _buildDetailRow('联系方式', userData['contact']),
+                _buildDetailRow('ContactMethod', userData['contact']),
               if (userData['rating'] != null && userData['rating'] > 0)
-                _buildDetailRow('评分', '${userData['rating'].toStringAsFixed(1)} ?),
+                _buildDetailRow('ReviewScore', '${userData['rating'].toStringAsFixed(1)} ?),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('关闭'),
+            child: const Text('Close'),
           ),
         ],
       ),

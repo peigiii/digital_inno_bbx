@@ -41,11 +41,11 @@ class CreditScoreService {
         'calculatedAt': DateTime.now(),
       };
     } catch (e) {
-      print('计算信用评分失败: $e');
+      print('Calc Credit ScoreFailure: $e');
       return {
         'totalScore': 0,
         'creditLevel': 'poor',
-        'creditLabel': '较差',
+        'creditLabel': 'MoreBad',
         'creditStars': 1,
         'breakdown': {
           'verification': 0,
@@ -191,35 +191,35 @@ class CreditScoreService {
     if (score >= 90) {
       return {
         'level': 'excellent',
-        'label': '卓越',
+        'label': 'SuperCross',
         'stars': 5,
         'color': 'purple',
       };
     } else if (score >= 80) {
       return {
         'level': 'good',
-        'label': '优秀',
+        'label': 'Excellent',
         'stars': 4,
         'color': 'blue',
       };
     } else if (score >= 70) {
       return {
         'level': 'fair',
-        'label': '良好',
+        'label': 'GoodGood',
         'stars': 3,
         'color': 'green',
       };
     } else if (score >= 60) {
       return {
         'level': 'average',
-        'label': '一?,
+        'label': 'One?,
         'stars': 2,
         'color': 'orange',
       };
     } else {
       return {
         'level': 'poor',
-        'label': '较差',
+        'label': 'MoreBad',
         'stars': 1,
         'color': 'red',
       };
@@ -256,7 +256,7 @@ class CreditScoreService {
         await saveCreditScore(doc.id);
       }
     } catch (e) {
-      print('批量更新信用评分失败: $e');
+      print('BatchUpdateCredit ScoreFailure: $e');
     }
   }
 }

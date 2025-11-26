@@ -24,7 +24,7 @@ class ListingService {
 
       return docRef.id;
     } catch (e) {
-      throw Exception('创建列表失败: $e');
+      throw Exception('CreateColTableFailure: $e');
     }
   }
 
@@ -45,7 +45,7 @@ class ListingService {
             if (listing.userId != user.uid) {
                 final userDoc = await _firestore.collection(CollectionConstants.users).doc(user.uid).get();
         final isAdmin = userDoc.data()?['isAdmin'] ?? false;
-        if (!isAdmin) throw Exception('无权限修改此列表');
+        if (!isAdmin) throw Exception('No permission to modify this list');
       }
 
             final finalUpdates = {
@@ -59,7 +59,7 @@ class ListingService {
           .update(finalUpdates)
           .timeout(ApiConstants.defaultTimeout);
     } catch (e) {
-      throw Exception('更新列表失败: $e');
+      throw Exception('UpdateColTableFailure: $e');
     }
   }
 
@@ -80,7 +80,7 @@ class ListingService {
             if (listing.userId != user.uid) {
         final userDoc = await _firestore.collection(CollectionConstants.users).doc(user.uid).get();
         final isAdmin = userDoc.data()?['isAdmin'] ?? false;
-        if (!isAdmin) throw Exception('无权限删除此列表');
+        if (!isAdmin) throw Exception('No permission to delete this list');
       }
 
             final offers = await _firestore
@@ -101,7 +101,7 @@ class ListingService {
         'deletedAt': FieldValue.serverTimestamp(),
       }).timeout(ApiConstants.defaultTimeout);
     } catch (e) {
-      throw Exception('删除列表失败: $e');
+      throw Exception('DeleteColTableFailure: $e');
     }
   }
 
@@ -117,7 +117,7 @@ class ListingService {
 
       return ListingModel.fromDocument(doc);
     } catch (e) {
-      throw Exception('获取列表失败: $e');
+      throw Exception('Get ListFailure: $e');
     }
   }
 
@@ -134,7 +134,7 @@ class ListingService {
         .map((snapshot) => snapshot.docs.map((doc) => ListingModel.fromDocument(doc)).toList());
   }
 
-  /// 搜索列表
+  /// SearchColTable
   Future<List<ListingModel>> searchListings({
     String? category,
     String? status,
@@ -166,7 +166,7 @@ class ListingService {
 
       return snapshot.docs.map((doc) => ListingModel.fromDocument(doc)).toList();
     } catch (e) {
-      throw Exception('搜索列表失败: $e');
+      throw Exception('SearchColTableFailure: $e');
     }
   }
 
@@ -196,7 +196,7 @@ class ListingService {
 
       await batch.commit().timeout(ApiConstants.defaultTimeout);
     } catch (e) {
-      throw Exception('批量删除失败: $e');
+      throw Exception('BatchDelete Failed: $e');
     }
   }
 
@@ -214,7 +214,7 @@ class ListingService {
 
       await batch.commit().timeout(ApiConstants.defaultTimeout);
     } catch (e) {
-      throw Exception('批量更新失败: $e');
+      throw Exception('BatchUpdate Failed: $e');
     }
   }
 
@@ -254,7 +254,7 @@ class ListingService {
         'expired': expired,
       };
     } catch (e) {
-      throw Exception('获取统计失败: $e');
+      throw Exception('GetStatisticsFailure: $e');
     }
   }
 }

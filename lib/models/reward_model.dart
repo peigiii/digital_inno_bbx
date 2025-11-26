@@ -211,7 +211,7 @@ class RewardModel {
         return 5000 - points;
       case MemberTier.platinum:
 <<<<<<< Updated upstream
-        return 0; // 已是最高等�?
+        return 0; // AlreadyYesMostHighWait�?
     }
 =======
         return 0;     }
@@ -228,7 +228,7 @@ class RewardModel {
         return 'Platinum';
       case MemberTier.platinum:
 <<<<<<< Updated upstream
-        return null; // 已是最高等�?
+        return null; // AlreadyYesMostHighWait�?
     }
 =======
         return null;     }
@@ -261,7 +261,7 @@ class RewardModel {
     final newPoints = points + pointsToAdd;
 
 <<<<<<< Updated upstream
-    // 计算新等�?
+    // Calc New Level�?
     MemberTier newTier = tier;
 =======
         MemberTier newTier = tier;

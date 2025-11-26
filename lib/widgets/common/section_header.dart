@@ -124,7 +124,7 @@ class SimpleSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return SectionHeader(
       title: title,
-      actionText: onMoreTap != null ? '查看更多' : null,
+      actionText: onMoreTap != null ? 'ViewMore' : null,
       onActionTap: onMoreTap,
       padding: padding,
     );

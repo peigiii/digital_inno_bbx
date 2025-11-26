@@ -29,14 +29,14 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
 
     if (displayUserId == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('资质证书')),
-        body: const Center(child: Text('请先登录')),
+        appBar: AppBar(title: const Text('CapitalQualityCertificate')),
+        body: const Center(child: Text('PleaseFirstLogin')),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('资质证书'),
+        title: const Text('CapitalQualityCertificate'),
         elevation: 0,
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -47,7 +47,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('错误: ${snapshot.error}'));
+            return Center(child: Text('Error: ${snapshot.error}'));
           }
 
           if (!snapshot.hasData) {
@@ -65,7 +65,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
                       size: 64, color: Colors.grey[400]),
                   const SizedBox(height: 16),
                   Text(
-                    '暂无证书',
+                    'No certificate',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                   if (_isOwnProfile) ...[
@@ -73,7 +73,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
                     ElevatedButton.icon(
                       onPressed: () => _showAddCertificateDialog(),
                       icon: const Icon(Icons.add),
-                      label: const Text('上传证书'),
+                      label: const Text('Upload Certificate'),
                     ),
                   ],
                 ],
@@ -109,7 +109,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
                     child: ElevatedButton.icon(
                       onPressed: () => _showAddCertificateDialog(),
                       icon: const Icon(Icons.add),
-                      label: const Text('上传证书'),
+                      label: const Text('Upload Certificate'),
                     ),
                   ),
                 ),
@@ -192,15 +192,15 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
     switch (status) {
       case 'approved':
         color = Colors.green;
-        label = '已认?;
+        label = 'AlreadyRecognize?;
         break;
       case 'rejected':
         color = Colors.red;
-        label = '未通过';
+        label = 'NotPass';
         break;
       default:
         color = Colors.orange;
-        label = '待审?;
+        label = 'WaitAudit?;
     }
 
     return Container(
@@ -254,17 +254,17 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
                   ),
                   const SizedBox(height: 8),
                   if (data['issuer'] != null)
-                    Text('颁发机构: ${data['issuer']}'),
+                    Text('AwardSendInstitution: ${data['issuer']}'),
                   if (data['number'] != null)
-                    Text('证书编号: ${data['number']}'),
+                    Text('CertificateNo.: ${data['number']}'),
                   if (data['validUntil'] != null)
-                    Text('有效期至: ${_formatDate(data['validUntil'])}'),
+                    Text('ValidPeriodTo: ${_formatDate(data['validUntil'])}'),
                   const SizedBox(height: 8),
                   _buildStatusBadge(data['status'] ?? 'pending'),
                   if (data['reviewNote'] != null) ...[
                     const SizedBox(height: 8),
                     Text(
-                      '审核备注: ${data['reviewNote']}',
+                      'AuditRemark: ${data['reviewNote']}',
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                   ],
@@ -277,7 +277,7 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('关闭'),
+                  child: const Text('Close'),
                 ),
               ),
             ),
@@ -290,21 +290,21 @@ class _BBXCertificatesScreenState extends State<BBXCertificatesScreen> {
   String _getCertificateTypeLabel(String type) {
     switch (type) {
       case 'business_license':
-        return '营业执照';
+        return 'Business LicensePhoto';
       case 'industry_cert':
-        return '行业资质证书';
+        return 'Industry QualsCertificate';
       case 'iso_cert':
-        return 'ISO 认证';
+        return 'ISO Authenticate';
       case 'environmental_cert':
-        return '环保认证';
+        return 'RingProtectAuthenticate';
       case 'quality_cert':
-        return '质量认证';
+        return 'QualityAuthenticate';
       case 'safety_cert':
-        return '安全生产许可?';
+        return 'SecureProduction License?';
       case 'other':
-        return '其他证书';
+        return 'OtherCertificate';
       default:
-        return '证书';
+        return 'Certificate';
     }
   }
 
@@ -368,7 +368,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('上传失败: $e')),
+          SnackBar(content: Text('Upload Failed: $e')),
         );
       }
     }
@@ -377,7 +377,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
   Future<void> _submit() async {
     if (_imageUrl == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请上传证书图?)),
+        const SnackBar(content: Text('PleaseUpload CertificateImg?)),
       );
       return;
     }
@@ -403,14 +403,14 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('证书已提交，等待审核')),
+          const SnackBar(content: Text('CertificateAlreadySubmit，WaitPending Audit')),
         );
       }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('提交失败: $e')),
+          SnackBar(content: Text('Submission Failed: $e')),
         );
       }
     }
@@ -430,24 +430,24 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
             controller: scrollController,
             children: [
               const Text(
-                '上传证书',
+                'Upload Certificate',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
 
-                            const Text('证书类型', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('Certificate Type', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 value: _selectedType,
                 decoration: const InputDecoration(border: OutlineInputBorder()),
                 items: const [
-                  DropdownMenuItem(value: 'business_license', child: Text('营业执照')),
-                  DropdownMenuItem(value: 'industry_cert', child: Text('行业资质证书')),
-                  DropdownMenuItem(value: 'iso_cert', child: Text('ISO 认证')),
-                  DropdownMenuItem(value: 'environmental_cert', child: Text('环保认证')),
-                  DropdownMenuItem(value: 'quality_cert', child: Text('质量认证')),
-                  DropdownMenuItem(value: 'safety_cert', child: Text('安全生产许可?)),
-                  DropdownMenuItem(value: 'other', child: Text('其他证书')),
+                  DropdownMenuItem(value: 'business_license', child: Text('Business LicensePhoto')),
+                  DropdownMenuItem(value: 'industry_cert', child: Text('Industry QualsCertificate')),
+                  DropdownMenuItem(value: 'iso_cert', child: Text('ISO Authenticate')),
+                  DropdownMenuItem(value: 'environmental_cert', child: Text('RingProtectAuthenticate')),
+                  DropdownMenuItem(value: 'quality_cert', child: Text('QualityAuthenticate')),
+                  DropdownMenuItem(value: 'safety_cert', child: Text('SecureProduction License?)),
+                  DropdownMenuItem(value: 'other', child: Text('OtherCertificate')),
                 ],
                 onChanged: (value) {
                   if (value != null) {
@@ -457,29 +457,29 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
               ),
               const SizedBox(height: 16),
 
-                            const Text('颁发机构', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('AwardSendInstitution', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               TextField(
                 controller: _issuerController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: '例如：国家质量监督检验检疫总局',
+                  hintText: 'ExampleIf：CountryAQSIQ',
                 ),
               ),
               const SizedBox(height: 16),
 
-                            const Text('证书编号', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('CertificateNo.', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               TextField(
                 controller: _numberController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: '证书编号',
+                  hintText: 'CertificateNo.',
                 ),
               ),
               const SizedBox(height: 16),
 
-                            const Text('有效期至 (可?', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('ValidPeriodTo (Can?', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               InkWell(
                 onTap: () async {
@@ -501,13 +501,13 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
                   child: Text(
                     _validUntil != null
                         ? '${_validUntil!.year}-${_validUntil!.month.toString().padLeft(2, '0')}-${_validUntil!.day.toString().padLeft(2, '0')}'
-                        : '选择日期',
+                        : 'SelectDate',
                   ),
                 ),
               ),
               const SizedBox(height: 24),
 
-                            const Text('证书图片', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const Text('CertificateImage', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               if (_imageUrl != null)
                 Stack(
@@ -541,7 +541,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
                 OutlinedButton.icon(
                   onPressed: _isLoading ? null : _pickImage,
                   icon: const Icon(Icons.upload_file),
-                  label: const Text('选择图片'),
+                  label: const Text('SelectImage'),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 48),
                   ),
@@ -555,7 +555,7 @@ class _AddCertificateSheetState extends State<AddCertificateSheet> {
                   onPressed: _isLoading ? null : _submit,
                   child: _isLoading
                       ? const CircularProgressIndicator()
-                      : const Text('提交审核'),
+                      : const Text('SubmitAudit'),
                 ),
               ),
             ],

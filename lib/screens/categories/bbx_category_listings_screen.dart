@@ -73,16 +73,16 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
               padding: const EdgeInsets.all(AppTheme.spacing16),
               child: Row(
                 children: [
-                  const Text('?0 个商?, style: AppTheme.body2),
+                  const Text('?0 Items?, style: AppTheme.body2),
                   const Spacer(),
                   DropdownButton<String>(
                     value: _sortBy,
                     underline: const SizedBox(),
                     items: const [
-                      DropdownMenuItem(value: 'latest', child: Text('最新发?)),
-                      DropdownMenuItem(value: 'price_asc', child: Text('价格从低到高')),
-                      DropdownMenuItem(value: 'price_desc', child: Text('价格从高到低')),
-                      DropdownMenuItem(value: 'quantity', child: Text('数量从多到少')),
+                      DropdownMenuItem(value: 'latest', child: Text('NewestSend?)),
+                      DropdownMenuItem(value: 'price_asc', child: Text('Price: Low to High')),
+                      DropdownMenuItem(value: 'price_desc', child: Text('Price: High to Low')),
+                      DropdownMenuItem(value: 'quantity', child: Text('CountFromManyToFew')),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -107,7 +107,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
                 child: Row(
                   children: [
                     BBXFilterChip(
-                      label: '全部',
+                      label: 'All',
                       isSelected: _filters.isEmpty,
                       onTap: () {
                         setState(() {
@@ -117,7 +117,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
                     ),
                     const SizedBox(width: AppTheme.spacing8),
                     BBXFilterChip(
-                      label: '已认?,
+                      label: 'AlreadyRecognize?,
                       isSelected: _filters.contains('verified'),
                       onTap: () {
                         setState(() {
@@ -131,7 +131,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
                     ),
                     const SizedBox(width: AppTheme.spacing8),
                     BBXFilterChip(
-                      label: '附近5km',
+                      label: 'Nearby5km',
                       isSelected: _filters.contains('nearby5'),
                       onTap: () {
                         setState(() {
@@ -159,7 +159,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
               if (snapshot.hasError) {
                 return SliverToBoxAdapter(
                   child: BBXEmptyState.noData(
-                    description: '加载失败，请重试',
+                    description: 'Load Failed，PleaseRetry',
                   ),
                 );
               }
@@ -173,7 +173,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return SliverToBoxAdapter(
                   child: BBXEmptyState.noData(
-                    description: '暂无该分类商?,
+                    description: 'No items in this category?,
                   ),
                 );
               }

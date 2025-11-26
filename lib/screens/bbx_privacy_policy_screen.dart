@@ -7,7 +7,7 @@ class BBXPrivacyPolicyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('隐私政策'),
+        title: const Text('Privacy Policy'),
         backgroundColor: const Color(0xFF4CAF50),
         foregroundColor: Colors.white,
       ),
@@ -17,7 +17,7 @@ class BBXPrivacyPolicyScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'BBX 隐私政策',
+              'BBX Privacy Policy',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -25,55 +25,55 @@ class BBXPrivacyPolicyScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '最后更新：${DateTime.now().year}�?{DateTime.now().month}�?,
+              'MostAfterUpdate：${DateTime.now().year}?{DateTime.now().month}?,
               style: TextStyle(color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
             _buildSection(
-              '1. 信息收集',
-              '我们收集以下类型的信息：\n'
-              '�?账户信息（姓名、邮箱、电话）\n'
-              '�?公司信息（公司名称、地址）\n'
-              '�?交易记录\n'
-              '�?设备信息\n'
-              '�?使用数据',
+              '1. InfoCollectGather',
+              'We collect followingType of Info：\n'
+              '?Account Info（Name、Email、Phone）\n'
+              '?Company Info（CompanyName、Address）\n'
+              '?TransactionRecord\n'
+              '?SetPrepInfo\n'
+              '?UseData',
             ),
             _buildSection(
-              '2. 信息使用',
-              '我们使用收集的信息用于：\n'
-              '�?提供和改进服务\n'
-              '�?处理交易\n'
-              '�?发送通知和更新\n'
-              '�?分析使用情况\n'
-              '�?防止欺诈',
+              '2. InfoUse',
+              'We use collected of InfoUseAt：\n'
+              '?Provide and improve services\n'
+              '?Process Transaction\n'
+              '?SendNotificationandUpdate\n'
+              '?AnalysisUseEmotionSituation\n'
+              '?Prevent Fraud',
             ),
             _buildSection(
-              '3. 信息共享',
-              '我们不会出售您的个人信息。我们可能与以下方共享信息：\n'
-              '�?交易对方（仅限必要信息）\n'
-              '�?服务提供商\n'
-              '�?法律要求的情�?,
+              '3. InfoShare',
+              'We will not sell your personal information。We may share withInfo：\n'
+              '?TransactionPairSquare（OnlyLimitMustWantInfo）\n'
+              '?ServiceLiftSupplyBusiness\n'
+              '?LawWantRequest of Emotion?,
             ),
             _buildSection(
-              '4. 数据安全',
-              '我们采用行业标准的安全措施保护您的数据，包括：\n'
-              '�?加密传输\n'
-              '�?安全存储\n'
-              '�?访问控制\n'
-              '�?定期安全审计',
+              '4. DataSecure',
+              'We use industry-standard security measures to protect your data，Include：\n'
+              '?EncryptTransfer\n'
+              '?SecureStorage\n'
+              '?Access Control\n'
+              '?SetPeriodSecureAudit',
             ),
             _buildSection(
-              '5. 您的权利',
-              '您有权：\n'
-              '�?访问您的数据\n'
-              '�?更正不准确的数据\n'
-              '�?删除您的账户\n'
-              '�?导出您的数据\n'
-              '�?拒绝营销通讯',
+              '5. Your RightProfit',
+              'YouHaveRight：\n'
+              '?VisitAskYour Data\n'
+              '?MoreRightNoAccurateSure of Data\n'
+              '?DeleteYour Account\n'
+              '?ExportYour Data\n'
+              '?RejectMarketing Comms',
             ),
             _buildSection(
-              '6. 联系我们',
-              '如有任何隐私问题，请联系：\n'
+              '6. ContactIs',
+              'If any privacy issues，PleaseContact：\n'
               'Email: privacy@bbx.com\n'
               'Phone: +60 12-345-6789\n'
               'Address: Kuching, Sarawak, Malaysia',

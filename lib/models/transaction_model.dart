@@ -289,13 +289,13 @@ class TransactionModel {
     String get paymentMethodDisplay {
     switch (paymentMethod) {
       case 'cash':
-        return '现金支付';
+        return 'NowGoldPay';
       case 'bank_transfer':
-        return '银行转账';
+        return 'BankTurnAccount';
       case 'ewallet':
-        return '电子钱包';
+        return 'ElectronicWallet';
       case 'fpx':
-        return 'FPX 网银转账';
+        return 'FPX NetSilverTurnAccount';
       case 'credit_card':
         return 'Credit/Debit Card';
       default:

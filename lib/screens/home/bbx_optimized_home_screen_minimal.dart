@@ -41,14 +41,14 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '早上?👋',
+                            'Morning?👋',
                             style: TextStyle(
                               fontSize: 12,
                               color: Color(0xFF757575),
                             ),
                           ),
                           Text(
-                            'BBX用户',
+                            'BBXUser',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -104,7 +104,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                       const SizedBox(width: 12),
                       const Expanded(
                         child: Text(
-                          '搜索废料类型、商?..',
+                          'SearchWaste Type、Business?..',
                           style: TextStyle(
                             fontSize: 16,
                             color: Color(0xFF9E9E9E),
@@ -141,7 +141,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                 child: Row(
                   children: [
                     const Text(
-                      '废料分类',
+                      'WasteCategory',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -153,7 +153,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                       child: const Row(
                         children: [
                           Text(
-                            '全部',
+                            'All',
                             style: TextStyle(color: Color(0xFF2E7D32)),
                           ),
                           Icon(
@@ -176,17 +176,17 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
-                    _buildCategoryCard('♻️', '塑料', const Color(0xFF2196F3)),
+                    _buildCategoryCard('♻️', 'Plastic', const Color(0xFF2196F3)),
                     const SizedBox(width: 8),
-                    _buildCategoryCard('🔩', '金属', const Color(0xFFFF9800)),
+                    _buildCategoryCard('🔩', 'Metal', const Color(0xFFFF9800)),
                     const SizedBox(width: 8),
-                    _buildCategoryCard('📄', '纸类', const Color(0xFF8BC34A)),
+                    _buildCategoryCard('📄', 'Paper', const Color(0xFF8BC34A)),
                     const SizedBox(width: 8),
-                    _buildCategoryCard('🍾', '玻璃', const Color(0xFF00BCD4)),
+                    _buildCategoryCard('🍾', 'Glass', const Color(0xFF00BCD4)),
                     const SizedBox(width: 8),
-                    _buildCategoryCard('💻', '电子', const Color(0xFF9C27B0)),
+                    _buildCategoryCard('💻', 'Electronic', const Color(0xFF9C27B0)),
                     const SizedBox(width: 8),
-                    _buildCategoryCard('🌿', '有机', const Color(0xFF795548)),
+                    _buildCategoryCard('🌿', 'HaveMachine', const Color(0xFF795548)),
                   ],
                 ),
               ),
@@ -198,7 +198,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    '快捷功能',
+                    'Quick Functions',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -220,26 +220,26 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                   childAspectRatio: 1.5,
                   children: [
                     _buildActionCard(
-                      '我的Quote',
-                      '待处?5 ?,
+                      'MineQuote',
+                      'WaitPlace?5 ?,
                       Icons.local_offer_outlined,
                       const Color(0xFFFF6B6B),
                     ),
                     _buildActionCard(
-                      '我的交易',
-                      '进行?2 ?,
+                      'My Transactions',
+                      'EnterRow?2 ?,
                       Icons.receipt_long_outlined,
                       const Color(0xFF4ECDC4),
                     ),
                     _buildActionCard(
-                      '附近商品',
-                      '查看周边',
+                      'Nearby Items',
+                      'ViewNearby',
                       Icons.location_on_outlined,
                       const Color(0xFFFFC371),
                     ),
                     _buildActionCard(
-                      '我的收藏',
-                      '已收?12 ?,
+                      'My Favorites',
+                      'AlreadyCollect?12 ?,
                       Icons.favorite_outline,
                       const Color(0xFFEC6EAD),
                     ),
@@ -267,7 +267,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '升级专业?,
+                              'UpgradeProfessional?,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -276,7 +276,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                             ),
                             SizedBox(height: 4),
                             Text(
-                              '享受更多特权和功?,
+                              'EnjoyReceiveMoreSpecialRightandMerit?,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -284,7 +284,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                             ),
                             SizedBox(height: 12),
                             Text(
-                              '立即升级',
+                              'NowUpgrade',
                               style: TextStyle(
                                 color: Color(0xFF667EEA),
                                 fontSize: 14,
@@ -312,7 +312,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                 child: Row(
                   children: [
                     const Text(
-                      '为你推荐',
+                      'ForYouRecommended',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -324,7 +324,7 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                       child: const Row(
                         children: [
                           Text(
-                            '查看全部',
+                            'View All',
                             style: TextStyle(color: Color(0xFF2E7D32)),
                           ),
                           Icon(
@@ -360,12 +360,12 @@ class BBXOptimizedHomeScreenMinimal extends StatelessWidget {
                       ),
                       SizedBox(height: 12),
                       Text(
-                        '商品列表加载区域',
+                        'Listing loading area',
                         style: TextStyle(color: Color(0xFF757575)),
                       ),
                       SizedBox(height: 4),
                       Text(
-                        '(暂时占位)',
+                        '(TempTimeOccupyBit)',
                         style: TextStyle(
                           fontSize: 12,
                           color: Color(0xFF9E9E9E),

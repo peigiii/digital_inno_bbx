@@ -37,7 +37,7 @@ class SubscriptionService {
       startDate: now,
       endDate: null,
       price: 0,
-      period: '永久',
+      period: 'Permanent',
       features: [
         'Post 5 items',
         'Basic search',
@@ -200,7 +200,7 @@ class SubscriptionService {
   }
 
     DateTime _calculateEndDate(DateTime startDate, String period) {
-    if (period == '1个月') {
+    if (period == '1 Month') {
       return startDate.add(const Duration(days: 30));
     } else if (period == '1?) {
       return DateTime(

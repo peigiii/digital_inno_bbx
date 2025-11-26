@@ -19,7 +19,7 @@ class RewardService {
 
       return RewardModel.fromFirestore(doc);
     } catch (e) {
-      print('获取奖励信息失败: $e');
+      print('GetRewardInfoFailure: $e');
       return null;
     }
   }

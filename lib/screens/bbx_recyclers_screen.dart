@@ -77,7 +77,7 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: '搜索处理者或城市...',
+                    hintText: 'SearchProcessPersonOrCity...',
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
@@ -141,7 +141,7 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '加载失败: ${snapshot.error}',
+                          'Load Failed: ${snapshot.error}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(color: Colors.red),
                         ),
@@ -151,7 +151,7 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
                             setState(() {});
                           },
                           icon: const Icon(Icons.refresh),
-                          label: const Text('重试'),
+                          label: const Text('Retry'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4CAF50),
                             foregroundColor: Colors.white,
@@ -186,8 +186,8 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty && _selectedWasteType == 'all'
-                              ? '暂无回收?
-                              : '未找到匹配的处理?,
+                              ? 'No recycling?
+                              : 'No match found of Process?,
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -196,7 +196,7 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
                         if (_searchQuery.isEmpty && _selectedWasteType == 'all') ...[
                           const SizedBox(height: 8),
                           Text(
-                            '还没有注册的废料处理?,
+                            'Unregistered waste processing?,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[500],
@@ -464,17 +464,17 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildDetailRow('城市', recyclerData['city'] ?? 'N/A'),
+              _buildDetailRow('City', recyclerData['city'] ?? 'N/A'),
               if (recyclerData['capacity'] != null && recyclerData['capacity'] > 0)
-                _buildDetailRow('处理能力', '${recyclerData['capacity']} tons/month'),
+                _buildDetailRow('Processing Capacity', '${recyclerData['capacity']} tons/month'),
               if (recyclerData['contact'] != null)
-                _buildDetailRow('联系方式', recyclerData['contact']),
+                _buildDetailRow('ContactMethod', recyclerData['contact']),
               if (recyclerData['rating'] != null && recyclerData['rating'] > 0)
-                _buildDetailRow('评分', '${recyclerData['rating'].toStringAsFixed(1)} ?),
+                _buildDetailRow('ReviewScore', '${recyclerData['rating'].toStringAsFixed(1)} ?),
               if (accepts.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Text(
-                  '接受的废料类?,
+                  'Accept of WasteClass?,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[600],
@@ -503,7 +503,7 @@ class _BBXRecyclersScreenState extends State<BBXRecyclersScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('关闭'),
+            child: const Text('Close'),
           ),
         ],
       ),

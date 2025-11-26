@@ -21,7 +21,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('用户评价'),
+        title: const Text('UserReview'),
         elevation: 0,
       ),
       body: Column(
@@ -55,7 +55,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
               padding: const EdgeInsets.all(24),
               child: Center(
                 child: Text(
-                  '暂无评价',
+                  'No reviews',
                   style: TextStyle(color: Colors.grey[600]),
                 ),
               ),
@@ -98,7 +98,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
                           _buildStars(averageRating),
                           const SizedBox(height: 8),
                           Text(
-                            '$totalReviews 条评?,
+                            '$totalReviews StripReview?,
                             style: TextStyle(color: Colors.grey[600]),
                           ),
                         ],
@@ -182,15 +182,15 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            _buildFilterChip('all', '全部'),
+            _buildFilterChip('all', 'All'),
             const SizedBox(width: 8),
-            _buildFilterChip('5', '好评 (5?'),
+            _buildFilterChip('5', 'Positive (5?'),
             const SizedBox(width: 8),
-            _buildFilterChip('3-4', '中评 (3-4?'),
+            _buildFilterChip('3-4', 'Neutral (3-4?'),
             const SizedBox(width: 8),
-            _buildFilterChip('1-2', '差评 (1-2?'),
+            _buildFilterChip('1-2', 'Negative (1-2?'),
             const SizedBox(width: 8),
-            _buildFilterChip('images', '有图'),
+            _buildFilterChip('images', 'HaveImg'),
           ],
         ),
       ),
@@ -220,7 +220,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
       stream: query.snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('错误: ${snapshot.error}'));
+          return Center(child: Text('Error: ${snapshot.error}'));
         }
 
         if (!snapshot.hasData) {
@@ -249,7 +249,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
         }).toList();
 
         if (reviews.isEmpty) {
-          return const Center(child: Text('暂无评价'));
+          return const Center(child: Text('No reviews'));
         }
 
         return ListView.builder(
@@ -288,7 +288,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
                       ),
                       const SizedBox(width: 8),
                       const Text(
-                        '匿名用户',
+                        'AnonymousUser',
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -301,7 +301,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
                         .get(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData || !snapshot.data!.exists) {
-                        return const Text('用户');
+                        return const Text('User');
                       }
 
                       final userData =
@@ -318,7 +318,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            userData['name'] ?? '用户',
+                            userData['name'] ?? 'User',
                             style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                         ],
@@ -339,17 +339,17 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
                 children: [
                   if (data['descriptionScore'] != null)
                     _buildScoreChip(
-                      '描述相符',
+                      'DescMutualSymbol',
                       (data['descriptionScore'] as num).toDouble(),
                     ),
                   if (data['serviceScore'] != null)
                     _buildScoreChip(
-                      '服务态度',
+                      'ServiceStateDegree',
                       (data['serviceScore'] as num).toDouble(),
                     ),
                   if (data['deliveryScore'] != null)
                     _buildScoreChip(
-                      '物流速度',
+                      'LogisticsSpeed',
                       (data['deliveryScore'] as num).toDouble(),
                     ),
                 ],
@@ -426,7 +426,7 @@ class _BBXUserReviewsScreenState extends State<BBXUserReviewsScreen> {
                 ),
                 if (data['transactionId'] != null)
                   Text(
-                    '交易订单',
+                    'TransactionOrderSingle',
                     style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
               ],

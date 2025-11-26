@@ -83,7 +83,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             padding: const EdgeInsets.all(AppTheme.spacing16),
             child: Row(
               children: [
-                const Text('提交Quote', style: AppTheme.heading2),
+                const Text('SubmitQuote', style: AppTheme.heading2),
                 const Spacer(),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
@@ -197,7 +197,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('您的Quote', style: AppTheme.heading3),
+        const Text('Your Quote', style: AppTheme.heading3),
         const SizedBox(height: AppTheme.spacing12),
         Container(
           height: 80,
@@ -244,7 +244,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
                 borderRadius: BorderRadius.circular(AppTheme.radiusFull),
               ),
               child: Text(
-                '比原?{_discount >= 0 ? "? : "?} ${_discount.abs().toStringAsFixed(1)}%',
+                'CompareOrig?{_discount >= 0 ? "? : "?} ${_discount.abs().toStringAsFixed(1)}%',
                 style: AppTheme.caption.copyWith(
                   color: _discountColor,
                   fontWeight: AppTheme.semibold,
@@ -261,20 +261,20 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('快捷选择', style: AppTheme.body2),
+        const Text('Quick Select', style: AppTheme.body2),
         const SizedBox(height: AppTheme.spacing12),
         Row(
           children: [
             Expanded(
-              child: _buildQuickAmountButton('原价9?, 0.9),
+              child: _buildQuickAmountButton('Original Price9?, 0.9),
             ),
             const SizedBox(width: AppTheme.spacing8),
             Expanded(
-              child: _buildQuickAmountButton('原价8?, 0.8),
+              child: _buildQuickAmountButton('Original Price8?, 0.8),
             ),
             const SizedBox(width: AppTheme.spacing8),
             Expanded(
-              child: _buildQuickAmountButton('原价7?, 0.7),
+              child: _buildQuickAmountButton('Original Price7?, 0.7),
             ),
           ],
         ),
@@ -315,17 +315,17 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('收货信息', style: AppTheme.heading3),
+        const Text('Shipping Info', style: AppTheme.heading3),
         const SizedBox(height: AppTheme.spacing12),
 
                 ListTile(
           contentPadding: EdgeInsets.zero,
           leading: const Icon(Icons.calendar_today_rounded, color: AppTheme.primary500),
-          title: const Text('收货日期', style: AppTheme.body1),
+          title: const Text('Receive GoodsDate', style: AppTheme.body1),
           trailing: Text(
             _pickupDate != null
                 ? '${_pickupDate!.month}?{_pickupDate!.day}?
-                : '选择日期',
+                : 'SelectDate',
             style: AppTheme.body2.copyWith(
               color: AppTheme.neutral600,
             ),
@@ -347,7 +347,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
 
         const Divider(),
 
-                const Text('收货方式', style: AppTheme.body1),
+                const Text('Receiving Method', style: AppTheme.body1),
         const SizedBox(height: AppTheme.spacing8),
         RadioListTile<String>(
           contentPadding: EdgeInsets.zero,
@@ -362,7 +362,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             children: [
               const Icon(Icons.directions_car_rounded, size: 20),
               const SizedBox(width: AppTheme.spacing8),
-              const Text('自提'),
+              const Text('SelfLift'),
             ],
           ),
         ),
@@ -379,10 +379,10 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             children: [
               const Icon(Icons.local_shipping_rounded, size: 20),
               const SizedBox(width: AppTheme.spacing8),
-              const Text('送货'),
+              const Text('SendGoods'),
               const SizedBox(width: AppTheme.spacing8),
               Text(
-                '(可能加收费用)',
+                '(May charge extra fees)',
                 style: AppTheme.caption.copyWith(
                   color: AppTheme.warning,
                 ),
@@ -400,10 +400,10 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
       children: [
         Row(
           children: [
-            const Text('留言', style: AppTheme.heading3),
+            const Text('Message', style: AppTheme.heading3),
             const SizedBox(width: AppTheme.spacing8),
             Text(
-              '(可?',
+              '(Can?',
               style: AppTheme.caption.copyWith(
                 color: AppTheme.neutral500,
               ),
@@ -416,7 +416,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
           maxLines: 3,
           maxLength: 200,
           decoration: const InputDecoration(
-            hintText: '向卖家说明您的需?..',
+            hintText: 'Explain your needs to the seller?..',
             border: OutlineInputBorder(),
           ),
         ),
@@ -427,7 +427,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
     Widget _buildPriceDetails() {
     return ExpansionTile(
       tilePadding: EdgeInsets.zero,
-      title: const Text('价格明细', style: AppTheme.body1),
+      title: const Text('PriceDetail', style: AppTheme.body1),
       children: [
         Container(
           padding: const EdgeInsets.all(AppTheme.spacing16),
@@ -437,12 +437,12 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
           ),
           child: Column(
             children: [
-              _buildPriceRow('Quote金额', _offerAmount),
+              _buildPriceRow('QuoteAmount', _offerAmount),
               const SizedBox(height: AppTheme.spacing8),
-              _buildPriceRow('平台服务?(3%)', _offerAmount * 0.03),
+              _buildPriceRow('PlatformService?(3%)', _offerAmount * 0.03),
               const Divider(height: AppTheme.spacing24),
               _buildPriceRow(
-                '预计总额',
+                'Estimated Total',
                 _totalAmount,
                 isTotal: true,
               ),
@@ -489,7 +489,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('预计总额', style: AppTheme.body1),
+                const Text('Estimated Total', style: AppTheme.body1),
                 Text(
                   'RM ${_totalAmount.toStringAsFixed(2)}',
                   style: AppTheme.heading2.copyWith(
@@ -500,7 +500,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
             ),
             const SizedBox(height: AppTheme.spacing12),
             BBXPrimaryButton(
-              text: '提交Quote',
+              text: 'SubmitQuote',
               isLoading: _isSubmitting,
               onPressed: _offerAmount > 0 && _pickupDate != null
                   ? _submitOffer
@@ -514,12 +514,12 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
 
     Future<void> _submitOffer() async {
     if (_offerAmount == 0) {
-      BBXNotification.showError(context, '请输入Quote金?);
+      BBXNotification.showError(context, 'PleaseInputQuoteGold?);
       return;
     }
 
     if (_pickupDate == null) {
-      BBXNotification.showError(context, '请选择收货日期');
+      BBXNotification.showError(context, 'Select receivingDate');
       return;
     }
 
@@ -529,7 +529,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
 
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null) throw '请先登录';
+      if (user == null) throw 'PleaseFirstLogin';
 
       await FirebaseFirestore.instance.collection('offers').add({
         'listingId': widget.listing.id,
@@ -569,10 +569,10 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
                 ),
               ),
               const SizedBox(height: AppTheme.spacing16),
-              const Text('Quote已提?, style: AppTheme.heading2),
+              const Text('QuoteAlreadyLift?, style: AppTheme.heading2),
               const SizedBox(height: AppTheme.spacing8),
               const Text(
-                '卖家将在24小时内回?,
+                'SellerWillAt24HoursInnerReturn?,
                 style: AppTheme.body2,
                 textAlign: TextAlign.center,
               ),
@@ -580,7 +580,7 @@ class _BBXNewMakeOfferScreenState extends State<BBXNewMakeOfferScreen> {
           ),
           actions: [
             BBXPrimaryButton(
-              text: '查看我的Quote',
+              text: 'View MyQuote',
               onPressed: () {
                 Navigator.pop(context);                 Navigator.pop(context);                 Navigator.pushNamed(context, '/my-offers');
               },

@@ -63,24 +63,24 @@ class _BBXTransactionDetailScreenState
       final trackingNumber = await showDialog<String>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('输入物流单号'),
+          title: const Text('Enter tracking number'),
           content: TextField(
             controller: _trackingNumberController,
             decoration: const InputDecoration(
-              labelText: '物流单号',
+              labelText: 'Tracking Number',
               border: OutlineInputBorder(),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('取消'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context, _trackingNumberController.text);
               },
-              child: const Text('确认'),
+              child: const Text('Confirm'),
             ),
           ],
         ),
@@ -101,14 +101,14 @@ class _BBXTransactionDetailScreenState
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('发货凭证上传成功')),
+          const SnackBar(content: Text('SendGoodsProofProofUploaded')),
         );
       }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('上传失败: $e')),
+          SnackBar(content: Text('Upload Failed: $e')),
         );
       }
     }
@@ -118,16 +118,16 @@ class _BBXTransactionDetailScreenState
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认收货'),
-        content: const Text('确认收到商品并满意吗？确认后资金将释放给卖家?),
+        title: const Text('ConfirmReceive Goods'),
+        content: const Text('Confirm receipt and satisfaction with the item?？ConfirmAfterFundWillExplainPutGiveSeller?),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('确认收货'),
+            child: const Text('ConfirmReceive Goods'),
           ),
         ],
       ),
@@ -142,14 +142,14 @@ class _BBXTransactionDetailScreenState
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Confirmed收?)),
+          const SnackBar(content: Text('ConfirmedCollect?)),
         );
       }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('操作失败: $e')),
+          SnackBar(content: Text('Failed: $e')),
         );
       }
     }
@@ -159,11 +159,11 @@ class _BBXTransactionDetailScreenState
     final reason = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('申请退?),
+        title: const Text('ApplyRetreat?),
         content: TextField(
           controller: _refundReasonController,
           decoration: const InputDecoration(
-            labelText: '退款原?,
+            labelText: 'RefundOrig?,
             border: OutlineInputBorder(),
           ),
           maxLines: 3,
@@ -171,13 +171,13 @@ class _BBXTransactionDetailScreenState
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context, _refundReasonController.text);
             },
-            child: const Text('提交'),
+            child: const Text('Submit'),
           ),
         ],
       ),
@@ -195,14 +195,14 @@ class _BBXTransactionDetailScreenState
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('退款申请已提交')),
+          const SnackBar(content: Text('RefundApplyAlreadySubmit')),
         );
       }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('操作失败: $e')),
+          SnackBar(content: Text('Failed: $e')),
         );
       }
     }
@@ -212,14 +212,14 @@ class _BBXTransactionDetailScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('交易详情'),
+        title: const Text('TransactionDetail'),
         elevation: 0,
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: _escrowService.getTransactionDetails(widget.transactionId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('错误: ${snapshot.error}'));
+            return Center(child: Text('Error: ${snapshot.error}'));
           }
 
           if (!snapshot.hasData) {
@@ -312,7 +312,7 @@ class _BBXTransactionDetailScreenState
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '订单? ${widget.transactionId.substring(0, 8)}',
+                    'OrderSingle? ${widget.transactionId.substring(0, 8)}',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 ],
@@ -335,26 +335,26 @@ class _BBXTransactionDetailScreenState
     final steps = <Map<String, dynamic>>[];
 
     steps.add({
-      'title': '订单创建',
+      'title': 'OrderSingleCreate',
       'time': data['createdAt'],
       'completed': true,
     });
 
     steps.add({
-      'title': '买家支付',
+      'title': 'BuyerPay',
       'time': data['paidAt'],
       'completed': data['status'] != 'pending',
     });
 
     steps.add({
-      'title': '卖家发货',
+      'title': 'SellerSendGoods',
       'time': data['shippedAt'],
       'completed': data['status'] == 'shipped' ||
           data['status'] == 'completed',
     });
 
     steps.add({
-      'title': '交易完成',
+      'title': 'TransactionDone',
       'time': data['completedAt'],
       'completed': data['status'] == 'completed',
     });
@@ -366,7 +366,7 @@ class _BBXTransactionDetailScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '交易进度',
+              'TransactionProgress',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -453,14 +453,14 @@ class _BBXTransactionDetailScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '交易信息',
+              'Transaction Info',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow('支付方式', data['paymentMethod'] ?? 'Online Banking'),
-            _buildInfoRow('托管状?, EscrowStatus.fromString(data['escrowStatus']).label),
+            _buildInfoRow('Payment Method', data['paymentMethod'] ?? 'Online Banking'),
+            _buildInfoRow('TrustPipeState?, EscrowStatus.fromString(data['escrowStatus']).label),
             if (data['refundReason'] != null)
-              _buildInfoRow('退款原?, data['refundReason']),
+              _buildInfoRow('RefundOrig?, data['refundReason']),
           ],
         ),
       ),
@@ -475,15 +475,15 @@ class _BBXTransactionDetailScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '物流信息',
+              'Logistics Info',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow('物流单号', data['trackingNumber'] ?? '-'),
+            _buildInfoRow('Tracking Number', data['trackingNumber'] ?? '-'),
             if (data['shippingProof'] != null &&
                 (data['shippingProof'] as List).isNotEmpty) ...[
               const SizedBox(height: 12),
-              const Text('发货凭证:', style: TextStyle(fontWeight: FontWeight.w500)),
+              const Text('SendGoodsProofProof:', style: TextStyle(fontWeight: FontWeight.w500)),
               const SizedBox(height: 8),
               SizedBox(
                 height: 100,
@@ -534,7 +534,7 @@ class _BBXTransactionDetailScreenState
       child: ElevatedButton.icon(
         onPressed: _uploadShippingProof,
         icon: const Icon(Icons.local_shipping),
-        label: const Text('上传发货凭证'),
+        label: const Text('Upload Shipping Proof'),
       ),
     );
   }
@@ -546,7 +546,7 @@ class _BBXTransactionDetailScreenState
       child: ElevatedButton.icon(
         onPressed: _confirmReceived,
         icon: const Icon(Icons.check_circle),
-        label: const Text('确认收货'),
+        label: const Text('ConfirmReceive Goods'),
       ),
     );
   }
@@ -558,7 +558,7 @@ class _BBXTransactionDetailScreenState
       child: OutlinedButton.icon(
         onPressed: _requestRefund,
         icon: const Icon(Icons.money_off),
-        label: const Text('申请退?),
+        label: const Text('ApplyRetreat?),
         style: OutlinedButton.styleFrom(
           foregroundColor: Colors.red,
         ),

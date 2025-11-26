@@ -58,7 +58,7 @@ class EscrowService {
 
     final data = doc.data()!;
     if (data['sellerId'] != userId) {
-      throw Exception('无权操作此交?');
+      throw Exception('Permission denied for this transaction?');
     }
 
     await _firestore.collection('transactions').doc(transactionId).update({
@@ -82,7 +82,7 @@ class EscrowService {
 
     final data = doc.data()!;
     if (data['buyerId'] != userId) {
-      throw Exception('无权操作此交?');
+      throw Exception('Permission denied for this transaction?');
     }
 
     await _firestore.collection('transactions').doc(transactionId).update({
@@ -109,7 +109,7 @@ class EscrowService {
 
     final data = doc.data()!;
     if (data['buyerId'] != userId) {
-      throw Exception('无权操作此交?');
+      throw Exception('Permission denied for this transaction?');
     }
 
     await _firestore.collection('transactions').doc(transactionId).update({
@@ -179,11 +179,11 @@ class EscrowService {
     final data = doc.data()!;
 
         if (data['buyerId'] != userId) {
-      throw Exception('无权操作此交?');
+      throw Exception('Permission denied for this transaction?');
     }
 
     if (data['status'] != 'pending') {
-      throw Exception('该状态下无法取消订单');
+      throw Exception('Cannot cancel order in this state');
     }
 
     await _firestore.collection('transactions').doc(transactionId).update({
@@ -249,15 +249,15 @@ class EscrowService {
 }
 
 enum TransactionStatus {
-  pending('pending', '待支?),
-  paid('paid', '已支?),
-  shipped('shipped', '已发?),
-  completed('completed', '已完?),
-  cancelled('cancelled', '已取?),
-  refundRequested('refund_requested', '申请退?),
-  refunded('refunded', '已退?),
-  refundRejected('refund_rejected', '退款被?),
-  disputed('disputed', '有争?);
+  pending('pending', 'WaitBranch?),
+  paid('paid', 'AlreadyBranch?),
+  shipped('shipped', 'AlreadySend?),
+  completed('completed', 'AlreadyDone?),
+  cancelled('cancelled', 'AlreadyTake?),
+  refundRequested('refund_requested', 'ApplyRetreat?),
+  refunded('refunded', 'AlreadyRetreat?),
+  refundRejected('refund_rejected', 'RefundBy?),
+  disputed('disputed', 'HaveFight?);
 
   final String value;
   final String label;
@@ -272,9 +272,9 @@ enum TransactionStatus {
 }
 
 enum EscrowStatus {
-  held('held', '资金托管?),
-  released('released', '资金已释?),
-  refunded('refunded', '已退?);
+  held('held', 'Fund Escrow?),
+  released('released', 'Funds Released?),
+  refunded('refunded', 'AlreadyRetreat?);
 
   final String value;
   final String label;

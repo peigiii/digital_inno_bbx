@@ -41,7 +41,7 @@ class _BBXAdminScreenState extends State<BBXAdminScreen> {
                     Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('无权限访问管理面?),
+              content: Text('No permission to access admin panel?),
               backgroundColor: Colors.red,
             ),
           );
@@ -52,7 +52,7 @@ class _BBXAdminScreenState extends State<BBXAdminScreen> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('权限验证失败: $e'),
+            content: Text('PermissionVerification Failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -78,7 +78,7 @@ class _BBXAdminScreenState extends State<BBXAdminScreen> {
       ]).timeout(
         const Duration(seconds: 15),
         onTimeout: () {
-          throw Exception('统计数据加载超时');
+          throw Exception('StatisticsDataLoadTimeout');
         },
       );
 
@@ -176,7 +176,7 @@ class _BBXAdminScreenState extends State<BBXAdminScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        '加载失败: $_error',
+                        'Load Failed: $_error',
                         textAlign: TextAlign.center,
                         style: const TextStyle(color: Colors.red),
                       ),
@@ -184,7 +184,7 @@ class _BBXAdminScreenState extends State<BBXAdminScreen> {
                       ElevatedButton.icon(
                         onPressed: _loadStatistics,
                         icon: const Icon(Icons.refresh),
-                        label: const Text('重试'),
+                        label: const Text('Retry'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF4CAF50),
                           foregroundColor: Colors.white,

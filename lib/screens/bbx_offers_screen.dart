@@ -74,7 +74,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                     color: Color(0xFF4CAF50),
                   ),
                   SizedBox(height: 16),
-                  Text('处理?..'),
+                  Text('Process?..'),
                 ],
               ),
             ),
@@ -101,7 +101,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
             .get();
 
         if (!listingDoc.exists) {
-          throw Exception('废料信息不存?');
+          throw Exception('Waste InfoNoSave?');
         }
 
         final listingData = listingDoc.data() as Map<String, dynamic>;
@@ -140,7 +140,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
         await batch.commit().timeout(
           const Duration(seconds: 15),
           onTimeout: () {
-            throw Exception('操作超时，请检查网络连?');
+            throw Exception('ActionTimeout，Check network conn?');
           },
         );
 
@@ -194,7 +194,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Quote?{newStatus == "accepted" ? "接受" : "拒绝"}'),
+            content: Text('Quote?{newStatus == "accepted" ? "Accept" : "Reject"}'),
             backgroundColor: newStatus == "accepted"
                 ? const Color(0xFF4CAF50)
                 : const Color(0xFFF44336),
@@ -206,7 +206,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
         Navigator.pop(context); // Close loading dialog
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('操作失败: $e'),
+            content: Text('Failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -230,7 +230,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                 TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: '搜索Quote...',
+                    hintText: 'SearchQuote...',
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchQuery.isNotEmpty
                         ? IconButton(
@@ -292,7 +292,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '加载失败: ${snapshot.error}',
+                          'Load Failed: ${snapshot.error}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(color: Colors.red),
                         ),
@@ -302,7 +302,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                             setState(() {});
                           },
                           icon: const Icon(Icons.refresh),
-                          label: const Text('重试'),
+                          label: const Text('Retry'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4CAF50),
                             foregroundColor: Colors.white,
@@ -337,8 +337,8 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                         const SizedBox(height: 16),
                         Text(
                           _searchQuery.isEmpty && _selectedStatus == 'all'
-                              ? '暂无Quote'
-                              : '未找到匹配的Quote',
+                              ? 'TempNoneQuote'
+                              : 'No match found of Quote',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -347,7 +347,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                         if (_searchQuery.isEmpty && _selectedStatus == 'all') ...[
                           const SizedBox(height: 8),
                           Text(
-                            '还没有收到任何报?,
+                            'Haven't received any offers yet?,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[500],
@@ -444,7 +444,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
             if (message.isNotEmpty) ...[
               const SizedBox(height: 12),
               Text(
-                '留言',
+                'Message',
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.grey[600],
@@ -489,7 +489,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                     child: ElevatedButton.icon(
                       onPressed: () => _updateOfferStatus(offerId, 'accepted', offerData),
                       icon: const Icon(Icons.check),
-                      label: const Text('接受'),
+                      label: const Text('Accept'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF4CAF50),
                         foregroundColor: Colors.white,
@@ -504,7 +504,7 @@ class _BBXOffersScreenState extends State<BBXOffersScreen> {
                     child: ElevatedButton.icon(
                       onPressed: () => _updateOfferStatus(offerId, 'rejected', offerData),
                       icon: const Icon(Icons.close),
-                      label: const Text('拒绝'),
+                      label: const Text('Reject'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFF44336),
                         foregroundColor: Colors.white,

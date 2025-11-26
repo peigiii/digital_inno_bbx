@@ -146,7 +146,7 @@ class ModernListingCard extends StatelessWidget {
                             ),
                             child: const Center(
                               child: Text(
-                                '立即Quote',
+                                'NowQuote',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -547,7 +547,7 @@ class ModernOfferCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '原价',
+                              'Original Price',
                               style: AppTheme.caption.copyWith(
                                 color: AppTheme.neutral600,
                               ),
@@ -570,7 +570,7 @@ class ModernOfferCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              '我的Quote',
+                              'MineQuote',
                               style: AppTheme.caption.copyWith(
                                 color: AppTheme.neutral600,
                               ),

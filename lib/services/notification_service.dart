@@ -21,7 +21,7 @@ class NotificationService {
       );
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        print('用户授予通知权限');
+        print('User GrantedNotificationPermission');
       }
 
             const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -47,7 +47,7 @@ class NotificationService {
 
             FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessage);
     } catch (e) {
-      print('通知初始化失? $e');
+      print('NotificationInit Failed? $e');
     }
   }
 
@@ -64,9 +64,9 @@ class NotificationService {
         'fcmToken': token,
         'fcmTokenUpdatedAt': FieldValue.serverTimestamp(),
       }, SetOptions(merge: true)); 
-      print('?FCM token 保存成功');
+      print('?FCM token Saved');
     } catch (e) {
-      print('?保存 FCM token 失败: $e');
+      print('?Save FCM token Failure: $e');
           }
   }
 
@@ -82,11 +82,11 @@ class NotificationService {
   }
 
   void _handleBackgroundMessage(RemoteMessage message) {
-        print('用户点击了通知: ${message.data}');
+        print('User ClickedNotification: ${message.data}');
   }
 
   void _onNotificationTapped(NotificationResponse response) {
-        print('通知被点? ${response.payload}');
+        print('NotificationByClick? ${response.payload}');
   }
 
   Future<void> _showLocalNotification(
@@ -117,7 +117,7 @@ class NotificationService {
         payload: data.toString(),
       );
     } catch (e) {
-      print('显示本地通知失败: $e');
+      print('ShowLocalNotificationFailure: $e');
     }
   }
 
@@ -137,7 +137,7 @@ class NotificationService {
         'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('发送通知失败: $e');
+      print('SendNotificationFailure: $e');
     }
   }
 }

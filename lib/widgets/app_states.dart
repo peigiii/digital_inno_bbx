@@ -69,7 +69,7 @@ class ErrorStateWidget extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: const Text('重试'),
+                label: const Text('Retry'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4CAF50),
                   foregroundColor: Colors.white,
@@ -149,7 +149,7 @@ class EmptyStateWidget extends StatelessWidget {
                     vertical: 12,
                   ),
                 ),
-                child: Text(actionLabel ?? '开?),
+                child: Text(actionLabel ?? 'On?),
               ),
             ],
           ],

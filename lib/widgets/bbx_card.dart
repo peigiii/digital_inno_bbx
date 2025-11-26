@@ -377,7 +377,7 @@ class BBXOfferCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '原价',
+                        'Original Price',
                         style: AppTheme.caption.copyWith(
                           color: AppTheme.neutral600,
                         ),
@@ -587,14 +587,14 @@ class BBXTransactionCard extends StatelessWidget {
 
                     const SizedBox(height: AppTheme.spacing8),
           Text(
-            '创建时间?createdAt',
+            'CreateTime?createdAt',
             style: AppTheme.caption.copyWith(
               color: AppTheme.neutral500,
             ),
           ),
           if (estimatedPickupDate != null)
             Text(
-              '预计取货?estimatedPickupDate',
+              'Est Pickup?estimatedPickupDate',
               style: AppTheme.caption.copyWith(
                 color: AppTheme.neutral700,
                 fontWeight: AppTheme.semibold,

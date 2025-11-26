@@ -100,7 +100,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
               ),
               SizedBox(height: 16),
               Text(
-                '请先登录以查看消?,
+                'Please login to view messages?,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.grey,
@@ -123,7 +123,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: '搜索对话...',
+                hintText: 'SearchPairWord...',
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
@@ -167,7 +167,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '加载失败: ${snapshot.error}',
+                          'Load Failed: ${snapshot.error}',
                           textAlign: TextAlign.center,
                           style: const TextStyle(color: Colors.red),
                         ),
@@ -177,7 +177,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
                             setState(() {});
                           },
                           icon: const Icon(Icons.refresh),
-                          label: const Text('重试'),
+                          label: const Text('Retry'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4CAF50),
                             foregroundColor: Colors.white,
@@ -211,7 +211,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          _searchQuery.isEmpty ? '暂无消息' : '未找到匹配的对话',
+                          _searchQuery.isEmpty ? 'No messages' : 'No match found of PairWord',
                           style: TextStyle(
                             fontSize: 18,
                             color: Colors.grey[600],
@@ -219,7 +219,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          _searchQuery.isEmpty ? '还没有任何对? : '',
+                          _searchQuery.isEmpty ? 'ReturnNoneTaskWhatPair? : '',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[500],
@@ -405,7 +405,7 @@ class _BBXMessagesScreenState extends State<BBXMessagesScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('打开聊天失败: $e'),
+            content: Text('OpenChatFailure: $e'),
             backgroundColor: Colors.red,
           ),
         );

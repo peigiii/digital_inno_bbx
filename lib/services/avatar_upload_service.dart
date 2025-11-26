@@ -29,7 +29,7 @@ class AvatarUploadService {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('图片太大，请选择小于 5MB 的图?),
+              content: Text('Image too large，Select less than 5MB  of Img?),
               backgroundColor: Colors.red,
             ),
           );
@@ -53,14 +53,14 @@ class AvatarUploadService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      print('?头像上传成功: $downloadUrl');
+      print('?Avatar Uploaded Successfully: $downloadUrl');
       return downloadUrl;
     } catch (e) {
-      print('?头像上传失败: $e');
+      print('?Avatar Upload Failed: $e');
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('上传失败: $e'),
+            content: Text('Upload Failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -73,18 +73,18 @@ class AvatarUploadService {
     return showDialog<ImageSource>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('选择图片来源'),
+        title: const Text('SelectImageSource'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: const Icon(Icons.camera_alt, color: Color(0xFF4CAF50)),
-              title: const Text('拍照'),
+              title: const Text('Photo'),
               onTap: () => Navigator.pop(context, ImageSource.camera),
             ),
             ListTile(
               leading: const Icon(Icons.photo_library, color: Color(0xFF4CAF50)),
-              title: const Text('从相册选择'),
+              title: const Text('FromGallerySelect'),
               onTap: () => Navigator.pop(context, ImageSource.gallery),
             ),
           ],
@@ -92,7 +92,7 @@ class AvatarUploadService {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -111,20 +111,20 @@ class AvatarUploadService {
 
       return File(pickedFile.path);
     } catch (e) {
-      print('?选择图片失败: $e');
+      print('?SelectImageFailure: $e');
       return null;
     }
   }
 
     static Future<File> _compressImage(File file) async {
     try {
-      print('🔄 开始压缩图?..');
+      print('🔄 Start compressing image?..');
 
             final bytes = await file.readAsBytes();
       img.Image? image = img.decodeImage(bytes);
 
       if (image == null) {
-        throw Exception('无法解码图片');
+        throw Exception('Cannot decode image');
       }
 
             if (image.width > maxWidth) {
@@ -137,13 +137,13 @@ class AvatarUploadService {
       final tempFile = File('${tempDir.path}/compressed_avatar.jpg');
       await tempFile.writeAsBytes(compressedBytes);
 
-      print('?图片压缩完成');
-      print('   原始大小: ${(bytes.length / 1024).toStringAsFixed(2)} KB');
-      print('   压缩后大? ${(compressedBytes.length / 1024).toStringAsFixed(2)} KB');
+      print('?Image compression complete');
+      print('   OrigStartSize: ${(bytes.length / 1024).toStringAsFixed(2)} KB');
+      print('   CompressAfterBig? ${(compressedBytes.length / 1024).toStringAsFixed(2)} KB');
 
       return tempFile;
     } catch (e) {
-      print('?压缩图片失败: $e');
+      print('?Image compression failed: $e');
             return file;
     }
   }
@@ -154,7 +154,7 @@ class AvatarUploadService {
     Function(double)? onProgress,
   ) async {
     try {
-      print('🔄 开始上传到 Firebase Storage...');
+      print('🔄 StartUploadTo Firebase Storage...');
 
             await deleteAvatar(userId);
 
@@ -168,18 +168,18 @@ class AvatarUploadService {
             uploadTask.snapshotEvents.listen((snapshot) {
         final progress = snapshot.bytesTransferred / snapshot.totalBytes;
         onProgress?.call(progress);
-        print('   上传进度: ${(progress * 100).toStringAsFixed(1)}%');
+        print('   Upload Progress: ${(progress * 100).toStringAsFixed(1)}%');
       });
 
             final snapshot = await uploadTask;
 
             final downloadUrl = await snapshot.ref.getDownloadURL();
 
-      print('?上传完成: $downloadUrl');
+      print('?Upload Completed: $downloadUrl');
       return downloadUrl;
     } catch (e) {
-      print('?上传失败: $e');
-      throw Exception('上传失败: $e');
+      print('?Upload Failed: $e');
+      throw Exception('Upload Failed: $e');
     }
   }
 
@@ -191,12 +191,12 @@ class AvatarUploadService {
           .child('$userId.jpg');
 
       await storageRef.delete();
-      print('🗑?旧头像已删除');
+      print('🗑?OldAvatarDeleted');
     } catch (e) {
             if (e.toString().contains('object-not-found')) {
-        print('ℹ️ 没有找到旧头?);
+        print('ℹ️ NoneFound old avatar?);
       } else {
-        print('⚠️ 删除旧头像失? $e');
+        print('⚠️ DeleteOldAvatarLost? $e');
       }
     }
   }
@@ -213,10 +213,10 @@ class AvatarUploadService {
 
       await deleteAvatar(userId);
 
-      print('?头像已从 Firestore 删除');
+      print('?AvatarAlreadyFrom Firestore Delete');
     } catch (e) {
-      print('?删除头像失败: $e');
-      throw Exception('删除头像失败: $e');
+      print('?DeleteAvatarFailure: $e');
+      throw Exception('DeleteAvatarFailure: $e');
     }
   }
 }

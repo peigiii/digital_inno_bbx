@@ -37,7 +37,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
 
     String _formatLocation() {
     final location = widget.listing.location;
-    if (location == null) return '地址未提?';
+    if (location == null) return 'AddressNotLift?';
 
         if (location['address'] != null) {
       return location['address'].toString();
@@ -46,10 +46,10 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
         final lat = location['latitude'];
     final lng = location['longitude'];
     if (lat != null && lng != null) {
-      return '位置: $lat, $lng';
+      return 'Location: $lat, $lng';
     }
 
-    return '地址未提?';
+    return 'AddressNotLift?';
   }
 
     void _calculateDiscount() {
@@ -75,9 +75,9 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
       initialDate: tomorrow,
       firstDate: tomorrow,
       lastDate: maxDate,
-      helpText: '选择预计收集日期',
-      cancelText: '取消',
-      confirmText: '确定',
+      helpText: 'Select Est CollectionDate',
+      cancelText: 'Cancel',
+      confirmText: 'OK',
     );
 
     if (pickedDate != null) {
@@ -116,7 +116,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Quote已提交，等待卖家回复'),
+            content: Text('QuoteAlreadySubmit，WaitSellerReply'),
             backgroundColor: Colors.green,
           ),
         );
@@ -143,7 +143,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('提交Quote'),
+        title: const Text('SubmitQuote'),
         elevation: 0,
       ),
       body: Form(
@@ -221,7 +221,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Quote金额 *',
+          'QuoteAmount *',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
@@ -231,18 +231,18 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
           decoration: InputDecoration(
             prefixText: 'RM ',
             suffixText: '/${widget.listing.unit}',
-            hintText: '输入您的Quote',
+            hintText: 'InputYour Quote',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return '请输入Quote金?';
+              return 'PleaseInputQuoteGold?';
             }
             final price = double.tryParse(value);
             if (price == null || price <= 0) {
-              return '请输入有效的金额';
+              return 'PleaseInputValid of Amount';
             }
             return null;
           },
@@ -268,8 +268,8 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                 const SizedBox(width: 8),
                 Text(
                   _discountPercentage! > 0
-                      ? '折扣 ${_discountPercentage!.toStringAsFixed(1)}%'
-                      : '高于原价 ${(-_discountPercentage!).toStringAsFixed(1)}%',
+                      ? 'Discount ${_discountPercentage!.toStringAsFixed(1)}%'
+                      : 'HighAtOriginal Price ${(-_discountPercentage!).toStringAsFixed(1)}%',
                   style: TextStyle(
                     color: _discountPercentage! > 0 ? Colors.green : Colors.orange,
                     fontWeight: FontWeight.w500,
@@ -288,7 +288,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '预计收集日期',
+          'Est CollectionDate',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
@@ -306,8 +306,8 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                 const SizedBox(width: 12),
                 Text(
                   _scheduledPickupDate != null
-                      ? DateFormat('yyyy年MM月dd?).format(_scheduledPickupDate!)
-                      : '选择日期',
+                      ? DateFormat('yyyyYearMMMonthdd?).format(_scheduledPickupDate!)
+                      : 'SelectDate',
                   style: TextStyle(
                     fontSize: 16,
                     color: _scheduledPickupDate != null ? Colors.black : Colors.grey,
@@ -326,14 +326,14 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '🚚 配送方?*',
+          '🚚 Carrier?*',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
 
                 RadioListTile<String>(
           title: const Text(
-            '自提',
+            'SelfLift',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           subtitle: Column(
@@ -341,7 +341,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
             children: [
               const SizedBox(height: 4),
               const Text(
-                '到卖家指定地点取?,
+                'ToSellerPointSetLocationTake?,
                 style: TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 4),
@@ -375,7 +375,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
 
                 RadioListTile<String>(
           title: const Text(
-            '邮寄',
+            'Mail',
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           subtitle: Column(
@@ -383,7 +383,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
             children: [
               const SizedBox(height: 4),
               const Text(
-                '卖家安排快递配?,
+                'Seller arranges delivery?,
                 style: TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 8),
@@ -399,7 +399,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                     Icon(Icons.info_outline, size: 14, color: Colors.orange[700]),
                     const SizedBox(width: 4),
                     Text(
-                      '邮费需与卖家协?额外支付)',
+                      'Shipping fee negotiable?AmountOuterPay)',
                       style: TextStyle(
                         fontSize: 11,
                         color: Colors.orange[700],
@@ -426,10 +426,10 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
           maxLines: 2,
           maxLength: 200,
           decoration: InputDecoration(
-            labelText: '💬 配送备?可?',
+            labelText: '💬 Delivery Note?Can?',
             hintText: _deliveryMethod == 'self_collect'
-                ? '例如：希望明天下午自?
-                : '例如：希望尽快发?,
+                ? 'ExampleIf：HopeLookTomorrowAfternoonSelf?
+                : 'ExampleIf：Hope to ship soon?,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -444,7 +444,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          '附加消息（可选）',
+          'AttachAddMessage（Optional）',
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
@@ -453,7 +453,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
           maxLines: 4,
           maxLength: 500,
           decoration: InputDecoration(
-            hintText: '向卖家说明您的需求或其他信息...',
+            hintText: 'Explain your needs or other info to the seller...',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -481,7 +481,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '温馨提示',
+                  'WarmInfo',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.blue.shade900,
@@ -489,9 +489,9 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  '?Quote有效期为 48 小时\n'
-                  '?卖家可能接受、拒绝或还价\n'
-                  '?请确保您的Quote合?,
+                  '?QuoteValidPeriodFor 48 Hours\n'
+                  '?SellerCanCanAccept、RejectOrReturnPrice\n'
+                  '?PleaseSureProtectYour QuoteCombine?,
                   style: TextStyle(
                     fontSize: 13,
                     color: Colors.blue.shade900,
@@ -526,7 +526,7 @@ class _BBXMakeOfferScreenState extends State<BBXMakeOfferScreen> {
                 ),
               )
             : const Text(
-                '提交Quote',
+                'SubmitQuote',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
               ),
       ),

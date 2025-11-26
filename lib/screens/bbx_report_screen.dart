@@ -64,7 +64,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('上传失败: $e')),
+          SnackBar(content: Text('Upload Failed: $e')),
         );
       }
     }
@@ -73,7 +73,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
   Future<void> _submitReport() async {
     if (_descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请填写举报原?)),
+        const SnackBar(content: Text('PleaseFillWriteReportOrig?)),
       );
       return;
     }
@@ -101,14 +101,14 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('举报已提交，我们会尽快处?)),
+          const SnackBar(content: Text('ReportAlreadySubmit，We will process ASAP?)),
         );
       }
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('提交失败: $e')),
+          SnackBar(content: Text('Submission Failed: $e')),
         );
       }
     }
@@ -118,7 +118,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('举报'),
+        title: const Text('Report'),
         elevation: 0,
       ),
       body: _isLoading
@@ -144,7 +144,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '举报${_getTargetTypeLabel()}',
+                                  'Report${_getTargetTypeLabel()}',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
@@ -170,20 +170,20 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
                   const SizedBox(height: 24),
 
                                     const Text(
-                    '举报原因',
+                    'Report Reason',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
-                  _buildReasonOption('false_info', '虚假信息', Icons.info_outline),
-                  _buildReasonOption('fraud', '欺诈行为', Icons.warning_outlined),
-                  _buildReasonOption('quality', '质量问题', Icons.broken_image_outlined),
-                  _buildReasonOption('inappropriate', '违规内容', Icons.report_outlined),
-                  _buildReasonOption('spam', '垃圾信息', Icons.mail_outline),
-                  _buildReasonOption('other', '其他', Icons.more_horiz),
+                  _buildReasonOption('false_info', 'VirtualFalseInfo', Icons.info_outline),
+                  _buildReasonOption('fraud', 'Fraudulent Behavior', Icons.warning_outlined),
+                  _buildReasonOption('quality', 'QualityQuestion', Icons.broken_image_outlined),
+                  _buildReasonOption('inappropriate', 'ViolationContent', Icons.report_outlined),
+                  _buildReasonOption('spam', 'TrashInfo', Icons.mail_outline),
+                  _buildReasonOption('other', 'Other', Icons.more_horiz),
                   const SizedBox(height: 24),
 
                                     const Text(
-                    '详细描述',
+                    'Detailed Description',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -191,7 +191,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
                     controller: _descriptionController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: '请详细描述问?..',
+                      hintText: 'PleaseDetailed DescriptionAsk?..',
                     ),
                     maxLines: 5,
                     maxLength: 500,
@@ -199,7 +199,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
                   const SizedBox(height: 24),
 
                                     const Text(
-                    '上传证据 (可?',
+                    'Upload Evidence (Can?',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -261,7 +261,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
                   OutlinedButton.icon(
                     onPressed: _pickEvidence,
                     icon: const Icon(Icons.add_photo_alternate),
-                    label: const Text('添加证据图片'),
+                    label: const Text('AddProofAccordingImage'),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 48),
                     ),
@@ -281,7 +281,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            '我们会在24小时内审核您的举报，并采取相应措施?,
+                            'We will24HoursInnerAuditYour Report，AndPickTakeMutualShouldMeasureApply?,
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.blue[700],
@@ -301,7 +301,7 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                       ),
-                      child: const Text('提交举报'),
+                      child: const Text('SubmitReport'),
                     ),
                   ),
                 ],
@@ -351,11 +351,11 @@ class _BBXReportScreenState extends State<BBXReportScreen> {
   String _getTargetTypeLabel() {
     switch (widget.targetType) {
       case 'user':
-        return '用户';
+        return 'User';
       case 'listing':
-        return '商品';
+        return 'Item';
       case 'review':
-        return '评价';
+        return 'Review';
       default:
         return '';
     }
@@ -373,14 +373,14 @@ class BBXMyReportsScreen extends StatelessWidget {
     final userId = auth.currentUser?.uid;
     if (userId == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('我的举报')),
-        body: const Center(child: Text('请先登录')),
+        appBar: AppBar(title: const Text('MineReport')),
+        body: const Center(child: Text('PleaseFirstLogin')),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('我的举报'),
+        title: const Text('MineReport'),
         elevation: 0,
       ),
       body: StreamBuilder<QuerySnapshot>(
@@ -391,7 +391,7 @@ class BBXMyReportsScreen extends StatelessWidget {
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(child: Text('错误: ${snapshot.error}'));
+            return Center(child: Text('Error: ${snapshot.error}'));
           }
 
           if (!snapshot.hasData) {
@@ -401,7 +401,7 @@ class BBXMyReportsScreen extends StatelessWidget {
           final reports = snapshot.data!.docs;
 
           if (reports.isEmpty) {
-            return const Center(child: Text('暂无举报记录'));
+            return const Center(child: Text('No report records'));
           }
 
           return ListView.builder(
@@ -426,23 +426,23 @@ class BBXMyReportsScreen extends StatelessWidget {
     switch (status) {
       case 'pending':
         statusColor = Colors.orange;
-        statusLabel = '待处?;
+        statusLabel = 'WaitPlace?;
         break;
       case 'processing':
         statusColor = Colors.blue;
-        statusLabel = '处理?;
+        statusLabel = 'Process?;
         break;
       case 'resolved':
         statusColor = Colors.green;
-        statusLabel = '已处?;
+        statusLabel = 'AlreadyPlace?;
         break;
       case 'rejected':
         statusColor = Colors.red;
-        statusLabel = '已驳?;
+        statusLabel = 'AlreadyReject?;
         break;
       default:
         statusColor = Colors.grey;
-        statusLabel = '未知';
+        statusLabel = 'Unknown';
     }
 
     return Card(
@@ -496,7 +496,7 @@ class BBXMyReportsScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
-                  '处理结果: ${data['reviewNote']}',
+                  'Process Result: ${data['reviewNote']}',
                   style: TextStyle(fontSize: 12, color: Colors.grey[700]),
                 ),
               ),
@@ -515,19 +515,19 @@ class BBXMyReportsScreen extends StatelessWidget {
   String _getReasonLabel(String? reason) {
     switch (reason) {
       case 'false_info':
-        return '虚假信息';
+        return 'VirtualFalseInfo';
       case 'fraud':
-        return '欺诈行为';
+        return 'Fraudulent Behavior';
       case 'quality':
-        return '质量问题';
+        return 'QualityQuestion';
       case 'inappropriate':
-        return '违规内容';
+        return 'ViolationContent';
       case 'spam':
-        return '垃圾信息';
+        return 'TrashInfo';
       case 'other':
-        return '其他';
+        return 'Other';
       default:
-        return '未知原因';
+        return 'UnknownOrigCause';
     }
   }
 

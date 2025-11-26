@@ -8,7 +8,7 @@ enum SubscriptionPlanType {
 }
 
 <<<<<<< Updated upstream
-/// 订阅状�?
+/// SubscriptionState�?
 =======
 >>>>>>> Stashed changes
 enum SubscriptionStatus {
@@ -27,7 +27,7 @@ class SubscriptionModel {
   final DateTime? endDate;
   final double price;
 <<<<<<< Updated upstream
-  final String period; // '1个月', '1�? �?
+  final String period; // '1 Month', '1�? �?
   final List<String> features;
 =======
   final String period;   final List<String> features;
@@ -50,7 +50,7 @@ class SubscriptionModel {
   });
 
 <<<<<<< Updated upstream
-  /// �?Firestore 文档创建
+  /// �?Firestore DocumentCreate
   factory SubscriptionModel.fromFirestore(DocumentSnapshot doc) {
 =======
     factory SubscriptionModel.fromFirestore(DocumentSnapshot doc) {
@@ -66,7 +66,7 @@ class SubscriptionModel {
       endDate:
           data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
       price: (data['price'] ?? 0).toDouble(),
-      period: data['period'] ?? '1个月',
+      period: data['period'] ?? '1 Month',
       features: List<String>.from(data['features'] ?? []),
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -74,7 +74,7 @@ class SubscriptionModel {
   }
 
 <<<<<<< Updated upstream
-  /// �?Map 创建
+  /// �?Map Create
   factory SubscriptionModel.fromMap(Map<String, dynamic> data) {
 =======
     factory SubscriptionModel.fromMap(Map<String, dynamic> data) {
@@ -93,7 +93,7 @@ class SubscriptionModel {
               : DateTime.parse(data['endDate']))
           : null,
       price: (data['price'] ?? 0).toDouble(),
-      period: data['period'] ?? '1个月',
+      period: data['period'] ?? '1 Month',
       features: List<String>.from(data['features'] ?? []),
       createdAt: data['createdAt'] is Timestamp
           ? (data['createdAt'] as Timestamp).toDate()
@@ -105,7 +105,7 @@ class SubscriptionModel {
   }
 
 <<<<<<< Updated upstream
-  /// 转换�?Map
+  /// TurnChange�?Map
   Map<String, dynamic> toMap() {
 =======
     Map<String, dynamic> toMap() {
@@ -125,7 +125,7 @@ class SubscriptionModel {
   }
 
 <<<<<<< Updated upstream
-  /// 是否激�?
+  /// YesNoExcite�?
   bool get isActive => status == SubscriptionStatus.active;
 =======
     bool get isActive => status == SubscriptionStatus.active;
@@ -156,28 +156,28 @@ class SubscriptionModel {
   }
 
 <<<<<<< Updated upstream
-  /// 获取状态显示名�?
+  /// GetStatusShowName�?
   String get statusDisplayName {
     switch (status) {
       case SubscriptionStatus.active:
-        return '激�?;
+        return 'Excite�?;
       case SubscriptionStatus.inactive:
-        return '未激�?;
+        return 'NotExcite�?;
       case SubscriptionStatus.expired:
-        return '已过�?;
+        return 'AlreadyPass�?;
       case SubscriptionStatus.cancelled:
-        return '已取�?;
+        return 'AlreadyTake�?;
 =======
     String get statusDisplayName {
     switch (status) {
       case SubscriptionStatus.active:
-        return '激?';
+        return 'Excite?';
       case SubscriptionStatus.inactive:
-        return '未激?';
+        return 'NotExcite?';
       case SubscriptionStatus.expired:
-        return '已过?';
+        return 'AlreadyPass?';
       case SubscriptionStatus.cancelled:
-        return '已取?';
+        return 'AlreadyTake?';
 >>>>>>> Stashed changes
     }
   }

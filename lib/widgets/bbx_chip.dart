@@ -26,52 +26,52 @@ class BBXStatusChip extends StatelessWidget {
       case 'pending':
         bgColor = AppTheme.warning.withOpacity(0.1);
         txtColor = AppTheme.warning;
-        label = '待处?;
+        label = 'WaitPlace?;
         break;
       case 'confirmed':
         bgColor = AppTheme.info.withOpacity(0.1);
         txtColor = AppTheme.info;
-        label = '已确?;
+        label = 'AlreadySure?;
         break;
       case 'paid':
         bgColor = AppTheme.success.withOpacity(0.1);
         txtColor = AppTheme.success;
-        label = '已支?;
+        label = 'AlreadyBranch?;
         break;
       case 'in_transit':
         bgColor = AppTheme.accent.withOpacity(0.1);
         txtColor = AppTheme.accent;
-        label = '运输?;
+        label = 'LuckLose?;
         break;
       case 'completed':
         bgColor = AppTheme.success.withOpacity(0.1);
         txtColor = AppTheme.success;
-        label = '已完?;
+        label = 'AlreadyDone?;
         break;
       case 'cancelled':
         bgColor = AppTheme.error.withOpacity(0.1);
         txtColor = AppTheme.error;
-        label = '已取?;
+        label = 'AlreadyTake?;
         break;
       case 'negotiating':
         bgColor = AppTheme.info.withOpacity(0.1);
         txtColor = AppTheme.info;
-        label = '议价?;
+        label = 'DiscussPrice?;
         break;
       case 'accepted':
         bgColor = AppTheme.success.withOpacity(0.1);
         txtColor = AppTheme.success;
-        label = '已接?;
+        label = 'AlreadyConnect?;
         break;
       case 'rejected':
         bgColor = AppTheme.error.withOpacity(0.1);
         txtColor = AppTheme.error;
-        label = '已拒?;
+        label = 'AlreadyRefuse?;
         break;
       case 'expired':
         bgColor = AppTheme.neutral400.withOpacity(0.1);
         txtColor = AppTheme.neutral600;
-        label = '已过?;
+        label = 'AlreadyPass?;
         break;
       default:
         bgColor = AppTheme.neutral300;
@@ -167,23 +167,23 @@ class BBXCategoryChip extends StatelessWidget {
   String _getCategoryLabel(String category) {
     switch (category.toLowerCase()) {
       case 'plastic':
-        return '塑料';
+        return 'Plastic';
       case 'metal':
-        return '金属';
+        return 'Metal';
       case 'paper':
-        return '纸类';
+        return 'Paper';
       case 'glass':
-        return '玻璃';
+        return 'Glass';
       case 'electronic':
-        return '电子';
+        return 'Electronic';
       case 'organic':
-        return '有机';
+        return 'HaveMachine';
       case 'construction':
-        return '建筑';
+        return 'BuildBuild';
       case 'textile':
-        return '纺织';
+        return 'Textile';
       default:
-        return '其他';
+        return 'Other';
     }
   }
 }

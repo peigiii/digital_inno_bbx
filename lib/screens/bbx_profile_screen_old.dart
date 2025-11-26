@@ -57,12 +57,12 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认退?),
-        content: const Text('确定要退出登录吗?),
+        title: const Text('ConfirmRetreat?),
+        content: const Text('OKWantLogout??),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -70,7 +70,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('退?),
+            child: const Text('Retreat?),
           ),
         ],
       ),
@@ -87,15 +87,15 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
   String _getUserTypeLabel(String? userType) {
     switch (userType) {
       case 'producer':
-        return '生产?';
+        return 'BirthProduce?';
       case 'processor':
-        return '处理?';
+        return 'Process?';
       case 'recycler':
-        return '回收?';
+        return 'ReturnCollect?';
       case 'admin':
-        return '管理?';
+        return 'Manage?';
       default:
-        return '普通用?';
+        return 'NormalUse?';
     }
   }
 
@@ -128,7 +128,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('个人资料'),
+        title: const Text('IndividualProfile'),
         backgroundColor: const Color(0xFF4CAF50),
         foregroundColor: Colors.white,
       ),
@@ -199,19 +199,19 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    _buildInfoRow('公司名称', userData?['companyName'] ?? '-'),
+                    _buildInfoRow('CompanyName', userData?['companyName'] ?? '-'),
                     const Divider(),
-                    _buildInfoRow('城市', userData?['city'] ?? '-'),
+                    _buildInfoRow('City', userData?['city'] ?? '-'),
                     const Divider(),
-                    _buildInfoRow('联系电话', userData?['contact'] ?? '-'),
+                    _buildInfoRow('ContactPhone', userData?['contact'] ?? '-'),
                     const Divider(),
                     _buildInfoRow(
-                      '认证状?,
-                      userData?['verified'] == true ? '?已认? : '?未认?,
+                      'AuthenticateState?,
+                      userData?['verified'] == true ? '?AlreadyRecognize? : '?NotRecognize?,
                     ),
                     if (userData?['isAdmin'] == true) ...[
                       const Divider(),
-                      _buildInfoRow('权限', '🔑 管理?),
+                      _buildInfoRow('Permission', '🔑 Manage?),
                     ],
                   ],
                 ),
@@ -223,7 +223,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               children: [
                 Expanded(
                   child: _buildStatCard(
-                    '积分',
+                    'Points',
                     '$userPoints',
                     Icons.stars,
                     Colors.amber,
@@ -232,7 +232,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: _buildStatCard(
-                    '订阅计划',
+                    'SubscriptionPlan',
                     userData?['subscriptionPlan'] ?? 'Free',
                     Icons.card_membership,
                     Colors.blue,
@@ -260,7 +260,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
                   }
                 },
                 icon: const Icon(Icons.edit),
-                label: const Text('编辑资料'),
+                label: const Text('EditProfile'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF4CAF50),
                   foregroundColor: Colors.white,
@@ -278,7 +278,7 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               child: ElevatedButton.icon(
                 onPressed: _logout,
                 icon: const Icon(Icons.logout),
-                label: const Text('退出登?),
+                label: const Text('LogoutClimb?),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,

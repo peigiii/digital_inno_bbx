@@ -7,8 +7,8 @@ import '../../widgets/enhanced/shimmer_loading.dart';
 import '../../widgets/state/error_state_widget.dart';
 import '../../widgets/state/empty_state_widget.dart';
 
-/// BBX 商品列表 - 优化�?
-/// Material Design 3 风格，适配 Pixel 5
+/// BBX ItemColTable - Optimize�?
+/// Material Design 3 Style，FitMatch Pixel 5
 class BBXOptimizedMarketplaceScreen extends StatefulWidget {
   const BBXOptimizedMarketplaceScreen({super.key});
 
@@ -44,13 +44,13 @@ class _BBXOptimizedMarketplaceScreenState
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部搜索�?
+            // TopSearch�?
             _buildTopBar(),
 
-            // 分类筛�?
+            // CategoryFilter�?
             _buildCategoryChips(),
 
-            // 商品列表
+            // ItemColTable
             Expanded(
               child: _buildProductList(),
             ),
@@ -68,14 +68,14 @@ class _BBXOptimizedMarketplaceScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'BBX 市场',
+            'BBX Market',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 12),
-          // 搜索�?
+          // Search�?
           TextField(
             controller: _searchController,
             decoration: InputDecoration(
@@ -84,7 +84,7 @@ class _BBXOptimizedMarketplaceScreenState
               suffixIcon: IconButton(
                 icon: const Icon(Icons.tune),
                 onPressed: () {
-                  // 高级筛�?
+                  // AdvancedFilter�?
                 },
               ),
               filled: true,
@@ -174,7 +174,7 @@ class _BBXOptimizedMarketplaceScreenState
                 category: listing.wasteType,
                 price: listing.pricePerUnit,
                 unit: listing.unit,
-                location: listing.location != null ? listing.location.toString() : '未知位置',
+                location: listing.location != null ? listing.location.toString() : 'UnknownLocation',
                 sellerName: listing.userEmail.split('@').first,
                 rating: 4.5,
                 isVerified: true,
@@ -186,7 +186,7 @@ class _BBXOptimizedMarketplaceScreenState
                   );
                 },
                 onFavorite: () {
-                  // TODO: 收藏功能
+                  // TODO: FavoriteFunction
                 },
               );
             } catch (e) {
@@ -273,11 +273,11 @@ class _BBXOptimizedMarketplaceScreenState
     if (_selectedCategory == 'all') {
       return EmptyStateWidget.noListings(
         onCreateListing: () {
-          // 导航到发布商品页面
+          // NavigationToReleaseItemPage
           Navigator.pushNamed(context, '/create-listing');
         },
         onBrowseAll: () {
-          // 切换到全部分类
+          // CutChangeToAllCategory
           setState(() {
             _selectedCategory = 'all';
           });
@@ -286,9 +286,9 @@ class _BBXOptimizedMarketplaceScreenState
     } else {
       return EmptyStateWidget(
         icon: Icons.category_outlined,
-        title: '该分类暂无商品',
-        message: '尝试浏览其他分类或查看全部商品',
-        actionLabel: '查看全部',
+        title: 'ThatCategoryTempNoneItem',
+        message: 'Try browsing other categories or view all items',
+        actionLabel: 'View All',
         onAction: () {
           setState(() {
             _selectedCategory = 'all';

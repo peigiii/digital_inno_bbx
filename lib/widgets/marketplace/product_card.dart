@@ -105,7 +105,7 @@ class ProductCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '个unit',
+                    'unit',
                     style: AppTheme.caption,
                   ),
                 ],

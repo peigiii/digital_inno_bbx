@@ -65,15 +65,15 @@ class LogisticsUpdateModel {
     String get statusDisplay {
     switch (status) {
       case 'pending':
-        return '待发?';
+        return 'WaitSend?';
       case 'picked_up':
-        return '已取?';
+        return 'AlreadyTake?';
       case 'in_transit':
-        return '运输?';
+        return 'LuckLose?';
       case 'delivered':
         return 'Delivered';
       case 'completed':
-        return '已完?';
+        return 'AlreadyDone?';
       default:
         return status;
     }

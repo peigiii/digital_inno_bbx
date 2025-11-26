@@ -191,15 +191,15 @@ class OfferModel {
     String get deliveryMethodDisplay {
     switch (deliveryMethod) {
       case 'self_pickup':
-        return '自行收集';
+        return 'Self Collection';
       case 'platform_logistics':
-        return '使用平台物流';
+        return 'UsePlatformLogistics';
       case 'seller_delivery':
-        return '卖家送货';
+        return 'SellerSendGoods';
       case 'self_collect':
-        return '自提';
+        return 'SelfLift';
       case 'delivery':
-        return '邮寄';
+        return 'Mail';
       default:
         return deliveryMethod ?? 'Not specified';
     }

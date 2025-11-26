@@ -9,21 +9,21 @@ class BBXCategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories = [
-      {'name': 'Plastic', 'label': '塑料制品', 'icon': Icons.recycling_rounded, 'count': 145},
-      {'name': 'Metal', 'label': '金属废料', 'icon': Icons.hardware_rounded, 'count': 98},
-      {'name': 'Paper', 'label': '纸类废料', 'icon': Icons.description_rounded, 'count': 76},
-      {'name': 'Glass', 'label': '玻璃制品', 'icon': Icons.lightbulb_rounded, 'count': 54},
-      {'name': 'Electronic', 'label': '电子废料', 'icon': Icons.devices_rounded, 'count': 123},
-      {'name': 'Organic', 'label': '有机废料', 'icon': Icons.eco_rounded, 'count': 32},
-      {'name': 'Construction', 'label': '建筑废料', 'icon': Icons.construction_rounded, 'count': 67},
-      {'name': 'Textile', 'label': '纺织废料', 'icon': Icons.checkroom_rounded, 'count': 41},
-      {'name': 'Others', 'label': '其他', 'icon': Icons.more_horiz_rounded, 'count': 29},
+      {'name': 'Plastic', 'label': 'PlasticMakeItem', 'icon': Icons.recycling_rounded, 'count': 145},
+      {'name': 'Metal', 'label': 'MetalWaste', 'icon': Icons.hardware_rounded, 'count': 98},
+      {'name': 'Paper', 'label': 'PaperWaste', 'icon': Icons.description_rounded, 'count': 76},
+      {'name': 'Glass', 'label': 'GlassMakeItem', 'icon': Icons.lightbulb_rounded, 'count': 54},
+      {'name': 'Electronic', 'label': 'E-Waste', 'icon': Icons.devices_rounded, 'count': 123},
+      {'name': 'Organic', 'label': 'Organic Waste', 'icon': Icons.eco_rounded, 'count': 32},
+      {'name': 'Construction', 'label': 'Construction Waste', 'icon': Icons.construction_rounded, 'count': 67},
+      {'name': 'Textile', 'label': 'Textile Waste', 'icon': Icons.checkroom_rounded, 'count': 41},
+      {'name': 'Others', 'label': 'Other', 'icon': Icons.more_horiz_rounded, 'count': 29},
     ];
 
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('商品分类', style: AppTheme.heading2),
+        title: const Text('Item Category', style: AppTheme.heading2),
         actions: [
           IconButton(
             icon: const Icon(Icons.search_rounded),
@@ -83,7 +83,7 @@ class BBXCategoriesScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: AppTheme.spacing4),
                   Text(
-                    '${category['count']} 个商?,
+                    '${category['count']} Items?,
                     style: AppTheme.caption.copyWith(
                       color: Colors.white.withOpacity(0.9),
                     ),

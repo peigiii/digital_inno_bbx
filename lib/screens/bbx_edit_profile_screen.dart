@@ -39,14 +39,14 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
   Future<void> _loadUserData() async {
     if (currentUser == null) {
       setState(() {
-        errorMessage = '未登?;
+        errorMessage = 'NotClimb?;
         isLoading = false;
       });
       return;
     }
 
     try {
-      print('🔄 开始加载用户数?..');
+      print('🔄 StartLoadUserNumber?..');
 
             final doc = await FirebaseFirestore.instance
           .collection('users')
@@ -55,7 +55,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('加载超时，请检查网络连?');
+              throw Exception('LoadTimeout，Check network conn?');
             },
           );
 
@@ -63,7 +63,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
       if (doc.exists) {
         final data = doc.data()!;
-        print('?用户数据加载成功');
+        print('?UserDataLoadSuccess');
 
         setState(() {
           _nameController.text = data['displayName'] ?? '';
@@ -75,7 +75,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           errorMessage = null;
         });
       } else {
-        print('⚠️ 用户文档不存在，使用默认?);
+        print('⚠️ UserDocumentNoSaveAt，UseDefault?);
         setState(() {
           _nameController.text = currentUser!.displayName ??
                                   currentUser!.email?.split('@')[0] ??
@@ -85,10 +85,10 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
         });
       }
     } catch (e) {
-      print('?加载用户数据失败: $e');
+      print('?LoadUserDataFailure: $e');
       if (mounted) {
         setState(() {
-          errorMessage = '加载失败: $e';
+          errorMessage = 'Load Failed: $e';
           isLoading = false;
                     _nameController.text = currentUser!.email?.split('@')[0] ?? 'User';
         });
@@ -108,7 +108,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
     });
 
     try {
-      print('🔄 开始保存用户资?..');
+      print('🔄 StartSaveUser Data?..');
 
       final updates = {
         'displayName': _nameController.text.trim(),
@@ -125,18 +125,18 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('保存超时，请检查网络连?');
+              throw Exception('SaveTimeout，Check network conn?');
             },
           );
 
             await currentUser!.updateDisplayName(_nameController.text.trim());
 
-      print('?用户资料保存成功');
+      print('?User ProfileSaved');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('?个人资料已更?),
+            content: Text('?IndividualProfile Updated?),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 2),
           ),
@@ -148,15 +148,15 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
           Navigator.pop(context, true);         }
       }
     } catch (e) {
-      print('?保存失败: $e');
+      print('?Save Failed: $e');
       if (mounted) {
         setState(() {
-          errorMessage = '保存失败: $e';
+          errorMessage = 'Save Failed: $e';
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('?保存失败: $e'),
+            content: Text('?Save Failed: $e'),
             backgroundColor: Colors.red,
             duration: const Duration(seconds: 3),
           ),
@@ -183,7 +183,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
         context: context,
         userId: currentUser!.uid,
         onProgress: (progress) {
-          print('上传进度: ${(progress * 100).toStringAsFixed(1)}%');
+          print('Upload Progress: ${(progress * 100).toStringAsFixed(1)}%');
         },
       );
 
@@ -194,14 +194,14 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('?头像已更?),
+            content: Text('?AvatarAlreadyMore?),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 2),
           ),
         );
       }
     } catch (e) {
-      print('?上传头像失败: $e');
+      print('?UploadAvatarFailure: $e');
     } finally {
       if (mounted) {
         setState(() {
@@ -225,7 +225,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
     if (isLoading) {
       return Scaffold(
         appBar: AppBar(
-          title: const Text('编辑资料'),
+          title: const Text('EditProfile'),
           backgroundColor: const Color(0xFF4CAF50),
           foregroundColor: Colors.white,
         ),
@@ -237,7 +237,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                 color: Color(0xFF4CAF50),
               ),
               SizedBox(height: 16),
-              Text('正在加载...'),
+              Text('Loading...'),
             ],
           ),
         ),
@@ -260,7 +260,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('编辑资料'),
+        title: const Text('EditProfile'),
         backgroundColor: const Color(0xFF4CAF50),
         foregroundColor: Colors.white,
         actions: [
@@ -282,7 +282,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
             IconButton(
               icon: const Icon(Icons.check),
               onPressed: _saveProfile,
-              tooltip: '保存',
+              tooltip: 'Save',
             ),
         ],
       ),
@@ -353,7 +353,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '点击相机图标更换头像',
+                    'Tap camera icon to change avatar',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[600],
@@ -367,14 +367,14 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                         TextFormField(
               controller: _nameController,
               decoration: const InputDecoration(
-                labelText: '姓名 *',
+                labelText: 'Name *',
                 prefixIcon: Icon(Icons.person),
                 border: OutlineInputBorder(),
-                helperText: '必填?,
+                helperText: 'Required?,
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return '请输入姓?';
+                  return 'Enter surname?';
                 }
                 return null;
               },
@@ -385,7 +385,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                         TextFormField(
               controller: _companyController,
               decoration: const InputDecoration(
-                labelText: '公司名称',
+                labelText: 'CompanyName',
                 prefixIcon: Icon(Icons.business),
                 border: OutlineInputBorder(),
               ),
@@ -396,7 +396,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                         TextFormField(
               controller: _cityController,
               decoration: const InputDecoration(
-                labelText: '城市',
+                labelText: 'City',
                 prefixIcon: Icon(Icons.location_city),
                 border: OutlineInputBorder(),
               ),
@@ -407,7 +407,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                         TextFormField(
               controller: _contactController,
               decoration: const InputDecoration(
-                labelText: '联系电话',
+                labelText: 'ContactPhone',
                 prefixIcon: Icon(Icons.phone),
                 border: OutlineInputBorder(),
                 hintText: '+60 12-345-6789',
@@ -416,7 +416,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
               validator: (value) {
                 if (value != null && value.isNotEmpty) {
                   if (!RegExp(r'^\+?[\d\s-]{10,}$').hasMatch(value)) {
-                    return '请输入有效的电话号码';
+                    return 'PleaseInputValid of PhoneNumberCode';
                   }
                 }
                 return null;
@@ -428,11 +428,11 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                         TextFormField(
               initialValue: currentUser?.email ?? '',
               decoration: const InputDecoration(
-                labelText: '邮箱',
+                labelText: 'Email',
                 prefixIcon: Icon(Icons.email),
                 border: OutlineInputBorder(),
                 enabled: false,
-                helperText: '邮箱不可修改',
+                helperText: 'EmailNoCanModify',
               ),
             ),
             const SizedBox(height: 32),
@@ -461,11 +461,11 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                           ),
                         ),
                         SizedBox(width: 12),
-                        Text('保存?..'),
+                        Text('Save?..'),
                       ],
                     )
                   : const Text(
-                      '保存',
+                      'Save',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -488,7 +488,7 @@ class _BBXEditProfileScreenState extends State<BBXEditProfileScreen> {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        '提示?errorMessage',
+                        'Info?errorMessage',
                         style: const TextStyle(fontSize: 12),
                       ),
                     ),

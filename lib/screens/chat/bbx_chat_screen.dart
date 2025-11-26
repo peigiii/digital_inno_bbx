@@ -72,7 +72,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('发送失败：$e'),
+            content: Text('Send Failed：$e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -135,7 +135,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('加载失败?{snapshot.error}'));
+          return Center(child: Text('Load Failed?{snapshot.error}'));
         }
 
         final messages = snapshot.data ?? [];
@@ -148,7 +148,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                 Icon(Icons.chat_bubble_outline, size: 60, color: Colors.grey.shade300),
                 const SizedBox(height: 16),
                 Text(
-                  '开始聊天吧',
+                  'StartChat',
                   style: TextStyle(color: Colors.grey.shade500),
                 ),
               ],
@@ -276,7 +276,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                 maxLines: null,
                 textInputAction: TextInputAction.send,
                 decoration: const InputDecoration(
-                  hintText: '输入消息...',
+                  hintText: 'InputMessage...',
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),

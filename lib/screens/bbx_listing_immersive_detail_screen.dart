@@ -106,11 +106,11 @@ class _BBXListingImmersiveDetailScreenState
                 children: [
                   const Icon(Icons.error_outline, size: 60, color: Colors.red),
                   const SizedBox(height: 16),
-                  Text('加载失败: ${snapshot.error}'),
+                  Text('Load Failed: ${snapshot.error}'),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('返回'),
+                    child: const Text('Back'),
                   ),
                 ],
               ),
@@ -129,11 +129,11 @@ class _BBXListingImmersiveDetailScreenState
                 children: [
                   const Icon(Icons.inventory_2_outlined, size: 60, color: Colors.grey),
                   const SizedBox(height: 16),
-                  const Text('商品不存在或已被删除'),
+                  const Text('Item not found or deleted'),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('返回'),
+                    child: const Text('Back'),
                   ),
                 ],
               ),

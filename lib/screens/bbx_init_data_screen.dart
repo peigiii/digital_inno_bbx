@@ -11,14 +11,14 @@ class BBXInitDataScreen extends StatefulWidget {
 
 class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
   bool _isLoading = false;
-  String _statusMessage = '准备初始化测试数?..';
+  String _statusMessage = 'Preparing InitializationTestNumber?..';
   int _progress = 0;
 
   Future<void> _initAllData() async {
     setState(() {
       _isLoading = true;
       _progress = 0;
-      _statusMessage = '开始初始化所有测试数?..';
+      _statusMessage = 'StartInitizeAllTestNumber?..';
     });
 
     try {
@@ -35,26 +35,26 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
       setState(() => _progress = 100);
 
       setState(() {
-        _statusMessage = '?所有测试数据初始化成功?;
+        _statusMessage = '?AllTestDataInitizeSuccess?;
       });
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('测试数据初始化成功！'),
+            content: Text('TestDataInitizeSuccess！'),
             backgroundColor: Colors.green,
           ),
         );
       }
     } catch (e) {
       setState(() {
-        _statusMessage = '?初始化失? $e';
+        _statusMessage = '?Init Failed? $e';
       });
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('初始化失? $e'),
+            content: Text('Init Failed? $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -65,7 +65,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
   }
 
   Future<void> _initUsers() async {
-    setState(() => _statusMessage = '正在创建测试用户...');
+    setState(() => _statusMessage = 'IsCreateTestUser...');
 
     final currentUser = FirebaseAuth.instance.currentUser;
     final firestore = FirebaseFirestore.instance;
@@ -88,40 +88,40 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
 
         final testUsers = [
       {
-        'displayName': '张三',
+        'displayName': 'User A',
         'email': 'producer1@test.com',
         'userType': 'producer',
-        'companyName': '棕榈油生产公司A',
+        'companyName': 'Palm OilBirthProduceCompanyA',
         'city': 'Kuching',
         'contact': '+60181234567',
         'rating': 4.5,
         'verified': true,
       },
       {
-        'displayName': '李四',
+        'displayName': 'User B',
         'email': 'producer2@test.com',
         'userType': 'producer',
-        'companyName': '棕榈油生产公司B',
+        'companyName': 'Palm OilBirthProduceCompanyB',
         'city': 'Miri',
         'contact': '+60182345678',
         'rating': 4.2,
         'verified': true,
       },
       {
-        'displayName': '王五',
+        'displayName': 'User C',
         'email': 'processor1@test.com',
         'userType': 'processor',
-        'companyName': '生物质处理公司A',
+        'companyName': 'Biomass ProcessingCompanyA',
         'city': 'Sibu',
         'contact': '+60183456789',
         'rating': 4.8,
         'verified': true,
       },
       {
-        'displayName': '赵六',
+        'displayName': 'User D',
         'email': 'recycler1@test.com',
         'userType': 'recycler',
-        'companyName': '环保回收公司A',
+        'companyName': 'Eco RecyclingCompanyA',
         'city': 'Bintulu',
         'contact': '+60184567890',
         'rating': 4.6,
@@ -140,12 +140,12 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
   }
 
   Future<void> _initRecyclers() async {
-    setState(() => _statusMessage = '正在创建测试回收?..');
+    setState(() => _statusMessage = 'IsCreateTestReturnCollect?..');
 
     final firestore = FirebaseFirestore.instance;
     final recyclers = [
       {
-        'name': '绿色环保回收公司',
+        'name': 'Green RecyclingCompany',
         'city': 'Kuching',
         'capacity': 5000,
         'accepts': ['EFB', 'POME', 'Palm Shell'],
@@ -155,7 +155,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
         'priceRange': 'RM 50-100/ton',
       },
       {
-        'name': '生物质能源处理中?,
+        'name': 'Biomass EnergyProcessing?,
         'city': 'Miri',
         'capacity': 8000,
         'accepts': ['EFB', 'Palm Fiber', 'Other Biomass'],
@@ -165,7 +165,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
         'priceRange': 'RM 60-120/ton',
       },
       {
-        'name': '循环经济废料处理?,
+        'name': 'CycleRingSutraEconomyWasteProcess?,
         'city': 'Sibu',
         'capacity': 6000,
         'accepts': ['POME', 'Palm Shell', 'Palm Fiber'],
@@ -175,7 +175,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
         'priceRange': 'RM 55-110/ton',
       },
       {
-        'name': '可持续生物质回收?,
+        'name': 'Sustainable Biomass Recycling?,
         'city': 'Bintulu',
         'capacity': 7000,
         'accepts': ['EFB', 'POME', 'Other Biomass'],
@@ -195,15 +195,15 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
   }
 
   Future<void> _initWasteListings() async {
-    setState(() => _statusMessage = '正在创建测试废料列表...');
+    setState(() => _statusMessage = 'IsCreateTestWasteColTable...');
 
     final firestore = FirebaseFirestore.instance;
     final currentUser = FirebaseAuth.instance.currentUser;
 
     final listings = [
       {
-        'title': 'EFB 空果串大量出?,
-        'description': '新鲜的EFB (Empty Fruit Bunches)，适合用于堆肥或生物质能源生产',
+        'title': 'EFB EmptyFruitStringBigAmountOut?,
+        'description': 'NewFresh of EFB (Empty Fruit Bunches)，Suitable for composting or biomass energy production',
         'wasteType': 'EFB (Empty Fruit Bunches)',
         'quantity': 100,
         'unit': 'tons',
@@ -217,8 +217,8 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
         },
       },
       {
-        'title': 'POME 棕榈油厂污水处理',
-        'description': '棕榈油厂的废水处理服务，可用于沼气生?,
+        'title': 'POME POME Treatment',
+        'description': 'Palm Oil Mill of WasteWaterProcessService，For Biogas Production?,
         'wasteType': 'POME (Palm Oil Mill Effluent)',
         'quantity': 50,
         'unit': 'tons',
@@ -232,8 +232,8 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
         },
       },
       {
-        'title': 'Palm Shell回?,
-        'description': '高质量的Palm Shell，可用于生物质能源或活性炭生产',
+        'title': 'Palm ShellReturn?,
+        'description': 'HighQuality of Palm Shell，Can be used for biomass energy or activated carbon',
         'wasteType': 'Palm Shell',
         'quantity': 75,
         'unit': 'tons',
@@ -247,8 +247,8 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
         },
       },
       {
-        'title': 'Palm Fiber出售',
-        'description': '适合制造生物燃料的Palm Fiber',
+        'title': 'Palm FiberSell',
+        'description': 'For Biofuel of Palm Fiber',
         'wasteType': 'Palm Fiber',
         'quantity': 60,
         'unit': 'tons',
@@ -262,8 +262,8 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
         },
       },
       {
-        'title': '混合生物质废?,
-        'description': '各种生物质废料混合物，适合能源生产',
+        'title': 'MixCombineBirthThingQualityWaste?,
+        'description': 'EachSeedBirthThingQualityWasteMixCombineThing，For Energy Production',
         'wasteType': 'Other Biomass',
         'quantity': 120,
         'unit': 'tons',
@@ -288,7 +288,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
   }
 
   Future<void> _initOffers() async {
-    setState(() => _statusMessage = '正在创建测试Quote...');
+    setState(() => _statusMessage = 'IsCreateTestQuote...');
 
     final firestore = FirebaseFirestore.instance;
 
@@ -306,28 +306,28 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
         'listingId': listingsSnapshot.docs[0].id,
         'recyclerId': 'recycler-001',
         'offerPrice': 75,
-        'message': '我们对您?EFB 很感兴趣，可以提供长期合?,
+        'message': 'We to you?EFB VeryFeelInterest，Can provide long-term cooperation?,
         'status': 'pending',
       },
       {
         'listingId': listingsSnapshot.docs[0].id,
         'recyclerId': 'recycler-002',
         'offerPrice': 82,
-        'message': '价格优惠，量大从?,
+        'message': 'PriceDiscount，Volume Discount?,
         'status': 'pending',
       },
       {
         'listingId': listingsSnapshot.docs[1].id,
         'recyclerId': 'recycler-003',
         'offerPrice': 58,
-        'message': '我们有专业的 POME 处理设备',
+        'message': 'We have professional of  POME Processing Equipment',
         'status': 'accepted',
       },
       {
         'listingId': listingsSnapshot.docs[2].id,
         'recyclerId': 'recycler-001',
         'offerPrice': 88,
-        'message': 'Palm Shell质量优良，我们愿意出好价格',
+        'message': 'Palm ShellGood Quality，We offer good pricePrice',
         'status': 'pending',
       },
     ];
@@ -345,21 +345,21 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认清除'),
+        title: const Text('ConfirmClear'),
         content: const Text(
-          '确定要清除所有测试数据吗？\n\n此操作不可撤销！\n\n注意：您的账户信息不会被删除?,
+          'OKWantClearAllTestData?？\n\nAction cannot be undone！\n\nNote：Your Account InfoNoWillByDelete?,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: const Text('确认清除'),
+            child: const Text('ConfirmClear'),
           ),
         ],
       ),
@@ -369,7 +369,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
 
     setState(() {
       _isLoading = true;
-      _statusMessage = '正在清除测试数据...';
+      _statusMessage = 'Clearing test data...';
       _progress = 0;
     });
 
@@ -377,28 +377,28 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
       final firestore = FirebaseFirestore.instance;
       final currentUserId = FirebaseAuth.instance.currentUser?.uid;
 
-            setState(() => _statusMessage = '清除废料列表...');
+            setState(() => _statusMessage = 'ClearWasteColTable...');
       final listings = await firestore.collection('listings').get();
       for (final doc in listings.docs) {
         await doc.reference.delete();
       }
       setState(() => _progress = 25);
 
-            setState(() => _statusMessage = '清除Quote...');
+            setState(() => _statusMessage = 'ClearQuote...');
       final offers = await firestore.collection('offers').get();
       for (final doc in offers.docs) {
         await doc.reference.delete();
       }
       setState(() => _progress = 50);
 
-            setState(() => _statusMessage = '清除回收?..');
+            setState(() => _statusMessage = 'ClearReturnCollect?..');
       final recyclers = await firestore.collection('recyclers').get();
       for (final doc in recyclers.docs) {
         await doc.reference.delete();
       }
       setState(() => _progress = 75);
 
-            setState(() => _statusMessage = '清除测试用户...');
+            setState(() => _statusMessage = 'ClearTestUser...');
       final users = await firestore.collection('users').get();
       for (final doc in users.docs) {
         if (doc.id != currentUserId) {
@@ -407,23 +407,23 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
       }
       setState(() => _progress = 100);
 
-      setState(() => _statusMessage = '?所有测试数据已清除?);
+      setState(() => _statusMessage = '?AllTestDataAlreadyClear?);
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('测试数据清除成功?),
+            content: Text('TestDataClearSuccess?),
             backgroundColor: Colors.green,
           ),
         );
       }
     } catch (e) {
-      setState(() => _statusMessage = '?清除失败: $e');
+      setState(() => _statusMessage = '?ClearFailure: $e');
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('清除失败: $e'),
+            content: Text('ClearFailure: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -437,7 +437,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('测试数据初始?),
+        title: const Text('TestDataInit?),
         backgroundColor: const Color(0xFF4CAF50),
         foregroundColor: Colors.white,
       ),
@@ -462,7 +462,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '测试数据初始化工?,
+                          'TestDataInit Tool?,
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -473,12 +473,12 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      '此工具将创建以下测试数据：\n'
-                      '?4个测试用户（Producer、处理者、Recycler）\n'
-                      '?4个测试Recycler资料\n'
-                      '?5个测试废料列表\n'
-                      '?4个测试Quote\n\n'
-                      '注意：您的账户将自动设置为管理员',
+                      'ThisToolsWillCreateByDownTestData：\n'
+                      '?4TestUser（Producer、ProcessPerson、Recycler）\n'
+                      '?4TestRecyclerProfile\n'
+                      '?5TestWasteColTable\n'
+                      '?4TestQuote\n\n'
+                      'Note：Your account will be automatically set as admin',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.orange[900],
@@ -538,7 +538,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
               onPressed: _isLoading ? null : _initAllData,
               icon: const Icon(Icons.play_arrow),
               label: const Text(
-                '初始化所有测试数?,
+                'InitizeAllTestNumber?,
                 style: TextStyle(fontSize: 16),
               ),
               style: ElevatedButton.styleFrom(
@@ -556,7 +556,7 @@ class _BBXInitDataScreenState extends State<BBXInitDataScreen> {
               onPressed: _isLoading ? null : _clearAllData,
               icon: const Icon(Icons.delete_sweep),
               label: const Text(
-                '清除所有测试数?,
+                'ClearAllTestNumber?,
                 style: TextStyle(fontSize: 16),
               ),
               style: OutlinedButton.styleFrom(

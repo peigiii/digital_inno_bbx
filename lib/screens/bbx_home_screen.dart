@@ -134,12 +134,12 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
     final shouldLogout = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('确认退?),
-        content: const Text('您确定要退出登录吗?),
+        title: const Text('ConfirmRetreat?),
+        content: const Text('YouOKWantLogout??),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
@@ -147,7 +147,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
               backgroundColor: const Color(0xFFF44336),
               foregroundColor: Colors.white,
             ),
-            child: const Text('退?),
+            child: const Text('Retreat?),
           ),
         ],
       ),
@@ -163,7 +163,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('退出失? $e'),
+              content: Text('LogoutLost? $e'),
               backgroundColor: Colors.red,
             ),
           );
@@ -198,7 +198,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
           elevation: 2,
           leading: IconButton(
             icon: const Icon(Icons.menu),
-            tooltip: '打开菜单',
+            tooltip: 'OpenMenu',
             onPressed: () {
               _scaffoldKey.currentState?.openDrawer();
             },
@@ -279,7 +279,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
               children: [
                                 ListTile(
                   leading: const Icon(Icons.person, color: Color(0xFF4CAF50)),
-                  title: const Text('个人资料'),
+                  title: const Text('IndividualProfile'),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(
@@ -292,7 +292,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                 ),
                                 ListTile(
                   leading: const Icon(Icons.card_membership, color: Colors.blue),
-                  title: const Text('订阅计划'),
+                  title: const Text('SubscriptionPlan'),
                   onTap: () {
                     Navigator.pop(context);
                     try {
@@ -306,7 +306,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                       print('Navigation error: $e');
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text('导航失败: $e'),
+                          content: Text('NavigationFailure: $e'),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -315,7 +315,7 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                 ),
                                 ListTile(
                   leading: const Icon(Icons.stars, color: Colors.amber),
-                  title: const Text('奖励积分'),
+                  title: const Text('RewardPoints'),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(
@@ -386,8 +386,8 @@ class _BBXHomeScreenState extends State<BBXHomeScreen> {
                 const Divider(),
                 ListTile(
                   leading: const Icon(Icons.science, color: Colors.orange),
-                  title: const Text('初始化测试数?),
-                  subtitle: const Text('创建演示数据'),
+                  title: const Text('InitizeTestNumber?),
+                  subtitle: const Text('CreateDemoData'),
                   onTap: () {
                     Navigator.pop(context);
                     Navigator.push(

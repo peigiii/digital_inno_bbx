@@ -21,10 +21,10 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
 
   final List<String> _filters = ['all', 'unread', 'buyer', 'seller'];
   final Map<String, String> _filterLabels = {
-    'all': '全部',
-    'unread': '未读',
-    'buyer': '买家',
-    'seller': '卖家',
+    'all': 'All',
+    'unread': 'NotRead',
+    'buyer': 'Buyer',
+    'seller': 'Seller',
   };
 
   @override
@@ -32,7 +32,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('消息', style: AppTheme.heading2),
+        title: const Text('Message', style: AppTheme.heading2),
         actions: [
           IconButton(
             icon: const Icon(Icons.search_rounded),
@@ -89,7 +89,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
     Widget _buildConversationsList() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      return BBXEmptyState.noData(description: '请先登录');
+      return BBXEmptyState.noData(description: 'PleaseFirstLogin');
     }
 
     return StreamBuilder<QuerySnapshot>(
@@ -100,7 +100,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
           .snapshots(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return BBXEmptyState.noData(description: '加载失败');
+          return BBXEmptyState.noData(description: 'Load Failed');
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -109,8 +109,8 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
 
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return BBXEmptyState.noData(
-            title: '暂无消息',
-            description: '开始你的第一个对话吧',
+            title: 'No messages',
+            description: 'StartYou of No.OnePairWordBar',
           );
         }
 
@@ -127,7 +127,7 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
 
     Widget _buildConversationCard(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    final otherUserName = data['otherUserName'] ?? '未知用户';
+    final otherUserName = data['otherUserName'] ?? 'UnknownUser';
     final otherUserAvatar = data['otherUserAvatar'] as String?;
     final lastMessage = data['lastMessage'] ?? '';
     final lastMessageTime = (data['lastMessageTime'] as Timestamp?)?.toDate();
@@ -279,10 +279,10 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
   String _formatLastMessage(String message) {
     if (message.isEmpty) return '';
 
-        if (message.startsWith('[图片]')) return '[图片]';
-    if (message.startsWith('[文件]')) return '[文件]';
-    if (message.startsWith('[位置]')) return '[位置]';
-    if (message.startsWith('[商品]')) return '[商品链接]';
+        if (message.startsWith('[Image]')) return '[Image]';
+    if (message.startsWith('[File]')) return '[File]';
+    if (message.startsWith('[Location]')) return '[Location]';
+    if (message.startsWith('[Item]')) return '[ItemLink]';
 
     return message;
   }

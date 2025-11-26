@@ -38,7 +38,7 @@ class _BBXOptimizedHomeScreenSafeState extends State<BBXOptimizedHomeScreenSafe>
               ),
               const SizedBox(height: 24),
               const Text(
-                '首页加载测试',
+                'HomeLoadTest',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -46,7 +46,7 @@ class _BBXOptimizedHomeScreenSafeState extends State<BBXOptimizedHomeScreenSafe>
               ),
               const SizedBox(height: 16),
               const Text(
-                '如果你看到这个页面，说明基本框架正常',
+                'If you see this page，DescriptionBaseBookFrameworksNormal',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey,
@@ -57,7 +57,7 @@ class _BBXOptimizedHomeScreenSafeState extends State<BBXOptimizedHomeScreenSafe>
               ElevatedButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('按钮点击正常')),
+                    const SnackBar(content: Text('PressButtonClickNormal')),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -67,7 +67,7 @@ class _BBXOptimizedHomeScreenSafeState extends State<BBXOptimizedHomeScreenSafe>
                     vertical: 16,
                   ),
                 ),
-                child: const Text('测试按钮'),
+                child: const Text('TestPressButton'),
               ),
             ],
           ),

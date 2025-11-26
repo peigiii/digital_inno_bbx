@@ -11,7 +11,7 @@ import '../../widgets/state/error_state_widget.dart';
 import '../../widgets/state/empty_state_widget.dart';
 import '../../models/offer_model.dart';
 
-/// BBX 我的报价页面（完全重构）
+/// BBX MineQuotePage（Complete Refactor）
 class BBXNewMyOffersScreen extends StatefulWidget {
   const BBXNewMyOffersScreen({super.key});
 
@@ -34,12 +34,12 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
   ];
 
   final Map<String, String> _filterLabels = {
-    'all': '全部',
-    'pending': '待处�?,
-    'negotiating': '议价�?,
-    'accepted': '已接�?,
-    'rejected': '已拒�?,
-    'expired': '已过�?,
+    'all': 'All',
+    'pending': 'WaitPlace�?,
+    'negotiating': 'DiscussPrice�?,
+    'accepted': 'AlreadyConnect�?,
+    'rejected': 'AlreadyRefuse�?,
+    'expired': 'AlreadyPass�?,
   };
 
   @override
@@ -59,7 +59,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('我的报价', style: AppTheme.heading2),
+        title: const Text('MineQuote', style: AppTheme.heading2),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_list_rounded),
@@ -101,7 +101,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('我发出的'),
+                      const Text('ISendOut of '),
                       const SizedBox(width: 4),
                       _buildBadge(5),
                     ],
@@ -111,7 +111,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('我收到的'),
+                      const Text('IReceived of '),
                       const SizedBox(width: 4),
                       _buildBadge(3),
                     ],
@@ -124,10 +124,10 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
       ),
       body: Column(
         children: [
-          // 状态筛选栏
+          // StatusFilterBar
           _buildFilterBar(),
 
-          // 内容区域
+          // ContentArea
           Expanded(
             child: TabBarView(
               controller: _tabController,
@@ -142,7 +142,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-  /// 角标
+  /// AngleMark
   Widget _buildBadge(int count) {
     if (count == 0) return const SizedBox.shrink();
 
@@ -171,7 +171,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-  /// 筛选栏
+  /// FilterBar
   Widget _buildFilterBar() {
     return Container(
       color: Colors.white,
@@ -202,12 +202,12 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-  /// 我发出的报价列表
+  /// ISendOut of QuoteColTable
   Widget _buildSentOffersList() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       return ErrorStateWidget.permissionDenied(
-        message: '请先登录以查看您的报价',
+        message: 'Please login to view yourQuote',
         onBack: () => Navigator.pop(context),
       );
     }
@@ -243,12 +243,12 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-  /// 我收到的报价列表
+  /// IReceived of QuoteColTable
   Widget _buildReceivedOffersList() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       return ErrorStateWidget.permissionDenied(
-        message: '请先登录以查看收到的报价',
+        message: 'Please login to view receivedQuote',
         onBack: () => Navigator.pop(context),
       );
     }
@@ -269,8 +269,8 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
           return EmptyStateWidget(
             icon: Icons.inbox_outlined,
-            title: '暂无收到的报价',
-            message: '当买家对您的商品提交报价时\n会显示在这里',
+            title: 'TempNoneReceived of Quote',
+            message: 'When a buyer submits to your itemQuoteTime\nWillShowAtThisIn',
           );
         }
 
@@ -286,7 +286,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-  /// 获取报价�?
+  /// GetQuote�?
   Stream<QuerySnapshot> _getOffersStream(String userId, {required bool isSent}) {
     var query = FirebaseFirestore.instance
         .collection('offers')
@@ -300,7 +300,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     return query.snapshots();
   }
 
-  /// 报价卡片
+  /// QuoteCard
   Widget _buildOfferCard(DocumentSnapshot doc, {required bool isSent}) {
     final data = doc.data() as Map<String, dynamic>;
     final status = data['status'] ?? 'pending';
@@ -316,7 +316,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 顶部：状态和时间
+          // Top：StatusandTime
           Row(
             children: [
               BBXStatusChip.status(status, isSmall: true),
@@ -332,7 +332,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 商品信息（简化版�?
+          // Item Info（SimpleizeVersion�?
           Row(
             children: [
               Container(
@@ -349,7 +349,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      '商品标题',
+                      'Item Title',
                       style: AppTheme.heading4,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -369,7 +369,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
 
           const SizedBox(height: AppTheme.spacing12),
 
-          // 报价信息
+          // QuoteInfo
           Container(
             padding: const EdgeInsets.all(AppTheme.spacing12),
             decoration: BoxDecoration(
@@ -383,7 +383,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '原价',
+                        'Original Price',
                         style: AppTheme.caption.copyWith(
                           color: AppTheme.neutral600,
                         ),
@@ -403,7 +403,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '报价',
+                        'Quote',
                         style: AppTheme.caption.copyWith(
                           color: AppTheme.neutral600,
                         ),
@@ -438,7 +438,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
             ),
           ),
 
-          // 还价信息（如有）
+          // ReturnPriceInfo（IfHave）
           if (counterPrice != null && sellerMessage != null) ...[
             const SizedBox(height: AppTheme.spacing12),
             Container(
@@ -455,7 +455,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
                     children: [
                       const Icon(Icons.info_rounded, color: AppTheme.info, size: 16),
                       const SizedBox(width: 4),
-                      const Text('卖家还价', style: AppTheme.caption),
+                      const Text('Seller Counter Offer', style: AppTheme.caption),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -475,7 +475,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
             ),
           ],
 
-          // 对方信息
+          // PairSquareInfo
           const SizedBox(height: AppTheme.spacing12),
           Row(
             children: [
@@ -489,7 +489,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
               ),
               const SizedBox(width: AppTheme.spacing8),
               const Expanded(
-                child: Text('卖家姓名', style: AppTheme.body2),
+                child: Text('SellerName', style: AppTheme.body2),
               ),
               const Icon(
                 Icons.verified_rounded,
@@ -499,7 +499,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
             ],
           ),
 
-          // 操作按钮
+          // ActionPressButton
           const SizedBox(height: AppTheme.spacing12),
           _buildActionButtons(status, isSent: isSent),
         ],
@@ -507,17 +507,17 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     );
   }
 
-  /// 操作按钮
+  /// ActionPressButton
   Widget _buildActionButtons(String status, {required bool isSent}) {
     if (isSent) {
-      // 我发出的报价
+      // ISendOut of Quote
       switch (status) {
         case 'pending':
           return Row(
             children: [
               Expanded(
                 child: BBXSecondaryButton(
-                  text: '取消报价',
+                  text: 'CancelQuote',
                   onPressed: () {},
                   height: 40,
                 ),
@@ -535,7 +535,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
             children: [
               Expanded(
                 child: BBXSecondaryButton(
-                  text: '拒绝还价',
+                  text: 'RejectReturnPrice',
                   onPressed: () {},
                   height: 40,
                 ),
@@ -544,7 +544,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
               Expanded(
                 flex: 2,
                 child: BBXPrimaryButton(
-                  text: '接受还价',
+                  text: 'AcceptReturnPrice',
                   onPressed: () {},
                   height: 40,
                 ),
@@ -553,14 +553,14 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
           );
         case 'accepted':
           return BBXPrimaryButton(
-            text: '查看交易',
+            text: 'View Transaction',
             onPressed: () {},
             height: 40,
           );
         case 'rejected':
         case 'expired':
           return BBXPrimaryButton(
-            text: '重新报价',
+            text: 'RetryQuote',
             onPressed: () {},
             height: 40,
           );
@@ -568,14 +568,14 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
           return const SizedBox.shrink();
       }
     } else {
-      // 我收到的报价
+      // IReceived of Quote
       switch (status) {
         case 'pending':
           return Row(
             children: [
               Expanded(
                 child: BBXSecondaryButton(
-                  text: '拒绝',
+                  text: 'Reject',
                   onPressed: () {},
                   height: 40,
                 ),
@@ -583,7 +583,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
               const SizedBox(width: AppTheme.spacing8),
               Expanded(
                 child: BBXSecondaryButton(
-                  text: '还价',
+                  text: 'ReturnPrice',
                   onPressed: () {},
                   height: 40,
                 ),
@@ -592,7 +592,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
               Expanded(
                 flex: 2,
                 child: BBXPrimaryButton(
-                  text: '接受',
+                  text: 'Accept',
                   onPressed: () {},
                   height: 40,
                 ),
@@ -604,7 +604,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
             children: [
               Expanded(
                 child: BBXSecondaryButton(
-                  text: '再次还价',
+                  text: 'Counter Offer Again',
                   onPressed: () {},
                   height: 40,
                 ),
@@ -613,7 +613,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
               Expanded(
                 flex: 2,
                 child: BBXPrimaryButton(
-                  text: '接受当前�?,
+                  text: 'AcceptCurrent�?,
                   onPressed: () {},
                   height: 40,
                 ),
@@ -622,7 +622,7 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
           );
         case 'accepted':
           return BBXPrimaryButton(
-            text: '查看交易',
+            text: 'View Transaction',
             onPressed: () {},
             height: 40,
           );
@@ -637,13 +637,13 @@ class _BBXNewMyOffersScreenState extends State<BBXNewMyOffersScreen>
     final difference = now.difference(date);
 
     if (difference.inDays > 0) {
-      return '${difference.inDays}天前';
+      return '${difference.inDays}DayFront';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours}小时�?;
+      return '${difference.inHours}Hours�?;
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}分钟�?;
+      return '${difference.inMinutes}Minutes�?;
     } else {
-      return '刚刚';
+      return 'Just now';
     }
   }
 }

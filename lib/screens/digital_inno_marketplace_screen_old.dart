@@ -71,7 +71,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text('提交Quote'),
+              title: const Text('SubmitQuote'),
               content: SingleChildScrollView(
                 child: Form(
                   key: formKey,
@@ -81,7 +81,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                     children: [
                       // Listing info
                       Text(
-                        '废料: ${listingData['title']}',
+                        'Waste: ${listingData['title']}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -89,12 +89,12 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '数量: ${listingData['quantity']} ${listingData['unit']}',
+                        'Count: ${listingData['quantity']} ${listingData['unit']}',
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '原价: RM${listingData['pricePerUnit']}/${listingData['unit']}',
+                        'Original Price: RM${listingData['pricePerUnit']}/${listingData['unit']}',
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       const Divider(height: 24),
@@ -103,17 +103,17 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                       TextFormField(
                         controller: priceController,
                         decoration: const InputDecoration(
-                          labelText: '您的Quote (RM)',
+                          labelText: 'Your Quote (RM)',
                           prefixIcon: Icon(Icons.monetization_on),
-                          hintText: '输入总价',
+                          hintText: 'InputTotal Price',
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return '请输入报?';
+                            return 'Enter offer?';
                           }
                           if (double.tryParse(value) == null) {
-                            return '请输入有效数?';
+                            return 'PleaseInputValidNumber?';
                           }
                           return null;
                         },
@@ -137,13 +137,13 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                         },
                         child: InputDecorator(
                           decoration: const InputDecoration(
-                            labelText: '收集日期',
+                            labelText: 'CollectGatherDate',
                             prefixIcon: Icon(Icons.calendar_today),
                           ),
                           child: Text(
                             selectedDate != null
                                 ? DateFormat('yyyy-MM-dd').format(selectedDate!)
-                                : '选择收集日期',
+                                : 'Select CollectionDate',
                             style: TextStyle(
                               color: selectedDate != null ? Colors.black : Colors.grey,
                             ),
@@ -156,9 +156,9 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                       TextFormField(
                         controller: messageController,
                         decoration: const InputDecoration(
-                          labelText: '留言（可选）',
+                          labelText: 'Message（Optional）',
                           prefixIcon: Icon(Icons.message),
-                          hintText: '说明您的收集计划或其他信?,
+                          hintText: 'Explain your collection plan or other info?,
                         ),
                         maxLines: 3,
                       ),
@@ -169,7 +169,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
-                  child: const Text('取消'),
+                  child: const Text('Cancel'),
                 ),
                 ElevatedButton(
                   onPressed: () async {
@@ -187,7 +187,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4CAF50),
                   ),
-                  child: const Text('提交Quote'),
+                  child: const Text('SubmitQuote'),
                 ),
               ],
             );
@@ -210,7 +210,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        throw Exception('请先登录');
+        throw Exception('PleaseFirstLogin');
       }
 
       // Get current user data
@@ -220,7 +220,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
           .get();
 
       if (!userDoc.exists) {
-        throw Exception('用户Data not found');
+        throw Exception('UserData not found');
       }
 
       final userData = userDoc.data() as Map<String, dynamic>;
@@ -247,14 +247,14 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
           .timeout(
             const Duration(seconds: 10),
             onTimeout: () {
-              throw Exception('提交超时，请检查网络连?');
+              throw Exception('SubmitTimeout，Check network conn?');
             },
           );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Quote提交成功?),
+            content: Text('QuoteSubmitted Successfully?),
             backgroundColor: Color(0xFF4CAF50),
           ),
         );
@@ -263,7 +263,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('提交失败: $e'),
+            content: Text('Submission Failed: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -523,7 +523,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 // Search Bar
                 TextField(
                   decoration: InputDecoration(
-                    hintText: '搜索废料类型或标?..',
+                    hintText: 'SearchWaste TypeOrMark?..',
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -543,7 +543,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 DropdownButtonFormField<String>(
                   initialValue: _selectedFilter,
                   decoration: InputDecoration(
-                    labelText: '筛选废料类?,
+                    labelText: 'FilterWasteClass?,
                     prefixIcon: const Icon(Icons.filter_list),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -555,7 +555,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                     return DropdownMenuItem<String>(
                       value: filter,
                       child: Text(
-                        filter == 'all' ? '全部类型' : filter,
+                        filter == 'all' ? 'All Types' : filter,
                         style: TextStyle(fontSize: isTablet ? 16 : 14),
                       ),
                     );
@@ -607,7 +607,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 const CircularProgressIndicator(),
                 const SizedBox(height: 16),
                 Text(
-                  '加载?..',
+                  'Load?..',
                   style: TextStyle(
                     fontSize: isTablet ? 16 : 14,
                     color: Colors.grey[600],
@@ -630,7 +630,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '加载失败',
+                  'Load Failed',
                   style: TextStyle(
                     fontSize: isTablet ? 20 : 18,
                     fontWeight: FontWeight.bold,
@@ -653,7 +653,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 ElevatedButton.icon(
                   onPressed: () => setState(() {}),
                   icon: const Icon(Icons.refresh),
-                  label: const Text('重试'),
+                  label: const Text('Retry'),
                 ),
               ],
             ),
@@ -672,7 +672,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '暂无废料信息',
+                  'No waste info',
                   style: TextStyle(
                     fontSize: isTablet ? 20 : 18,
                     color: Colors.grey[600],
@@ -680,7 +680,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '成为第一个发布废料信息的用户',
+                  'Be the first user to post waste info',
                   style: TextStyle(
                     fontSize: isTablet ? 16 : 14,
                     color: Colors.grey[500],
@@ -724,7 +724,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '未找到匹配的废料信息',
+                  'No match found of Waste Info',
                   style: TextStyle(
                     fontSize: isTablet ? 20 : 18,
                     color: Colors.grey[600],
@@ -732,7 +732,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '请尝试调整搜索条?,
+                  'Please adjustSearchStrip?,
                   style: TextStyle(
                     fontSize: isTablet ? 16 : 14,
                     color: Colors.grey[500],
@@ -796,7 +796,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            '可用',
+                            'CanUse',
                             style: TextStyle(
                               color: const Color(0xFF2E7D32),
                               fontWeight: FontWeight.w600,
@@ -811,7 +811,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
 
                     // Description
                     Text(
-                      data['description'] ?? '无描?,
+                      data['description'] ?? 'NoneDesc?,
                       style: TextStyle(
                         fontSize: isTablet ? 16 : 14,
                         color: Colors.grey[700],
@@ -867,7 +867,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            data['contactInfo'] ?? '无联系方?,
+                            data['contactInfo'] ?? 'NoneContactSquare?,
                             style: TextStyle(
                               fontSize: isTablet ? 14 : 12,
                               color: Colors.grey[600],
@@ -883,7 +883,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                             color: const Color(0xFF4CAF50),
                           ),
                           Text(
-                            '有位?,
+                            'HaveBit?,
                             style: TextStyle(
                               fontSize: isTablet ? 12 : 10,
                               color: const Color(0xFF4CAF50),
@@ -905,33 +905,33 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                               showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
-                                  title: const Text('联系信息'),
+                                  title: const Text('Contact Info'),
                                   content: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text('联系方式: ${data['contactInfo']}'),
+                                      Text('ContactMethod: ${data['contactInfo']}'),
                                       if (data['userEmail'] != null)
-                                        Text('邮箱: ${data['userEmail']}'),
+                                        Text('Email: ${data['userEmail']}'),
                                       const SizedBox(height: 12),
                                       if (data['location'] != null) ...[
-                                        const Text('位置坐标:'),
-                                        Text('纬度: ${data['location']['latitude']}'),
-                                        Text('经度: ${data['location']['longitude']}'),
+                                        const Text('LocationCoordinates:'),
+                                        Text('LatDegree: ${data['location']['latitude']}'),
+                                        Text('SutraDegree: ${data['location']['longitude']}'),
                                       ],
                                     ],
                                   ),
                                   actions: [
                                     TextButton(
                                       onPressed: () => Navigator.pop(context),
-                                      child: const Text('关闭'),
+                                      child: const Text('Close'),
                                     ),
                                   ],
                                 ),
                               );
                             },
                             icon: const Icon(Icons.contact_phone),
-                            label: const Text('联系'),
+                            label: const Text('Contact'),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: const Color(0xFF2E7D32),
                             ),
@@ -973,7 +973,7 @@ class _BBXMarketplaceScreenState extends State<BBXMarketplaceScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'PCDS 2030 合规认证',
+                            'PCDS 2030 CombineRuleAuthenticate',
                             style: TextStyle(
                               fontSize: isTablet ? 14 : 12,
                               color: const Color(0xFF2E7D32),

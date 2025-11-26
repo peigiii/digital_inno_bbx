@@ -29,8 +29,8 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
   double _serviceScore = 5.0;
   double _deliveryScore = 5.0;
 
-    final List<String> _positiveTags = ['质量?, '服务?, '发货?, '包装?, '价格实惠'];
-  final List<String> _negativeTags = ['质量?, '服务?, '发货?, '包装?, '描述不符'];
+    final List<String> _positiveTags = ['Quality?, 'Service?, 'SendGoods?, 'Package?, 'PriceAffordable'];
+  final List<String> _negativeTags = ['Quality?, 'Service?, 'SendGoods?, 'Package?, 'DescNoSymbol'];
   final Set<String> _selectedTags = {};
 
     final TextEditingController _commentController = TextEditingController();
@@ -51,7 +51,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
   Future<void> _pickImages() async {
     if (_images.length >= 9) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('最多上?张图?)),
+        const SnackBar(content: Text('MostManyUp?images?)),
       );
       return;
     }
@@ -87,7 +87,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
       setState(() => _isUploading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('上传失败: $e')),
+          SnackBar(content: Text('Upload Failed: $e')),
         );
       }
     }
@@ -96,7 +96,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
   Future<void> _submitReview() async {
     if (_commentController.text.isEmpty && _selectedTags.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('请填写评价内容或选择标签')),
+        const SnackBar(content: Text('Please fill in review content or select tags')),
       );
       return;
     }
@@ -126,14 +126,14 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('评价已提?)),
+          const SnackBar(content: Text('ReviewAlreadyLift?)),
         );
       }
     } catch (e) {
       setState(() => _isSubmitting = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('提交失败: $e')),
+          SnackBar(content: Text('Submission Failed: $e')),
         );
       }
     }
@@ -143,14 +143,14 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('撰写评价'),
+        title: const Text('WriteReview'),
         elevation: 0,
         actions: [
           if (!_isSubmitting)
             TextButton(
               onPressed: _submitReview,
               child: const Text(
-                '提交',
+                'Submit',
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -164,7 +164,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                                     const Text(
-                    '总体评分',
+                    'TotalBodyReviewScore',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -188,34 +188,34 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   const SizedBox(height: 24),
 
                                     const Text(
-                    '详细评分',
+                    'DetailedReviewScore',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   _buildScoreSlider(
-                    '描述相符?,
+                    'DescMutualSymbol?,
                     _descriptionScore,
                     (value) => setState(() => _descriptionScore = value),
                   ),
                   _buildScoreSlider(
-                    '服务态度',
+                    'ServiceStateDegree',
                     _serviceScore,
                     (value) => setState(() => _serviceScore = value),
                   ),
                   _buildScoreSlider(
-                    '物流速度',
+                    'LogisticsSpeed',
                     _deliveryScore,
                     (value) => setState(() => _deliveryScore = value),
                   ),
                   const SizedBox(height: 24),
 
                                     const Text(
-                    '快速评?,
+                    'QuickReview?,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   const Text(
-                    '正面评价',
+                    'RightFaceReview',
                     style: TextStyle(fontSize: 14, color: Colors.green),
                   ),
                   const SizedBox(height: 8),
@@ -241,7 +241,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   ),
                   const SizedBox(height: 12),
                   const Text(
-                    '负面评价',
+                    'NegativeFaceReview',
                     style: TextStyle(fontSize: 14, color: Colors.red),
                   ),
                   const SizedBox(height: 8),
@@ -268,7 +268,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   const SizedBox(height: 24),
 
                                     const Text(
-                    '评价内容',
+                    'Review Content',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -276,7 +276,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                     controller: _commentController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
-                      hintText: '分享您的使用体验...',
+                      hintText: 'ShareYour UseBodyTest...',
                     ),
                     maxLines: 5,
                     maxLength: 500,
@@ -284,7 +284,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   const SizedBox(height: 24),
 
                                     const Text(
-                    '上传图片 (最??',
+                    'Upload Image (Most??',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
@@ -310,8 +310,8 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   const SizedBox(height: 24),
 
                                     SwitchListTile(
-                    title: const Text('匿名评价'),
-                    subtitle: const Text('其他用户将无法看到您的身份信?),
+                    title: const Text('AnonymousReview'),
+                    subtitle: const Text('Other users will not see your identity info?),
                     value: _isAnonymous,
                     onChanged: (value) {
                       setState(() => _isAnonymous = value);
@@ -324,7 +324,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: _isSubmitting ? null : _submitReview,
-                      child: const Text('提交评价'),
+                      child: const Text('SubmitReview'),
                     ),
                   ),
                 ],
@@ -405,7 +405,7 @@ class _BBXWriteReviewScreenState extends State<BBXWriteReviewScreen> {
                   Icon(Icons.add_photo_alternate, color: Colors.grey[600]),
                   const SizedBox(height: 4),
                   Text(
-                    '添加图片',
+                    'AddImage',
                     style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ],

@@ -61,7 +61,7 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
         Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('发货信息已提?),
+            content: Text('SendGoodsInfoAlreadyLift?),
             backgroundColor: Colors.green,
           ),
         );
@@ -192,7 +192,7 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(false),
-          child: const Text('取消'),
+          child: const Text('Cancel'),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _submitShipping,
@@ -209,7 +209,7 @@ class _ShipOrderDialogState extends State<ShipOrderDialog> {
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
                 )
-              : const Text('确认发货'),
+              : const Text('ConfirmSendGoods'),
         ),
       ],
     );

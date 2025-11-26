@@ -43,14 +43,14 @@ class BBXNewProfileScreen extends StatelessWidget {
                 ),
                 child: BBXAvatar(
                   imageUrl: user?.photoURL,
-                  name: user?.displayName ?? '用户',
+                  name: user?.displayName ?? 'User',
                   size: 100,
                 ),
               ),
               const SizedBox(height: AppTheme.spacing16),
 
                             Text(
-                user?.displayName ?? '未登?,
+                user?.displayName ?? 'NotClimb?,
                 style: AppTheme.heading2.copyWith(color: Colors.white),
               ),
               const SizedBox(height: AppTheme.spacing8),
@@ -65,7 +65,7 @@ class BBXNewProfileScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppTheme.radiusFull),
                 ),
                 child: const Text(
-                  '认证卖家',
+                  'AuthenticateSeller',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: AppTheme.semibold,
@@ -106,7 +106,7 @@ class BBXNewProfileScreen extends StatelessWidget {
                     borderRadius: AppTheme.borderRadiusLarge,
                   ),
                 ),
-                child: const Text('编辑资料'),
+                child: const Text('EditProfile'),
               ),
             ],
           ),
@@ -129,9 +129,9 @@ class BBXNewProfileScreen extends StatelessWidget {
           ),
           child: Row(
             children: [
-              _buildStatItem('交易?, '128'),
+              _buildStatItem('Transaction?, '128'),
               _buildStatItem('Quote?, '45'),
-              _buildStatItem('收藏?, '23'),
+              _buildStatItem('Favorite?, '23'),
             ],
           ),
         ),
@@ -168,34 +168,34 @@ class BBXNewProfileScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-                        const Text('我的活动', style: AppTheme.heading4),
+                        const Text('MineActivity', style: AppTheme.heading4),
             const SizedBox(height: AppTheme.spacing12),
             _buildMenuGroup([
-              _MenuItem(Icons.inventory_2_rounded, '我的商品', AppTheme.primary500, '/my-listings', badge: 12),
-              _MenuItem(Icons.local_offer_rounded, '我的Quote', AppTheme.secondary500, '/my-offers', badge: 5),
-              _MenuItem(Icons.receipt_long_rounded, '我的交易', AppTheme.info, '/transactions', badge: 3),
-              _MenuItem(Icons.favorite_rounded, '我的收藏', AppTheme.error, '/favorites', badge: 23),
+              _MenuItem(Icons.inventory_2_rounded, 'My Listings', AppTheme.primary500, '/my-listings', badge: 12),
+              _MenuItem(Icons.local_offer_rounded, 'MineQuote', AppTheme.secondary500, '/my-offers', badge: 5),
+              _MenuItem(Icons.receipt_long_rounded, 'My Transactions', AppTheme.info, '/transactions', badge: 3),
+              _MenuItem(Icons.favorite_rounded, 'My Favorites', AppTheme.error, '/favorites', badge: 23),
             ]),
 
             const SizedBox(height: AppTheme.spacing24),
 
-                        const Text('设置', style: AppTheme.heading4),
+                        const Text('Settings', style: AppTheme.heading4),
             const SizedBox(height: AppTheme.spacing12),
             _buildMenuGroup([
               _MenuItem(Icons.person_outline_rounded, 'Account Settings', null, '/account-settings'),
               _MenuItem(Icons.notifications_outlined, 'Notification Settings', null, '/notification-settings'),
-              _MenuItem(Icons.lock_outline_rounded, '隐私设置', null, '/privacy-settings'),
+              _MenuItem(Icons.lock_outline_rounded, 'PrivacySettings', null, '/privacy-settings'),
               _MenuItem(Icons.language_rounded, 'Language', null, '/language-settings', trailing: 'English'),
             ]),
 
             const SizedBox(height: AppTheme.spacing24),
 
-                        const Text('其他', style: AppTheme.heading4),
+                        const Text('Other', style: AppTheme.heading4),
             const SizedBox(height: AppTheme.spacing12),
             _buildMenuGroup([
-              _MenuItem(Icons.help_outline_rounded, '帮助中心', null, '/help'),
-              _MenuItem(Icons.info_outline_rounded, '关于我们', null, '/about'),
-              _MenuItem(Icons.logout_rounded, '退出登?, AppTheme.error, null, isLogout: true),
+              _MenuItem(Icons.help_outline_rounded, 'HelpMidHeart', null, '/help'),
+              _MenuItem(Icons.info_outline_rounded, 'AboutIs', null, '/about'),
+              _MenuItem(Icons.logout_rounded, 'LogoutClimb?, AppTheme.error, null, isLogout: true),
             ]),
           ],
         ),
