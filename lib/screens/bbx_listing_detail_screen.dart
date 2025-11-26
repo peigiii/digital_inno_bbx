@@ -9,6 +9,7 @@ import '../widgets/common/shimmer_loading.dart';
 import '../widgets/marketplace/product_card.dart';
 import '../widgets/state/error_state_widget.dart';
 import '../services/chat_service.dart';
+import '../services/favorite_service.dart';
 import 'chat/bbx_chat_screen.dart';
 
 class BBXListingDetailScreen extends StatefulWidget {
@@ -25,73 +26,17 @@ class BBXListingDetailScreen extends StatefulWidget {
 
 class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   int _currentImageIndex = 0;
-  bool _isFavorite = false;
   bool _isDescriptionExpanded = false;
   GoogleMapController? _mapController;
   final PageController _imagePageController = PageController();
   final ChatService _chatService = ChatService();
+  final FavoriteService _favoriteService = FavoriteService();
   bool _isStartingChat = false;
 
   @override
   void dispose() {
     _imagePageController.dispose();
     super.dispose();
-  }
-
-  Future<void> _checkIfFavorite() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    final favDoc = await FirebaseFirestore.instance
-        .collection('user_favorites')
-        .doc(user.uid)
-        .collection('listings')
-        .doc(widget.listingId)
-        .get();
-
-    if (mounted) {
-      setState(() {
-        _isFavorite = favDoc.exists;
-      });
-    }
-  }
-
-  Future<void> _toggleFavorite() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please login to add favorites')),
-      );
-      return;
-    }
-
-    final favRef = FirebaseFirestore.instance
-        .collection('user_favorites')
-        .doc(user.uid)
-        .collection('listings')
-        .doc(widget.listingId);
-
-    if (_isFavorite) {
-      await favRef.delete();
-    } else {
-      await favRef.set({
-        'listingId': widget.listingId,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-    }
-
-    if (mounted) {
-      setState(() {
-        _isFavorite = !_isFavorite;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_isFavorite ? 'Added to favorites' : 'Removed from favorites'),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
   }
 
   void _shareListing(Map<String, dynamic> data) {
@@ -704,19 +649,25 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                         ),
                         onPressed: () => _shareListing(data),
                       ),
-                      IconButton(
-                        icon: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.3),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            _isFavorite ? Icons.favorite : Icons.favorite_border,
-                            color: _isFavorite ? Colors.red : Colors.white,
-                          ),
-                        ),
-                        onPressed: _toggleFavorite,
+                      StreamBuilder<bool>(
+                        stream: _favoriteService.isFavoriteStream(widget.listingId),
+                        builder: (context, snapshot) {
+                          final isFavorite = snapshot.data ?? false;
+                          return IconButton(
+                            icon: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.3),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                isFavorite ? Icons.favorite : Icons.favorite_border,
+                                color: isFavorite ? Colors.red : Colors.white,
+                              ),
+                            ),
+                            onPressed: () => _favoriteService.toggleFavorite(widget.listingId, context),
+                          );
+                        },
                       ),
                     ],
                     flexibleSpace: FlexibleSpaceBar(

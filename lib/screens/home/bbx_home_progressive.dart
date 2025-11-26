@@ -303,6 +303,7 @@ class BBXHomeProgressive extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
@@ -327,7 +328,7 @@ class BBXHomeProgressive extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Row(
             children: [
               Expanded(
@@ -378,13 +379,7 @@ class BBXHomeProgressive extends StatelessWidget {
             ),
           );
         } else if (title == 'My Favorites') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: const Text('My Favorites feature coming soon...'),
-              duration: const Duration(seconds: 2),
-              backgroundColor: Colors.pink.shade700,
-            ),
-          );
+          Navigator.pushNamed(context, '/favorites');
         }
       },
       child: Container(

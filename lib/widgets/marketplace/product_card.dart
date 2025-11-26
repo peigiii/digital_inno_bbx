@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common/common.dart';
+import '../../services/favorite_service.dart';
 
 class ProductCard extends StatelessWidget {
   final DocumentSnapshot doc;
   final VoidCallback? onTap;
   final VoidCallback? onQuote;
+  final bool showFavoriteButton;
 
   const ProductCard({
     super.key,
     required this.doc,
     this.onTap,
     this.onQuote,
+    this.showFavoriteButton = true,
   });
 
   @override
@@ -43,21 +46,33 @@ class ProductCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-                    if (imageUrl != null)
-            ClipRRect(
-              borderRadius: AppTheme.borderRadiusStandard,
-              child: Image.network(
-                imageUrl,
-                height: 100,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return _buildPlaceholderImage();
-                },
-              ),
-            )
-          else
-            _buildPlaceholderImage(),
+                    Stack(
+            children: [
+              if (imageUrl != null)
+                ClipRRect(
+                  borderRadius: AppTheme.borderRadiusStandard,
+                  child: Image.network(
+                    imageUrl,
+                    height: 100,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return _buildPlaceholderImage();
+                    },
+                  ),
+                )
+              else
+                _buildPlaceholderImage(),
+
+              // Favorite button
+              if (showFavoriteButton)
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: _buildFavoriteButton(context),
+                ),
+            ],
+          ),
 
           const SizedBox(height: AppTheme.spacingSM),
 
@@ -230,6 +245,46 @@ class ProductCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFavoriteButton(BuildContext context) {
+    final favoriteService = FavoriteService();
+    final listingId = doc.id;
+
+    return StreamBuilder<bool>(
+      stream: favoriteService.isFavoriteStream(listingId),
+      builder: (context, snapshot) {
+        final isFavorite = snapshot.data ?? false;
+
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            icon: Icon(
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: isFavorite ? Colors.red : Colors.grey.shade600,
+              size: 20,
+            ),
+            iconSize: 20,
+            padding: const EdgeInsets.all(8),
+            constraints: const BoxConstraints(),
+            onPressed: () async {
+              await favoriteService.toggleFavorite(listingId, context);
+            },
+            tooltip: isFavorite ? 'Remove from favorites' : 'Add to favorites',
+          ),
+        );
+      },
     );
   }
 }

@@ -31,6 +31,7 @@ import 'screens/profile/bbx_coupons_screen.dart';
 import 'screens/profile/bbx_statistics_screen.dart';
 import 'screens/profile/bbx_account_settings_screen.dart';
 import 'screens/profile/bbx_notification_settings_screen.dart';
+import 'screens/bbx_favorites_standalone_screen.dart';
 import 'services/notification_service.dart';
 import 'utils/user_initializer.dart';
 import 'firebase_options.dart';
@@ -123,6 +124,7 @@ class BBXApp extends StatelessWidget {
         '/statistics': (context) => const BBXStatisticsScreen(),
         '/account-settings': (context) => const BBXAccountSettingsScreen(),
         '/notification-settings': (context) => const BBXNotificationSettingsScreen(),
+        '/favorites': (context) => const BBXFavoritesStandaloneScreen(),
       },
       onGenerateRoute: (settings) {
         // Handle routes with arguments
