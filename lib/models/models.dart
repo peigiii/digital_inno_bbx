@@ -7,3 +7,4 @@ export 'user_model.dart';
 export 'listing_model.dart';
 export 'offer_model.dart';
 export 'transaction_model.dart';
+export 'favorite_model.dart';
