@@ -202,8 +202,11 @@ class FavoriteService {
   Stream<List<ListingModel>> getFavoriteListings() {
     final userId = _currentUserId;
     if (userId == null) {
+      debugPrint('[FavoriteService] No user logged in, returning empty list');
       return Stream.value([]);
     }
+
+    debugPrint('[FavoriteService] Fetching favorites for user: $userId');
 
     return _firestore
         .collection(_collectionName)
@@ -211,6 +214,8 @@ class FavoriteService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .asyncMap((snapshot) async {
+      debugPrint('[FavoriteService] Received ${snapshot.docs.length} favorite documents');
+      
       if (snapshot.docs.isEmpty) {
         return <ListingModel>[];
       }
@@ -220,6 +225,8 @@ class FavoriteService {
           .whereType<String>()
           .toList();
 
+      debugPrint('[FavoriteService] Fetching ${listingIds.length} listings');
+
       if (listingIds.isEmpty) {
         return <ListingModel>[];
       }
@@ -228,23 +235,28 @@ class FavoriteService {
       final listings = <ListingModel>[];
       for (var i = 0; i < listingIds.length; i += 10) {
         final batch = listingIds.skip(i).take(10).toList();
-        final listingsSnapshot = await _firestore
-            .collection('listings')
-            .where(FieldPath.documentId, whereIn: batch)
-            .get();
+        try {
+          final listingsSnapshot = await _firestore
+              .collection('listings')
+              .where(FieldPath.documentId, whereIn: batch)
+              .get();
 
-        listings.addAll(
-          listingsSnapshot.docs.map((doc) {
-            try {
-              return ListingModel.fromDocument(doc);
-            } catch (e) {
-              debugPrint('[FavoriteService] Error parsing listing: $e');
-              return null;
-            }
-          }).whereType<ListingModel>(),
-        );
+          listings.addAll(
+            listingsSnapshot.docs.map((doc) {
+              try {
+                return ListingModel.fromDocument(doc);
+              } catch (e) {
+                debugPrint('[FavoriteService] Error parsing listing: $e');
+                return null;
+              }
+            }).whereType<ListingModel>(),
+          );
+        } catch (e) {
+          debugPrint('[FavoriteService] Error fetching listings batch: $e');
+        }
       }
 
+      debugPrint('[FavoriteService] Returning ${listings.length} listings');
       return listings;
     }).handleError((error) {
       debugPrint('[FavoriteService] Error fetching favorite listings: $error');

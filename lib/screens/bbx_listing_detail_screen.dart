@@ -32,6 +32,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   final ChatService _chatService = ChatService();
   final FavoriteService _favoriteService = FavoriteService();
   bool _isStartingChat = false;
+  bool _isFavorite = false;
 
   @override
   void dispose() {
@@ -420,6 +421,35 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     print('═══════════════════════════════════════════════════');
     print('');
     _checkIfFavorite();
+  }
+
+  Future<void> _checkIfFavorite() async {
+    try {
+      final isFav = await _favoriteService.isFavorite(widget.listingId);
+      if (mounted) {
+        setState(() {
+          _isFavorite = isFav;
+        });
+      }
+    } catch (e) {
+      debugPrint('[ListingDetail] Error checking favorite status: $e');
+      // Don't crash the UI, just set to false
+      if (mounted) {
+        setState(() {
+          _isFavorite = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    try {
+      await _favoriteService.toggleFavorite(widget.listingId, context);
+      _checkIfFavorite();
+    } catch (e) {
+      debugPrint('[ListingDetail] Error toggling favorite: $e');
+      // Error is already shown by FavoriteService via SnackBar
+    }
   }
 
   @override

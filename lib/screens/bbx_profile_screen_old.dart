@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/user_avatar_widget.dart';
-import 'bbx_edit_profile_screen.dart';
 
 class BBXProfileScreen extends StatefulWidget {
   const BBXProfileScreen({super.key});
@@ -246,18 +245,8 @@ class _BBXProfileScreenState extends State<BBXProfileScreen> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: () async {
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const BBXEditProfileScreen(),
-                    ),
-                  );
-                  if (result == true) {
-                                        setState(() {
-                      isLoading = true;
-                    });
-                    _loadUserData();
-                  }
+                  // Navigate to account settings
+                  Navigator.pushNamed(context, '/account-settings');
                 },
                 icon: const Icon(Icons.edit),
                 label: const Text('EditProfile'),

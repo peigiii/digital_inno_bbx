@@ -69,5 +69,10 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+            
+        <!-- 禁用 Impeller 渲染引擎 (修复模拟器崩溃问题) -->
+        <meta-data
+            android:name="io.flutter.embedding.android.EnableImpeller"
+            android:value="false" />
     </application>
 </manifest>

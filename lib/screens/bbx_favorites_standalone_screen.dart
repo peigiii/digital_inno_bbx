@@ -39,7 +39,7 @@ class _BBXFavoritesStandaloneScreenState
           // Error state
           if (snapshot.hasError) {
             return ErrorStateWidget(
-              error: snapshot.error.toString(),
+              message: snapshot.error.toString(),
               onRetry: () => setState(() {}),
             );
           }
@@ -50,7 +50,7 @@ class _BBXFavoritesStandaloneScreenState
               icon: Icons.favorite_border,
               title: 'No Favorites Yet',
               message: 'Start adding items to your favorites to see them here',
-              actionText: 'Browse Marketplace',
+              actionLabel: 'Browse Marketplace',
               onAction: () {
                 Navigator.pushNamed(context, '/marketplace');
               },
@@ -70,15 +70,13 @@ class _BBXFavoritesStandaloneScreenState
       padding: const EdgeInsets.all(16),
       itemCount: 5,
       itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: ShimmerLoading(
-            child: Container(
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
+        return const Padding(
+          padding: EdgeInsets.only(bottom: 16),
+          child: ShimmerLoading.rounded(
+            width: double.infinity,
+            height: 120,
+            shapeBorder: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
           ),
         );
