@@ -566,159 +566,162 @@ class _BBXOptimizedProfileScreenState extends State<BBXOptimizedProfileScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => Padding(
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDialogState) => Padding(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-            left: 20,
-            right: 20,
-            top: 20,
+            bottom: MediaQuery.of(dialogContext).viewInsets.bottom,
           ),
           child: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Handle bar
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      margin: const EdgeInsets.only(bottom: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Edit Profile',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Handle bar
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        margin: const EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(2),
                         ),
                       ),
-                      TextButton(
-                        onPressed: isSaving
-                            ? null
-                            : () async {
-                                if (!formKey.currentState!.validate()) return;
+                    ),
+                    // Header row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Edit Profile',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: isSaving
+                              ? null
+                              : () async {
+                                  if (!formKey.currentState!.validate()) return;
 
-                                setDialogState(() => isSaving = true);
+                                  setDialogState(() => isSaving = true);
 
-                                try {
-                                  await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(user!.uid)
-                                      .set({
-                                    'displayName': nameController.text.trim(),
-                                    'companyName': companyController.text.trim(),
-                                    'city': cityController.text.trim(),
-                                    'contact': contactController.text.trim(),
-                                    'updatedAt': FieldValue.serverTimestamp(),
-                                  }, SetOptions(merge: true));
+                                  try {
+                                    await FirebaseFirestore.instance
+                                        .collection('users')
+                                        .doc(user!.uid)
+                                        .set({
+                                      'displayName': nameController.text.trim(),
+                                      'companyName': companyController.text.trim(),
+                                      'city': cityController.text.trim(),
+                                      'contact': contactController.text.trim(),
+                                      'updatedAt': FieldValue.serverTimestamp(),
+                                    }, SetOptions(merge: true));
 
-                                  await user!.updateDisplayName(nameController.text.trim());
+                                    await user!.updateDisplayName(nameController.text.trim());
 
-                                  if (mounted) {
-                                    setState(() {
-                                      displayName = nameController.text.trim();
-                                      companyName = companyController.text.trim();
-                                      city = cityController.text.trim();
-                                      contact = contactController.text.trim();
-                                    });
+                                    if (mounted) {
+                                      setState(() {
+                                        displayName = nameController.text.trim();
+                                        companyName = companyController.text.trim();
+                                        city = cityController.text.trim();
+                                        contact = contactController.text.trim();
+                                      });
 
-                                    Navigator.pop(context);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Profile updated successfully!'),
-                                        backgroundColor: Colors.green,
-                                      ),
-                                    );
-                                  }
-                                } catch (e) {
-                                  setDialogState(() => isSaving = false);
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      Navigator.pop(dialogContext);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Profile updated successfully!'),
+                                          backgroundColor: Colors.green,
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    setDialogState(() => isSaving = false);
+                                    ScaffoldMessenger.of(dialogContext).showSnackBar(
                                       SnackBar(
                                         content: Text('Failed to save: $e'),
                                         backgroundColor: Colors.red,
                                       ),
                                     );
                                   }
-                                }
-                              },
-                        child: isSaving
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              )
-                            : const Text(
-                                'Save',
-                                style: TextStyle(
-                                  color: Color(0xFF2E7D32),
-                                  fontWeight: FontWeight.bold,
+                                },
+                          child: isSaving
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Text(
+                                  'Save',
+                                  style: TextStyle(
+                                    color: Color(0xFF2E7D32),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Name field
+                    TextFormField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Name *',
+                        prefixIcon: Icon(Icons.person),
+                        border: OutlineInputBorder(),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  TextFormField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Name *',
-                      prefixIcon: Icon(Icons.person),
-                      border: OutlineInputBorder(),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your name';
+                        }
+                        return null;
+                      },
+                      enabled: !isSaving,
                     ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Please enter your name';
-                      }
-                      return null;
-                    },
-                    enabled: !isSaving,
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: companyController,
-                    decoration: const InputDecoration(
-                      labelText: 'Company Name',
-                      prefixIcon: Icon(Icons.business),
-                      border: OutlineInputBorder(),
+                    const SizedBox(height: 12),
+                    // Company field
+                    TextFormField(
+                      controller: companyController,
+                      decoration: const InputDecoration(
+                        labelText: 'Company Name',
+                        prefixIcon: Icon(Icons.business),
+                        border: OutlineInputBorder(),
+                      ),
+                      enabled: !isSaving,
                     ),
-                    enabled: !isSaving,
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: cityController,
-                    decoration: const InputDecoration(
-                      labelText: 'City',
-                      prefixIcon: Icon(Icons.location_city),
-                      border: OutlineInputBorder(),
+                    const SizedBox(height: 12),
+                    // City field
+                    TextFormField(
+                      controller: cityController,
+                      decoration: const InputDecoration(
+                        labelText: 'City',
+                        prefixIcon: Icon(Icons.location_city),
+                        border: OutlineInputBorder(),
+                      ),
+                      enabled: !isSaving,
                     ),
-                    enabled: !isSaving,
-                  ),
-                  const SizedBox(height: 12),
-                  TextFormField(
-                    controller: contactController,
-                    decoration: const InputDecoration(
-                      labelText: 'Contact Phone',
-                      prefixIcon: Icon(Icons.phone),
-                      border: OutlineInputBorder(),
-                      hintText: '+60 12-345-6789',
+                    const SizedBox(height: 12),
+                    // Contact field
+                    TextFormField(
+                      controller: contactController,
+                      decoration: const InputDecoration(
+                        labelText: 'Contact Phone',
+                        prefixIcon: Icon(Icons.phone),
+                        border: OutlineInputBorder(),
+                        hintText: '+60 12-345-6789',
+                      ),
+                      keyboardType: TextInputType.phone,
+                      enabled: !isSaving,
                     ),
-                    keyboardType: TextInputType.phone,
-                    enabled: !isSaving,
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
           ),
