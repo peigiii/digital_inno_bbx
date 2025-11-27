@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../../services/dashboard_counter_service.dart';
 
-class BBXHomeProgressive extends StatelessWidget {
+class BBXHomeProgressive extends StatefulWidget {
   const BBXHomeProgressive({super.key});
 
+  @override
+  State<BBXHomeProgressive> createState() => _BBXHomeProgressiveState();
+}
+
+class _BBXHomeProgressiveState extends State<BBXHomeProgressive> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,8 +21,6 @@ class BBXHomeProgressive extends StatelessWidget {
             SizedBox(height: MediaQuery.of(context).padding.top),
             
             _buildTopBar(context),
-            
-            _buildSearchBar(context),
 
             _buildSectionTitle(context, 'Waste Categories'),
 
@@ -112,82 +118,6 @@ class BBXHomeProgressive extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchBar(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, '/search');
-        },
-        child: Container(
-          height: 56,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(28),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x14000000),
-                blurRadius: 12,
-                offset: Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              const SizedBox(width: 20),
-              Container(
-                width: 36,
-                height: 36,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF2E7D32),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.search_rounded,
-                  size: 20,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Search waste types, items...',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Color(0xFF9E9E9E),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/advanced-search');
-                },
-                child: Container(
-                  margin: const EdgeInsets.only(right: 8),
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: const Color(0xFF2E7D32),
-                      width: 1.5,
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.tune_rounded,
-                    size: 20,
-                    color: Color(0xFF2E7D32),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildSectionTitle(BuildContext context, String title) {
     return Padding(
@@ -308,22 +238,34 @@ class BBXHomeProgressive extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _buildActionCard(
-                  context,
-                  'My Quote',
-                  'Pending: 5',
-                  Icons.local_offer_outlined,
-                  const Color(0xFFFF6B6B),
+                child: StreamBuilder<int>(
+                  stream: DashboardCounterService.getPendingQuotesCount(),
+                  builder: (context, snapshot) {
+                    final count = snapshot.data ?? 0;
+                    return _buildActionCard(
+                      context,
+                      'My Quote',
+                      'Pending: $count',
+                      Icons.local_offer_outlined,
+                      const Color(0xFFFF6B6B),
+                    );
+                  },
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildActionCard(
-                  context,
-                  'My Transactions',
-                  'Ongoing: 2',
-                  Icons.receipt_long_outlined,
-                  const Color(0xFF4ECDC4),
+                child: StreamBuilder<int>(
+                  stream: DashboardCounterService.getOngoingTransactionsCount(),
+                  builder: (context, snapshot) {
+                    final count = snapshot.data ?? 0;
+                    return _buildActionCard(
+                      context,
+                      'My Transactions',
+                      'Ongoing: $count',
+                      Icons.receipt_long_outlined,
+                      const Color(0xFF4ECDC4),
+                    );
+                  },
                 ),
               ),
             ],
@@ -332,22 +274,34 @@ class BBXHomeProgressive extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _buildActionCard(
-                  context,
-                  'Nearby Items',
-                  'Explore Nearby',
-                  Icons.location_on_outlined,
-                  const Color(0xFFFFC371),
+                child: StreamBuilder<int>(
+                  stream: DashboardCounterService.getNearbyItemsCount(),
+                  builder: (context, snapshot) {
+                    final count = snapshot.data ?? 0;
+                    return _buildActionCard(
+                      context,
+                      'Nearby Items',
+                      'Available: $count',
+                      Icons.location_on_outlined,
+                      const Color(0xFFFFC371),
+                    );
+                  },
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
-                child: _buildActionCard(
-                  context,
-                  'My Favorites',
-                  'Saved: 12',
-                  Icons.favorite_outline,
-                  const Color(0xFFEC6EAD),
+                child: StreamBuilder<int>(
+                  stream: DashboardCounterService.getFavoritesCount(),
+                  builder: (context, snapshot) {
+                    final count = snapshot.data ?? 0;
+                    return _buildActionCard(
+                      context,
+                      'My Favorites',
+                      'Saved: $count',
+                      Icons.favorite_outline,
+                      const Color(0xFFEC6EAD),
+                    );
+                  },
                 ),
               ),
             ],
@@ -383,7 +337,7 @@ class BBXHomeProgressive extends StatelessWidget {
         }
       },
       child: Container(
-        height: 100,
+        height: 108,  // ✅ 增加高度以适应内容
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(12),
@@ -392,10 +346,12 @@ class BBXHomeProgressive extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.max,  // ✅ 确保填充整个空间
           children: [
             Icon(icon, color: Colors.white, size: 28),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,  // ✅ 避免过度扩展
               children: [
                 Text(
                   title,
@@ -404,6 +360,8 @@ class BBXHomeProgressive extends StatelessWidget {
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
+                  maxLines: 1,  // ✅ 限制为1行
+                  overflow: TextOverflow.ellipsis,  // ✅ 超出显示省略号
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -412,6 +370,8 @@ class BBXHomeProgressive extends StatelessWidget {
                     color: Colors.white,
                     fontSize: 12,
                   ),
+                  maxLines: 1,  // ✅ 限制为1行
+                  overflow: TextOverflow.ellipsis,  // ✅ 超出显示省略号
                 ),
               ],
             ),

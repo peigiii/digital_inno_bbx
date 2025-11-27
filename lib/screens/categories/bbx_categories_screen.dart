@@ -9,26 +9,27 @@ class BBXCategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories = [
-      {'name': 'Plastic', 'label': 'PlasticMakeItem', 'icon': Icons.recycling_rounded, 'count': 145},
-      {'name': 'Metal', 'label': 'MetalWaste', 'icon': Icons.hardware_rounded, 'count': 98},
-      {'name': 'Paper', 'label': 'PaperWaste', 'icon': Icons.description_rounded, 'count': 76},
-      {'name': 'Glass', 'label': 'GlassMakeItem', 'icon': Icons.lightbulb_rounded, 'count': 54},
+      {'name': 'Plastic', 'label': 'Plastic', 'icon': Icons.recycling_rounded, 'count': 145},
+      {'name': 'Metal', 'label': 'Metal', 'icon': Icons.hardware_rounded, 'count': 98},
+      {'name': 'Paper', 'label': 'Paper', 'icon': Icons.description_rounded, 'count': 76},
+      {'name': 'Glass', 'label': 'Glass', 'icon': Icons.lightbulb_rounded, 'count': 54},
       {'name': 'Electronic', 'label': 'E-Waste', 'icon': Icons.devices_rounded, 'count': 123},
       {'name': 'Organic', 'label': 'Organic Waste', 'icon': Icons.eco_rounded, 'count': 32},
-      {'name': 'Construction', 'label': 'Construction Waste', 'icon': Icons.construction_rounded, 'count': 67},
-      {'name': 'Textile', 'label': 'Textile Waste', 'icon': Icons.checkroom_rounded, 'count': 41},
+      {'name': 'Construction', 'label': 'Construction', 'icon': Icons.construction_rounded, 'count': 67},
+      {'name': 'Textile', 'label': 'Textile', 'icon': Icons.checkroom_rounded, 'count': 41},
       {'name': 'Others', 'label': 'Other', 'icon': Icons.more_horiz_rounded, 'count': 29},
     ];
 
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text('Item Category', style: AppTheme.heading2),
+        title: const Text('Categories', style: AppTheme.heading2),
         actions: [
           IconButton(
             icon: const Icon(Icons.search_rounded),
             onPressed: () {
-                          },
+              // Search functionality
+            },
           ),
         ],
       ),
@@ -83,7 +84,7 @@ class BBXCategoriesScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: AppTheme.spacing4),
                   Text(
-                    '${category['count']} Items?,
+                    '${category['count']} Items',
                     style: AppTheme.caption.copyWith(
                       color: Colors.white.withOpacity(0.9),
                     ),

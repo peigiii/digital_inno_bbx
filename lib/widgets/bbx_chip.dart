@@ -17,7 +17,7 @@ class BBXStatusChip extends StatelessWidget {
     this.isSmall = false,
   });
 
-    factory BBXStatusChip.status(String status, {bool isSmall = false}) {
+  factory BBXStatusChip.status(String status, {bool isSmall = false}) {
     Color bgColor;
     Color txtColor;
     String label;
@@ -26,52 +26,52 @@ class BBXStatusChip extends StatelessWidget {
       case 'pending':
         bgColor = AppTheme.warning.withOpacity(0.1);
         txtColor = AppTheme.warning;
-        label = 'WaitPlace?;
+        label = 'Pending';
         break;
       case 'confirmed':
         bgColor = AppTheme.info.withOpacity(0.1);
         txtColor = AppTheme.info;
-        label = 'AlreadySure?;
+        label = 'Confirmed';
         break;
       case 'paid':
         bgColor = AppTheme.success.withOpacity(0.1);
         txtColor = AppTheme.success;
-        label = 'AlreadyBranch?;
+        label = 'Paid';
         break;
       case 'in_transit':
         bgColor = AppTheme.accent.withOpacity(0.1);
         txtColor = AppTheme.accent;
-        label = 'LuckLose?;
+        label = 'In Transit';
         break;
       case 'completed':
         bgColor = AppTheme.success.withOpacity(0.1);
         txtColor = AppTheme.success;
-        label = 'AlreadyDone?;
+        label = 'Completed';
         break;
       case 'cancelled':
         bgColor = AppTheme.error.withOpacity(0.1);
         txtColor = AppTheme.error;
-        label = 'AlreadyTake?;
+        label = 'Cancelled';
         break;
       case 'negotiating':
         bgColor = AppTheme.info.withOpacity(0.1);
         txtColor = AppTheme.info;
-        label = 'DiscussPrice?;
+        label = 'Negotiating';
         break;
       case 'accepted':
         bgColor = AppTheme.success.withOpacity(0.1);
         txtColor = AppTheme.success;
-        label = 'AlreadyConnect?;
+        label = 'Accepted';
         break;
       case 'rejected':
         bgColor = AppTheme.error.withOpacity(0.1);
         txtColor = AppTheme.error;
-        label = 'AlreadyRefuse?;
+        label = 'Rejected';
         break;
       case 'expired':
         bgColor = AppTheme.neutral400.withOpacity(0.1);
         txtColor = AppTheme.neutral600;
-        label = 'AlreadyPass?;
+        label = 'Expired';
         break;
       default:
         bgColor = AppTheme.neutral300;
@@ -177,9 +177,9 @@ class BBXCategoryChip extends StatelessWidget {
       case 'electronic':
         return 'Electronic';
       case 'organic':
-        return 'HaveMachine';
+        return 'Organic';
       case 'construction':
-        return 'BuildBuild';
+        return 'Construction';
       case 'textile':
         return 'Textile';
       default:

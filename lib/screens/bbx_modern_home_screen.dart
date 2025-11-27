@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../theme/app_theme.dart';
 import '../utils/animation_utils.dart';
 import 'bbx_market_browse_screen.dart';
-import 'bbx_listing_immersive_detail_screen.dart';
+import 'bbx_listing_detail_screen.dart';
 import 'bbx_my_listings_standalone_screen.dart';
 import 'bbx_my_offers_standalone_screen.dart';
 import 'bbx_messages_standalone_screen.dart';
@@ -30,11 +30,6 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
           // Top Welcome Section
           SliverToBoxAdapter(
             child: _buildWelcomeSection(),
-          ),
-
-          // Search Card
-          SliverToBoxAdapter(
-            child: _buildSearchCard(),
           ),
 
           // Stats Cards
@@ -266,62 +261,6 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
     );
   }
 
-  Widget _buildSearchCard() {
-    return Transform.translate(
-      offset: const Offset(0, -20),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Material(
-          elevation: 4,
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.search,
-                  color: AppTheme.textLight,
-                  size: 28,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BBXMarketBrowseScreen(),
-                        ),
-                      );
-                    },
-                    decoration: const InputDecoration(
-                      hintText: 'Search biomass waste...',
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                        fontSize: 16,
-                        color: AppTheme.textLight,
-                      ),
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.mic_outlined,
-                    color: AppTheme.primary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   Widget _buildStatsSection() {
     return Padding(
@@ -769,7 +708,7 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BBXListingImmersiveDetailScreen(listingId: id),
+            builder: (context) => BBXListingDetailScreen(listingId: id),
           ),
         );
       },

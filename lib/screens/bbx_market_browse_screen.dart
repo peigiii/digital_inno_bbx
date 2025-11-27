@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../theme/app_theme.dart';
-import 'bbx_listing_immersive_detail_screen.dart';
+import 'bbx_listing_detail_screen.dart';
 import 'bbx_advanced_filter_screen.dart';
 
 class BBXMarketBrowseScreen extends StatefulWidget {
@@ -229,7 +229,7 @@ class _BBXMarketBrowseScreenState extends State<BBXMarketBrowseScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BBXListingImmersiveDetailScreen(listingId: id),
+            builder: (context) => BBXListingDetailScreen(listingId: id),
           ),
         );
       },

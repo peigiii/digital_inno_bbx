@@ -11,6 +11,8 @@ class ListingModel {
   final String unit;
   final double pricePerUnit;
   final String contactInfo;
+  final String pickupCity; // New field for pickup city
+  final String pickupAddress; // New field for detailed address
   final Map<String, dynamic>? location; // {latitude: double, longitude: double}
   final List<String> imageUrls;
   final String status; // available, pending, sold, expired
@@ -30,6 +32,8 @@ class ListingModel {
     required this.unit,
     required this.pricePerUnit,
     required this.contactInfo,
+    this.pickupCity = '',
+    this.pickupAddress = '',
     this.location,
     this.imageUrls = const [],
     this.status = 'available',
@@ -56,6 +60,8 @@ class ListingModel {
       unit: data['unit'] ?? '',
       pricePerUnit: (data['pricePerUnit'] ?? 0).toDouble(),
       contactInfo: data['contactInfo'] ?? '',
+      pickupCity: data['pickupCity'] ?? '',
+      pickupAddress: data['pickupAddress'] ?? '',
       location: data['location'] as Map<String, dynamic>?,
       imageUrls: (data['imageUrls'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
       status: data['status'] ?? 'available',
@@ -77,6 +83,8 @@ class ListingModel {
       'unit': unit,
       'pricePerUnit': pricePerUnit,
       'contactInfo': contactInfo,
+      'pickupCity': pickupCity,
+      'pickupAddress': pickupAddress,
       'location': location,
       'imageUrls': imageUrls,
       'status': status,
@@ -95,6 +103,8 @@ class ListingModel {
     String? unit,
     double? pricePerUnit,
     String? contactInfo,
+    String? pickupCity,
+    String? pickupAddress,
     Map<String, dynamic>? location,
     List<String>? imageUrls,
     String? status,
@@ -112,6 +122,8 @@ class ListingModel {
       unit: unit ?? this.unit,
       pricePerUnit: pricePerUnit ?? this.pricePerUnit,
       contactInfo: contactInfo ?? this.contactInfo,
+      pickupCity: pickupCity ?? this.pickupCity,
+      pickupAddress: pickupAddress ?? this.pickupAddress,
       location: location ?? this.location,
       imageUrls: imageUrls ?? this.imageUrls,
       status: status ?? this.status,

@@ -33,7 +33,13 @@ class _BBXConversationsScreenState extends State<BBXConversationsScreen> {
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
-              // TODO: Implement search
+              // ✅ 显示搜索提示
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Search conversations coming soon...'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
             },
           ),
         ],

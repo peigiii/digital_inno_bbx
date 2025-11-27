@@ -34,7 +34,8 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
       backgroundColor: AppTheme.background,
       body: CustomScrollView(
         slivers: [
-                    SliverAppBar(
+          // App Bar
+          SliverAppBar(
             pinned: true,
             expandedHeight: 120,
             backgroundColor: color,
@@ -67,22 +68,23 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
             ],
           ),
 
-                    SliverToBoxAdapter(
+          // Sort and Count
+          SliverToBoxAdapter(
             child: Container(
               color: Colors.white,
               padding: const EdgeInsets.all(AppTheme.spacing16),
               child: Row(
                 children: [
-                  const Text('?0 Items?, style: AppTheme.body2),
+                  const Text('0 Items', style: AppTheme.body2),
                   const Spacer(),
                   DropdownButton<String>(
                     value: _sortBy,
                     underline: const SizedBox(),
                     items: const [
-                      DropdownMenuItem(value: 'latest', child: Text('NewestSend?)),
+                      DropdownMenuItem(value: 'latest', child: Text('Latest')),
                       DropdownMenuItem(value: 'price_asc', child: Text('Price: Low to High')),
                       DropdownMenuItem(value: 'price_desc', child: Text('Price: High to Low')),
-                      DropdownMenuItem(value: 'quantity', child: Text('CountFromManyToFew')),
+                      DropdownMenuItem(value: 'quantity', child: Text('Quantity: High to Low')),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -95,7 +97,8 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
             ),
           ),
 
-                    SliverToBoxAdapter(
+          // Filters
+          SliverToBoxAdapter(
             child: Container(
               color: Colors.white,
               padding: const EdgeInsets.symmetric(
@@ -117,7 +120,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
                     ),
                     const SizedBox(width: AppTheme.spacing8),
                     BBXFilterChip(
-                      label: 'AlreadyRecognize?,
+                      label: 'Verified',
                       isSelected: _filters.contains('verified'),
                       onTap: () {
                         setState(() {
@@ -131,7 +134,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
                     ),
                     const SizedBox(width: AppTheme.spacing8),
                     BBXFilterChip(
-                      label: 'Nearby5km',
+                      label: 'Nearby 5km',
                       isSelected: _filters.contains('nearby5'),
                       onTap: () {
                         setState(() {
@@ -149,17 +152,18 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
             ),
           ),
 
-                    StreamBuilder<QuerySnapshot>(
+          // Listings
+          StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('listings')
                 .where('category', isEqualTo: widget.category)
-                .where('status', isEqualTo: 'active')
+                .where('status', isEqualTo: 'available')
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return SliverToBoxAdapter(
                   child: BBXEmptyState.noData(
-                    description: 'Load Failed，PleaseRetry',
+                    description: 'Failed to load. Please try again.',
                   ),
                 );
               }
@@ -173,7 +177,7 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
               if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                 return SliverToBoxAdapter(
                   child: BBXEmptyState.noData(
-                    description: 'No items in this category?,
+                    description: 'No items in this category',
                   ),
                 );
               }
@@ -195,7 +199,12 @@ class _BBXCategoryListingsScreenState extends State<BBXCategoryListingsScreen> {
                       quantity: '${listing.quantity} ${listing.unit}',
                       sellerName: listing.userEmail,
                       onTap: () {
-                                              },
+                        Navigator.pushNamed(
+                          context,
+                          '/listing-detail',
+                          arguments: {'listingId': listing.id},
+                        );
+                      },
                     );
                   },
                   childCount: snapshot.data!.docs.length,

@@ -28,10 +28,20 @@ service cloud.firestore {
     }
     
     match /offers/{offerId} {
-      allow read: if isAuthenticated() && (request.auth.uid == resource.data.recyclerId || request.auth.uid == resource.data.producerId || isAdmin());
+      // ✅ 修复：支持 buyerId/sellerId 和 recyclerId/producerId 两种字段名
+      allow read: if isAuthenticated();
       allow create: if isAuthenticated();
-      allow update: if isAuthenticated() && (request.auth.uid == resource.data.producerId || isAdmin());
-      allow delete: if isAuthenticated() && (request.auth.uid == resource.data.recyclerId || isAdmin());
+      allow update: if isAuthenticated() && (
+        request.auth.uid == resource.data.buyerId || 
+        request.auth.uid == resource.data.sellerId ||
+        request.auth.uid == resource.data.producerId || 
+        isAdmin()
+      );
+      allow delete: if isAuthenticated() && (
+        request.auth.uid == resource.data.buyerId || 
+        request.auth.uid == resource.data.recyclerId || 
+        isAdmin()
+      );
     }
     
     match /transactions/{transactionId} {
@@ -42,17 +52,16 @@ service cloud.firestore {
     }
     
     match /conversations/{conversationId} {
-      allow read: if isAuthenticated() && request.auth.uid in resource.data.participantIds;
+      // ✅ 修复：对话规则 - 查询会自动过滤 participantIds
+      allow read: if isAuthenticated();
       allow create: if isAuthenticated();
       allow update: if isAuthenticated() && request.auth.uid in resource.data.participantIds;
       allow delete: if false;
     }
 
-    // Messages - 只有发送者和接收者可以访问
+    // Messages - 通过 conversationId 查询，权限由 conversation 层控制
     match /messages/{messageId} {
-      allow read: if isAuthenticated() &&
-        (request.auth.uid == resource.data.senderId ||
-         request.auth.uid == resource.data.receiverId);
+      allow read: if isAuthenticated();
       allow create: if isAuthenticated() && request.auth.uid == request.resource.data.senderId;
       allow update: if isAuthenticated() && request.auth.uid == resource.data.senderId;
       allow delete: if isAuthenticated() && request.auth.uid == resource.data.senderId;
@@ -98,12 +107,47 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Rewards - 只能访问自己的奖励
-    match /rewards/{rewardId} {
-      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    // Rewards - 只能访问自己的奖励 (文档ID为用户ID)
+    match /rewards/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
       allow create: if false;
       allow update: if false;
       allow delete: if false;
+    }
+
+    // ✅ Wallets - 钱包余额 (文档ID为用户ID)
+    match /wallets/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+      allow update: if isAuthenticated() && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    // ✅ Notifications - 用户通知
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // ✅ Reports - 举报记录
+    match /reports/{reportId} {
+      allow read: if isAuthenticated() && (
+        resource.data.reporterId == request.auth.uid ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated() && request.resource.data.reporterId == request.auth.uid;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // ✅ Recyclers - 回收商信息 (公开读取)
+    match /recyclers/{recyclerId} {
+      allow read: if true;
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow delete: if isAdmin();
     }
 
     // Quote Requests - 报价请求

@@ -12,8 +12,10 @@ import '../../models/logistics_update_model.dart';
 import '../../services/transaction_service.dart';
 import '../../services/listing_service.dart';
 import '../../services/user_service.dart';
+import '../../services/chat_service.dart'; // ✅ 导入聊天服务
 import '../../utils/delivery_config.dart';
 import '../../widgets/state/error_state_widget.dart';
+import '../chat/bbx_chat_screen.dart'; // ✅ 导入聊天页面
 import 'bbx_upload_payment_screen.dart';
 import 'bbx_update_logistics_screen.dart';
 
@@ -715,11 +717,30 @@ class _BBXOptimizedTransactionDetailScreenState
               ),
               const SizedBox(width: 8),
               IconButton(
-                onPressed: () {
-                  // TODO: Navigate to chat
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Chat feature coming soon')),
-                  );
+                onPressed: () async {
+                  // ✅ 实现聊天导航
+                  try {
+                    final chatService = ChatService();
+                    final conversationId = await chatService.getOrCreateConversation(userId);
+                    if (mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BBXChatScreen(
+                            conversationId: conversationId,
+                            otherUserId: userId,
+                            otherUserName: user.displayName ?? 'User',
+                          ),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Failed to open chat: $e')),
+                      );
+                    }
+                  }
                 },
                 icon: Container(
                   padding: const EdgeInsets.all(8),

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/message_model.dart';
+import 'notification_service.dart'; // ✅ 导入通知服务
 
 /// Chat Service
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final NotificationService _notificationService = NotificationService(); // ✅ 添加通知服务
 
   /// Get Current User ID
   String? get _currentUserId => _auth.currentUser?.uid;
@@ -106,7 +108,15 @@ class ChatService {
       'unreadCount.$receiverId': FieldValue.increment(1),
     });
 
-    // TODO: Send push notification
+    // ✅ 发送消息通知
+    final senderDoc = await _firestore.collection('users').doc(_currentUserId).get();
+    final senderName = senderDoc.data()?['displayName'] ?? 'Someone';
+    await _notificationService.sendNotification(
+      userId: receiverId,
+      title: 'New Message from $senderName',
+      body: type == 'text' ? content : 'Sent you a $type',
+      data: {'conversationId': conversationId, 'type': 'new_message'},
+    );
 
     return docRef.id;
   }

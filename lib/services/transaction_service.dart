@@ -7,11 +7,13 @@ import '../models/transaction_model.dart';
 import '../models/logistics_update_model.dart';
 import '../models/offer_model.dart';
 import '../models/listing_model.dart';
+import 'notification_service.dart'; // ✅ 导入通知服务
 
 /// Transaction Service
 class TransactionService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final NotificationService _notificationService = NotificationService(); // ✅ 添加通知服务实例
 
   /// 1. Confirm Transaction - Create transaction when offer is accepted
   Future<String> confirmTransaction(String offerId) async {
@@ -64,7 +66,19 @@ class TransactionService {
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
-      // TODO: Send notifications
+      // ✅ 发送通知给买家和卖家
+      await _notificationService.sendNotification(
+        userId: offer.buyerId,
+        title: 'Transaction Confirmed',
+        body: 'Your offer has been accepted. Please proceed with payment.',
+        data: {'transactionId': transactionRef.id, 'type': 'transaction_confirmed'},
+      );
+      await _notificationService.sendNotification(
+        userId: listing.userId,
+        title: 'New Transaction',
+        body: 'You have a new transaction. Waiting for buyer payment.',
+        data: {'transactionId': transactionRef.id, 'type': 'transaction_confirmed'},
+      );
 
       return transactionRef.id;
     } catch (e) {
@@ -89,7 +103,19 @@ class TransactionService {
         'paidAt': FieldValue.serverTimestamp(),
       });
 
-      // TODO: Send notification to seller
+      // ✅ 发送通知给卖家
+      final transactionDoc = await _firestore.collection('transactions').doc(transactionId).get();
+      if (transactionDoc.exists) {
+        final sellerId = transactionDoc.data()?['sellerId'];
+        if (sellerId != null) {
+          await _notificationService.sendNotification(
+            userId: sellerId,
+            title: 'Payment Received',
+            body: 'Buyer has uploaded payment proof. Please verify and ship the order.',
+            data: {'transactionId': transactionId, 'type': 'payment_uploaded'},
+          );
+        }
+      }
 
     } catch (e) {
       throw Exception('Upload payment proof failed: $e');
@@ -124,7 +150,19 @@ class TransactionService {
         imageUrl: photoUrl,
       );
 
-      // TODO: Send notification to buyer
+      // ✅ 发送通知给买家
+      final transactionDoc = await _firestore.collection('transactions').doc(transactionId).get();
+      if (transactionDoc.exists) {
+        final buyerId = transactionDoc.data()?['buyerId'];
+        if (buyerId != null) {
+          await _notificationService.sendNotification(
+            userId: buyerId,
+            title: 'Order Picked Up',
+            body: 'Your order has been picked up and is on the way.',
+            data: {'transactionId': transactionId, 'type': 'order_picked_up'},
+          );
+        }
+      }
 
     } catch (e) {
       throw Exception('Mark as picked up failed: $e');
@@ -175,7 +213,14 @@ class TransactionService {
         imageUrl: photoUrl,
       );
 
-      // TODO: Send notification
+      // ✅ 发送物流更新通知
+      final buyerId = transaction.buyerId;
+      await _notificationService.sendNotification(
+        userId: buyerId,
+        title: 'Shipping Update',
+        body: 'Your order status has been updated to: $newStatus',
+        data: {'transactionId': transactionId, 'type': 'shipping_update', 'status': newStatus},
+      );
 
     } catch (e) {
       throw Exception('Update shipping status failed: $e');
@@ -198,7 +243,19 @@ class TransactionService {
         description: 'Buyer confirmed receipt',
       );
 
-      // TODO: Send notification to seller
+      // ✅ 发送通知给卖家
+      final transactionDoc = await _firestore.collection('transactions').doc(transactionId).get();
+      if (transactionDoc.exists) {
+        final sellerId = transactionDoc.data()?['sellerId'];
+        if (sellerId != null) {
+          await _notificationService.sendNotification(
+            userId: sellerId,
+            title: 'Delivery Confirmed',
+            body: 'Buyer has confirmed receipt of the order.',
+            data: {'transactionId': transactionId, 'type': 'delivery_confirmed'},
+          );
+        }
+      }
 
     } catch (e) {
       throw Exception('Confirm delivery failed: $e');
@@ -251,7 +308,19 @@ class TransactionService {
         description: 'Transaction Completed',
       );
 
-      // TODO: Send notifications
+      // ✅ 发送完成通知
+      await _notificationService.sendNotification(
+        userId: transaction.buyerId,
+        title: 'Transaction Completed',
+        body: 'Your transaction has been completed successfully. Thank you!',
+        data: {'transactionId': transactionId, 'type': 'transaction_completed'},
+      );
+      await _notificationService.sendNotification(
+        userId: transaction.sellerId,
+        title: 'Transaction Completed',
+        body: 'Transaction completed. Payment has been released.',
+        data: {'transactionId': transactionId, 'type': 'transaction_completed'},
+      );
 
     } catch (e) {
       throw Exception('Complete transaction failed: $e');
@@ -295,7 +364,19 @@ class TransactionService {
       // Commit Batch
       await batch.commit();
 
-      // TODO: Send notifications
+      // ✅ 发送取消通知
+      await _notificationService.sendNotification(
+        userId: transaction.buyerId,
+        title: 'Transaction Cancelled',
+        body: 'Transaction has been cancelled. Reason: $reason',
+        data: {'transactionId': transactionId, 'type': 'transaction_cancelled'},
+      );
+      await _notificationService.sendNotification(
+        userId: transaction.sellerId,
+        title: 'Transaction Cancelled',
+        body: 'Transaction has been cancelled. Reason: $reason',
+        data: {'transactionId': transactionId, 'type': 'transaction_cancelled'},
+      );
 
     } catch (e) {
       throw Exception('Cancel transaction failed: $e');

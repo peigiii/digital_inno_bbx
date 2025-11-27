@@ -6,6 +6,7 @@ import '../../widgets/enhanced/modern_card.dart';
 import '../../widgets/enhanced/shimmer_loading.dart';
 import '../../widgets/state/error_state_widget.dart';
 import '../../widgets/state/empty_state_widget.dart';
+import '../../services/favorite_service.dart'; // ✅ 导入收藏服务
 
 /// BBX ItemColTable - Optimize�?
 /// Material Design 3 Style，FitMatch Pixel 5
@@ -21,6 +22,7 @@ class _BBXOptimizedMarketplaceScreenState
     extends State<BBXOptimizedMarketplaceScreen> {
   String _selectedCategory = 'all';
   final TextEditingController _searchController = TextEditingController();
+  final FavoriteService _favoriteService = FavoriteService(); // ✅ 添加收藏服务
 
   final List<Map<String, dynamic>> _categories = [
     {'id': 'all', 'label': '📦 All', 'color': Color(0xFF43A047)},
@@ -186,7 +188,8 @@ class _BBXOptimizedMarketplaceScreenState
                   );
                 },
                 onFavorite: () {
-                  // TODO: FavoriteFunction
+                  // ✅ 实现收藏功能
+                  _favoriteService.addFavorite(listing.id, context);
                 },
               );
             } catch (e) {

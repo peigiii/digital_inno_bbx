@@ -8,7 +8,8 @@ import 'screens/bbx_new_marketplace_screen.dart';
 import 'screens/bbx_listing_detail_screen.dart';
 import 'screens/bbx_new_profile_screen.dart';
 import 'screens/bbx_splash_screen.dart';
-import 'screens/bbx_main_screen.dart'; import 'screens/bbx_modern_home_screen.dart';
+import 'screens/bbx_main_screen.dart';
+import 'screens/bbx_modern_home_screen.dart';
 import 'screens/bbx_market_browse_screen.dart';
 import 'screens/bbx_profile_cards_screen.dart';
 import 'screens/bbx_subscription_screen.dart';
@@ -21,6 +22,9 @@ import 'screens/transactions/bbx_optimized_transaction_detail_screen.dart';
 import 'screens/offers/bbx_my_offers_screen.dart';
 import 'screens/chat/bbx_conversations_screen.dart';
 import 'screens/search/bbx_advanced_search_screen.dart';
+import 'screens/search/bbx_new_search_screen.dart'; // ✅ 添加搜索页面
+import 'screens/categories/bbx_categories_screen.dart'; // ✅ 添加分类页面
+import 'screens/bbx_my_listings_standalone_screen.dart'; // ✅ 添加我的列表页面
 import 'screens/transactions/bbx_transactions_screen.dart';
 import 'screens/transactions/bbx_transaction_detail_screen.dart';
 import 'screens/transactions/bbx_upload_payment_screen.dart';
@@ -125,6 +129,12 @@ class BBXApp extends StatelessWidget {
         '/account-settings': (context) => const BBXAccountSettingsScreen(),
         '/notification-settings': (context) => const BBXNotificationSettingsScreen(),
         '/favorites': (context) => const BBXFavoritesStandaloneScreen(),
+        // ✅ 新增缺失的路由
+        '/search': (context) => const BBXNewSearchScreen(),
+        '/categories': (context) => const BBXCategoriesScreen(),
+        '/edit-profile': (context) => const BBXAccountSettingsScreen(), // 编辑资料复用账户设置页
+        '/my-listings': (context) => const BBXMyListingsStandaloneScreen(),
+        '/create-listing': (context) => const BBXListWasteScreen(), // 创建列表复用发布废料页
       },
       onGenerateRoute: (settings) {
         // Handle routes with arguments
