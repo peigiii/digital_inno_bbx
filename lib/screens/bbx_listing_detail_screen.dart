@@ -104,15 +104,15 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           // 错误状态
           if (snapshot.hasError) {
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                   const Icon(Icons.error_outline, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
                   Text('Error: ${snapshot.error}'),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(context),
                     child: const Text('Go Back'),
                   ),
                 ],
@@ -131,7 +131,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                   const Text('Listing not found'),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(context),
                     child: const Text('Go Back'),
                   ),
                 ],
@@ -147,10 +147,10 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           debugPrint('📦 [DEBUG] location field value: ${data['location']}');
 
           return Stack(
-            children: [
+                children: [
               // 主要内容
-              CustomScrollView(
-                slivers: [
+                  CustomScrollView(
+                    slivers: [
                   // 图片区域
                   SliverToBoxAdapter(child: _buildImageSection(data)),
 
@@ -173,8 +173,8 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                   backgroundColor: Colors.black54,
                   child: IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () => Navigator.pop(context),
-                  ),
+                      onPressed: () => Navigator.pop(context),
+                    ),
                 ),
               ),
 
@@ -188,7 +188,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     icon: Icon(
                       _isFavorite ? Icons.favorite : Icons.favorite_border,
                       color: _isFavorite ? Colors.red : Colors.white,
-                    ),
+                            ),
                     onPressed: () => _toggleFavorite(data),
                   ),
                 ),
@@ -202,9 +202,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                 child: _buildBottomBar(data),
               ),
             ],
-          );
-        },
-      ),
+                          );
+                        },
+                      ),
     );
   }
 
@@ -232,56 +232,56 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     return SizedBox(
       height: 300,
       child: Stack(
-        children: [
-          PageView.builder(
+                              children: [
+                                PageView.builder(
             controller: _pageController,
             itemCount: images.length,
-            onPageChanged: (index) {
+                                  onPageChanged: (index) {
               setState(() => _currentImageIndex = index);
-            },
-            itemBuilder: (context, index) {
-              return CachedNetworkImage(
-                imageUrl: images[index],
-                fit: BoxFit.cover,
+                                  },
+                                  itemBuilder: (context, index) {
+                                    return CachedNetworkImage(
+                                      imageUrl: images[index],
+                                      fit: BoxFit.cover,
                 placeholder: (context, url) => Container(
                   color: Colors.grey[200],
                   child: const Center(child: CircularProgressIndicator()),
                 ),
                 errorWidget: (context, url, error) => Container(
                   color: Colors.grey[300],
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
                       Icon(Icons.broken_image, size: 48, color: Colors.grey[500]),
                       const SizedBox(height: 8),
                       Text('Failed to load', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
+                                              ],
+                                            ),
+                                          ),
+                                    );
+                                  },
+                                ),
           // 图片指示器
-          if (images.length > 1)
-            Positioned(
-              bottom: 16,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Container(
+                                if (images.length > 1)
+                                  Positioned(
+                                    bottom: 16,
+                                    left: 0,
+                                    right: 0,
+                                    child: Center(
+                                      child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
+                                        decoration: BoxDecoration(
                     color: Colors.black54,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Text(
-                    '${_currentImageIndex + 1} / ${images.length}',
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Text(
+                                          '${_currentImageIndex + 1} / ${images.length}',
                     style: const TextStyle(color: Colors.white, fontSize: 14),
-                  ),
-                ),
-              ),
-            ),
-        ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
       ),
     );
   }
@@ -331,7 +331,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
 
     return Container(
       margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -344,8 +344,8 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         children: [
           // 标题和状态
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
               Expanded(
                 child: Text(
                   (data['title'] ?? data['wasteType'] ?? 'Untitled').toString(),
@@ -365,7 +365,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Color(0xFF2E7D32),
-            ),
+          ),
           ),
           const SizedBox(height: 16),
 
@@ -380,11 +380,11 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           if (data['description'] != null && data['description'].toString().isNotEmpty) ...[
             const SizedBox(height: 16),
             const Text('Description', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 8),
-            Text(
+          const SizedBox(height: 8),
+              Text(
               data['description'].toString(),
               style: TextStyle(color: Colors.grey[700], height: 1.5),
-            ),
+                ),
           ],
 
           // 联系方式
@@ -402,22 +402,22 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       return Container(
         margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
+            decoration: BoxDecoration(
           color: Colors.red[50],
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.red[200]!),
-        ),
-        child: Column(
-          children: [
+            ),
+            child: Column(
+              children: [
             const Icon(Icons.error_outline, color: Colors.red, size: 48),
-            const SizedBox(height: 8),
+                const SizedBox(height: 8),
             const Text('Error loading product info', style: TextStyle(color: Colors.red)),
-            const SizedBox(height: 4),
+                const SizedBox(height: 4),
             Text('$e', style: const TextStyle(fontSize: 12, color: Colors.red)),
-          ],
-        ),
-      );
-    }
+        ],
+      ),
+    );
+  }
   }
 
   double _getPrice(Map<String, dynamic> data) {
@@ -461,10 +461,10 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   }
 
   Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Padding(
+      return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        children: [
+            children: [
           Icon(icon, size: 20, color: Colors.grey[600]),
           const SizedBox(width: 12),
           Text(label, style: TextStyle(color: Colors.grey[600])),
@@ -477,10 +477,10 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-        ],
-      ),
-    );
-  }
+            ],
+        ),
+      );
+    }
 
   Widget _buildStatusBadge(String status) {
     Color bgColor;
@@ -511,54 +511,54 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         displayText = status;
     }
 
-    return Container(
+          return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Text(
+                      child: Text(
         displayText,
         style: TextStyle(color: textColor, fontSize: 12, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
+            ),
+          );
+        }
 
   // ========== 卖家信息卡片 ==========
   Widget _buildSellerCard(Map<String, dynamic> data) {
-    return Container(
+        return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+          color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(color: Colors.black.withOpacity(0.08), blurRadius: 8, offset: const Offset(0, 2)),
         ],
-      ),
+              ),
       child: Row(
-        children: [
-          CircleAvatar(
+                children: [
+                  CircleAvatar(
             radius: 24,
             backgroundColor: const Color(0xFFE8F5E9),
             child: const Icon(Icons.person, color: Color(0xFF2E7D32)),
-          ),
+                  ),
           const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                 Text('Seller', style: TextStyle(color: Colors.grey[600], fontSize: 12)),
                 Text(
                   (data['userEmail'] ?? 'Unknown Seller').toString(),
                   style: const TextStyle(fontWeight: FontWeight.w500),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
               ],
-            ),
-          ),
-        ],
-      ),
+                              ),
+                            ),
+                          ],
+                        ),
     );
   }
 
@@ -600,42 +600,42 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
   // 卖家看到的按钮（自己的商品）
   Widget _buildOwnerButtons(Map<String, dynamic> data) {
     return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
             onPressed: () => _editListing(),
             icon: const Icon(Icons.edit),
             label: const Text('Edit Listing'),
-            style: OutlinedButton.styleFrom(
+                      style: OutlinedButton.styleFrom(
               foregroundColor: const Color(0xFF5C6BC0),
               side: const BorderSide(color: Color(0xFF5C6BC0)),
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: ElevatedButton.icon(
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
             onPressed: () => _deleteListing(),
             icon: const Icon(Icons.delete),
             label: const Text('Delete'),
-            style: ElevatedButton.styleFrom(
+                      style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+                        foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-          ),
-        ),
-      ],
-    );
+                      ),
+                    ),
+                  ),
+                ],
+        );
   }
 
   // 买家看到的按钮（别人的商品）
   Widget _buildBuyerButtons(Map<String, dynamic> data) {
     return Row(
-      children: [
+        children: [
         // Contact 按钮
         Expanded(
           child: OutlinedButton.icon(
@@ -652,7 +652,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         ),
         const SizedBox(width: 12),
         // Quote 按钮
-        Expanded(
+                    Expanded(
           child: ElevatedButton.icon(
             onPressed: () => _handleQuote(data),
             icon: const Icon(Icons.request_quote),
@@ -662,10 +662,10 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-          ),
-        ),
-      ],
+                        ),
+                      ),
+                    ),
+                  ],
     );
   }
 
@@ -711,9 +711,9 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
             content: Text(_isFavorite ? 'Added to favorites' : 'Removed from favorites'),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 1),
-          ),
-        );
-      }
+      ),
+    );
+  }
     } catch (e) {
       debugPrint('❌ [Favorite] Error: $e');
       if (mounted) {
@@ -731,7 +731,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         const SnackBar(content: Text('Please login first'), backgroundColor: Colors.orange),
       );
       return;
-    }
+                }
 
     final sellerId = data['userId']?.toString();
     if (sellerId == null || sellerId.isEmpty) {
@@ -743,7 +743,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
 
     // 导航到聊天页面
     Navigator.pushNamed(
-      context,
+                              context,
       '/chat',
       arguments: {
         'recipientId': sellerId,
@@ -751,7 +751,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         'listingId': widget.listingId,
         'listingTitle': data['title'] ?? data['wasteType'],
       },
-    );
+                    );
   }
 
   void _handleQuote(Map<String, dynamic> data) {
@@ -784,14 +784,14 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
           bottom: MediaQuery.of(context).viewInsets.bottom + 20,
         ),
         decoration: const BoxDecoration(
-          color: Colors.white,
+        color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
+      ),
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          children: [
               // Handle bar
               Center(
                 child: Container(
@@ -820,8 +820,8 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                   labelText: 'Your Price (RM)',
                   prefixText: 'RM ',
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                ),
               ),
+            ),
               const SizedBox(height: 16),
 
               TextField(
@@ -842,8 +842,8 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                   labelText: 'Message (Optional)',
                   alignLabelWithHint: true,
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                ),
               ),
+            ),
               const SizedBox(height: 24),
 
               SizedBox(
@@ -856,17 +856,17 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
                     quantityController.text,
                     messageController.text,
                   ),
-                  style: ElevatedButton.styleFrom(
+                style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF2E7D32),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text(
                     'Send Quote',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
                 ),
               ),
-            ],
+            ),
+          ],
           ),
         ),
       ),
@@ -946,13 +946,13 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       try {
         await FirebaseFirestore.instance.collection('listings').doc(widget.listingId).delete();
 
-        if (!mounted) return;
+      if (!mounted) return;
         Navigator.pop(context);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Listing deleted'), backgroundColor: Colors.green),
-        );
-      } catch (e) {
+      );
+    } catch (e) {
         debugPrint('❌ [Delete] Error: $e');
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

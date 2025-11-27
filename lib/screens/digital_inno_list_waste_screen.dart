@@ -21,7 +21,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
   final _priceController = TextEditingController();
   final _contactController = TextEditingController();
   final _addressController = TextEditingController();
-
+  
   String? _selectedWasteType;
   String? _selectedUnit;
   String? _selectedCity;
@@ -182,14 +182,14 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                     label: 'Camera',
                     onTap: () async {
                       Navigator.pop(context);
-                      final XFile? image = await picker.pickImage(
-                        source: ImageSource.camera,
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.camera,
                         maxWidth: 1024,
                         maxHeight: 1024,
                         imageQuality: 80,
-                      );
+    );
                       if (image != null && _selectedImages.length < 5) {
-                        setState(() {
+      setState(() {
                           _selectedImages.add(image);
                         });
                       }
@@ -210,8 +210,8 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                           // Add images up to max 5
                           final remaining = 5 - _selectedImages.length;
                           _selectedImages.addAll(images.take(remaining));
-                        });
-                      }
+      });
+    }
                     },
                   ),
                 ],
@@ -337,8 +337,8 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
         'imageUrl': imageUrls.isNotEmpty ? imageUrls.first : null,
         'location': _currentPosition != null
             ? {
-                'latitude': _currentPosition!.latitude,
-                'longitude': _currentPosition!.longitude,
+          'latitude': _currentPosition!.latitude,
+          'longitude': _currentPosition!.longitude,
               }
             : null,
         'status': 'available',
@@ -389,7 +389,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
             duration: const Duration(seconds: 3),
           ),
         );
-
+        
         // Clear form
         _formKey.currentState!.reset();
         _titleController.clear();
@@ -488,21 +488,21 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+                padding: const EdgeInsets.all(16),
+                child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+                  children: [
               // Image Upload Section
               _buildImageUploadSection(),
-              const SizedBox(height: 24),
+            const SizedBox(height: 24),
 
               // Basic Information Section
               _buildSectionHeader('Basic Information', Icons.info_outline),
               const SizedBox(height: 16),
 
               // Title
-              TextFormField(
-                controller: _titleController,
+                      TextFormField(
+                        controller: _titleController,
                 decoration: InputDecoration(
                   labelText: 'Title *',
                   hintText: 'e.g., Fresh Coffee Grounds',
@@ -512,13 +512,13 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                   ),
                   filled: true,
                   fillColor: Colors.white,
-                ),
+                        ),
                 validator: (v) => v?.isEmpty ?? true ? 'Title is required' : null,
-              ),
-              const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
               // Waste Type
-              DropdownButtonFormField<String>(
+                      DropdownButtonFormField<String>(
                 value: _selectedWasteType,
                 decoration: InputDecoration(
                   labelText: 'Waste Type *',
@@ -528,24 +528,24 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                   ),
                   filled: true,
                   fillColor: Colors.white,
-                ),
+                        ),
                 items: wasteTypes.map((type) => DropdownMenuItem(
-                  value: type,
+                            value: type,
                   child: Text(type),
                 )).toList(),
                 onChanged: (v) => setState(() => _selectedWasteType = v),
                 validator: (v) => v == null ? 'Please select waste type' : null,
-              ),
-              const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
-              // Quantity and Unit Row
-              Row(
+                      // Quantity and Unit Row
+                      Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: TextFormField(
-                      controller: _quantityController,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: TextFormField(
+                              controller: _quantityController,
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(
                         labelText: 'Quantity *',
@@ -560,14 +560,14 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       validator: (v) {
                         if (v?.isEmpty ?? true) return 'Required';
                         if (double.tryParse(v!) == null) return 'Invalid number';
-                        return null;
-                      },
-                    ),
-                  ),
+                                return null;
+                              },
+                            ),
+                          ),
                   const SizedBox(width: 12),
-                  Expanded(
-                    flex: 1,
-                    child: DropdownButtonFormField<String>(
+                          Expanded(
+                            flex: 1,
+                            child: DropdownButtonFormField<String>(
                       value: _selectedUnit,
                       decoration: InputDecoration(
                         labelText: 'Unit *',
@@ -583,15 +583,15 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                       )).toList(),
                       onChanged: (v) => setState(() => _selectedUnit = v),
                       validator: (v) => v == null ? 'Required' : null,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
 
               // Price per Unit
-              TextFormField(
-                controller: _priceController,
+                      TextFormField(
+                        controller: _priceController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(
                   labelText: 'Price per Unit (RM) *',
@@ -600,21 +600,21 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                   prefixText: 'RM ',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                  ),
+                        ),
                   filled: true,
                   fillColor: Colors.white,
                 ),
                 validator: (v) {
                   if (v?.isEmpty ?? true) return 'Price is required';
                   if (double.tryParse(v!) == null) return 'Invalid price';
-                  return null;
-                },
-              ),
+                          return null;
+                        },
+                      ),
               const SizedBox(height: 24),
 
               // Location Section
               _buildSectionHeader('Location', Icons.location_on),
-              const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
               // Pickup City
               DropdownButtonFormField<String>(
@@ -662,8 +662,8 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
               _buildSectionHeader('Description', Icons.description),
               const SizedBox(height: 16),
 
-              TextFormField(
-                controller: _descriptionController,
+                      TextFormField(
+                        controller: _descriptionController,
                 decoration: InputDecoration(
                   labelText: 'Description *',
                   hintText: 'Describe your item in detail...',
@@ -673,15 +673,15 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                   ),
                   filled: true,
                   fillColor: Colors.white,
-                ),
+                        ),
                 maxLines: 4,
                 validator: (v) => v?.isEmpty ?? true ? 'Description is required' : null,
-              ),
-              const SizedBox(height: 16),
+                      ),
+                      const SizedBox(height: 16),
 
               // Contact Number (Optional)
-              TextFormField(
-                controller: _contactController,
+                      TextFormField(
+                        controller: _contactController,
                 decoration: InputDecoration(
                   labelText: 'Contact Number (Optional)',
                   hintText: '+60 12-345 6789',
@@ -743,7 +743,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                           ),
                         ),
                 ),
-              ),
+                      ),
               const SizedBox(height: 16),
 
               // Compliance Info
@@ -758,7 +758,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
 
   Widget _buildUploadProgress() {
     return Container(
-      padding: const EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -770,9 +770,9 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
           ),
         ],
       ),
-      child: Column(
+                          child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+                            children: [
           Row(
             children: [
               const Icon(Icons.cloud_upload, color: Color(0xFF2E7D32)),
@@ -785,7 +785,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                   ),
                 ),
               ),
-              Text(
+                              Text(
                 '${(_uploadProgress * 100).toInt()}%',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
@@ -849,7 +849,7 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
               const SizedBox(width: 8),
               const Text(
                 'Photos',
-                style: TextStyle(
+                                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -871,8 +871,8 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
                 ),
               ),
             ],
-          ),
-          const SizedBox(height: 16),
+                              ),
+                              const SizedBox(height: 16),
           SizedBox(
             height: 100,
             child: ListView(
@@ -880,40 +880,40 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
               children: [
                 // Add Photo Button
                 if (_selectedImages.length < 5)
-                  InkWell(
+                              InkWell(
                     onTap: _isLoading ? null : _pickImages,
                     borderRadius: BorderRadius.circular(12),
-                    child: Container(
+                                child: Container(
                       width: 100,
                       height: 100,
-                      decoration: BoxDecoration(
-                        border: Border.all(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
                           color: const Color(0xFF2E7D32),
                           width: 2,
-                          style: BorderStyle.solid,
-                        ),
+                                      style: BorderStyle.solid,
+                                    ),
                         borderRadius: BorderRadius.circular(12),
-                      ),
+                                  ),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
                             Icons.add_photo_alternate,
                             size: 32,
                             color: _isLoading ? Colors.grey : const Color(0xFF2E7D32),
-                          ),
+                                            ),
                           const SizedBox(height: 4),
-                          Text(
+                                            Text(
                             'Add Photo',
-                            style: TextStyle(
+                                              style: TextStyle(
                               color: _isLoading ? Colors.grey : const Color(0xFF2E7D32),
                               fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                ),
+                              ),
                 // Selected Images
                 ..._selectedImages.asMap().entries.map((entry) {
                   final index = entry.key;
@@ -1006,44 +1006,44 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
 
   Widget _buildLocationStatus() {
     return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: _currentPosition != null
-            ? const Color(0xFF4CAF50).withOpacity(0.1)
-            : Colors.orange.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: _currentPosition != null 
+                                      ? const Color(0xFF4CAF50).withOpacity(0.1)
+                                      : Colors.orange.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Icon(
             _currentPosition != null ? Icons.location_on : Icons.location_off,
-            color: _currentPosition != null
-                ? const Color(0xFF2E7D32)
-                : Colors.orange,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _isLocationLoading
+                                      color: _currentPosition != null 
+                                          ? const Color(0xFF2E7D32) 
+                                          : Colors.orange,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: _isLocationLoading
                 ? const Text('Getting GPS location...')
-                : Text(
-                    _currentPosition != null
+                                          : Text(
+                                              _currentPosition != null
                         ? 'GPS Location Acquired'
                         : 'GPS Location Not Available',
-                    style: TextStyle(
-                      color: _currentPosition != null
-                          ? const Color(0xFF2E7D32)
-                          : Colors.orange[700],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-          ),
-          if (_currentPosition == null && !_isLocationLoading)
-            TextButton(
-              onPressed: _getCurrentLocation,
-              child: const Text('Retry'),
-            ),
-        ],
-      ),
+                                              style: TextStyle(
+                                                color: _currentPosition != null 
+                                                    ? const Color(0xFF2E7D32) 
+                                                    : Colors.orange[700],
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                    ),
+                                    if (_currentPosition == null && !_isLocationLoading)
+                                      TextButton(
+                                        onPressed: _getCurrentLocation,
+                                        child: const Text('Retry'),
+                                      ),
+                                  ],
+                                ),
     );
   }
 
@@ -1058,36 +1058,36 @@ class _BBXListWasteScreenState extends State<BBXListWasteScreen> {
         ),
       ),
       child: Row(
-        children: [
-          const Icon(
-            Icons.verified_user,
-            color: Color(0xFF2E7D32),
-            size: 32,
-          ),
+                  children: [
+                    const Icon(
+                      Icons.verified_user,
+                      color: Color(0xFF2E7D32),
+                      size: 32,
+                    ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'PCDS 2030 Compliant',
-                  style: TextStyle(
+                      'PCDS 2030 Compliant',
+                      style: TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.bold,
                     color: Color(0xFF2E7D32),
-                  ),
-                ),
-                Text(
+                      ),
+                    ),
+                    Text(
                   'All listings are reviewed for sustainability standards.',
-                  style: TextStyle(
+                      style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey[700],
-                  ),
-                ),
-              ],
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ],
+              ),
             ),
-          ),
-        ],
+          ],
       ),
     );
   }
