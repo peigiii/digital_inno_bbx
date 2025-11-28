@@ -21,6 +21,7 @@ import 'screens/bbx_invoice_screen.dart';
 import 'screens/transactions/bbx_optimized_transaction_detail_screen.dart';
 import 'screens/offers/bbx_my_offers_screen.dart';
 import 'screens/chat/bbx_conversations_screen.dart';
+import 'screens/chat/bbx_chat_screen.dart';
 import 'screens/search/bbx_advanced_search_screen.dart';
 import 'screens/search/bbx_new_search_screen.dart'; // ✅ 添加搜索页面
 import 'screens/categories/bbx_categories_screen.dart'; // ✅ 添加分类页面

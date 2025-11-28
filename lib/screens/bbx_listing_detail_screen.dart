@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../services/chat_service.dart';
+import 'chat/bbx_chat_screen.dart';
 
 /// 商品详情页 - 简化可靠版本 - 修复类型错误
 /// 修复问题：
@@ -724,14 +726,14 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
     }
   }
 
-  void _handleContact(Map<String, dynamic> data) {
+  Future<void> _handleContact(Map<String, dynamic> data) async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please login first'), backgroundColor: Colors.orange),
       );
       return;
-                }
+    }
 
     final sellerId = data['userId']?.toString();
     if (sellerId == null || sellerId.isEmpty) {
@@ -741,17 +743,46 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
       return;
     }
 
-    // 导航到聊天页面
-    Navigator.pushNamed(
-                              context,
-      '/chat',
-      arguments: {
-        'recipientId': sellerId,
-        'recipientName': data['userEmail'] ?? 'Seller',
-        'listingId': widget.listingId,
-        'listingTitle': data['title'] ?? data['wasteType'],
-      },
-                    );
+    try {
+      // 获取或创建对话
+      final chatService = ChatService();
+      final conversationId = await chatService.getOrCreateConversation(sellerId);
+      
+      // 获取卖家信息
+      final sellerDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(sellerId)
+          .get();
+      
+      final sellerName = sellerDoc.data()?['displayName'] ?? 
+                        data['userEmail']?.toString().split('@')[0] ?? 
+                        'Seller';
+      final sellerAvatar = sellerDoc.data()?['photoURL'];
+
+      if (mounted) {
+        // 导航到聊天页面
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BBXChatScreen(
+              conversationId: conversationId,
+              otherUserId: sellerId,
+              otherUserName: sellerName,
+              otherUserAvatar: sellerAvatar,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to start chat: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _handleQuote(Map<String, dynamic> data) {
