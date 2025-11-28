@@ -28,11 +28,18 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
   final _scrollController = ScrollController();
   final _auth = FirebaseAuth.instance;
   bool _isSending = false;
+  bool _hasText = false;
 
   @override
   void initState() {
     super.initState();
-        Future.delayed(const Duration(milliseconds: 500), () {
+    // 监听输入框文本变化
+    _messageController.addListener(() {
+      setState(() {
+        _hasText = _messageController.text.trim().isNotEmpty;
+      });
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
       _chatService.markAsRead(widget.conversationId);
     });
   }
@@ -84,6 +91,131 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
         });
       }
     }
+  }
+
+  void _showAttachmentOptions() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const Text(
+              'Send Attachment',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildAttachmentOption(
+                  icon: Icons.photo,
+                  label: 'Photo',
+                  color: Colors.blue,
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Photo feature coming soon...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+                _buildAttachmentOption(
+                  icon: Icons.image,
+                  label: 'Gallery',
+                  color: Colors.purple,
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Gallery feature coming soon...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+                _buildAttachmentOption(
+                  icon: Icons.location_on,
+                  label: 'Location',
+                  color: Colors.green,
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Location feature coming soon...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+                _buildAttachmentOption(
+                  icon: Icons.attach_file,
+                  label: 'File',
+                  color: Colors.orange,
+                  onTap: () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('File feature coming soon...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAttachmentOption({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 30),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -259,8 +391,7 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
         children: [
                     IconButton(
             icon: const Icon(Icons.add_circle_outline),
-            onPressed: () {
-                          },
+            onPressed: _showAttachmentOptions,
             color: Colors.grey.shade600,
           ),
           const SizedBox(width: 8),
@@ -281,8 +412,6 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
                 onSubmitted: (_) => _sendMessage(),
-                onChanged: (value) {
-                                  },
               ),
             ),
           ),
@@ -291,9 +420,9 @@ class _BBXChatScreenState extends State<BBXChatScreen> {
                     IconButton(
             icon: Icon(
               Icons.send,
-              color: _messageController.text.isEmpty ? Colors.grey : Colors.green,
+              color: !_hasText || _isSending ? Colors.grey : Colors.green,
             ),
-            onPressed: _messageController.text.isEmpty || _isSending ? null : _sendMessage,
+            onPressed: !_hasText || _isSending ? null : _sendMessage,
           ),
         ],
       ),
