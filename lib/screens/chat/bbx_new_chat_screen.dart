@@ -164,6 +164,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
         return ListView.builder(
           controller: _scrollController,
           reverse: true,
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.all(AppTheme.spacing16),
           itemCount: messages.length,
           itemBuilder: (context, index) {
@@ -356,25 +357,120 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
           ),
         );
       case 'listing':
+        if (listingId == null || listingId.isEmpty) {
+          return Container(
+            padding: const EdgeInsets.all(AppTheme.spacing12),
+            decoration: BoxDecoration(
+              color: isMine
+                  ? Colors.white.withOpacity(0.2)
+                  : AppTheme.neutral100,
+              borderRadius: AppTheme.borderRadiusMedium,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: AppTheme.neutral200,
+                    borderRadius: AppTheme.borderRadiusMedium,
+                  ),
+                  child: const Icon(Icons.shopping_bag_rounded),
+                ),
+                const SizedBox(width: AppTheme.spacing8),
+                Expanded(
+                  child: Text(
+                    content,
+                    style: AppTheme.body2.copyWith(
+                      color: isMine ? Colors.white : AppTheme.neutral900,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
         return FutureBuilder<DocumentSnapshot>(
-          future: listingId != null
-              ? FirebaseFirestore.instance
-                  .collection('listings')
-                  .doc(listingId)
-                  .get()
-              : null,
+          future: FirebaseFirestore.instance
+              .collection('listings')
+              .doc(listingId)
+              .get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
                 padding: const EdgeInsets.all(AppTheme.spacing12),
-                child: const CircularProgressIndicator(),
+                decoration: BoxDecoration(
+                  color: isMine
+                      ? Colors.white.withOpacity(0.2)
+                      : AppTheme.neutral100,
+                  borderRadius: AppTheme.borderRadiusMedium,
+                ),
+                child: const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
               );
             }
 
-            final listingData = snapshot.data?.data() as Map<String, dynamic>?;
-            final title = listingData?['title'] ?? listingData?['wasteType'] ?? 'Item';
-            final price = listingData?['pricePerUnit'] ?? 0;
-            final imageUrl = listingData?['imageUrl'] ?? listingData?['imageUrls']?[0];
+            if (snapshot.hasError || !snapshot.hasData || !snapshot.data!.exists) {
+              return Container(
+                padding: const EdgeInsets.all(AppTheme.spacing12),
+                decoration: BoxDecoration(
+                  color: isMine
+                      ? Colors.white.withOpacity(0.2)
+                      : AppTheme.neutral100,
+                  borderRadius: AppTheme.borderRadiusMedium,
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: AppTheme.neutral200,
+                        borderRadius: AppTheme.borderRadiusMedium,
+                      ),
+                      child: const Icon(Icons.error_outline),
+                    ),
+                    const SizedBox(width: AppTheme.spacing8),
+                    Expanded(
+                      child: Text(
+                        content,
+                        style: AppTheme.body2.copyWith(
+                          color: isMine ? Colors.white : AppTheme.neutral900,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            final listingData = snapshot.data!.data() as Map<String, dynamic>?;
+            if (listingData == null) {
+              return Container(
+                padding: const EdgeInsets.all(AppTheme.spacing12),
+                decoration: BoxDecoration(
+                  color: isMine
+                      ? Colors.white.withOpacity(0.2)
+                      : AppTheme.neutral100,
+                  borderRadius: AppTheme.borderRadiusMedium,
+                ),
+                child: Text(
+                  content,
+                  style: AppTheme.body2.copyWith(
+                    color: isMine ? Colors.white : AppTheme.neutral900,
+                  ),
+                ),
+              );
+            }
+
+            final title = listingData['title'] ?? listingData['wasteType'] ?? 'Item';
+            final price = listingData['pricePerUnit'] ?? 0;
+            final imageUrl = listingData['imageUrl'] ?? 
+                (listingData['imageUrls'] is List && (listingData['imageUrls'] as List).isNotEmpty
+                    ? (listingData['imageUrls'] as List)[0]
+                    : null);
 
             return Container(
               padding: const EdgeInsets.all(AppTheme.spacing12),
