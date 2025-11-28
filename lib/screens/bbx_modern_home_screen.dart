@@ -337,7 +337,7 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const BBXNewConversationsScreen(),
+                          builder: (context) => BBXNewConversationsScreen(),
                         ),
                       );
                     },
@@ -475,7 +475,7 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const BBXConversationsScreen(),
+                      builder: (context) => BBXNewConversationsScreen(),
                     ),
                   );
                 },
