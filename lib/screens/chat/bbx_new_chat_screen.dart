@@ -399,10 +399,10 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                 ),
                 child: IconButton(
                   icon: Icon(
-                    Icons.mic_rounded,
-                    color: AppTheme.neutral600,
+                    Icons.send_rounded,
+                    color: AppTheme.neutral400,
                   ),
-                  onPressed: () {},
+                  onPressed: null, // 禁用状态，因为没有文本
                 ),
               ),
           ],
@@ -494,7 +494,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Gallery feature coming soon...'),
+                        content: Text('还没开发'),
                         duration: Duration(seconds: 2),
                       ),
                     );
@@ -507,7 +507,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Photo feature coming soon...'),
+                        content: Text('还没开发'),
                         duration: Duration(seconds: 2),
                       ),
                     );
@@ -520,7 +520,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Location feature coming soon...'),
+                        content: Text('还没开发'),
                         duration: Duration(seconds: 2),
                       ),
                     );
@@ -533,7 +533,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                     Navigator.pop(context);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Item link feature coming soon...'),
+                        content: Text('还没开发'),
                         duration: Duration(seconds: 2),
                       ),
                     );
