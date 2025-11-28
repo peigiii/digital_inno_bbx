@@ -26,7 +26,7 @@ import 'screens/search/bbx_new_search_screen.dart'; // ✅ 添加搜索页面
 import 'screens/categories/bbx_categories_screen.dart'; // ✅ 添加分类页面
 import 'screens/bbx_my_listings_standalone_screen.dart'; // ✅ 添加我的列表页面
 import 'screens/transactions/bbx_transactions_screen.dart';
-import 'screens/transactions/bbx_transaction_detail_screen.dart';
+// import 'screens/transactions/bbx_transaction_detail_screen.dart'; // 未使用，路由使用BBXOptimizedTransactionDetailScreen
 import 'screens/transactions/bbx_upload_payment_screen.dart';
 import 'screens/transactions/bbx_update_logistics_screen.dart';
 import 'screens/profile/bbx_optimized_profile_screen.dart';
