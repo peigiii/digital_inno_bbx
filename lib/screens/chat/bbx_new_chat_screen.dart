@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:geolocator/geolocator.dart';
+import 'dart:io';
 import '../../theme/app_theme.dart';
 import '../../widgets/bbx_avatar.dart';
 import '../../models/message_model.dart';
 import '../../services/chat_service.dart';
+import '../../services/image_upload_service.dart';
 
 class BBXNewChatScreen extends StatefulWidget {
   final String conversationId;
   final String otherUserId;
   final String otherUserName;
   final String? otherUserAvatar;
+  final String? listingId; // 用于商品链接功能
 
   const BBXNewChatScreen({
     super.key,
@@ -18,6 +23,7 @@ class BBXNewChatScreen extends StatefulWidget {
     required this.otherUserId,
     required this.otherUserName,
     this.otherUserAvatar,
+    this.listingId,
   });
 
   @override
@@ -29,9 +35,11 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final _auth = FirebaseAuth.instance;
+  final ImagePicker _imagePicker = ImagePicker();
   bool _isTyping = false;
   bool _isSending = false;
   bool _hasText = false;
+  bool _isUploadingImage = false;
 
   @override
   void initState() {
@@ -173,6 +181,9 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     final type = message.type;
     final createdAt = message.createdAt;
     final isRead = message.isRead;
+    final imageUrl = message.imageUrl;
+    final location = message.location;
+    final listingId = message.listingId;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTheme.spacing8),
@@ -214,7 +225,14 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.7,
                   ),
-                  child: _buildMessageContent(type, content, isMine),
+                  child: _buildMessageContent(
+                    type,
+                    content,
+                    isMine,
+                    imageUrl: imageUrl,
+                    location: location,
+                    listingId: listingId,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -245,7 +263,14 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     );
   }
 
-    Widget _buildMessageContent(String type, String content, bool isMine) {
+    Widget _buildMessageContent(
+      String type,
+      String content,
+      bool isMine, {
+      String? imageUrl,
+      Map<String, dynamic>? location,
+      String? listingId,
+    }) {
     switch (type) {
       case 'text':
         return Text(
@@ -255,16 +280,40 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
           ),
         );
       case 'image':
+        if (imageUrl == null || imageUrl.isEmpty) {
+          return Text(
+            '[Image]',
+            style: AppTheme.body1.copyWith(
+              color: isMine ? Colors.white : AppTheme.neutral900,
+            ),
+          );
+        }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
               borderRadius: AppTheme.borderRadiusMedium,
               child: Image.network(
-                content,
+                imageUrl,
                 width: 200,
                 height: 200,
                 fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Container(
+                    width: 200,
+                    height: 200,
+                    color: AppTheme.neutral200,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    ),
+                  );
+                },
                 errorBuilder: (context, error, stackTrace) => Container(
                   width: 200,
                   height: 200,
@@ -275,7 +324,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
             ),
           ],
         );
-      case 'listing':
+      case 'location':
         return Container(
           padding: const EdgeInsets.all(AppTheme.spacing12),
           decoration: BoxDecoration(
@@ -285,41 +334,112 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
             borderRadius: AppTheme.borderRadiusMedium,
           ),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: AppTheme.neutral200,
-                  borderRadius: AppTheme.borderRadiusMedium,
-                ),
+              Icon(
+                Icons.location_on_rounded,
+                color: isMine ? Colors.white : AppTheme.primary500,
+                size: 24,
               ),
               const SizedBox(width: AppTheme.spacing8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Item Title',
-                      style: AppTheme.body2.copyWith(
-                        color: isMine ? Colors.white : AppTheme.neutral900,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'RM 150.00',
-                      style: AppTheme.heading4.copyWith(
-                        color:
-                            isMine ? Colors.white : AppTheme.primary500,
-                      ),
-                    ),
-                  ],
+              Flexible(
+                child: Text(
+                  location != null
+                      ? 'Location: ${location['latitude']?.toStringAsFixed(4)}, ${location['longitude']?.toStringAsFixed(4)}'
+                      : content,
+                  style: AppTheme.body2.copyWith(
+                    color: isMine ? Colors.white : AppTheme.neutral900,
+                  ),
                 ),
               ),
             ],
           ),
+        );
+      case 'listing':
+        return FutureBuilder<DocumentSnapshot>(
+          future: listingId != null
+              ? FirebaseFirestore.instance
+                  .collection('listings')
+                  .doc(listingId)
+                  .get()
+              : null,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                padding: const EdgeInsets.all(AppTheme.spacing12),
+                child: const CircularProgressIndicator(),
+              );
+            }
+
+            final listingData = snapshot.data?.data() as Map<String, dynamic>?;
+            final title = listingData?['title'] ?? listingData?['wasteType'] ?? 'Item';
+            final price = listingData?['pricePerUnit'] ?? 0;
+            final imageUrl = listingData?['imageUrl'] ?? listingData?['imageUrls']?[0];
+
+            return Container(
+              padding: const EdgeInsets.all(AppTheme.spacing12),
+              decoration: BoxDecoration(
+                color: isMine
+                    ? Colors.white.withOpacity(0.2)
+                    : AppTheme.neutral100,
+                borderRadius: AppTheme.borderRadiusMedium,
+              ),
+              child: Row(
+                children: [
+                  if (imageUrl != null)
+                    ClipRRect(
+                      borderRadius: AppTheme.borderRadiusMedium,
+                      child: Image.network(
+                        imageUrl,
+                        width: 60,
+                        height: 60,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          width: 60,
+                          height: 60,
+                          color: AppTheme.neutral200,
+                          child: const Icon(Icons.image),
+                        ),
+                      ),
+                    )
+                  else
+                    Container(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: AppTheme.neutral200,
+                        borderRadius: AppTheme.borderRadiusMedium,
+                      ),
+                      child: const Icon(Icons.shopping_bag_rounded),
+                    ),
+                  const SizedBox(width: AppTheme.spacing8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: AppTheme.body2.copyWith(
+                            color: isMine ? Colors.white : AppTheme.neutral900,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'RM ${price.toStringAsFixed(2)}',
+                          style: AppTheme.heading4.copyWith(
+                            color: isMine ? Colors.white : AppTheme.primary500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       default:
         return Text(content);
@@ -373,38 +493,28 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
 
             const SizedBox(width: AppTheme.spacing8),
 
-                        if (_hasText && !_isSending)
-              Container(
-                width: 48,
-                height: 48,
-                decoration: const BoxDecoration(
-                  color: AppTheme.primary500,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.send_rounded,
-                    color: Colors.white,
-                  ),
-                  onPressed: _sendMessage,
-                ),
-              )
-            else
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppTheme.neutral200,
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  icon: Icon(
-                    Icons.send_rounded,
-                    color: AppTheme.neutral400,
-                  ),
-                  onPressed: null, // 禁用状态，因为没有文本
-                ),
+            // 发送按钮（始终显示，但根据状态启用/禁用）
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: (_hasText && !_isSending && !_isUploadingImage)
+                    ? AppTheme.primary500
+                    : AppTheme.neutral200,
+                shape: BoxShape.circle,
               ),
+              child: IconButton(
+                icon: Icon(
+                  Icons.send_rounded,
+                  color: (_hasText && !_isSending && !_isUploadingImage)
+                      ? Colors.white
+                      : AppTheme.neutral600,
+                ),
+                onPressed: (_hasText && !_isSending && !_isUploadingImage)
+                    ? _sendMessage
+                    : null,
+              ),
+            ),
           ],
         ),
       ),
@@ -492,12 +602,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                   'Gallery',
                   () {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('还没开发'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
+                    _pickImageFromGallery();
                   },
                 ),
                 _buildAttachmentOption(
@@ -505,12 +610,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                   'Photo',
                   () {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('还没开发'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
+                    _pickImageFromCamera();
                   },
                 ),
                 _buildAttachmentOption(
@@ -518,27 +618,18 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                   'Location',
                   () {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('还没开发'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
+                    _sendLocation();
                   },
                 ),
-                _buildAttachmentOption(
-                  Icons.shopping_bag_rounded,
-                  'ItemLink',
-                  () {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('还没开发'),
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                ),
+                if (widget.listingId != null)
+                  _buildAttachmentOption(
+                    Icons.shopping_bag_rounded,
+                    'ItemLink',
+                    () {
+                      Navigator.pop(context);
+                      _sendListingLink();
+                    },
+                  ),
               ],
             ),
             const SizedBox(height: 20),
@@ -611,5 +702,306 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
 
   String _formatTime(DateTime time) {
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  }
+
+  /// 从相册选择图片
+  Future<void> _pickImageFromGallery() async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (image != null) {
+        await _sendImage(image);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to pick image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// 从相机拍照
+  Future<void> _pickImageFromCamera() async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 80,
+      );
+
+      if (image != null) {
+        await _sendImage(image);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to take photo: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  /// 发送图片
+  Future<void> _sendImage(XFile imageFile) async {
+    if (_isUploadingImage || _isSending) return;
+
+    setState(() {
+      _isUploadingImage = true;
+    });
+
+    try {
+      // 显示上传进度
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Uploading image...'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      // 上传图片到 ImgBB
+      final imageUrl = await ImageUploadService.uploadXFile(imageFile);
+
+      if (imageUrl == null) {
+        throw Exception('Failed to upload image');
+      }
+
+      // 发送图片消息
+      await _chatService.sendMessage(
+        conversationId: widget.conversationId,
+        receiverId: widget.otherUserId,
+        content: '[Image]',
+        type: 'image',
+        imageUrl: imageUrl,
+      );
+
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Image sent successfully'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to send image: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isUploadingImage = false;
+        });
+      }
+    }
+  }
+
+  /// 发送位置
+  Future<void> _sendLocation() async {
+    if (_isSending) return;
+
+    setState(() {
+      _isSending = true;
+    });
+
+    try {
+      // 检查位置权限
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Location permission denied'),
+                backgroundColor: Colors.orange,
+              ),
+            );
+          }
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Location permission permanently denied. Please enable it in settings.'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
+
+      // 检查位置服务是否启用
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Location services are disabled. Please enable location services.'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
+
+      // 获取当前位置
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Getting location...'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // 发送位置消息
+      await _chatService.sendMessage(
+        conversationId: widget.conversationId,
+        receiverId: widget.otherUserId,
+        content: 'Location: ${position.latitude.toStringAsFixed(6)}, ${position.longitude.toStringAsFixed(6)}',
+        type: 'location',
+        location: {
+          'latitude': position.latitude,
+          'longitude': position.longitude,
+          'address': 'Current Location', // 可以后续使用 geocoding 获取地址
+        },
+      );
+
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Location sent successfully'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to send location: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
+      }
+    }
+  }
+
+  /// 发送商品链接
+  Future<void> _sendListingLink() async {
+    if (widget.listingId == null || _isSending) return;
+
+    setState(() {
+      _isSending = true;
+    });
+
+    try {
+      // 获取商品信息
+      final listingDoc = await FirebaseFirestore.instance
+          .collection('listings')
+          .doc(widget.listingId)
+          .get();
+
+      if (!listingDoc.exists) {
+        throw Exception('Listing not found');
+      }
+
+      final listingData = listingDoc.data()!;
+      final title = listingData['title'] ?? listingData['wasteType'] ?? 'Item';
+      final price = listingData['pricePerUnit'] ?? 0;
+
+      // 发送商品链接消息
+      await _chatService.sendMessage(
+        conversationId: widget.conversationId,
+        receiverId: widget.otherUserId,
+        content: 'Check out this item: $title - RM ${price.toStringAsFixed(2)}',
+        type: 'listing',
+        listingId: widget.listingId,
+      );
+
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Item link sent successfully'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to send item link: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
+      }
+    }
   }
 }

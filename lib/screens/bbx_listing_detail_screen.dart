@@ -769,6 +769,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
               otherUserId: sellerId,
               otherUserName: sellerName,
               otherUserAvatar: sellerAvatar,
+              listingId: widget.listingId, // 传递商品ID以便分享商品链接
             ),
           ),
         );
