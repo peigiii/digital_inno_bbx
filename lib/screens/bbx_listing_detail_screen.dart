@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../services/chat_service.dart';
-import 'chat/bbx_chat_screen.dart';
+import 'chat/bbx_new_chat_screen.dart';
 
 /// 商品详情页 - 简化可靠版本 - 修复类型错误
 /// 修复问题：
@@ -764,7 +764,7 @@ class _BBXListingDetailScreenState extends State<BBXListingDetailScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => BBXChatScreen(
+            builder: (context) => BBXNewChatScreen(
               conversationId: conversationId,
               otherUserId: sellerId,
               otherUserName: sellerName,

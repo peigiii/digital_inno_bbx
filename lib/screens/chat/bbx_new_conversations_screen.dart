@@ -3,11 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/bbx_avatar.dart';
-import '../../widgets/bbx_chip.dart';
-import '../../widgets/bbx_empty_state.dart';
-import '../../widgets/bbx_loading.dart';
+import '../../models/message_model.dart';
+import '../../services/chat_service.dart';
 import 'bbx_new_chat_screen.dart';
-import '../../utils/page_transitions.dart';
 
 class BBXNewConversationsScreen extends StatefulWidget {
   const BBXNewConversationsScreen({super.key});
@@ -17,14 +15,14 @@ class BBXNewConversationsScreen extends StatefulWidget {
 }
 
 class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
+  final _chatService = ChatService();
+  final _auth = FirebaseAuth.instance;
   String _selectedFilter = 'all';
 
-  final List<String> _filters = ['all', 'unread', 'buyer', 'seller'];
+  final List<String> _filters = ['all', 'unread'];
   final Map<String, String> _filterLabels = {
     'all': 'All',
-    'unread': 'NotRead',
-    'buyer': 'Buyer',
-    'seller': 'Seller',
+    'unread': 'Unread',
   };
 
   @override
@@ -87,190 +85,251 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
   }
 
     Widget _buildConversationsList() {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _auth.currentUser;
     if (user == null) {
-      return BBXEmptyState.noData(description: 'PleaseFirstLogin');
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.person_off, size: 64, color: AppTheme.neutral400),
+            const SizedBox(height: 16),
+            Text(
+              'Please login first',
+              style: AppTheme.body1.copyWith(color: AppTheme.neutral600),
+            ),
+          ],
+        ),
+      );
     }
 
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('conversations')
-          .where('participants', arrayContains: user.uid)
-          .orderBy('lastMessageTime', descending: true)
-          .snapshots(),
+    return StreamBuilder<List<ConversationModel>>(
+      stream: _chatService.getMyConversations(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return BBXEmptyState.noData(description: 'Load Failed');
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.error_outline, size: 64, color: AppTheme.error),
+                const SizedBox(height: 16),
+                Text(
+                  'Load Failed: ${snapshot.error}',
+                  style: AppTheme.body1.copyWith(color: AppTheme.error),
+                ),
+              ],
+            ),
+          );
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const BBXListLoading(itemCount: 5);
+          return const Center(child: CircularProgressIndicator());
         }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return BBXEmptyState.noData(
-            title: 'No messages',
-            description: 'StartYou of No.OnePairWordBar',
+        final conversations = snapshot.data ?? [];
+
+        // 应用过滤器
+        List<ConversationModel> filteredConversations = conversations;
+        if (_selectedFilter == 'unread') {
+          filteredConversations = conversations.where((conv) {
+            final unreadCount = conv.unreadCount[user.uid] ?? 0;
+            return unreadCount > 0;
+          }).toList();
+        }
+
+        if (filteredConversations.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.chat_bubble_outline, size: 64, color: AppTheme.neutral400),
+                const SizedBox(height: 16),
+                Text(
+                  'No messages',
+                  style: AppTheme.heading4.copyWith(color: AppTheme.neutral600),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Start a conversation',
+                  style: AppTheme.body2.copyWith(color: AppTheme.neutral500),
+                ),
+              ],
+            ),
           );
         }
 
         return ListView.builder(
-          itemCount: snapshot.data!.docs.length,
+          itemCount: filteredConversations.length,
           itemBuilder: (context, index) {
-            final doc = snapshot.data!.docs[index];
-            return _buildConversationCard(doc);
+            return _buildConversationCard(filteredConversations[index], user.uid);
           },
         );
       },
     );
   }
 
-    Widget _buildConversationCard(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    final otherUserName = data['otherUserName'] ?? 'UnknownUser';
-    final otherUserAvatar = data['otherUserAvatar'] as String?;
-    final lastMessage = data['lastMessage'] ?? '';
-    final lastMessageTime = (data['lastMessageTime'] as Timestamp?)?.toDate();
-    final unreadCount = data['unreadCount'] ?? 0;
-    final isOnline = data['isOnline'] ?? false;
+    Widget _buildConversationCard(ConversationModel conversation, String currentUserId) {
+    final otherUserId = conversation.getOtherParticipantId(currentUserId);
+    if (otherUserId == null) return const SizedBox.shrink();
 
-    return Dismissible(
-      key: Key(doc.id),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        color: AppTheme.error,
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: AppTheme.spacing16),
-        child: const Icon(
-          Icons.delete_rounded,
-          color: Colors.white,
-        ),
-      ),
-      child: InkWell(
-        onTap: () {
-          PageTransitions.navigateTo(
-            context,
-            BBXNewChatScreen(
-              conversationId: doc.id,
-              otherUserName: otherUserName,
-              otherUserAvatar: otherUserAvatar,
-            ),
-          );
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppTheme.spacing16,
-            vertical: AppTheme.spacing12,
-          ),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            border: Border(
-              bottom: BorderSide(
-                color: AppTheme.neutral300,
-                width: 1,
-              ),
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _getUserInfo(otherUserId),
+      builder: (context, snapshot) {
+        final userInfo = snapshot.data ?? {};
+        final otherUserName = userInfo['displayName'] ?? userInfo['email'] ?? 'Unknown User';
+        final otherUserAvatar = userInfo['photoURL'];
+        final unreadCount = conversation.getUnreadCount(currentUserId);
+        final lastMessage = conversation.lastMessage ?? '';
+        final lastMessageTime = conversation.lastMessageAt;
+
+        return Dismissible(
+          key: Key(conversation.id),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            color: AppTheme.error,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: AppTheme.spacing16),
+            child: const Icon(
+              Icons.delete_rounded,
+              color: Colors.white,
             ),
           ),
-          child: Row(
-            children: [
-                            BBXAvatarOnline(
-                imageUrl: otherUserAvatar,
-                name: otherUserName,
-                size: 56,
-                isOnline: isOnline,
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BBXNewChatScreen(
+                    conversationId: conversation.id,
+                    otherUserId: otherUserId,
+                    otherUserName: otherUserName,
+                    otherUserAvatar: otherUserAvatar,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppTheme.spacing16,
+                vertical: AppTheme.spacing12,
               ),
-              const SizedBox(width: AppTheme.spacing12),
-
-                            Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                                        Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            otherUserName,
-                            style: AppTheme.heading4,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (lastMessageTime != null)
-                          Text(
-                            _formatTime(lastMessageTime),
-                            style: AppTheme.caption.copyWith(
-                              color: AppTheme.neutral500,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-
-                                        Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            _formatLastMessage(lastMessage),
-                            style: AppTheme.body2.copyWith(
-                              color: unreadCount > 0
-                                  ? AppTheme.neutral900
-                                  : AppTheme.neutral600,
-                              fontWeight: unreadCount > 0
-                                  ? AppTheme.semibold
-                                  : AppTheme.regular,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (unreadCount > 0) ...[
-                          const SizedBox(width: AppTheme.spacing8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: const BoxDecoration(
-                              color: AppTheme.error,
-                              shape: BoxShape.circle,
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 20,
-                              minHeight: 20,
-                            ),
-                            child: Text(
-                              unreadCount.toString(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: AppTheme.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ],
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(
+                    color: AppTheme.neutral300,
+                    width: 1,
+                  ),
                 ),
               ),
-            ],
+              child: Row(
+                children: [
+                  BBXAvatar(
+                    imageUrl: otherUserAvatar,
+                    name: otherUserName,
+                    size: 56,
+                  ),
+                  const SizedBox(width: AppTheme.spacing12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                otherUserName,
+                                style: AppTheme.heading4,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (lastMessageTime != null)
+                              Text(
+                                _formatTime(lastMessageTime),
+                                style: AppTheme.caption.copyWith(
+                                  color: AppTheme.neutral500,
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _formatLastMessage(lastMessage),
+                                style: AppTheme.body2.copyWith(
+                                  color: unreadCount > 0
+                                      ? AppTheme.neutral900
+                                      : AppTheme.neutral600,
+                                  fontWeight: unreadCount > 0
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (unreadCount > 0) ...[
+                              const SizedBox(width: AppTheme.spacing8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: const BoxDecoration(
+                                  color: AppTheme.error,
+                                  shape: BoxShape.circle,
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 20,
+                                  minHeight: 20,
+                                ),
+                                child: Text(
+                                  unreadCount > 99 ? '99+' : unreadCount.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  String _formatTime(DateTime time) {
+  Future<Map<String, dynamic>> _getUserInfo(String userId) async {
+    try {
+      final doc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+      return doc.data() ?? {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  String _formatTime(DateTime? time) {
+    if (time == null) return '';
     final now = DateTime.now();
     final difference = now.difference(time);
 
     if (difference.inDays > 0) {
-      return '${time.month}?{time.day}?';
+      return '${time.month}/${time.day}';
     } else if (difference.inHours > 0) {
-      return '${difference.inHours} hours ago';
+      return '${difference.inHours}h ago';
     } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes} minutes ago';
+      return '${difference.inMinutes}m ago';
     } else {
       return 'Just now';
     }

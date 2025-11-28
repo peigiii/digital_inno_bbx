@@ -3,18 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/bbx_avatar.dart';
-import '../../widgets/bbx_button.dart';
-import '../../widgets/bbx_bottom_sheet.dart';
-import '../../widgets/bbx_notification.dart';
+import '../../models/message_model.dart';
+import '../../services/chat_service.dart';
 
 class BBXNewChatScreen extends StatefulWidget {
   final String conversationId;
+  final String otherUserId;
   final String otherUserName;
   final String? otherUserAvatar;
 
   const BBXNewChatScreen({
     super.key,
     required this.conversationId,
+    required this.otherUserId,
     required this.otherUserName,
     this.otherUserAvatar,
   });
@@ -24,9 +25,27 @@ class BBXNewChatScreen extends StatefulWidget {
 }
 
 class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
+  final _chatService = ChatService();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final _auth = FirebaseAuth.instance;
   bool _isTyping = false;
+  bool _isSending = false;
+  bool _hasText = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // 监听输入框文本变化
+    _messageController.addListener(() {
+      setState(() {
+        _hasText = _messageController.text.trim().isNotEmpty;
+      });
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _chatService.markAsRead(widget.conversationId);
+    });
+  }
 
   @override
   void dispose() {
@@ -101,24 +120,20 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
   }
 
     Widget _buildMessagesList() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('conversations')
-          .doc(widget.conversationId)
-          .collection('messages')
-          .orderBy('createdAt', descending: true)
-          .limit(50)
-          .snapshots(),
+    return StreamBuilder<List<MessageModel>>(
+      stream: _chatService.getMessages(widget.conversationId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text('Load Failed?{snapshot.error}'));
+          return Center(child: Text('Load Failed: ${snapshot.error}'));
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+        final messages = snapshot.data ?? [];
+
+        if (messages.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -130,7 +145,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                 ),
                 const SizedBox(height: AppTheme.spacing16),
                 const Text(
-                  'StartChat',
+                  'Start Chat',
                   style: AppTheme.body1,
                 ),
               ],
@@ -142,24 +157,22 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
           controller: _scrollController,
           reverse: true,
           padding: const EdgeInsets.all(AppTheme.spacing16),
-          itemCount: snapshot.data!.docs.length,
+          itemCount: messages.length,
           itemBuilder: (context, index) {
-            final doc = snapshot.data!.docs[index];
-            return _buildMessageBubble(doc);
+            return _buildMessageBubble(messages[index]);
           },
         );
       },
     );
   }
 
-    Widget _buildMessageBubble(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    final user = FirebaseAuth.instance.currentUser;
-    final isMine = data['senderId'] == user?.uid;
-    final message = data['message'] ?? '';
-    final type = data['type'] ?? 'text';
-    final createdAt = (data['createdAt'] as Timestamp?)?.toDate();
-    final isRead = data['isRead'] ?? false;
+    Widget _buildMessageBubble(MessageModel message) {
+    final user = _auth.currentUser;
+    final isMine = message.senderId == user?.uid;
+    final content = message.content;
+    final type = message.type;
+    final createdAt = message.createdAt;
+    final isRead = message.isRead;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppTheme.spacing8),
@@ -201,7 +214,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.of(context).size.width * 0.7,
                   ),
-                  child: _buildMessageContent(type, message, isMine),
+                  child: _buildMessageContent(type, content, isMine),
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -232,11 +245,11 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
     );
   }
 
-    Widget _buildMessageContent(String type, String message, bool isMine) {
+    Widget _buildMessageContent(String type, String content, bool isMine) {
     switch (type) {
       case 'text':
         return Text(
-          message,
+          content,
           style: AppTheme.body1.copyWith(
             color: isMine ? Colors.white : AppTheme.neutral900,
           ),
@@ -248,7 +261,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
             ClipRRect(
               borderRadius: AppTheme.borderRadiusMedium,
               child: Image.network(
-                message,
+                content,
                 width: 200,
                 height: 200,
                 fit: BoxFit.cover,
@@ -326,11 +339,11 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
         top: false,
         child: Row(
           children: [
-                        BBXIconButton(
-              icon: Icons.add_circle_rounded,
+                        IconButton(
+              icon: const Icon(Icons.add_circle_rounded),
               onPressed: _showAttachmentOptions,
               color: AppTheme.neutral600,
-              size: 48,
+              iconSize: 28,
             ),
             const SizedBox(width: AppTheme.spacing8),
 
@@ -347,21 +360,20 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                 child: TextField(
                   controller: _messageController,
                   maxLines: null,
+                  textInputAction: TextInputAction.send,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     hintText: 'InputMessage...',
                     isDense: true,
                   ),
-                  onChanged: (text) {
-                    setState(() {});
-                  },
+                  onSubmitted: (_) => _sendMessage(),
                 ),
               ),
             ),
 
             const SizedBox(width: AppTheme.spacing8),
 
-                        if (_messageController.text.isNotEmpty)
+                        if (_hasText && !_isSending)
               Container(
                 width: 48,
                 height: 48,
@@ -378,11 +390,20 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                 ),
               )
             else
-              BBXIconButton(
-                icon: Icons.mic_rounded,
-                onPressed: () {},
-                color: AppTheme.neutral600,
-                size: 48,
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppTheme.neutral200,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.mic_rounded,
+                    color: AppTheme.neutral600,
+                  ),
+                  onPressed: () {},
+                ),
               ),
           ],
         ),
@@ -391,36 +412,23 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
   }
 
     Future<void> _sendMessage() async {
-    if (_messageController.text.trim().isEmpty) return;
+    final content = _messageController.text.trim();
+    if (content.isEmpty || _isSending) return;
 
-    final message = _messageController.text.trim();
-    _messageController.clear();
+    setState(() {
+      _isSending = true;
+    });
 
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) return;
+      await _chatService.sendMessage(
+        conversationId: widget.conversationId,
+        receiverId: widget.otherUserId,
+        content: content,
+      );
 
-      await FirebaseFirestore.instance
-          .collection('conversations')
-          .doc(widget.conversationId)
-          .collection('messages')
-          .add({
-        'senderId': user.uid,
-        'message': message,
-        'type': 'text',
-        'isRead': false,
-        'createdAt': FieldValue.serverTimestamp(),
-      });
+      _messageController.clear();
 
-            await FirebaseFirestore.instance
-          .collection('conversations')
-          .doc(widget.conversationId)
-          .update({
-        'lastMessage': message,
-        'lastMessageTime': FieldValue.serverTimestamp(),
-      });
-
-            if (_scrollController.hasClients) {
+      if (_scrollController.hasClients) {
         _scrollController.animateTo(
           0,
           duration: const Duration(milliseconds: 300),
@@ -428,42 +436,112 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
         );
       }
     } catch (e) {
-      BBXNotification.showError(context, 'Send Failed：$e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Send Failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSending = false;
+        });
+      }
     }
   }
 
     void _showAttachmentOptions() {
-    BBXBottomSheet.show(
+    showModalBottomSheet(
       context: context,
-      title: 'Send?,
-      child: Padding(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
         padding: const EdgeInsets.all(AppTheme.spacing16),
-        child: GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 3,
-          mainAxisSpacing: AppTheme.spacing16,
-          crossAxisSpacing: AppTheme.spacing16,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            _buildAttachmentOption(
-              Icons.photo_library_rounded,
-              'Gallery',
-              () {},
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: AppTheme.neutral300,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-            _buildAttachmentOption(
-              Icons.camera_alt_rounded,
-              'Photo',
-              () {},
+            const Text(
+              'Send Attachment',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            _buildAttachmentOption(
-              Icons.location_on_rounded,
-              'Location',
-              () {},
+            const SizedBox(height: 20),
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: 3,
+              mainAxisSpacing: AppTheme.spacing16,
+              crossAxisSpacing: AppTheme.spacing16,
+              children: [
+                _buildAttachmentOption(
+                  Icons.photo_library_rounded,
+                  'Gallery',
+                  () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Gallery feature coming soon...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+                _buildAttachmentOption(
+                  Icons.camera_alt_rounded,
+                  'Photo',
+                  () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Photo feature coming soon...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+                _buildAttachmentOption(
+                  Icons.location_on_rounded,
+                  'Location',
+                  () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Location feature coming soon...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+                _buildAttachmentOption(
+                  Icons.shopping_bag_rounded,
+                  'ItemLink',
+                  () {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Item link feature coming soon...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
-            _buildAttachmentOption(
-              Icons.shopping_bag_rounded,
-              'ItemLink',
-              () {},
-            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

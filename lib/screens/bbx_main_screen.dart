@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/navigation/bbx_bottom_navigation.dart';
 import 'home/bbx_home_progressive.dart'; import 'marketplace/bbx_optimized_marketplace_screen.dart'; import 'digital_inno_list_waste_screen.dart';
-import 'chat/bbx_conversations_screen.dart';
+import 'chat/bbx_new_conversations_screen.dart';
 import 'profile/bbx_optimized_profile_screen.dart'; 
 class BBXMainScreen extends StatefulWidget {
   final int initialIndex;
@@ -22,7 +22,7 @@ class _BBXMainScreenState extends State<BBXMainScreen> {
     super.initState();
     _currentIndex = widget.initialIndex;
     _pages = [
-      const BBXHomeProgressive(),                       const BBXOptimizedMarketplaceScreen(),            const BBXListWasteScreen(),                       const BBXConversationsScreen(),                   const BBXOptimizedProfileScreen(),              ];
+      const BBXHomeProgressive(),                       const BBXOptimizedMarketplaceScreen(),            const BBXListWasteScreen(),                       const BBXNewConversationsScreen(),                   const BBXOptimizedProfileScreen(),              ];
     _loadUnreadMessageCount();
   }
 

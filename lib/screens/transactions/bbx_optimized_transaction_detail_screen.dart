@@ -15,7 +15,7 @@ import '../../services/user_service.dart';
 import '../../services/chat_service.dart'; // ✅ 导入聊天服务
 import '../../utils/delivery_config.dart';
 import '../../widgets/state/error_state_widget.dart';
-import '../chat/bbx_chat_screen.dart'; // ✅ 导入聊天页面
+import '../chat/bbx_new_chat_screen.dart'; // ✅ 导入聊天页面
 import 'bbx_upload_payment_screen.dart';
 import 'bbx_update_logistics_screen.dart';
 
@@ -726,7 +726,7 @@ class _BBXOptimizedTransactionDetailScreenState
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => BBXChatScreen(
+                          builder: (context) => BBXNewChatScreen(
                             conversationId: conversationId,
                             otherUserId: userId,
                             otherUserName: user.displayName ?? 'User',
