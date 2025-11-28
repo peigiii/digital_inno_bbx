@@ -6,7 +6,7 @@ import 'screens/digital_inno_login_screen.dart';
 import 'screens/digital_inno_list_waste_screen.dart';
 import 'screens/bbx_new_marketplace_screen.dart';
 import 'screens/bbx_listing_detail_screen.dart';
-import 'screens/bbx_new_profile_screen.dart';
+// import 'screens/bbx_new_profile_screen.dart'; // 已删除，使用profile/bbx_optimized_profile_screen.dart
 import 'screens/bbx_splash_screen.dart';
 import 'screens/bbx_main_screen.dart';
 import 'screens/bbx_modern_home_screen.dart';
@@ -29,7 +29,7 @@ import 'screens/transactions/bbx_transactions_screen.dart';
 import 'screens/transactions/bbx_transaction_detail_screen.dart';
 import 'screens/transactions/bbx_upload_payment_screen.dart';
 import 'screens/transactions/bbx_update_logistics_screen.dart';
-import 'screens/profile/bbx_profile_screen.dart';
+import 'screens/profile/bbx_optimized_profile_screen.dart';
 import 'screens/profile/bbx_wallet_screen.dart';
 import 'screens/profile/bbx_coupons_screen.dart';
 import 'screens/profile/bbx_statistics_screen.dart';
@@ -112,7 +112,7 @@ class BBXApp extends StatelessWidget {
         // '/home' moved to onGenerateRoute to support arguments
         '/waste-list': (context) => const BBXListWasteScreen(),
         '/marketplace': (context) => const BBXNewMarketplaceScreen(),
-        '/profile': (context) => const BBXProfileScreen(),
+        '/profile': (context) => const BBXOptimizedProfileScreen(),
         '/modern-home': (context) => const BBXModernHomeScreen(),
         '/market-browse': (context) => const BBXMarketBrowseScreen(),
         '/profile-cards': (context) => const BBXProfileCardsScreen(),
