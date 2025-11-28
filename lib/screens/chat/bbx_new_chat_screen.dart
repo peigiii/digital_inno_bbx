@@ -600,35 +600,23 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
                 _buildAttachmentOption(
                   Icons.photo_library_rounded,
                   'Gallery',
-                  () {
-                    Navigator.pop(context);
-                    _pickImageFromGallery();
-                  },
+                  _pickImageFromGallery,
                 ),
                 _buildAttachmentOption(
                   Icons.camera_alt_rounded,
                   'Photo',
-                  () {
-                    Navigator.pop(context);
-                    _pickImageFromCamera();
-                  },
+                  _pickImageFromCamera,
                 ),
                 _buildAttachmentOption(
                   Icons.location_on_rounded,
                   'Location',
-                  () {
-                    Navigator.pop(context);
-                    _sendLocation();
-                  },
+                  _sendLocation,
                 ),
                 if (widget.listingId != null)
                   _buildAttachmentOption(
                     Icons.shopping_bag_rounded,
                     'ItemLink',
-                    () {
-                      Navigator.pop(context);
-                      _sendListingLink();
-                    },
+                    _sendListingLink,
                   ),
               ],
             ),
