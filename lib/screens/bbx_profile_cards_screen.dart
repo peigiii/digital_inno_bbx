@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../theme/app_theme.dart';
 import 'bbx_my_listings_standalone_screen.dart';
-import 'bbx_my_offers_standalone_screen.dart';
+import 'offers/bbx_my_offers_screen.dart';
 import 'bbx_favorites_standalone_screen.dart';
 import 'bbx_history_standalone_screen.dart';
 
@@ -419,7 +419,7 @@ class _BBXProfileCardsScreenState extends State<BBXProfileCardsScreen> {
         'onTap': () => Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const BBXMyOffersStandaloneScreen(),
+                builder: (context) => const BBXMyOffersScreen(),
               ),
             ),
       },

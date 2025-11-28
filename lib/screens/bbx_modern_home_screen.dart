@@ -6,7 +6,7 @@ import '../utils/animation_utils.dart';
 import 'bbx_market_browse_screen.dart';
 import 'bbx_listing_detail_screen.dart';
 import 'bbx_my_listings_standalone_screen.dart';
-import 'bbx_my_offers_standalone_screen.dart';
+import 'offers/bbx_my_offers_screen.dart';
 import 'chat/bbx_conversations_screen.dart';
 import 'bbx_notifications_standalone_screen.dart';
 
@@ -316,7 +316,7 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const BBXMyOffersStandaloneScreen(),
+                          builder: (context) => const BBXMyOffersScreen(),
                         ),
                       );
                     },
@@ -460,7 +460,7 @@ class _BBXModernHomeScreenState extends State<BBXModernHomeScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const BBXMyOffersStandaloneScreen(),
+                      builder: (context) => const BBXMyOffersScreen(),
                     ),
                   );
                 },
