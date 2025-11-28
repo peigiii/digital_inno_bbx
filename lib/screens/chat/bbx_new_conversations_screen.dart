@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/bbx_avatar.dart';
+import '../../widgets/bbx_chip.dart';
 import '../../models/message_model.dart';
 import '../../services/chat_service.dart';
 import 'bbx_new_chat_screen.dart';
@@ -319,19 +321,25 @@ class _BBXNewConversationsScreenState extends State<BBXNewConversationsScreen> {
     }
   }
 
-  String _formatTime(DateTime? time) {
-    if (time == null) return '';
-    final now = DateTime.now();
-    final difference = now.difference(time);
+  String _formatTime(DateTime? dateTime) {
+    if (dateTime == null) return '';
 
-    if (difference.inDays > 0) {
-      return '${time.month}/${time.day}';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m ago';
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inDays == 0) {
+      // Today
+      return DateFormat('HH:mm').format(dateTime);
+    } else if (difference.inDays == 1) {
+      // Yesterday
+      return 'Yesterday';
+    } else if (difference.inDays < 7) {
+      // This Week
+      const weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      return weekdays[dateTime.weekday - 1];
     } else {
-      return 'Just now';
+      // Older: Display Date
+      return DateFormat('MM/dd').format(dateTime);
     }
   }
 

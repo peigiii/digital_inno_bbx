@@ -322,7 +322,7 @@ class _BBXNewChatScreenState extends State<BBXNewChatScreen> {
           ),
         );
       default:
-        return Text(message);
+        return Text(content);
     }
   }
 
